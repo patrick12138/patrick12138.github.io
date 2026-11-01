@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A comprehensive repository of AI-generated technical guides">
+<title>Git Worktree 完全指南 · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a>
+    <a href="../../about/">关于</a>
+    <a href="../../tga/">工具</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · 原文 <a href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">chenmijiang.github.io</a> · 搬运</div><div class="body"><h2>Git Worktree 完全指南</h2>
+<h2>1. 概述</h2>
+<h3>1.1 什么是 Git Worktree</h3>
+<p><code>git worktree</code> 用来管理本地同一个仓库（repository）下的多个工作区（working tree）。它允许你在不同目录中同时检出多个分支或提交，从而并行开发/测试。</p>
+<p>它解决的核心痛点是：</p>
+<ul>
+<li>你想切换到另一个分支处理任务，但当前分支还有未完成的修改</li>
+<li>你需要同时维护多个版本（比如 <code>main</code> 修 bug、 <code>feature/*</code> 开发新需求、 <code>release/*</code> 打包）</li>
+<li>你希望并行跑不同分支的测试/构建，而不是反复 <code>git checkout</code></li>
+</ul>
+<p>一句话： <code>git worktree</code> 让”一个仓库，多份工作区”成为原生能力。</p>
+<h3>1.2 Worktree 的工作原理</h3>
+<p>Git 的一个”仓库”（repository）可以绑定多个工作区：</p>
+<ul>
+<li>一个 <strong>主工作区</strong> （通常就是你 <code>git clone</code> 得到的目录）</li>
+<li>多个 <strong>附加工作区</strong> （由 <code>git worktree add</code> 创建）</li>
+</ul>
+<p>这些工作区共享同一套对象数据库（<code>.git/objects</code> ），因此：</p>
+<ul>
+<li>✅ 不会重复下载/存储提交对象（比多次 clone 更省空间）</li>
+<li>✅ 分支切换互不干扰（每个工作区固定检出某个分支或某个提交）</li>
+<li>✅ 可以在不同目录里并行工作（测试、编译、review）</li>
+</ul>
+<p>典型结构（示意）：</p>
+<pre><code>repo/                      # 主 worktree
+├── .git/                  # 主 worktree 的 git 目录（或 gitfile）
+├── src/
+└── ...
+
+repo/.git/worktrees/       # worktree 元数据（每个附加 worktree 一份）
+
+../repo-feature-x/         # 附加 worktree 1
+├── .git                   # 指向主仓库的 gitfile
+├── src/
+└── ...
+
+../repo-hotfix/            # 附加 worktree 2
+├── .git                   # 指向主仓库的 gitfile
+├── src/
+└── ...
+</code></pre>
+<p>工作原理示意图：</p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│            共享的 Git 对象数据库                       │
+│         repo/.git/objects, refs, hooks              │
+└─────────────────────────────────────────────────────┘
+                        ▲
+                        │ 共享引用
+        ┌───────────────┼────────────────┐
+        │               │                │
+    ┌───▼──┐      ┌─────▼───┐      ┌─────▼──┐
+    │ repo │      │repo-fe  │      │repo-fix│
+    │(main)│      │-x       │      │        │
+    └──────┘      │(feature)│      │(hotfix)│
+                  └─────────┘      └────────┘
+</code></pre>
+<blockquote>
+<p><strong>注意</strong> ：附加 worktree 目录中通常不会有完整的 <code>.git/</code> 目录，而是一个指向主仓库的”gitfile”。</p>
+</blockquote>
+<h3>1.3 与 clone / stash 的区别</h3>
+<p>很多人第一次遇到并行开发需求时，会用 <code>git stash</code> 或者多次 <code>git clone</code> 。它们都能”凑合”，但 <code>git worktree</code> 更适合长期和频繁并行。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>适合场景</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git stash</code></td>
+<td>临时切走一会儿</td>
+<td>快；不新增目录</td>
+<td>容易忘；冲突概率高；不适合多线程工作</td>
+</tr>
+<tr>
+<td>多次 <code>git clone</code></td>
+<td>彻底隔离</td>
+<td>最直观；彼此无关联</td>
+<td>占空间；更新维护成本高；多个 clone 的 remotes/配置容易不一致</td>
+</tr>
+<tr>
+<td><code>git worktree</code></td>
+<td>并行分支长期共存</td>
+<td>省空间；共享对象；切换成本低；结构清晰</td>
+<td>需要理解 worktree 约束；需要正确清理</td>
+</tr>
+</tbody>
+</table>
+<h2>2. 基本概念</h2>
+<h3>2.1 主 worktree 与附加 worktree</h3>
+<ul>
+<li><strong>主 worktree</strong> ：你最初 clone 得到的目录；它可以检出任意分支</li>
+<li><strong>附加 worktree</strong> ：额外创建的工作目录；通常绑定到某个特定分支</li>
+</ul>
+<h3>2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</h3>
+<p>Git 默认不允许同一个本地分支同时被多个 worktree 检出：</p>
+<ul>
+<li>原因：同一个分支的 HEAD / index / working directory 状态无法被多地同时维护</li>
+<li>表现：当你尝试 <code>worktree add</code> 一个已被检出的分支，会报错</li>
+</ul>
+<pre><code class="language-bash"># 假设 main 已在主 worktree 检出
+git worktree add ../repo-main2 main
+# fatal: 'main' is already checked out at '/path/to/repo'
+</code></pre>
+<p>如果你确实需要同一份代码在两个目录存在，通常有三种方法：</p>
+<ol>
+<li>基于同一 commit 创建另一个分支（推荐）</li>
+<li>使用 detached HEAD（临时检出，可修改但改动需及时保存）</li>
+<li>再 clone（极少数需要完全隔离配置时）</li>
+</ol>
+<h3>2.3 Detached HEAD worktree</h3>
+<p>你可以把 worktree 绑定到某个提交（而不是分支），这样的 worktree 称为 detached HEAD 状态：</p>
+<pre><code class="language-bash">git worktree add --detach ../repo-debug HEAD~3
+</code></pre>
+<p><strong>核心特性</strong> ：</p>
+<ul>
+<li>✅ 可以修改、测试、甚至提交（非只读）</li>
+<li>✅ 修改不会影响任何分支</li>
+<li>⚠️ 改动必须创建分支才能保存，否则删除 worktree 时会丢失</li>
+</ul>
+<blockquote>
+<p><strong>重要</strong> ：在 detached worktree 里做了改动就 <strong>立刻创建分支</strong> <code>git switch -c &lt;branch&gt;</code> 保存。</p>
+</blockquote>
+<h2>3. 安装与前置条件</h2>
+<p><code>git worktree</code> 从 Git 2.5 引入，现代 Git 基本都内置。</p>
+<pre><code class="language-bash">git --version
+# 建议 &gt;= 2.30（体验更好）
+</code></pre>
+<blockquote>
+<p><strong>说明</strong> ：不同平台自带 Git 版本差异较大（特别是 macOS 的系统 Git）。如果遇到行为不一致，优先升级 Git（例如 brew 安装）。</p>
+</blockquote>
+<h2>4. 基本用法</h2>
+<h3>4.1 查看 worktree 列表</h3>
+<pre><code class="language-bash">git worktree list
+</code></pre>
+<p>输出示例：</p>
+<pre><code>/Users/me/repo                abc1234 [main]
+/Users/me/repo-feature-x      def5678 [feature/x]
+/Users/me/repo-hotfix         9876fed [hotfix/urgent]
+</code></pre>
+<p>常用选项：</p>
+<pre><code class="language-bash"># 输出机器可读格式（便于脚本解析）
+git worktree list --porcelain
+</code></pre>
+<h3>4.2 创建新的 worktree</h3>
+<h4>4.2.1 不指定分支时的默认行为</h4>
+<p>当你只提供路径时：</p>
+<pre><code class="language-bash">git worktree add ../hotfix
+</code></pre>
+<p>Git 会把路径的最后一段（这里是 <code>hotfix</code> ）当做分支名：</p>
+<ul>
+<li>如果 <code>hotfix</code> 分支不存在：自动从当前 <code>HEAD</code> 创建并检出 <code>hotfix</code></li>
+<li>如果 <code>hotfix</code> 分支已存在：尝试直接检出（但如果它已被其它 worktree 占用会失败，除非 <code>--force</code> ）</li>
+</ul>
+<h4>4.2.2 基于已有分支创建</h4>
+<pre><code class="language-bash"># 把已存在的分支检出到新 worktree
+git worktree add ../repo-feature-x feature/x
+</code></pre>
+<h4>4.2.3 创建新分支并创建 worktree（最常用）</h4>
+<pre><code class="language-bash"># -b: 创建新分支 | ../repo-feature-x: worktree 目录 | origin/main: 新分支起点
+git worktree add -b feature/x ../repo-feature-x origin/main
+</code></pre>
+<p>含义：</p>
+<ul>
+<li><code>-b feature/x</code> ：创建本地分支</li>
+<li><code>../repo-feature-x</code> ：worktree 目录</li>
+<li><code>origin/main</code> ：以哪个起点创建（也可以是 <code>main</code> 或某个 commit）</li>
+</ul>
+<h4>4.2.4 使用 detached HEAD 创建</h4>
+<pre><code class="language-bash"># 基于某个版本号或提交 hash 创建 detached worktree
+git worktree add --detach ../repo-debug v1.2.3
+</code></pre>
+<h3>4.3 切换分支（在特定 worktree 内）</h3>
+<p>进入某个 worktree 后，它和普通仓库使用方式一致：</p>
+<pre><code class="language-bash">cd ../repo-feature-x
+git status
+# 在该 worktree 内切换到新分支
+git switch -c feature/x-2
+</code></pre>
+<blockquote>
+<p><strong>注意</strong> ：如果你在附加 worktree 里 <code>git switch main</code> ，可能会失败（因为 main 已在主 worktree 检出）。</p>
+</blockquote>
+<h3>4.4 删除 worktree</h3>
+<pre><code class="language-bash">git worktree remove ../repo-feature-x
+</code></pre>
+<p>只有”干净”的 worktree（无已跟踪文件修改、无未跟踪文件）才能被删除；否则 Git 会拒绝：</p>
+<pre><code class="language-bash"># 强制删除（谨慎）
+git worktree remove --force ../repo-feature-x
+</code></pre>
+<h3>4.5 移动 worktree（move）</h3>
+<p>当你需要重命名目录或调整 worktree 的存放位置时，优先用 <code>move</code> 而不是手动 <code>mv</code> ：</p>
+<pre><code class="language-bash"># 把 worktree 移动到新路径
+git worktree move ../repo-feature-x ../repo-feature-x-renamed
+</code></pre>
+<blockquote>
+<p><strong>注意</strong> ：主 worktree 不能用 <code>move</code> 。如果你手动移动了主 worktree，建议用 <code>git worktree repair</code> 重新建立关联。</p>
+</blockquote>
+<h3>4.6 锁定 worktree（lock/unlock）</h3>
+<p>当 worktree 放在可移动磁盘/网络盘上（可能会临时断开挂载）时，建议锁定它以避免被自动清理：</p>
+<pre><code class="language-bash"># 锁定，附带原因说明
+git worktree lock --reason &quot;mounted on external disk&quot; ../repo-debug
+
+# 解锁
+git worktree unlock ../repo-debug
+</code></pre>
+<h3>4.7 修复 worktree（repair）</h3>
+<p>当你手动移动了 worktree 目录，或 <code>.git</code> 连接文件损坏导致 worktree 失联时，可以尝试修复：</p>
+<pre><code class="language-bash"># 在任意 worktree 里执行，修复当前 worktree
+git worktree repair
+
+# 修复指定路径（可一次多个）
+git worktree repair ../repo-feature-x ../repo-hotfix
+</code></pre>
+<h3>4.8 清理遗留元数据（prune）</h3>
+<p>当你手动删除了 worktree 目录，或者目录损坏时，仓库内可能残留记录。</p>
+<pre><code class="language-bash">git worktree prune
+</code></pre>
+<p>建议搭配检查：</p>
+<pre><code class="language-bash">git worktree list
+</code></pre>
+<h2>5. 日常开发场景</h2>
+<h3>5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</h3>
+<p>目标：</p>
+<ul>
+<li><code>../repo-feature-x</code> 开发 feature</li>
+<li>主目录 <code>repo/</code> 保持 <code>main</code> 干净，随时修 hotfix</li>
+</ul>
+<p>操作流程：</p>
+<pre><code class="language-bash"># 1. 主目录：保持 main
+cd repo
+git switch main
+
+# 2. 创建 feature worktree（新分支）
+git worktree add -b feature/x ../repo-feature-x origin/main
+
+# 3. 在 feature worktree 开发
+cd ../repo-feature-x
+# 编写代码、测试、提交...
+git add .
+git commit -m &quot;feat: 添加新功能&quot;
+
+# 4. 紧急 bug 来了：回到主目录处理
+cd ../repo
+git switch -c hotfix/urgent
+# 修复 bug、测试、提交、push...
+git add .
+git commit -m &quot;fix: 修复紧急 bug&quot;
+git push
+</code></pre>
+<p>优势：</p>
+<ul>
+<li>✅ 不需要 stash</li>
+<li>✅ 不需要频繁 checkout</li>
+<li>✅ 两条线互不影响</li>
+</ul>
+<h3>5.2 场景 2：并行跑测试/构建</h3>
+<p>例子：</p>
+<ul>
+<li><code>main</code> 跑全量测试</li>
+<li><code>feature/x</code> 跑增量/本地开发</li>
+</ul>
+<pre><code class="language-bash"># worktree A: 主目录跑测试
+cd repo
+npm test
+
+# worktree B: 另开窗口，在 feature worktree 开发和调试
+cd ../repo-feature-x
+npm run dev
+</code></pre>
+<blockquote>
+<p><strong>提示</strong> ：如果项目会生成大量构建产物（dist、.next、target 等），worktree 比 “同目录切分支” 更干净。</p>
+</blockquote>
+<h3>5.3 场景 3：Review PR 或复现 CI 失败</h3>
+<p>你可以把某个远端分支拉到独立 worktree，用完就删：</p>
+<pre><code class="language-bash"># 1. 拉取 PR 分支
+git fetch origin pull/123/head:pr/123
+
+# 2. 创建 worktree 检出该分支
+git worktree add ../repo-pr-123 pr/123
+
+# 3. 在隔离环境复现、跑测试、review
+cd ../repo-pr-123
+npm test
+npm run build
+
+# 4. 用完后清理（两个命令都需要）
+cd ../repo
+git worktree remove ../repo-pr-123
+git branch -D pr/123
+</code></pre>
+<h3>5.4 场景 4：用 detached worktree debug 和修复老版本</h3>
+<p>detached worktree 特别适合调试历史版本。根据需求不同，有两类操作流程：</p>
+<h4>5.4.1 场景 A：验证老版本（临时查看，无需保存改动）</h4>
+<p>目标：快速在某个历史版本验证 bug 是否存在，验证后丢弃。</p>
+<pre><code class="language-bash"># 1. 创建 detached worktree 检出历史版本
+git worktree add --detach ../repo-verify v1.0.0
+
+# 2. 进入 worktree 并验证
+cd ../repo-verify
+npm install
+npm test  # 验证 bug 是否存在
+
+# 3. 验证完毕，返回主目录清理 worktree（改动自动丢弃）
+cd ../repo
+git worktree remove ../repo-verify
+</code></pre>
+<p>优点：</p>
+<ul>
+<li>快速验证历史版本状态</li>
+<li>不产生任何分支或提交记录</li>
+<li>完全隔离，不影响当前工作</li>
+</ul>
+<h4>5.4.2 场景 B：修复老版本（需要保存改动）</h4>
+<p>目标：在历史版本上修复 bug，并保存为新分支。</p>
+<pre><code class="language-bash"># 1. 创建 detached worktree 检出历史版本
+git worktree add --detach ../repo-bugfix v0.9.0
+
+# 2. 进入 worktree 并修复问题
+cd ../repo-bugfix
+# 编写、测试修复代码...
+npm test
+
+# 3. 重要：改动需要保存，立刻创建分支
+git switch -c fix/v0.9.0-patch
+# 此时所有修改都已转移到新分支
+# 可以继续 git add / git commit（如果有新改动）
+
+# 4. 返回主仓库，清理 worktree（分支已安全保存）
+cd ../repo
+git worktree remove ../repo-bugfix
+
+# 5. 新分支已创建并包含改动，可继续操作
+git log -1 --oneline fix/v0.9.0-patch
+git switch fix/v0.9.0-patch  # 继续在该分支上工作
+</code></pre>
+<p><strong>核心原则</strong> ：改动完成立即创建分支，否则删除 worktree 时丢失。</p>
+<h3>5.5 场景 5：配合 rebase / cherry-pick 做对比验证</h3>
+<p>当你需要对比 rebase 前后行为，worktree 特别好用：</p>
+<pre><code class="language-bash"># 1. 创建一个对照 worktree（记录 rebase 前状态）
+git worktree add ../repo-before-rebase main
+
+# 2. 在主目录做 rebase
+cd repo
+git switch feature/x
+git rebase main
+
+# 3. 在对照 worktree 跑验证（old 行为）
+cd ../repo-before-rebase
+npm test
+
+# 4. 回到主目录跑验证（new 行为）
+cd ../repo
+npm test
+
+# 5. 对比结果，确认 rebase 安全后清理
+git worktree remove ../repo-before-rebase
+</code></pre>
+<h2>6. 常用命令速查</h2>
+<h3>6.1 常见错误与定位</h3>
+<p>遇到问题时可以用以下命令快速诊断：</p>
+<pre><code class="language-bash"># 查看分支被哪个 worktree 占用
+git worktree list
+
+# 查看某个 worktree 的 gitfile 指向
+cat &lt;worktree-path&gt;/.git
+
+# 检查 worktree 列表是否有残留
+git worktree list
+
+# 清理失效元数据
+git worktree prune
+</code></pre>
+<h2>7. 最佳实践与注意事项</h2>
+<h3>7.1 Worktree 目录放哪里</h3>
+<p>推荐策略：</p>
+<ul>
+<li>主仓库： <code>~/code/repo</code></li>
+<li>worktree： <code>~/code/wt/repo-&lt;branch&gt;</code> 或 <code>../repo-&lt;branch&gt;</code></li>
+</ul>
+<p>这样好处是：</p>
+<ul>
+<li>清理方便</li>
+<li>不会把 worktree 嵌套到另一个 worktree 内（避免混乱）</li>
+</ul>
+<h3>7.2 给 worktree 起”能排序”的名字</h3>
+<pre><code>repo-wt-main
+repo-wt-feature-x
+repo-wt-hotfix-urgent
+repo-wt-pr-123
+</code></pre>
+<p>文件夹名能直接体现用途，比只用分支名更直观。</p>
+<h3>7.3 不要在多个 worktree 共享同一个构建输出目录</h3>
+<p>某些构建脚本会写入固定路径（比如 <code>dist/</code> ），这在 worktree 模式下一般没事， 但如果你把输出目录重定向到共享路径（例如 <code>../dist</code> ），可能造成互相覆盖。</p>
+<ul>
+<li>✅ 每个 worktree 自己产出一套 build</li>
+<li>❌ 多个 worktree 写同一个 build 目录</li>
+</ul>
+<h3>7.4 删除 worktree 前先处理分支生命周期</h3>
+<p>worktree 删除只影响工作区，不一定会删除分支。</p>
+<p>常见流程：</p>
+<pre><code class="language-bash"># 1. 先 remove worktree
+git worktree remove ../repo-feature-x
+
+# 2. 再决定是否删分支
+git branch -d feature/x
+# 或强制删除
+git branch -D feature/x
+</code></pre>
+<h3>7.5 处理”目录已不存在，但 Git 还认为存在”的情况</h3>
+<pre><code class="language-bash"># 先清理元数据
+git worktree prune
+
+# 再确认
+git worktree list
+</code></pre>
+<h3>7.6 子模块与 worktree</h3>
+<p>worktree 对子模块也能用，但注意：</p>
+<ul>
+<li>子模块本身也有自己的工作区状态</li>
+<li>不同 worktree 下更新子模块可能会产生不同的检出状态</li>
+</ul>
+<p>建议：</p>
+<ul>
+<li>在每个 worktree 内独立运行 <code>git submodule update --init --recursive</code></li>
+<li>避免在多个 worktree 同时对同一个子模块做改动</li>
+</ul>
+<h2>8. Git Worktree vs 相关命令</h2>
+<h3>8.1 Worktree vs Stash</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Worktree</th>
+<th>Stash</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>并行开发</td>
+<td>✅ 天然支持</td>
+<td>❌ 需要不停存取</td>
+</tr>
+<tr>
+<td>上下文保存</td>
+<td>✅ 目录即上下文</td>
+<td>⚠️ 容易忘记 stash 内容</td>
+</tr>
+<tr>
+<td>适合时长</td>
+<td>中长期</td>
+<td>短期</td>
+</tr>
+<tr>
+<td>冲突风险</td>
+<td>低（彼此隔离）</td>
+<td>中高（恢复时易冲突）</td>
+</tr>
+</tbody>
+</table>
+<h3>8.2 Worktree vs Clone</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Worktree</th>
+<th>多次 clone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>磁盘占用</td>
+<td>低（共享 objects）</td>
+<td>高（重复 objects）</td>
+</tr>
+<tr>
+<td>远端/配置一致性</td>
+<td>✅ 天然一致</td>
+<td>❌ 可能不一致</td>
+</tr>
+<tr>
+<td>隔离程度</td>
+<td>中（共享仓库）</td>
+<td>高（完全独立）</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>并行分支开发</td>
+<td>需要彻底隔离配置或权限时</td>
+</tr>
+</tbody>
+</table>
+<h2>9. 常见问题（FAQ）</h2>
+<p><strong>Q1：为什么我不能在第二个 worktree 里 checkout main？</strong></p>
+<p>因为 main 已被另一个 worktree 检出，Git 会阻止同一分支被多个 worktree 同时使用。</p>
+<p>解决思路：</p>
+<ul>
+<li>创建一个新分支： <code>git switch -c main-copy</code></li>
+<li>或创建 detached worktree： <code>git worktree add --detach &lt;path&gt; main</code></li>
+</ul>
+<p><strong>Q2：我把 worktree 目录 rm -rf 了，现在 git worktree list 还在？</strong></p>
+<p>运行：</p>
+<pre><code class="language-bash">git worktree prune
+</code></pre>
+<p>这会清理所有失效的 worktree 元数据。</p>
+<p><strong>Q3：删除 worktree 时报错”worktree contains modified files”怎么办？</strong></p>
+<p>这是安全保护——Git 不允许删除包含未提交改动的 worktree。解决方案：</p>
+<pre><code class="language-bash"># 方案 1: 进入 worktree 提交或放弃改动
+cd ../repo-feature-x
+git add .
+git commit -m &quot;save changes&quot;
+
+# 或丢弃改动
+git reset --hard HEAD
+
+# 方案 2: 强制删除（不推荐，容易丢失代码）
+git worktree remove --force ../repo-feature-x
+</code></pre>
+<p><strong>Q4：worktree 中的改动会影响其他 worktree 吗？</strong></p>
+<p>不会。每个 worktree 有独立的工作目录、index 和 HEAD，改动不会相互影响。但是：</p>
+<ul>
+<li>✅ 各 worktree 独立管理文件状态</li>
+<li>❌ 如果多个 worktree 同时 push 同一分支会有冲突（这是正常 Git 问题，不是 worktree 特有）</li>
+</ul>
+<p><strong>Q5：worktree 对大仓库有特殊支持吗？</strong></p>
+<p>有。worktree 特别适合大仓库：</p>
+<ul>
+<li>省空间：共享 <code>.git/objects</code> ，不重复存储</li>
+<li>快速：创建 worktree 只需几毫秒（vs clone 需要分钟级）</li>
+<li>节省带宽：无需重复下载对象</li>
+</ul>
+<h2>10. 总结</h2>
+<p><code>git worktree</code> 是解决并行分支开发的”正统方案”，尤其适合：</p>
+<ul>
+<li>同时处理 feature / hotfix / release</li>
+<li>本地复现 PR、CI、历史 bug</li>
+<li>并行测试与构建</li>
+</ul>
+<p>核心要点速记：</p>
+<ul>
+<li>✅ 一个仓库可以有多个工作区，节省空间</li>
+<li>✅ 同一分支不能被多个 worktree 同时检出</li>
+<li>✅ 用完及时 <code>git worktree remove</code> ，异常时 <code>git worktree prune</code></li>
+<li>✅ detached worktree 适合临时 debug，但要记得创建分支保存提交</li>
+</ul>
+<h3>10.1 速查表</h3>
+<table>
+<thead>
+<tr>
+<th>目的</th>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查看 worktree</td>
+<td><code>git worktree list</code></td>
+<td>列出所有 worktree</td>
+</tr>
+<tr>
+<td>新建 worktree（已有分支）</td>
+<td><code>git worktree add &lt;path&gt; &lt;branch&gt;</code></td>
+<td>把分支检出到新目录</td>
+</tr>
+<tr>
+<td>新建 worktree（新分支）</td>
+<td><code>git worktree add -b &lt;b&gt; &lt;path&gt; &lt;start&gt;</code></td>
+<td>最常用</td>
+</tr>
+<tr>
+<td>detached worktree</td>
+<td><code>git worktree add --detach &lt;path&gt; &lt;rev&gt;</code></td>
+<td>debug/回归</td>
+</tr>
+<tr>
+<td>删除 worktree</td>
+<td><code>git worktree remove &lt;path&gt;</code></td>
+<td>删除工作区</td>
+</tr>
+<tr>
+<td>清理记录</td>
+<td><code>git worktree prune</code></td>
+<td>清掉失效 worktree 元数据</td>
+</tr>
+</tbody>
+</table></div><a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a> · 静态页面，没有后端
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>

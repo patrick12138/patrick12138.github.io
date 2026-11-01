@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Warp 用人类反馈持续改进 Skill，为 Agent 建立了一套低摩擦的自我进化循环。">
+<title>Warp 如何让 Agent 自我进化 · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a>
+    <a href="../../about/">关于</a>
+    <a href="../../tga/">工具</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 原文 <a href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">baoyu.io</a> · 搬运</div><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a> ，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong> 。</p>
+<p>这个问题我以前也研究过，我写了一个反编译 JS 代码的 Skill（ <a href="https://github.com/JimLiu/decode-">GitHub</a> ），每次 Agent 反编译的时候遇到新的场景解决了就自己更新自己的 Skill，效果还不错，能一直优化，就是 Skill 文件越来越大。</p>
+<p>我还研究过写作的自我进化 Skill，那个就一言难尽，因为它其实没有自己统一的标准，经常负优化，越写越糟糕。</p>
+<h2>Agent 做 Code Review，缺的不是能力，而是记忆</h2>
+<p>说回来 Warp 这个，Warp 是一个挺有名的终端工具，内部尝试借助 AI 做 Code Review。一开始让 Agent review 代码，效果并不理想，主要问题体现在 Agent 不了解你的项目，不知道你的团队规范，不知道历史经验教训，就算你指出来问题它下次还记不住。简单来说就是没有记忆。</p>
+<p>初期他们采取了很多补救措施：</p>
+<ul>
+<li>手动根据失败案例改系统提示词</li>
+<li>完善项目的 <code>AGENTS.md</code> 文件（有意思的是这篇文章是 Claude 发的，但是用的是 <code>AGENTS.md</code> 而不是 <code>CLAUDE.md</code> ，我记得 Claude 默认不支持 <code>AGENTS.md</code> 的）</li>
+</ul>
+<p>但效果并不理想，一方面它依赖于人主动去做，成本较高；另一方面团队成员在 Code Review 时人工在 PR 写的高质量评论完全没用上。</p>
+<h2>两个 Skill，加上人类反馈</h2>
+<p>所以他们搞了个解决方案，一个基础 Skill 负责做代码审查，一个改进 Skill 负责定期收集人类工程师在代码审查时的评论，尤其是对 Agent 审查结果的评论，根据人类工程师的评论去更新代码审查的 Skill。</p>
+<p><img alt="Warp 的 Skill 自我改进循环" src="https://s.baoyu.io/imgs/2026-08-28/warp-self-improving-agents/illustration-01-feedback-loop-20260828.png" /></p>
+<p>换句话说，它不是依赖于模型自己去改进自己，而是 <strong>Agent 根据人类对模型结果的标注（人类对代码审查的评论），去改进技能</strong> 。</p>
+<p>只不过它把这个事做的摩擦力极低，不需要人手工去收集整理评论，不需要填写调查问卷，人只要自然地去代码下写评论，后面的事情都是 Agent 自动完成。</p>
+<blockquote>
+<p>这可能正是 Agent 的最佳实践方案之一：人负责高维度的标注、评论、反馈这些事情，Agent 去做执行的工作，Agent 根据人类的反馈去改进 Skill。</p>
+</blockquote>
+<h2>Warp 总结的 6 条最佳实践</h2>
+<p>除此之外，他们还总结了一些最佳实践：</p>
+<h3>1. 写原则，不要写死规则</h3>
+<p>编写 Skill 时，要像在指导一个聪明人，而不是在给计算机编程。在 Skill 中写“寻找重复代码”，比列出详尽的变量命名规则更有效。</p>
+<h3>2. 解释为什么</h3>
+<p>说明规则背后的理由，能让智能体针对问题进行推理，而不是机械执行僵化指令，也因此更容易举一反三。</p>
+<h3>3. 让反馈没有摩擦、毫不费力</h3>
+<p>在人们原本工作的地方收集反馈，例如直接评论 PR 或 issue。同时让收集过程自动发生，不要增加额外的提交步骤。低摩擦才能让信号持续流动。如果反馈太麻烦，你就收不到反馈，也就无法改进 Skill。</p>
+<h3>4. 保持 Skill 精简，并使用渐进式披露</h3>
+<p>优秀的 Skill 文件不会很庞大；它会引用资源文件和脚本，而不是一次性把所有内容都塞进上下文。</p>
+<h3>5. 反馈质量大于数量，但数量也有帮助</h3>
+<p>一位资深工程师给出的少量、详细且与领域相关的反馈，可能比大量草率反馈更有价值，因为简单的赞成／反对并不能说明“为什么”。</p>
+<p>即使样本量相对较小，只要反馈来自掌握领域知识的人，而且足够详细，你也能得到非常好的信号——这些知识是智能体通过其他方式根本无法获得的。话虽如此，优质信号的语料越多，效果越好。</p>
+<h3>6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</h3>
+<p>把改进 Skill（也就是前面提到的一个代码审查 Skill、一个改进 Skill）做好，收益不只限于眼前这套 Agent 循环，因为改进 Skill 在不同用例之间具有很高的复用性。除了领域专用知识这一部分，它其实是一套相当通用、可复用的机制。代码审查 Agent 的改进 Skill，也可以应用到其他 Skill 的改进上。</p>
+<p><img alt="让 Skill 持续进化的六条原则" src="https://s.baoyu.io/imgs/2026-08-28/warp-self-improving-agents/illustration-02-six-principles-20260828.png" /></p>
+<h2>如果反馈本身是错的呢？</h2>
+<p>可能有人会担心：如果反馈本身是错的呢？</p>
+<p>Warp 的做法是永远不让 Agent 盲目接受反馈。给它足够的上下文来做基本的合理性检查，限制谁的反馈有权影响技能更新（不是所有人的意见都同等重要），最后始终保留人在循环中审核改动。</p>
+<p>对于那些有明确标准答案的领域，比如代码是否通过了测试、部署是否成功，可以先建一个验证基准，让 Agent 自己对着基准跑。没有标准答案的领域，比如代码风格、文档质量，就靠领域专家的判断，不要开放给所有人随意反馈。</p>
+<hr /></div><a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a> · 静态页面，没有后端
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>

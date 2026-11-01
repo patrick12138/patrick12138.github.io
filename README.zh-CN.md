@@ -8,14 +8,16 @@
 
 | 路径 | 是什么 |
 | --- | --- |
-| `/` | 入口页 —— Notion 风格的页面列表 |
+| `/` | 博客首页 —— 原创与搬运，按时间倒序 |
+| `/posts/<slug>/` | 单篇文章 |
 | `/tga/` | TGA 年度游戏提名清单，2014–2025（68 席） |
 | `/about/` | 终端风格的个人页，中英文可切 |
 
 ## 目录结构
 
 ```text
-index.html          入口页
+index.html          博客首页
+posts/*/index.html  文章（单文件自包含）
 tga/index.html      TGA 清单（单文件自包含）
 about/index.html    关于页（单文件自包含）
 .nojekyll           原样输出，跳过 Jekyll

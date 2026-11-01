@@ -8,14 +8,16 @@ Small static pages I actually use, hosted on GitHub Pages. No framework, no back
 
 | Path | What it is |
 | --- | --- |
-| `/` | Index — a Notion-style list of the pages below |
+| `/` | Blog index — original posts and reposts, newest first |
+| `/posts/<slug>/` | Individual posts |
 | `/tga/` | The Game Awards GOTY nominee checklist, 2014–2025 (68 entries) |
 | `/about/` | Terminal-style personal page, English / 中文 toggle |
 
 ## Structure
 
 ```text
-index.html          Index page
+index.html          Blog index
+posts/*/index.html  Posts (self-contained)
 tga/index.html      TGA checklist (self-contained)
 about/index.html    About page (self-contained)
 .nojekyll           Serve files as-is, skip Jekyll
