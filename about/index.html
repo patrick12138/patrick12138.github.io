@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="patrick — .NET 后端，做自己用的小工具。">
+<title>patrick</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ─── Reset ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─── Tokens: Dark (default) ─── */
+:root,[data-theme="dark"]{
+  --bg:#0c0c0c;
+  --text:#d4d4d4;
+  --text-muted:#585858;
+  --text-faint:#2e2e2e;
+  --accent:#e09a35;
+  --border:#1a1a1a;
+  --heading:#ededed;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+
+/* ─── Tokens: Light (cream) ─── */
+[data-theme="light"]{
+  --bg:#f6f2e8;
+  --text:#3a2f24;
+  --text-muted:#6f5f50;
+  --text-faint:#b8aa98;
+  --accent:#b86b43;
+  --border:#e2d9c8;
+  --heading:#2b2017;
+}
+
+/* ─── Theme cross-fade ─── */
+html.theme-switching, html.theme-switching *{
+  transition:background-color .28s ease, color .22s ease, border-color .28s ease !important;
+}
+
+/* ─── Base ─── */
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background-color:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh}
+html:not(.intro-complete),html:not(.intro-complete) body{overflow:hidden;position:fixed;width:100%}
+
+/* ─── Film grain (dark only) ─── */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.038;transition:opacity .28s ease;
+}
+[data-theme="light"] .grain{opacity:0}
+
+/* ─── Theme toggle ─── */
+.theme-toggle{
+  margin-left:auto;width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  background:none;border:none;color:var(--accent);cursor:pointer;padding:0;transition:color .15s;
+}
+[data-theme="dark"] .icon-sun{display:block}
+[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}
+[data-theme="light"] .icon-moon{display:block}
+
+/* ─── Layout ─── */
+.container{max-width:680px;margin:0 auto;padding:0 28px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── Hero ─── */
+.hero{padding:120px 0 88px}
+.hero-terminal{border:1px solid var(--border);background:color-mix(in srgb,var(--bg) 96%,#000 4%)}
+[data-theme="light"] .hero-terminal{background:color-mix(in srgb,var(--bg) 92%,#fff 8%)}
+[data-theme="dark"] .hero-terminal{border-color:#2f2f2f}
+[data-theme="dark"] .terminal-head{border-bottom-color:#2f2f2f}
+[data-theme="dark"] .terminal-title{color:#7a7a7a}
+
+.terminal-head{
+  height:34px;position:relative;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:7px;padding:0 12px;
+}
+.terminal-head .theme-toggle{position:absolute;right:6px;top:5px;margin-left:0}
+.terminal-dot{width:8px;height:8px;border-radius:999px;background:color-mix(in srgb,var(--text-muted) 45%,transparent)}
+.terminal-title{margin-left:8px;font-family:var(--mono);font-size:.7rem;color:var(--text-faint);letter-spacing:.02em}
+.terminal-body{padding:18px 20px 20px}
+.terminal-row{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:.88rem;line-height:1.55;color:var(--text)}
+.terminal-row + .terminal-row{margin-top:7px}
+html.hero-typing .hero-terminal{opacity:0;transform:translateY(10px);transition:opacity .34s ease,transform .34s ease}
+html.hero-typing .hero-terminal.is-visible{opacity:1;transform:translateY(0)}
+html.hero-typing .terminal-row{opacity:0;transform:translateY(6px);transition:opacity .16s ease,transform .16s ease}
+html.hero-typing .terminal-row.is-visible{opacity:1;transform:translateY(0)}
+.terminal-row-heading{font-size:clamp(1.5rem,4.3vw,2.35rem);line-height:1.1;color:var(--heading);letter-spacing:-.03em;margin-top:2px}
+.terminal-prompt{font-family:var(--mono);color:var(--accent);white-space:nowrap}
+.terminal-output{color:var(--text-muted);padding-left:2px}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.terminal-type{display:inline;min-height:1em}
+.terminal-type.is-typing::after{content:'_';color:var(--accent);margin-left:1px;animation:blink .95s step-end infinite}
+
+/* CTA */
+.btn{
+  display:inline-block;font-family:var(--mono);font-size:.8rem;font-weight:500;letter-spacing:.03em;
+  color:var(--accent);text-decoration:none;border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);
+  padding:9px 20px;transition:background .15s,color .15s,border-color .15s;
+}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.hero-cta{display:inline-flex;align-items:center;gap:8px;margin-top:26px}
+.hero-cta-icon{flex-shrink:0;display:inline-block;vertical-align:-1px}
+html.hero-typing .post-terminal{opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .32s ease,transform .32s ease}
+html.hero-typing.intro-complete .post-terminal{opacity:1;transform:translateY(0);pointer-events:auto}
+html.hero-typing .btn.hero-cta{opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .32s ease,transform .32s ease}
+html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);pointer-events:auto}
+
+/* ─── About ─── */
+.about{border-top:1px solid var(--border)}
+.about p{font-size:1rem;color:var(--text-muted);line-height:1.95;padding:72px 0;max-width:560px}
+
+/* ─── Projects ─── */
+.projects{border-top:1px solid var(--border)}
+.project{position:relative;padding:64px 0;border-bottom:1px solid var(--border)}
+.project::before{
+  content:'';position:absolute;left:-28px;top:0;bottom:0;width:1.5px;background:var(--accent);
+  transform:scaleY(0);transform-origin:top;transition:transform .35s ease;
+}
+.project:hover::before{transform:scaleY(1)}
+.project-header{margin-bottom:20px}
+.project-index{display:block;font-family:var(--mono);font-size:.6875rem;font-weight:500;letter-spacing:.12em;color:var(--accent);opacity:.55;margin-bottom:10px}
+.project-name{font-family:var(--mono);font-size:1.1875rem;font-weight:600;color:var(--heading);letter-spacing:-.02em;margin-bottom:6px;transition:color .15s}
+.project:hover .project-name{color:var(--accent)}
+.project-hook{font-size:.875rem;font-weight:500;color:var(--accent);opacity:.8}
+.project p{font-size:.9375rem;color:var(--text-muted);line-height:1.9;margin-bottom:10px;max-width:540px}
+.project-note{font-style:italic;color:var(--text-faint) !important}
+[data-theme="dark"] .project-note{color:#767676 !important}
+.project-actions{margin-top:22px;display:flex;align-items:center;gap:16px}
+.project > .project-link{display:inline-block;margin-top:22px}
+.project-link{
+  font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--text);text-decoration:none;
+  border-bottom:1px solid var(--border);padding-bottom:2px;transition:color .15s,border-color .15s;
+}
+.project-link:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+.project-platform{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
+.project-next{border-bottom:none}
+.project-next::before{display:none}
+.project-name-muted{font-family:var(--mono);font-size:.6875rem;font-weight:500;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.project-next p{font-size:.9375rem;color:var(--text-muted);line-height:1.8;max-width:480px}
+
+/* ─── Footer ─── */
+.footer{border-top:1px solid var(--border);padding:56px 0 80px}
+.footer-nav{display:flex;gap:24px;margin-bottom:22px}
+.footer-link{
+  display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.8rem;font-weight:500;
+  color:color-mix(in srgb,var(--text) 60%,var(--text-muted) 40%);text-decoration:none;transition:color .15s;
+}
+.footer-link:hover{color:var(--accent)}
+.footer-icon{flex-shrink:0;display:block}
+.footer-copy{font-size:.8125rem;color:color-mix(in srgb,var(--text-muted) 60%,var(--text-faint) 40%);line-height:1.7;max-width:480px}
+
+/* ─── Responsive ─── */
+@media (max-width:480px){
+  .hero{padding:80px 0 64px}
+  .terminal-body{padding:14px 14px 16px}
+  .terminal-row{font-size:.8rem;gap:8px}
+  .terminal-row-heading{font-size:clamp(1.35rem,7.2vw,1.95rem)}
+  .about p{padding:52px 0}
+  .project{padding:48px 0}
+  .project::before{left:-20px}
+  .footer{padding:48px 0 64px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-terminal" aria-label="终端自我介绍">
+        <div class="terminal-head">
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-title">patrick://session</span>
+          <button class="theme-toggle" id="themeToggle" aria-label="切换深浅色">
+            <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="terminal-body">
+          <p class="terminal-row">
+            <span class="terminal-prompt">~$</span>
+            <span class="terminal-type" data-type-text="whoami">whoami</span>
+          </p>
+          <h1 class="terminal-row terminal-row-heading">
+            <span class="terminal-type" data-type-text="patrick">patrick</span>
+          </h1>
+          <p class="terminal-row">
+            <span class="terminal-prompt">~$</span>
+            <span class="terminal-type" data-type-text="cat profile.txt">cat profile.txt</span>
+          </p>
+          <p class="terminal-row terminal-output">
+            <span class="terminal-type" data-type-text=".NET 后端。做业务系统，也做自己用的小工具。">.NET 后端。做业务系统，也做自己用的小工具。</span>
+          </p>
+          <p class="terminal-row terminal-output">
+            <span class="terminal-type" data-type-text="2023 年转行进来，最上瘾的一直是把别扭的流程磨顺。">2023 年转行进来，最上瘾的一直是把别扭的流程磨顺。</span>
+          </p>
+          <p class="terminal-row terminal-output">
+            <span class="terminal-type" data-type-text="Tools change. Curiosity doesn't.">Tools change. Curiosity doesn't.</span>
+          </p>
+        </div>
+      </div>
+      <a href="https://github.com/patrick12138" class="btn hero-cta post-terminal" target="_blank" rel="noopener">
+        <span>Follow on</span>
+        <svg class="hero-cta-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/>
+        </svg>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about post-terminal">
+    <div class="container">
+      <p>我写 .NET，大部分时间在业务后台里跟数据、权限和前人留下的代码打交道。
+      业余时间做点自己用得上的东西——静态页面、桌面小工具、抓数据的脚本。
+      标准是同一个：做完之后，那个烦人的步骤应该消失。</p>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="projects post-terminal">
+    <div class="container">
+
+      <article class="project">
+        <header class="project-header">
+          <span class="project-index">01</span>
+          <h2 class="project-name">TGA 年度游戏清单</h2>
+          <p class="project-hook">68 席提名，勾出玩过的，算出还要玩多少小时。</p>
+        </header>
+        <p>2014–2025 十二届「年度游戏」的全部提名，每一席都能标成通关、玩过没通、
+        想玩、不打算玩，或者平台够不着。时长取自 HowLongToBeat 的全收集数据，
+        按「每天 3 小时」换算成还要多少天。</p>
+        <p class="project-note">只有 PS 和 Switch 独占的那 14 席默认标成没得玩，
+        所以进度算的是能玩的 54 席。</p>
+        <div class="project-actions">
+          <a href="/tga/" class="project-link">patrick12138.github.io/tga/ →</a>
+          <span class="project-platform">Web</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <header class="project-header">
+          <span class="project-index">02</span>
+          <h2 class="project-name">MusicBridge</h2>
+          <p class="project-hook">几个音乐播放器，一个窗口，一套控制。</p>
+        </header>
+        <p>.NET 8 + WPF 写的桌面程序。把支持的播放器窗口嵌进同一个宿主界面里，
+        播放、暂停、切歌走统一的控制，不用来回来去切窗口。</p>
+        <p class="project-note">起因是常年同时开着三个播放器，每次切歌都要先找窗口在哪。</p>
+        <div class="project-actions">
+          <a href="https://github.com/patrick12138/MusicBridge" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/MusicBridge →</a>
+          <span class="project-platform">Windows</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <header class="project-header">
+          <span class="project-index">03</span>
+          <h2 class="project-name">CrossPlatformAutoFetcher</h2>
+          <p class="project-hook">三个平台的音乐榜单，一键抓成 CSV。</p>
+        </header>
+        <p>Python 写的 Windows 桌面工具，抓 QQ 音乐、网易云、酷狗的榜单数据，
+        直接导出 CSV。省掉每次手工复制粘贴再对账的那半小时。</p>
+        <div class="project-actions">
+          <a href="https://github.com/patrick12138/CrossPlatformAutoFetcher" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/CrossPlatformAutoFetcher →</a>
+          <span class="project-platform">Windows</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <header class="project-header">
+          <span class="project-index">04</span>
+          <h2 class="project-name">KaraokeLyricsControl</h2>
+          <p class="project-hook">WPF 的卡拉 OK 歌词控件，逐字高亮。</p>
+        </header>
+        <p>支持 KRC 和 KSC 两种歌词格式，按字切时间轴做高亮，渲染方式可以自己定制。
+        做成 .NET 6 的控件库，其他 WPF 项目直接引用就能用。</p>
+        <a href="https://github.com/patrick12138/KaraokeLyricsControl" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/KaraokeLyricsControl →</a>
+      </article>
+
+      <article class="project project-next">
+        <h2 class="project-name-muted">What's next?</h2>
+        <p>一直在做点什么。新的东西会先在 GitHub 上出现，做得像样了再单独接出来。</p>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer post-terminal">
+  <div class="container">
+    <div class="footer-nav">
+      <a href="https://github.com/patrick12138" class="footer-link" target="_blank" rel="noopener">
+        <svg class="footer-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/>
+        </svg>
+        GitHub
+      </a>
+      <a href="/" class="footer-link">小工具站 →</a>
+    </div>
+    <p class="footer-copy">Built by patrick. 慢慢写，慢慢改。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var html = document.documentElement;
+
+  // 主题：先恢复，再挂事件
+  try {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    html.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+  } catch (e) {}
+  html.classList.add('hero-typing');
+
+  var toggle = document.getElementById('themeToggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.classList.add('theme-switching');
+    html.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    setTimeout(function () { html.classList.remove('theme-switching'); }, 350);
+  });
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.terminal-row'));
+  var chunks = Array.prototype.slice.call(document.querySelectorAll('.terminal-type'));
+  var hero = document.querySelector('.hero-terminal');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+  var done = false, started = 0, BUDGET = 4200;
+
+  function finish(){
+    if (done) return;
+    done = true;
+    if (hero) hero.classList.add('is-visible');
+    rows.forEach(function(r){ r.classList.add('is-visible'); });
+    chunks.forEach(function(c){
+      c.textContent = c.dataset.typeText || c.textContent;
+      c.classList.remove('is-typing');
+    });
+    html.classList.add('intro-complete');
+  }
+
+  async function typeChunk(node, text, speed){
+    node.textContent = '';
+    node.classList.add('is-typing');
+    for (var i = 0; i < text.length; i++) {
+      if (done) return;
+      node.textContent += text[i];
+      await wait(speed);
+    }
+    node.classList.remove('is-typing');
+  }
+
+  async function run(){
+    if (!hero || !rows.length || !chunks.length) return finish();
+    if (reduced) return finish();
+
+    started = Date.now();
+    hero.classList.add('is-visible');
+    await wait(420);
+
+    for (var i = 0; i < rows.length; i++) {
+      if (done) return;
+      // 后台标签页的定时器会被节流，超预算就直接铺完整文本
+      if (Date.now() - started > BUDGET) return finish();
+
+      var row = rows[i];
+      row.classList.add('is-visible');
+      var chunk = row.querySelector('.terminal-type');
+      if (chunk) {
+        var text = chunk.dataset.typeText || chunk.textContent;
+        var speed = row.classList.contains('terminal-row-heading') ? 72 : 20;
+        await typeChunk(chunk, text, speed);
+      }
+      await wait(130);
+    }
+    await wait(200);
+    finish();
+  }
+
+  // 兜底：JS 出错也不能把页面锁死
+  setTimeout(finish, BUDGET + 1200);
+
+  run().catch(finish);
+})();
+</script>
+</body>
+</html>
