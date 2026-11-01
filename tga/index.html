@@ -50,6 +50,7 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
 .line .b{background:var(--half)}
 .legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:7px;flex-wrap:wrap}
 .legend b{color:var(--ink2);font-weight:600}
+.legend em{font-style:normal;color:var(--faint);font-size:10px;margin-left:1px}
 
 /* ---------- filters ---------- */
 .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:13px 0 12px;
@@ -175,8 +176,9 @@ main{max-width:760px;margin:0 auto;padding:0 18px 40px}
     </div>
     <div class="line"><i class="a" id="barA"></i><i class="b" id="barB"></i></div>
     <div class="legend">
+      <span>想玩 <b id="lgWantH">0</b>h</span>
+      <span>没通 <b id="lgHalfH">0</b>h<em>×½</em></span>
       <span>可玩 <b id="lgPlayable">54</b> 席</span>
-      <span>已标记 <b id="lgMarked">0</b></span>
       <span>平台受限 <b id="lgLocked">14</b></span>
     </div>
     <div class="chips" id="chips">
@@ -200,7 +202,8 @@ main{max-width:760px;margin:0 auto;padding:0 18px 40px}
   <p>
     数据：提名与获奖来自 <a href="https://www.gamemall.org/zh/tga">GameMall TGA 档案</a>；
     时长来自 HowLongToBeat（主线 → 全收集，社区中位数）。平台按 2026-11 现状标注，无 PC 版的 14 席预置为「没得玩」。<br>
-    勾选只存在这台设备的浏览器里，不上传。
+    勾选只存在这台设备的浏览器里，不上传。<br>
+    「还要玩」= 想玩的全收集时长 + 玩过没通的按全收集一半估。
   </p>
 </div>
 
@@ -269,7 +272,8 @@ function build(){
 }
 
 function paint(){
-  var n = {done:0, half:0, want:0, skip:0, no:0, blank:0}, playable = 0, hours = 0, wantCount = 0;
+  var n = {done:0, half:0, want:0, skip:0, no:0, blank:0}, playable = 0;
+  var wantHours = 0, halfHours = 0, wantCount = 0, halfCount = 0;
   cards.forEach(function(c){
     var k = c.dataset.k, pc = c.dataset.pc === '1';
     if (pc) playable++;
@@ -279,7 +283,8 @@ function paint(){
       b.classList.toggle('on', v === b.dataset.v);
     });
     if (v) n[v]++; else n.blank++;
-    if (v === 'want') { wantCount++; hours += parseFloat(c.dataset.comp) || 0; }
+    if (v === 'want') { wantCount++; wantHours += parseFloat(c.dataset.comp) || 0; }
+    if (v === 'half') { halfCount++; halfHours += (parseFloat(c.dataset.comp) || 0) * 0.5; }
     var show = filter === 'all'
       || (filter === 'todo' && !v)
       || (filter === 'want' && v === 'want')
@@ -288,17 +293,18 @@ function paint(){
     c.style.display = show ? '' : 'none';
   });
 
-  var played = n.done + n.half;
+  var hours = wantHours + halfHours;
   document.getElementById('kHours').textContent = Math.round(hours);
   document.getElementById('kDays').textContent = hours > 0
-    ? '按每天 3 小时 · ' + Math.ceil(hours / 3) + ' 天'
-    : '每天 3 小时能玩完';
-  document.getElementById('kWant').textContent = wantCount;
-  document.getElementById('kWantSub').textContent = '在可玩 ' + playable + ' 席里';
-  document.getElementById('kPlayed').textContent = played;
-  document.getElementById('kPlayedSub').textContent = '通关 ' + n.done + ' · 没通 ' + n.half;
+    ? '每天 3 小时 · ' + Math.ceil(hours / 3) + ' 天'
+    : '把想玩的标上就出来了';
+  document.getElementById('kWant').textContent = wantCount + halfCount;
+  document.getElementById('kWantSub').textContent = '想玩 ' + wantCount + ' · 没通 ' + halfCount;
+  document.getElementById('kPlayed').textContent = n.done;
+  document.getElementById('kPlayedSub').textContent = '可玩 ' + playable + ' 席里';
+  document.getElementById('lgWantH').textContent = Math.round(wantHours);
+  document.getElementById('lgHalfH').textContent = Math.round(halfHours);
   document.getElementById('lgPlayable').textContent = playable;
-  document.getElementById('lgMarked').textContent = played + n.want + n.skip;
   document.getElementById('lgLocked').textContent = n.no;
   document.getElementById('barA').style.width = (playable ? n.done / playable * 100 : 0) + '%';
   document.getElementById('barB').style.width = (playable ? n.half / playable * 100 : 0) + '%';
@@ -355,14 +361,18 @@ document.getElementById('btnCopy').onclick = function(){
     });
   });
   var hrs = 0;
-  cards.forEach(function(c){ if (eff(c.dataset.k, c.dataset.pc === '1', c.dataset.zh) === 'want') hrs += parseFloat(c.dataset.comp) || 0; });
+  cards.forEach(function(c){
+    var v = eff(c.dataset.k, c.dataset.pc === '1', c.dataset.zh);
+    if (v === 'want') hrs += parseFloat(c.dataset.comp) || 0;
+    if (v === 'half') hrs += (parseFloat(c.dataset.comp) || 0) * 0.5;
+  });
   var head = {done:'✅ 通关', half:'◐ 玩过没通', want:'♡ 想玩', skip:'✕ 不打算玩', no:'⊘ 没得玩'};
   var L = ['TGA 年度游戏提名 2014–2025 · 我的进度'];
   ['done','half','want','skip','no'].forEach(function(s){
     if (!g[s].length) return;
     L.push(''); L.push(head[s] + '（' + g[s].length + '）'); L.push(g[s].join('、'));
   });
-  L.push(''); L.push('想玩合计 ' + Math.round(hrs) + ' 小时，按每天 3 小时约 ' + Math.ceil(hrs/3) + ' 天');
+  L.push(''); L.push('待玩合计 ' + Math.round(hrs) + ' 小时（没通的按一半算），按每天 3 小时约 ' + Math.ceil(hrs/3) + ' 天');
   var txt = L.join('\n');
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(txt).then(function(){ toast('已复制'); }, function(){ fb(txt); });
