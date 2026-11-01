@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="patrick — .NET 后端，做自己用的小工具。">
+<meta name="description" content="patrick — .NET backend engineer. Business systems by day, small tools after hours.">
 <title>patrick</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,26 +16,26 @@
 
 /* ─── Tokens: Dark (default) ─── */
 :root,[data-theme="dark"]{
-  --bg:#0c0c0c;
-  --text:#d4d4d4;
-  --text-muted:#585858;
-  --text-faint:#2e2e2e;
-  --accent:#e09a35;
-  --border:#1a1a1a;
-  --heading:#ededed;
+  --bg:#0a0c10;
+  --text:#ccd2da;
+  --text-muted:#5a6472;
+  --text-faint:#2b313a;
+  --accent:#6aa2d8;
+  --border:#191d24;
+  --heading:#e9edf2;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
 }
 
 /* ─── Tokens: Light (cream) ─── */
 [data-theme="light"]{
-  --bg:#f6f2e8;
-  --text:#3a2f24;
-  --text-muted:#6f5f50;
-  --text-faint:#b8aa98;
-  --accent:#b86b43;
-  --border:#e2d9c8;
-  --heading:#2b2017;
+  --bg:#f3f5f8;
+  --text:#26313d;
+  --text-muted:#5d6b7a;
+  --text-faint:#b3bcc7;
+  --accent:#2d6496;
+  --border:#dfe4ea;
+  --heading:#16202b;
 }
 
 /* ─── Theme cross-fade ─── */
@@ -75,9 +75,9 @@ html:not(.intro-complete),html:not(.intro-complete) body{overflow:hidden;positio
 .hero{padding:120px 0 88px}
 .hero-terminal{border:1px solid var(--border);background:color-mix(in srgb,var(--bg) 96%,#000 4%)}
 [data-theme="light"] .hero-terminal{background:color-mix(in srgb,var(--bg) 92%,#fff 8%)}
-[data-theme="dark"] .hero-terminal{border-color:#2f2f2f}
-[data-theme="dark"] .terminal-head{border-bottom-color:#2f2f2f}
-[data-theme="dark"] .terminal-title{color:#7a7a7a}
+[data-theme="dark"] .hero-terminal{border-color:#262c35}
+[data-theme="dark"] .terminal-head{border-bottom-color:#262c35}
+[data-theme="dark"] .terminal-title{color:#737d8a}
 
 .terminal-head{
   height:34px;position:relative;border-bottom:1px solid var(--border);
@@ -134,7 +134,7 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
 .project-hook{font-size:.875rem;font-weight:500;color:var(--accent);opacity:.8}
 .project p{font-size:.9375rem;color:var(--text-muted);line-height:1.9;margin-bottom:10px;max-width:540px}
 .project-note{font-style:italic;color:var(--text-faint) !important}
-[data-theme="dark"] .project-note{color:#767676 !important}
+[data-theme="dark"] .project-note{color:#727b87 !important}
 .project-actions{margin-top:22px;display:flex;align-items:center;gap:16px}
 .project > .project-link{display:inline-block;margin-top:22px}
 .project-link{
@@ -147,6 +147,19 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
 .project-next::before{display:none}
 .project-name-muted{font-family:var(--mono);font-size:.6875rem;font-weight:500;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
 .project-next p{font-size:.9375rem;color:var(--text-muted);line-height:1.8;max-width:480px}
+
+/* ─── Stack ─── */
+.stack{border-top:1px solid var(--border)}
+.stack-inner{padding:64px 0}
+.stack-title{
+  font-family:var(--mono);font-size:.6875rem;font-weight:500;letter-spacing:.12em;
+  color:var(--accent);opacity:.55;text-transform:uppercase;margin-bottom:22px;
+}
+.stack-row{display:flex;gap:18px;padding:9px 0;border-bottom:1px solid color-mix(in srgb,var(--border) 55%,transparent);font-family:var(--mono);font-size:.8125rem;line-height:1.7}
+.stack-row:last-child{border-bottom:none}
+.stack-key{flex:0 0 88px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;font-size:.6875rem;padding-top:2px}
+.stack-val{flex:1;color:var(--text-muted)}
+.stack-val b{color:var(--text);font-weight:500}
 
 /* ─── Footer ─── */
 .footer{border-top:1px solid var(--border);padding:56px 0 80px}
@@ -181,13 +194,13 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
   <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <div class="hero-terminal" aria-label="终端自我介绍">
+      <div class="hero-terminal" aria-label="Terminal introduction">
         <div class="terminal-head">
           <span class="terminal-dot"></span>
           <span class="terminal-dot"></span>
           <span class="terminal-dot"></span>
           <span class="terminal-title">patrick://session</span>
-          <button class="theme-toggle" id="themeToggle" aria-label="切换深浅色">
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark">
             <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"/>
               <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
@@ -213,13 +226,13 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
             <span class="terminal-type" data-type-text="cat profile.txt">cat profile.txt</span>
           </p>
           <p class="terminal-row terminal-output">
-            <span class="terminal-type" data-type-text=".NET 后端。做业务系统，也做自己用的小工具。">.NET 后端。做业务系统，也做自己用的小工具。</span>
+            <span class="terminal-type" data-type-text=".NET backend engineer. Business systems by day, small tools after hours.">.NET backend engineer. Business systems by day, small tools after hours.</span>
           </p>
           <p class="terminal-row terminal-output">
-            <span class="terminal-type" data-type-text="2023 年转行进来，最上瘾的一直是把别扭的流程磨顺。">2023 年转行进来，最上瘾的一直是把别扭的流程磨顺。</span>
+            <span class="terminal-type" data-type-text="Writing C# since 2023, still hooked on the same part:">Writing C# since 2023, still hooked on the same part:</span>
           </p>
           <p class="terminal-row terminal-output">
-            <span class="terminal-type" data-type-text="Tools change. Curiosity doesn't.">Tools change. Curiosity doesn't.</span>
+            <span class="terminal-type" data-type-text="a clumsy workflow becomes a smooth one.">a clumsy workflow becomes a smooth one.</span>
           </p>
         </div>
       </div>
@@ -236,9 +249,35 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
   <!-- About -->
   <section class="about post-terminal">
     <div class="container">
-      <p>我写 .NET，大部分时间在业务后台里跟数据、权限和前人留下的代码打交道。
-      业余时间做点自己用得上的东西——静态页面、桌面小工具、抓数据的脚本。
-      标准是同一个：做完之后，那个烦人的步骤应该消失。</p>
+      <p>I write .NET, mostly business backends — reports, permissions, and data a
+      lot of people quietly depend on. After hours I build things I actually need:
+      static pages, desktop utilities, small scrapers. The bar never changes — when
+      it's done, the annoying step should be gone.</p>
+    </div>
+  </section>
+
+  <!-- Stack -->
+  <section class="stack post-terminal">
+    <div class="container">
+      <div class="stack-inner">
+        <div class="stack-title">what I work with</div>
+        <div class="stack-row">
+          <div class="stack-key">Backend</div>
+          <div class="stack-val"><b>C#</b> · ASP.NET Core 9 · EF Core · SqlSugar · Dapper</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-key">Frontend</div>
+          <div class="stack-val"><b>Vue 3</b> · Element Plus · WPF · WinForms</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-key">Data</div>
+          <div class="stack-val">SQL Server · <b>MySQL 8</b> · Redis</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-key">Practice</div>
+          <div class="stack-val">Onion architecture · DDD layers · REST · xUnit</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -249,29 +288,13 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
       <article class="project">
         <header class="project-header">
           <span class="project-index">01</span>
-          <h2 class="project-name">TGA 年度游戏清单</h2>
-          <p class="project-hook">68 席提名，勾出玩过的，算出还要玩多少小时。</p>
-        </header>
-        <p>2014–2025 十二届「年度游戏」的全部提名，每一席都能标成通关、玩过没通、
-        想玩、不打算玩，或者平台够不着。时长取自 HowLongToBeat 的全收集数据，
-        按「每天 3 小时」换算成还要多少天。</p>
-        <p class="project-note">只有 PS 和 Switch 独占的那 14 席默认标成没得玩，
-        所以进度算的是能玩的 54 席。</p>
-        <div class="project-actions">
-          <a href="/tga/" class="project-link">patrick12138.github.io/tga/ →</a>
-          <span class="project-platform">Web</span>
-        </div>
-      </article>
-
-      <article class="project">
-        <header class="project-header">
-          <span class="project-index">02</span>
           <h2 class="project-name">MusicBridge</h2>
-          <p class="project-hook">几个音乐播放器，一个窗口，一套控制。</p>
+          <p class="project-hook">A few music players. One window. One set of controls.</p>
         </header>
-        <p>.NET 8 + WPF 写的桌面程序。把支持的播放器窗口嵌进同一个宿主界面里，
-        播放、暂停、切歌走统一的控制，不用来回来去切窗口。</p>
-        <p class="project-note">起因是常年同时开着三个播放器，每次切歌都要先找窗口在哪。</p>
+        <p>A Windows desktop app built with .NET 8 and WPF. It embeds supported player
+        windows into a single host and puts playback, pause and track switching on one
+        set of controls, so you stop hunting for the right window every time a song ends.</p>
+        <p class="project-note">Started because I kept three players open at once, all day.</p>
         <div class="project-actions">
           <a href="https://github.com/patrick12138/MusicBridge" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/MusicBridge →</a>
           <span class="project-platform">Windows</span>
@@ -280,12 +303,13 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
 
       <article class="project">
         <header class="project-header">
-          <span class="project-index">03</span>
+          <span class="project-index">02</span>
           <h2 class="project-name">CrossPlatformAutoFetcher</h2>
-          <p class="project-hook">三个平台的音乐榜单，一键抓成 CSV。</p>
+          <p class="project-hook">Three music charts, one CSV.</p>
         </header>
-        <p>Python 写的 Windows 桌面工具，抓 QQ 音乐、网易云、酷狗的榜单数据，
-        直接导出 CSV。省掉每次手工复制粘贴再对账的那半小时。</p>
+        <p>A small Windows tool in Python that pulls chart data from QQ Music, NetEase
+        Cloud Music and Kugou, then exports it straight to CSV — replacing half an hour
+        of copy, paste and reconciliation every time the charts moved.</p>
         <div class="project-actions">
           <a href="https://github.com/patrick12138/CrossPlatformAutoFetcher" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/CrossPlatformAutoFetcher →</a>
           <span class="project-platform">Windows</span>
@@ -294,18 +318,35 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
 
       <article class="project">
         <header class="project-header">
-          <span class="project-index">04</span>
+          <span class="project-index">03</span>
           <h2 class="project-name">KaraokeLyricsControl</h2>
-          <p class="project-hook">WPF 的卡拉 OK 歌词控件，逐字高亮。</p>
+          <p class="project-hook">Word-by-word karaoke lyrics, as a WPF control.</p>
         </header>
-        <p>支持 KRC 和 KSC 两种歌词格式，按字切时间轴做高亮，渲染方式可以自己定制。
-        做成 .NET 6 的控件库，其他 WPF 项目直接引用就能用。</p>
+        <p>Supports both KRC and KSC lyric formats, drives the highlight from a per-word
+        timeline, and leaves rendering open so the host app can style it. Shipped as a
+        .NET 6 control library — add the reference and it works.</p>
         <a href="https://github.com/patrick12138/KaraokeLyricsControl" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/KaraokeLyricsControl →</a>
+      </article>
+
+      <article class="project">
+        <header class="project-header">
+          <span class="project-index">04</span>
+          <h2 class="project-name">nodejs_crawl</h2>
+          <p class="project-hook">Car prices from three sites, on a schedule.</p>
+        </header>
+        <p>Node.js scrapers that collect model and trim prices from Autohome, Dongchedi
+        and Bitauto, normalise them into one shape, and keep a running history so price
+        moves are visible instead of anecdotal.</p>
+        <div class="project-actions">
+          <a href="https://github.com/patrick12138/nodejs_crawl" class="project-link" target="_blank" rel="noopener">github.com/patrick12138/nodejs_crawl →</a>
+          <span class="project-platform">Node.js</span>
+        </div>
       </article>
 
       <article class="project project-next">
         <h2 class="project-name-muted">What's next?</h2>
-        <p>一直在做点什么。新的东西会先在 GitHub 上出现，做得像样了再单独接出来。</p>
+        <p>Always building something. The rough versions show up on GitHub first —
+        the ones worth keeping get their own address.</p>
       </article>
 
     </div>
@@ -322,9 +363,9 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
         </svg>
         GitHub
       </a>
-      <a href="/" class="footer-link">小工具站 →</a>
+      <a href="/" class="footer-link">tools →</a>
     </div>
-    <p class="footer-copy">Built by patrick. 慢慢写，慢慢改。</p>
+    <p class="footer-copy">Built by patrick. Slowly, then again.</p>
   </div>
 </footer>
 
