@@ -1,12 +1,37 @@
 # patrick12138.github.io
 
-个人小工具站点根仓库（GitHub Pages）。
+[English](./README.md) | [简体中文](./README.zh-CN.md)
 
-- 站点地址：https://patrick12138.github.io/
-- 每个工具一个子目录，例如 `/tga/` → https://patrick12138.github.io/tga/
+Small static pages I actually use, hosted on GitHub Pages. No framework, no backend, no build step.
 
-## 新增一个工具
+## Pages
 
-1. 在仓库里建子目录，放入 `index.html`（自包含最好，CSS/JS 内联）
-2. 在根 `index.html` 的 `.grid` 里加一张卡片
-3. push 到 `main`，Pages 自动构建（约 30–60 秒）
+| Path | What it is |
+| --- | --- |
+| `/` | Index — a Notion-style list of the pages below |
+| `/tga/` | The Game Awards GOTY nominee checklist, 2014–2025 (68 entries) |
+| `/about/` | Terminal-style personal page, English / 中文 toggle |
+
+## Structure
+
+```text
+index.html          Index page
+tga/index.html      TGA checklist (self-contained)
+about/index.html    About page (self-contained)
+.nojekyll           Serve files as-is, skip Jekyll
+```
+
+## Adding a page
+
+1. Create `<slug>/index.html`. Keep CSS, JS and data inline so it works as a single file.
+2. Add an entry to the `.list` block in the root `index.html`.
+3. Push to `main`. Pages rebuilds in 30–60 seconds.
+
+## Notes
+
+- Every page stores its state in `localStorage`. Nothing is uploaded anywhere.
+- `/` and `/tga/` load no external fonts or CDN. `/about/` pulls Figtree and JetBrains Mono from Google Fonts and falls back to system fonts if that fails.
+
+## License
+
+Personal project. Code is free to read and borrow.
