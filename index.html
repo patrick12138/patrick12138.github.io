@@ -3,50 +3,114 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0e13">
-<title>Patrick · 小工具</title>
+<meta name="theme-color" content="#fbfbfa">
+<title>随便写写 · Patrick</title>
 <style>
 *{box-sizing:border-box}
-:root{--bg:#0b0e13;--card:#161b24;--line:#252d3a;--tx:#eef2f7;--dim:#8b97a8;--accent:#4d9fff}
-html,body{margin:0;background:var(--bg);color:var(--tx);
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
-  -webkit-font-smoothing:antialiased}
-body{min-height:100vh;background:radial-gradient(1100px 600px at 50% -10%,#161f2d 0%,var(--bg) 62%) fixed}
-.wrap{max-width:760px;margin:0 auto;padding:64px 22px 90px}
-.kicker{font-size:10px;letter-spacing:.24em;color:#e3b341;font-weight:700}
-h1{font-size:30px;margin:10px 0 6px;letter-spacing:-.02em}
-.sub{color:var(--dim);font-size:13.5px;margin-bottom:36px}
-.grid{display:grid;gap:12px}
-a.item{display:block;text-decoration:none;color:inherit;background:var(--card);
-  border:1px solid var(--line);border-radius:16px;padding:18px 18px;transition:.18s}
-a.item:hover{border-color:#37455c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.t{font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:8px}
-.t .tag{font-size:10px;font-weight:700;color:#12210f;background:#e3b341;padding:2px 6px;border-radius:5px}
-.d{color:var(--dim);font-size:12.5px;margin-top:6px;line-height:1.6}
-.u{color:var(--accent);font-size:11.5px;margin-top:9px;font-variant-numeric:tabular-nums}
-footer{margin-top:44px;color:#4e5766;font-size:11.5px;line-height:1.8}
-footer a{color:#5c6b82}
-@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+:root{
+  --paper:#fbfbfa;
+  --ink:#37352f;
+  --ink2:#5f5c56;
+  --grey:#787774;
+  --faint:#9b9a97;
+  --line:#e9e9e7;
+  --hover:#f1f1ef;
+  --link:#2383e2;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+         "Microsoft YaHei","Noto Sans CJK SC",Helvetica,Arial,sans-serif;
+}
+html{background:var(--paper);-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;font-size:16px;line-height:1.6}
+
+.wrap{max-width:708px;margin:0 auto;padding:76px 24px 120px}
+
+/* icon + title */
+.icon{font-size:56px;line-height:1;margin-bottom:18px}
+h1{font-size:40px;font-weight:700;line-height:1.2;letter-spacing:-.015em;margin:0 0 6px}
+.sub{font-size:13.5px;color:var(--faint);margin:0 0 30px}
+
+p{color:var(--ink);margin:0 0 16px;line-height:1.65}
+.intro{font-size:16px;color:var(--ink2)}
+.intro a{color:var(--ink);text-decoration:none;
+  background-image:linear-gradient(transparent 62%,#e3e2e0 62%);background-size:100% 100%}
+
+h2{font-size:20px;font-weight:600;margin:44px 0 10px;letter-spacing:-.01em}
+
+/* divider */
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+
+/* page links (notion-like) */
+.list{margin:6px -10px}
+.item{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;border-radius:4px;
+  text-decoration:none;color:inherit;transition:background .1s}
+.item:hover{background:var(--hover)}
+.item .ic{font-size:17px;line-height:1.6;flex:0 0 auto;width:20px;text-align:center;filter:saturate(.85)}
+.item .tx{flex:1;min-width:0}
+.item .tt{display:block;font-size:15.5px;font-weight:500;line-height:1.5}
+.item .dd{display:block;font-size:13.5px;color:var(--grey);line-height:1.6;margin-top:2px}
+.item .go{opacity:0;font-size:12px;color:var(--faint);margin-top:4px;flex:0 0 auto;transition:.12s}
+.item:hover .go{opacity:1}
+
+/* meta block */
+.meta{font-size:13.5px;color:var(--grey);line-height:1.85}
+.meta b{font-weight:500;color:var(--ink)}
+.meta a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.meta a:hover{border-color:var(--faint)}
+
+.sig{margin-top:52px;font-size:13.5px;color:var(--faint)}
+
+@media (min-width:760px){
+  .wrap{padding:104px 48px 140px}
+  h1{font-size:46px}
+  .icon{font-size:62px}
+}
+
+/* dark mode, like Notion's */
+@media (prefers-color-scheme:dark){
+  :root{--paper:#191919;--ink:#e9e9e7;--ink2:#c7c6c4;--grey:#9b9a97;--faint:#787774;
+        --line:#2f2f2f;--hover:#252525}
+  .intro a{background-image:linear-gradient(transparent 62%,#3a3a3a 62%)}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="kicker">PERSONAL TOOLS</div>
-  <h1>小工具</h1>
-  <div class="sub">一些自己用的小页面，纯静态，数据都存在浏览器本地。</div>
 
-  <div class="grid">
+  <div class="icon">🗂️</div>
+  <h1>随便写写</h1>
+  <p class="sub">Patrick · 广州 · 2026</p>
+
+  <p class="intro">
+    这里放一些自己用的小页面。都是<strong>纯静态</strong>的，没有后端也没有登录，
+    数据存在你自己的浏览器里，关掉重开还在。
+  </p>
+
+  <hr>
+
+  <h2>页面</h2>
+  <div class="list">
     <a class="item" href="/tga/">
-      <div class="t">TGA 年度游戏提名 <span class="tag">NEW</span></div>
-      <div class="d">2014–2025 十二届「年度游戏」68 席全提名。五个状态勾选、平台标记、按可玩数算进度。</div>
-      <div class="u">/tga/</div>
+      <span class="ic">🎮</span>
+      <span class="tx">
+        <span class="tt">TGA 年度游戏清单</span>
+        <span class="dd">2014–2025 十二届「年度游戏」68 席提名，标记进度与想玩，算还要多少小时。</span>
+      </span>
+      <span class="go">→</span>
     </a>
   </div>
 
-  <footer>
-    根仓库：<a href="https://github.com/patrick12138/patrick12138.github.io">patrick12138/patrick12138.github.io</a><br>
-    每个工具一个子目录，直接 push 到 main 即可更新。
-  </footer>
+  <hr>
+
+  <h2>关于</h2>
+  <div class="meta">
+    这些小页面没有数据库，勾选和进度只在这台设备的浏览器里。<br>
+    源码放在 <a href="https://github.com/patrick12138/patrick12138.github.io">GitHub</a>，
+    用 Pages 托管，没有外部字体和 CDN，国内网络也能一次加载完。
+  </div>
+
+  <div class="sig">— 想到什么就加一个页面。</div>
+
 </div>
 </body>
 </html>

@@ -3,272 +3,315 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0e13">
-<title>TGA 年度游戏提名 · 玩过没</title>
+<meta name="theme-color" content="#101215">
+<title>TGA 年度游戏 · 待玩清单</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0b0e13; --card:#161b24; --card2:#1d2430; --line:#252d3a;
-  --tx:#eef2f7; --dim:#8b97a8; --gold:#e3b341;
-  --done:#2ecc8f; --half:#3fb0d6; --want:#4d9fff; --skip:#6b7686; --no:#c05f5f;
-  --pc:#4d9fff; --ps:#7b8cff; --ns:#ff6b6b; --xb:#4bd07a;
+  --bg:#101215; --shell:#141619; --row:#141619; --row-hi:#191c20; --card2:#1b1e23;
+  --line:#272b31; --line2:#33383f;
+  --ink:#ecedef; --ink2:#a3a9b1; --muted:#787f88; --faint:#575d65;
+  --gold:#d9a441; --gold-dim:#8a6a2e;
+  --done:#5fae83; --half:#6d97bd; --want:#d9a441; --skip:#79818c; --no:#ad6a6a;
 }
-html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
-  -webkit-font-smoothing:antialiased}
-body{padding-bottom:8px}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
 
-header{position:sticky;top:0;z-index:20;background:rgba(11,14,19,.93);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.hd{max-width:720px;margin:0 auto;padding:13px 16px 9px}
-.kicker{font-size:9.5px;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:5px}
-h1{font-size:18px;margin:0;font-weight:800;letter-spacing:-.01em;display:flex;align-items:baseline;gap:7px}
-h1 span{color:var(--dim);font-weight:500;font-size:12.5px}
-.top{display:flex;align-items:baseline;gap:8px;margin-top:11px}
-.top b{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--done)}
-.top .of{font-size:12px;color:var(--dim)}
-.top .pct{margin-left:auto;font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
-.bar{height:6px;border-radius:99px;background:#202836;margin:7px 0 7px;overflow:hidden;display:flex}
-.bar i{display:block;height:100%;flex:0 0 auto;transition:width .28s cubic-bezier(.4,0,.2,1)}
-.bar .a{background:linear-gradient(90deg,#2ecc8f,#25b47c)}
-.bar .b{background:linear-gradient(90deg,#3fb0d6,#2f96ba)}
-.micro{display:flex;gap:11px;font-size:11px;color:var(--dim);flex-wrap:wrap;font-variant-numeric:tabular-nums}
-.micro b{font-weight:700;font-size:11.5px}
-.micro .d b{color:var(--done)} .micro .h b{color:var(--half)}
-.micro .w b{color:var(--want)} .micro .s b{color:#98a3b3} .micro .n b{color:var(--no)}
-.tabs{display:flex;gap:6px;margin-top:11px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;padding:6px 12px;border-radius:99px;background:var(--card);
-  border:1px solid var(--line);color:var(--dim);font-size:12.5px;cursor:pointer;transition:.15s}
-.tab.on{background:#22344b;border-color:#35507a;color:#cfe3ff}
+/* ---------- shell ---------- */
+.shell{position:sticky;top:0;z-index:20;background:rgba(16,18,21,.94);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.shell-in{max-width:760px;margin:0 auto;padding:0 18px}
+.top{display:flex;align-items:center;gap:10px;height:52px}
+.mark{width:20px;height:20px;border:1.5px solid var(--gold);display:grid;place-items:center;
+  font-size:9px;font-weight:800;color:var(--gold);letter-spacing:-.02em;flex:0 0 auto}
+.brand{font-size:13px;font-weight:700;letter-spacing:.01em}
+.brand em{font-style:normal;color:var(--muted);font-weight:500;margin-left:6px}
+.top .sp{flex:1}
+.ghost{border:1px solid var(--line2);background:transparent;color:var(--ink2);
+  font-size:11.5px;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:inherit}
+.ghost:hover{color:var(--ink);border-color:var(--muted)}
 
-main{max-width:720px;margin:0 auto;padding:0 16px}
-.yr{margin-top:24px}
-.yr-hd{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
-.yr-hd .y{font-size:21px;font-weight:800;letter-spacing:-.02em}
-.yr-hd .t{font-size:11.5px;color:var(--gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.yr-hd .c{margin-left:auto;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums;flex:0 0 auto}
+/* ---------- KPI strip (type, not tiles) ---------- */
+.kpis{display:flex;gap:0;border-top:1px solid var(--line);padding:16px 0 14px}
+.kpi{flex:1;min-width:0;padding-right:12px}
+.kpi + .kpi{border-left:1px solid var(--line);padding-left:14px}
+.kpi .k{font-size:10px;letter-spacing:.09em;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:5px}
+.kpi .v{font-size:30px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.kpi .v small{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;margin-left:3px}
+.kpi.hl .v{color:var(--gold)}
+.kpi .sub{font-size:11px;color:var(--faint);margin-top:5px}
 
-.card{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
-  border-radius:14px;padding:10px 10px 10px 12px;margin-bottom:7px;transition:.15s}
-.card[data-s="done"]{border-color:rgba(46,204,143,.45);background:linear-gradient(90deg,rgba(46,204,143,.09),var(--card) 60%)}
-.card[data-s="half"]{border-color:rgba(63,176,214,.4);background:linear-gradient(90deg,rgba(63,176,214,.08),var(--card) 60%)}
-.card[data-s="want"]{border-color:rgba(77,159,255,.35)}
-.card[data-s="skip"]{opacity:.6}
-.card[data-s="no"]{opacity:.5;border-style:dashed}
-.card[data-s="skip"] .name,.card[data-s="no"] .name{color:#a8b3c2}
-.nm{flex:1;min-width:0}
-.name{font-size:14.5px;font-weight:650;line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.win{font-size:9px;font-weight:700;color:#12210f;background:var(--gold);
-  padding:2px 5px;border-radius:4px;letter-spacing:.04em;flex:0 0 auto}
-.sub{display:flex;align-items:center;gap:6px;margin-top:4px;min-width:0}
-.en{font-size:10.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+/* ---------- progress ---------- */
+.line{height:3px;background:#22262c;display:flex;overflow:hidden;border-radius:2px}
+.line i{display:block;height:100%;flex:0 0 auto;transition:width .3s cubic-bezier(.4,0,.2,1)}
+.line .a{background:var(--done)}
+.line .b{background:var(--half)}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:7px;flex-wrap:wrap}
+.legend b{color:var(--ink2);font-weight:600}
+
+/* ---------- filters ---------- */
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:13px 0 12px;
+  border-bottom:1px solid var(--line)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;padding:5px 11px;border-radius:3px;border:1px solid var(--line2);
+  background:transparent;color:var(--ink2);font-size:12px;cursor:pointer;font-family:inherit;
+  transition:.13s;white-space:nowrap}
+.chip:hover{border-color:var(--muted);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#0f1114;font-weight:650}
+
+/* ---------- rows ---------- */
+main{max-width:760px;margin:0 auto;padding:0 18px 40px}
+.year{display:flex;align-items:baseline;gap:10px;margin:26px 0 2px}
+.year .y{font-size:12px;font-weight:700;letter-spacing:.13em;color:var(--faint)}
+.year .w{font-size:11.5px;color:var(--gold-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.year .c{margin-left:auto;font-size:11px;color:var(--faint);flex:0 0 auto}
+
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1d2025;transition:.12s}
+.row:hover{background:var(--row-hi)}
+.row[data-s="done"] .t{color:var(--done)}
+.row[data-s="half"] .t{color:var(--half)}
+.row[data-s="want"] .t{color:var(--want)}
+.row[data-s="skip"] .t{color:var(--faint)}
+.row[data-s="no"]{opacity:.55}
+.info{flex:1;min-width:0}
+.t{font-size:14.5px;font-weight:600;line-height:1.3;display:flex;align-items:center;gap:6px}
+.goty{font-size:8.5px;font-weight:800;letter-spacing:.06em;color:#12140f;background:var(--gold);
+  padding:1.5px 4px;border-radius:2px;flex:0 0 auto}
+.m{display:flex;align-items:center;gap:7px;margin-top:3px;font-size:10.5px;color:var(--faint);min-width:0}
+.m .en{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .plats{display:flex;gap:3px;flex:0 0 auto}
-.pl{font-size:8.5px;font-weight:800;padding:1.5px 4px;border-radius:3.5px;letter-spacing:.03em;line-height:1.25}
-.pl.pc{color:var(--pc);background:rgba(77,159,255,.15)}
-.pl.ps{color:#aab4ff;background:rgba(123,140,255,.16)}
-.pl.ns{color:#ff9a9a;background:rgba(255,107,107,.16)}
-.pl.xb{color:#7de39d;background:rgba(75,208,122,.15)}
+@media (max-width:859px){ .plats .pl ~ .pl{display:none} }
+.pl{font-size:8.5px;font-weight:700;letter-spacing:.03em;padding:1px 3.5px;border-radius:2px;
+  border:1px solid;line-height:1.35}
+.pl.pc{color:#8fb8e0;border-color:#2f4257}
+.pl.ps{color:#9aa5d8;border-color:#3a3f63}
+.pl.ns{color:#d79a9a;border-color:#573a3a}
+.pl.xb{color:#8fc4a1;border-color:#2f4a39}
 
-.btns{display:flex;gap:4px;flex:0 0 auto}
-.b{width:29px;height:29px;border-radius:9px;border:1px solid var(--line);background:var(--card2);
-  color:#5f6b7c;font-size:13px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:.15s;padding:0;line-height:1;font-family:inherit}
-.b:active{transform:scale(.9)}
-.b[data-v="done"].on{background:rgba(46,204,143,.18);border-color:var(--done);color:var(--done)}
-.b[data-v="half"].on{background:rgba(63,176,214,.18);border-color:var(--half);color:var(--half)}
-.b[data-v="want"].on{background:rgba(77,159,255,.18);border-color:var(--want);color:var(--want)}
-.b[data-v="skip"].on{background:rgba(120,132,150,.2);border-color:#8b95a5;color:#cdd5e0}
-.b[data-v="no"].on{background:rgba(192,95,95,.16);border-color:var(--no);color:#e08484}
+.dur{flex:0 0 auto;text-align:right;margin-left:auto;padding-left:8px;white-space:nowrap;font-size:11.5px;color:var(--ink2);line-height:1.35}
+.dur b{font-size:13.5px;font-weight:700;color:var(--ink)}
+.dur .to{color:var(--faint);font-size:10.5px}
+.row[data-s="want"] .dur b{color:var(--gold)}
 
-footer{max-width:720px;margin:32px auto 0;padding:0 16px;color:#4e5766;font-size:11px;line-height:1.75}
-footer a{color:#5c6b82}
-.fab{display:flex;gap:8px;max-width:720px;margin:10px auto 0;padding:0 16px}
-.fab button{flex:1;border:1px solid var(--line);background:#1a2130;color:#c3cddb;font-size:13px;
-  padding:12px 13px;border-radius:13px;cursor:pointer;font-family:inherit}
-.fab button:active{transform:scale(.97)}
-#toast{position:fixed;left:50%;bottom:80px;transform:translate(-50%,14px);opacity:0;
-  background:#22344b;color:#dbe9ff;padding:9px 16px;border-radius:99px;font-size:12.5px;
-  pointer-events:none;transition:.22s;z-index:50;border:1px solid #33507c;white-space:nowrap}
+.acts{display:flex;gap:3px;flex:0 0 auto}
+.b{width:27px;height:27px;border-radius:4px;border:1px solid var(--line2);background:transparent;
+  color:#5b626b;font-size:12px;display:grid;place-items:center;cursor:pointer;
+  transition:.13s;padding:0;line-height:1;font-family:inherit}
+.b:hover{background:var(--card2);color:var(--ink2)}
+.b:active{transform:scale(.92)}
+.b[data-v="done"].on{color:var(--done);border-color:var(--done);background:rgba(95,174,131,.1)}
+.b[data-v="half"].on{color:var(--half);border-color:var(--half);background:rgba(109,151,189,.1)}
+.b[data-v="want"].on{color:var(--want);border-color:var(--gold-dim);background:rgba(217,164,65,.1)}
+.b[data-v="skip"].on{color:var(--ink2);border-color:var(--muted)}
+.b[data-v="no"].on{color:var(--no);border-color:var(--no);background:rgba(173,106,106,.09)}
+
+/* ---------- footer ---------- */
+.foot{max-width:760px;margin:0 auto;padding:22px 18px 46px;border-top:1px solid var(--line)}
+.foot .btns{display:flex;gap:8px;margin-bottom:16px}
+.foot .btns button{flex:1;border:1px solid var(--line2);background:transparent;color:var(--ink2);
+  font-size:12.5px;padding:10px;border-radius:4px;cursor:pointer;font-family:inherit}
+.foot .btns button:hover{color:var(--ink);border-color:var(--muted)}
+.foot p{font-size:10.5px;color:var(--faint);line-height:1.8;margin:0}
+.foot a{color:var(--muted)}
+
+.empty{padding:40px 0;text-align:center;font-size:12.5px;color:var(--faint);display:none}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,10px);opacity:0;
+  background:#22262c;color:var(--ink);padding:8px 15px;border-radius:4px;font-size:12px;
+  pointer-events:none;transition:.2s;z-index:50;border:1px solid var(--line2);white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-@media (max-width: 819px){ .plats .pl ~ .pl{display:none} }
-.empty{color:var(--dim);font-size:13px;padding:24px 4px;text-align:center;display:none}
 
-/* ---------- PC / 宽屏 ---------- */
-@media (min-width: 820px) {
-  body{background:radial-gradient(1200px 600px at 50% -10%,#131a26 0%,var(--bg) 60%) fixed}
-  .hd{max-width:1080px;padding:20px 24px 14px}
-  h1{font-size:22px}
-  .top b{font-size:26px}
-  .micro{font-size:12px;gap:16px}
-  main{max-width:1080px;padding:0 24px}
-  .yr{margin-top:34px}
-  .yr-hd .y{font-size:26px}
-  .yr-hd .t{font-size:13px}
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
-  .card{margin:0;padding:12px 12px 12px 14px}
-  .card:hover{border-color:#37455c;transform:translateY(-1px);
-    box-shadow:0 4px 16px rgba(0,0,0,.35)}
-  .card[data-s="done"]:hover{border-color:rgba(46,204,143,.7)}
-  .name{font-size:15.5px}
-  .en{font-size:11.5px}
-  .b{width:33px;height:33px;font-size:14px}
-  .b:hover{background:#2a3446;color:#9fb0c6;border-color:#3d4a60}
-  footer,.fab{max-width:1080px;padding:0 24px}
-  .fab{margin:16px auto 0}
-  .fab button{flex:0 0 auto;min-width:150px}
-  .fab{justify-content:center}
-  .tab:hover{color:#cfe3ff;border-color:#35507a}
+/* ---------- PC ---------- */
+@media (min-width:860px){
+  .shell-in,main,.foot{max-width:1080px;padding-left:28px;padding-right:28px}
+  .top{height:58px}
+  .brand{font-size:14px}
+  .kpis{padding:22px 0 18px}
+  .kpi .v{font-size:40px}
+  .kpi .k{font-size:10.5px;margin-bottom:7px}
+  .kpi .sub{font-size:11.5px}
+  .kpi + .kpi{padding-left:22px}
+  .row{padding:12px 10px 12px 8px}
+  .row:hover{background:#191c20}
+  .t{font-size:15.5px}
+  .b{width:29px;height:29px;font-size:12.5px}
+  .year{margin-top:32px}
+  .dur b{font-size:14.5px}
 }
-@media (min-width: 1280px) {
-  .cards{grid-template-columns:1fr 1fr 1fr}
-  .hd,main,footer,.fab{max-width:1320px}
+@media (min-width:1100px){
+  .shell-in,main,.foot{max-width:1180px}
 }
-
 </style>
 </head>
 <body>
 
-<header>
-  <div class="hd">
-    <div class="kicker">THE GAME AWARDS · 2014–2025</div>
-    <h1>年度游戏提名<span>68 席</span></h1>
+<div class="shell">
+  <div class="shell-in">
     <div class="top">
-      <b id="cDone">0</b><span class="of" id="ofTotal">/ 54 可玩</span>
-      <span class="pct" id="pct">0%</span>
+      <div class="mark">TG</div>
+      <div class="brand">年度游戏提名<em>TGA 2014–2025 · 68 席</em></div>
+      <div class="sp"></div>
+      <button class="ghost" id="btnReset">重来</button>
     </div>
-    <div class="bar"><i class="a" id="barA"></i><i class="b" id="barB"></i></div>
-    <div class="micro">
-      <span class="d">通關 <b id="mDone">0</b></span>
-      <span class="h">玩过没通 <b id="mHalf">0</b></span>
-      <span class="w">想玩 <b id="mWant">0</b></span>
-      <span class="s">不打算玩 <b id="mSkip">0</b></span>
-      <span class="n">没得玩 <b id="mNo">0</b></span>
+    <div class="kpis">
+      <div class="kpi hl">
+        <div class="k">还要玩</div>
+        <div class="v"><span id="kHours">0</span><small>小时</small></div>
+        <div class="sub" id="kDays">按每天 3 小时 · —</div>
+      </div>
+      <div class="kpi">
+        <div class="k">待玩</div>
+        <div class="v"><span id="kWant">0</span><small>款</small></div>
+        <div class="sub" id="kWantSub">在可玩 54 席里</div>
+      </div>
+      <div class="kpi">
+        <div class="k">已玩过</div>
+        <div class="v"><span id="kPlayed">0</span><small>款</small></div>
+        <div class="sub" id="kPlayedSub">通关 0 · 没通 0</div>
+      </div>
     </div>
-    <div class="tabs" id="tabs">
-      <div class="tab on" data-f="all">全部</div>
-      <div class="tab" data-f="todo">待标记</div>
-      <div class="tab" data-f="played">玩过</div>
-      <div class="tab" data-f="want">想玩</div>
-      <div class="tab" data-f="no">没得玩</div>
+    <div class="line"><i class="a" id="barA"></i><i class="b" id="barB"></i></div>
+    <div class="legend">
+      <span>可玩 <b id="lgPlayable">54</b> 席</span>
+      <span>已标记 <b id="lgMarked">0</b></span>
+      <span>平台受限 <b id="lgLocked">14</b></span>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip on" data-f="all">全部</button>
+      <button class="chip" data-f="todo">待标记</button>
+      <button class="chip" data-f="want">想玩</button>
+      <button class="chip" data-f="played">玩过</button>
+      <button class="chip" data-f="no">没得玩</button>
     </div>
   </div>
-</header>
+</div>
 
 <main id="list"></main>
-<div class="empty" id="empty">这个筛选下没有游戏 👌</div>
+<div class="empty" id="empty">这个筛选下没有条目</div>
 
-<footer>
-  数据来源 <a href="https://www.gamemall.org/zh/tga">GameMall TGA 历届档案</a>（2014–2025 十二届 GOTY 全提名 68 席）。<br>
-  平台标记按 <b>2026-11</b> 的实际情况统计：只有 PS / Switch 独占、没有 PC 版的 14 席已默认标为「没得玩」，你可以随时改。标记存在本机浏览器，不上传。
-</footer>
-
-<div class="fab">
-  <button id="btnCopy">复制结果</button>
-  <button id="btnReset">重来</button>
+<div class="foot">
+  <div class="btns">
+    <button id="btnCopy">复制结果</button>
+    <button id="btnWalk">只看想玩</button>
+  </div>
+  <p>
+    数据：提名与获奖来自 <a href="https://www.gamemall.org/zh/tga">GameMall TGA 档案</a>；
+    时长来自 HowLongToBeat（主线 → 全收集，社区中位数）。平台按 2026-11 现状标注，无 PC 版的 14 席预置为「没得玩」。<br>
+    勾选只存在这台设备的浏览器里，不上传。
+  </p>
 </div>
+
 <div id="toast"></div>
 
-<script id="data" type="application/json">[{"year": "2025", "games": [{"zh": "光与影：33号远征队", "en": "Clair Obscur: Expedition 33", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "死亡搁浅 2：冥滩之上", "en": "Death Stranding 2: On the Beach", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "咚奇刚 蕉力全开", "en": "Donkey Kong Bananza", "w": false, "pc": false, "plats": ["NS2"]}, {"zh": "黑帝斯II", "en": "Hades II", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"]}, {"zh": "空洞骑士：丝之歌", "en": "Hollow Knight: Silksong", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"]}, {"zh": "天国：拯救 II", "en": "Kingdom Come: Deliverance II", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}]}, {"year": "2024", "games": [{"zh": "宇宙机器人", "en": "Astro Bot", "w": true, "pc": false, "plats": ["PS5"]}, {"zh": "Balatro", "en": "Balatro", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"]}, {"zh": "黑神话：悟空", "en": "Black Myth: Wukong", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "艾尔登法环：黄金树幽影", "en": "Elden Ring: Shadow of the Erdtree", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "最终幻想 VII 重生", "en": "Final Fantasy VII Rebirth", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "暗喻幻想：ReFantazio", "en": "Metaphor: ReFantazio", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}]}, {"year": "2023", "games": [{"zh": "博德之门 3", "en": "Baldur's Gate 3", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "心灵杀手2", "en": "Alan Wake 2", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "王国之泪", "en": "The Legend of Zelda: Tears of the Kingdom", "w": false, "pc": false, "plats": ["NS"]}, {"zh": "漫威蜘蛛侠 2", "en": "Marvel's Spider-Man 2", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "生化危机 4（2023）", "en": "Resident Evil 4", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"]}, {"zh": "超级马力欧兄弟：惊奇", "en": "Super Mario Bros. Wonder", "w": false, "pc": false, "plats": ["NS"]}]}, {"year": "2022", "games": [{"zh": "艾尔登法环", "en": "Elden Ring", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "瘟疫传说：安魂曲", "en": "A Plague Tale: Requiem", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "战神：诸神黄昏", "en": "God of War Ragnarök", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "地平线：西之绝境", "en": "Horizon Forbidden West", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "迷失", "en": "Stray", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "异度神剑 3", "en": "Xenoblade Chronicles 3", "w": false, "pc": false, "plats": ["NS"]}]}, {"year": "2021", "games": [{"zh": "双人成行", "en": "It Takes Two", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"]}, {"zh": "死亡循环", "en": "Deathloop", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "密特罗德 生存恐惧", "en": "Metroid Dread", "w": false, "pc": false, "plats": ["NS"]}, {"zh": "脑航员 2", "en": "Psychonauts 2", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "瑞奇与叮当：时空跳转", "en": "Ratchet & Clank: Rift Apart", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "生化危机 Village", "en": "Resident Evil Village", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"]}]}, {"year": "2020", "games": [{"zh": "最后生还者 第二部", "en": "The Last of Us Part II", "w": true, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "集合啦！动物森友会", "en": "Animal Crossing: New Horizons", "w": false, "pc": false, "plats": ["NS"]}, {"zh": "毀滅戰士：永恆", "en": "Doom Eternal", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"]}, {"zh": "最终幻想 VII 重制版", "en": "Final Fantasy VII Remake", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "对马岛之魂", "en": "Ghost of Tsushima", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "哈迪斯", "en": "Hades", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"]}]}, {"year": "2019", "games": [{"zh": "只狼：影逝二度", "en": "Sekiro: Shadows Die Twice", "w": true, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "控制", "en": "Control", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "死亡搁浅", "en": "Death Stranding", "w": false, "pc": true, "plats": ["PC", "PS5"]}, {"zh": "天外世界", "en": "The Outer Worlds", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"]}, {"zh": "生化危机 2 重制版", "en": "Resident Evil 2", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"]}, {"zh": "任天堂明星大乱斗 特别版", "en": "Super Smash Bros. Ultimate", "w": false, "pc": false, "plats": ["NS"]}]}, {"year": "2018", "games": [{"zh": "战神", "en": "God of War", "w": true, "pc": true, "plats": ["PC", "PS4"]}, {"zh": "刺客信条：奥德赛", "en": "Assassin's Creed Odyssey", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "蔚蓝", "en": "Celeste", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"]}, {"zh": "漫威蜘蛛侠", "en": "Marvel's Spider-Man", "w": false, "pc": true, "plats": ["PC", "PS4"]}, {"zh": "怪物猎人：世界", "en": "Monster Hunter: World", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "荒野大镖客：救赎 2", "en": "Red Dead Redemption 2", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}]}, {"year": "2017", "games": [{"zh": "塞尔达传说：旷野之息", "en": "The Legend of Zelda: Breath of the Wild", "w": true, "pc": false, "plats": ["NS"]}, {"zh": "地平线：零之曙光", "en": "Horizon Zero Dawn", "w": false, "pc": true, "plats": ["PC", "PS4"]}, {"zh": "女神异闻录 5", "en": "Persona 5", "w": false, "pc": true, "plats": ["PC", "PS4", "NS"]}, {"zh": "绝地求生", "en": "PlayerUnknown's Battlegrounds", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "超级马力欧 奥德赛", "en": "Super Mario Odyssey", "w": false, "pc": false, "plats": ["NS"]}]}, {"year": "2016", "games": [{"zh": "守望先锋（2016）", "en": "Overwatch", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"]}, {"zh": "毁灭战士（2016）", "en": "Doom", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"]}, {"zh": "INSIDE", "en": "Inside", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"]}, {"zh": "泰坦陨落 2", "en": "Titanfall 2", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "神秘海域 4：盗贼末路", "en": "Uncharted 4: A Thief's End", "w": false, "pc": false, "plats": ["PS4"]}]}, {"year": "2015", "games": [{"zh": "巫师 3", "en": "The Witcher 3: Wild Hunt", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"]}, {"zh": "血源诅咒", "en": "Bloodborne", "w": false, "pc": false, "plats": ["PS4"]}, {"zh": "辐射 4", "en": "Fallout 4", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"]}, {"zh": "合金装备 V：幻痛", "en": "Metal Gear Solid V: The Phantom Pain", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "超级马力欧创作家", "en": "Super Mario Maker", "w": false, "pc": false, "plats": ["NS"]}]}, {"year": "2014", "games": [{"zh": "龙腾世纪：审判", "en": "Dragon Age: Inquisition", "w": true, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "魔兵惊天录2", "en": "Bayonetta 2", "w": false, "pc": false, "plats": ["NS"]}, {"zh": "黑暗之魂 II", "en": "Dark Souls II", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}, {"zh": "炉石传说", "en": "Hearthstone", "w": false, "pc": true, "plats": ["PC"]}, {"zh": "中土世界：暗影魔多", "en": "Middle-earth: Shadow of Mordor", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"]}]}]</script>
+<script id="data" type="application/json">[{"year": "2025", "games": [{"zh": "光与影：33号远征队", "en": "Clair Obscur: Expedition 33", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 29.5, "comp": 69.0, "endless": false}, {"zh": "死亡搁浅 2：冥滩之上", "en": "Death Stranding 2: On the Beach", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 35.5, "comp": 118.0, "endless": false}, {"zh": "咚奇刚 蕉力全开", "en": "Donkey Kong Bananza", "w": false, "pc": false, "plats": ["NS2"], "main": 19.0, "comp": 50.0, "endless": false}, {"zh": "黑帝斯II", "en": "Hades II", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"], "main": 32.0, "comp": 105.0, "endless": false}, {"zh": "空洞骑士：丝之歌", "en": "Hollow Knight: Silksong", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"], "main": 28.0, "comp": 65.5, "endless": false}, {"zh": "天国：拯救 II", "en": "Kingdom Come: Deliverance II", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 56.0, "comp": 147.0, "endless": false}]}, {"year": "2024", "games": [{"zh": "宇宙机器人", "en": "Astro Bot", "w": true, "pc": false, "plats": ["PS5"], "main": 11.0, "comp": 18.5, "endless": false}, {"zh": "Balatro", "en": "Balatro", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"], "main": 7.5, "comp": null, "endless": true}, {"zh": "黑神话：悟空", "en": "Black Myth: Wukong", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 37.5, "comp": 67.5, "endless": false}, {"zh": "艾尔登法环：黄金树幽影", "en": "Elden Ring: Shadow of the Erdtree", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 25.5, "comp": 51.5, "endless": false}, {"zh": "最终幻想 VII 重生", "en": "Final Fantasy VII Rebirth", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 48.5, "comp": 160.0, "endless": false}, {"zh": "暗喻幻想：ReFantazio", "en": "Metaphor: ReFantazio", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 65.5, "comp": 109.0, "endless": false}]}, {"year": "2023", "games": [{"zh": "博德之门 3", "en": "Baldur's Gate 3", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 73.0, "comp": 181.0, "endless": false}, {"zh": "心灵杀手2", "en": "Alan Wake 2", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 19.0, "comp": 32.5, "endless": false}, {"zh": "王国之泪", "en": "The Legend of Zelda: Tears of the Kingdom", "w": false, "pc": false, "plats": ["NS"], "main": 59.5, "comp": 247.0, "endless": false}, {"zh": "漫威蜘蛛侠 2", "en": "Marvel's Spider-Man 2", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 17.0, "comp": 28.5, "endless": false}, {"zh": "生化危机 4（2023）", "en": "Resident Evil 4", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"], "main": 16.0, "comp": 64.5, "endless": false}, {"zh": "超级马力欧兄弟：惊奇", "en": "Super Mario Bros. Wonder", "w": false, "pc": false, "plats": ["NS"], "main": 10.0, "comp": 20.0, "endless": false}]}, {"year": "2022", "games": [{"zh": "艾尔登法环", "en": "Elden Ring", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 60.0, "comp": 136.0, "endless": false}, {"zh": "瘟疫传说：安魂曲", "en": "A Plague Tale: Requiem", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 17.0, "comp": 27.5, "endless": false}, {"zh": "战神：诸神黄昏", "en": "God of War Ragnarök", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 26.5, "comp": 55.5, "endless": false}, {"zh": "地平线：西之绝境", "en": "Horizon Forbidden West", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 28.5, "comp": 90.0, "endless": false}, {"zh": "迷失", "en": "Stray", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 5.0, "comp": 10.5, "endless": false}, {"zh": "异度神剑 3", "en": "Xenoblade Chronicles 3", "w": false, "pc": false, "plats": ["NS"], "main": 62.0, "comp": 174.0, "endless": false}]}, {"year": "2021", "games": [{"zh": "双人成行", "en": "It Takes Two", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"], "main": 13.0, "comp": 16.5, "endless": false}, {"zh": "死亡循环", "en": "Deathloop", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 16.5, "comp": 36.0, "endless": false}, {"zh": "密特罗德 生存恐惧", "en": "Metroid Dread", "w": false, "pc": false, "plats": ["NS"], "main": 9.5, "comp": 14.0, "endless": false}, {"zh": "脑航员 2", "en": "Psychonauts 2", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 15.0, "comp": 26.5, "endless": false}, {"zh": "瑞奇与叮当：时空跳转", "en": "Ratchet & Clank: Rift Apart", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 11.0, "comp": 18.0, "endless": false}, {"zh": "生化危机 Village", "en": "Resident Evil Village", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"], "main": 10.0, "comp": 38.5, "endless": false}]}, {"year": "2020", "games": [{"zh": "最后生还者 第二部", "en": "The Last of Us Part II", "w": true, "pc": true, "plats": ["PC", "PS5"], "main": 24.0, "comp": 43.5, "endless": false}, {"zh": "集合啦！动物森友会", "en": "Animal Crossing: New Horizons", "w": false, "pc": false, "plats": ["NS"], "main": 61.0, "comp": null, "endless": true}, {"zh": "毀滅戰士：永恆", "en": "Doom Eternal", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"], "main": 14.5, "comp": 30.0, "endless": false}, {"zh": "最终幻想 VII 重制版", "en": "Final Fantasy VII Remake", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 32.5, "comp": 85.5, "endless": false}, {"zh": "对马岛之魂", "en": "Ghost of Tsushima", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 25.0, "comp": 62.5, "endless": false}, {"zh": "哈迪斯", "en": "Hades", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS"], "main": 23.5, "comp": 95.5, "endless": false}]}, {"year": "2019", "games": [{"zh": "只狼：影逝二度", "en": "Sekiro: Shadows Die Twice", "w": true, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 30.0, "comp": 69.5, "endless": false}, {"zh": "控制", "en": "Control", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 11.5, "comp": 29.0, "endless": false}, {"zh": "死亡搁浅", "en": "Death Stranding", "w": false, "pc": true, "plats": ["PC", "PS5"], "main": 40.5, "comp": 113.0, "endless": false}, {"zh": "天外世界", "en": "The Outer Worlds", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"], "main": 13.5, "comp": 40.5, "endless": false}, {"zh": "生化危机 2 重制版", "en": "Resident Evil 2", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"], "main": 9.0, "comp": 36.5, "endless": false}, {"zh": "任天堂明星大乱斗 特别版", "en": "Super Smash Bros. Ultimate", "w": false, "pc": false, "plats": ["NS"], "main": 24.0, "comp": 76.5, "endless": false}]}, {"year": "2018", "games": [{"zh": "战神", "en": "God of War", "w": true, "pc": true, "plats": ["PC", "PS4"], "main": 20.5, "comp": 51.0, "endless": false}, {"zh": "刺客信条：奥德赛", "en": "Assassin's Creed Odyssey", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 45.5, "comp": 145.0, "endless": false}, {"zh": "蔚蓝", "en": "Celeste", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"], "main": 8.5, "comp": 39.0, "endless": false}, {"zh": "漫威蜘蛛侠", "en": "Marvel's Spider-Man", "w": false, "pc": true, "plats": ["PC", "PS4"], "main": 17.0, "comp": 36.0, "endless": false}, {"zh": "怪物猎人：世界", "en": "Monster Hunter: World", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 46.5, "comp": 434.0, "endless": false}, {"zh": "荒野大镖客：救赎 2", "en": "Red Dead Redemption 2", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 51.0, "comp": 196.0, "endless": false}]}, {"year": "2017", "games": [{"zh": "塞尔达传说：旷野之息", "en": "The Legend of Zelda: Breath of the Wild", "w": true, "pc": false, "plats": ["NS"], "main": 50.5, "comp": 193.0, "endless": false}, {"zh": "地平线：零之曙光", "en": "Horizon Zero Dawn", "w": false, "pc": true, "plats": ["PC", "PS4"], "main": 22.5, "comp": 61.0, "endless": false}, {"zh": "女神异闻录 5", "en": "Persona 5", "w": false, "pc": true, "plats": ["PC", "PS4", "NS"], "main": 97.5, "comp": 174.0, "endless": false}, {"zh": "绝地求生", "en": "PlayerUnknown's Battlegrounds", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": null, "comp": null, "endless": true}, {"zh": "超级马力欧 奥德赛", "en": "Super Mario Odyssey", "w": false, "pc": false, "plats": ["NS"], "main": 12.5, "comp": 62.0, "endless": false}]}, {"year": "2016", "games": [{"zh": "守望先锋（2016）", "en": "Overwatch", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"], "main": 93.5, "comp": null, "endless": true}, {"zh": "毁灭战士（2016）", "en": "Doom", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"], "main": 11.5, "comp": 27.0, "endless": false}, {"zh": "INSIDE", "en": "Inside", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1", "NS"], "main": 3.5, "comp": 4.5, "endless": false}, {"zh": "泰坦陨落 2", "en": "Titanfall 2", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 6.0, "comp": 16.0, "endless": false}, {"zh": "神秘海域 4：盗贼末路", "en": "Uncharted 4: A Thief's End", "w": false, "pc": false, "plats": ["PS4"], "main": 15.0, "comp": 31.5, "endless": false}]}, {"year": "2015", "games": [{"zh": "巫师 3", "en": "The Witcher 3: Wild Hunt", "w": true, "pc": true, "plats": ["PC", "PS5", "XSX", "NS2"], "main": 51.5, "comp": 175.0, "endless": false}, {"zh": "血源诅咒", "en": "Bloodborne", "w": false, "pc": false, "plats": ["PS4"], "main": 32.0, "comp": 75.0, "endless": false}, {"zh": "辐射 4", "en": "Fallout 4", "w": false, "pc": true, "plats": ["PC", "PS5", "XSX"], "main": 28.0, "comp": 160.0, "endless": false}, {"zh": "合金装备 V：幻痛", "en": "Metal Gear Solid V: The Phantom Pain", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 45.5, "comp": 162.0, "endless": false}, {"zh": "超级马力欧创作家", "en": "Super Mario Maker", "w": false, "pc": false, "plats": ["NS"], "main": 5.5, "comp": 132.0, "endless": false}]}, {"year": "2014", "games": [{"zh": "龙腾世纪：审判", "en": "Dragon Age: Inquisition", "w": true, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 46.5, "comp": 129.0, "endless": false}, {"zh": "魔兵惊天录2", "en": "Bayonetta 2", "w": false, "pc": false, "plats": ["NS"], "main": 9.0, "comp": 47.0, "endless": false}, {"zh": "黑暗之魂 II", "en": "Dark Souls II", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 43.0, "comp": 120.0, "endless": false}, {"zh": "炉石传说", "en": "Hearthstone", "w": false, "pc": true, "plats": ["PC"], "main": 38.0, "comp": null, "endless": true}, {"zh": "中土世界：暗影魔多", "en": "Middle-earth: Shadow of Mordor", "w": false, "pc": true, "plats": ["PC", "PS4", "XB1"], "main": 15.5, "comp": 33.0, "endless": false}]}]</script>
 <script>
 var YEARS = JSON.parse(document.getElementById('data').textContent);
-var KEY = 'tga_checklist_v2', OLD = 'tga_checklist_v1';
-var LABEL = {done:'✓ 通关', half:'◐ 玩过没通', want:'♡ 想加进待玩', skip:'✕ 不打算玩', no:'⊘ 没得玩'};
-
+var KEY = 'tga_checklist_v2';
+var LABEL = {done:'✓ 通关', half:'◐ 玩过没通', want:'♡ 想玩', skip:'✕ 不打算玩', no:'⊘ 没得玩'};
 var state = {};
-try {
-  var raw = localStorage.getItem(KEY);
-  if (raw) state = JSON.parse(raw) || {};
-  else {
-    var old = JSON.parse(localStorage.getItem(OLD) || 'null');
-    if (old) { // 迁移旧版 yes/no
-      Object.keys(old).forEach(function(k){
-        if (old[k] === 'yes') state[k] = 'done';
-        else if (old[k] === 'no') state[k] = 'skip';
-      });
-    }
-  }
-} catch(e) { state = {}; }
-var filter = 'all';
+try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { state = {}; }
+var filter = 'all', cards = [];
+// 之前会话里点名要玩的：默认标成「想玩」，用户自己的勾选优先
+var PRESET = {'战神：诸神黄昏':'want', '空洞骑士：丝之歌':'want'};
 
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
 function keyOf(y,i){ return y + ':' + i; }
-// 没有 PC 版的：默认视为「没得玩」，除非用户手动改过
-function eff(k, pc){ var v = state[k]; if (v) return v; return pc ? '' : 'no'; }
-
-var cards = [];
+function eff(k, pc, zh){
+  var v = state[k];
+  if (v) return v;
+  if (zh && PRESET[zh]) return PRESET[zh];
+  return pc ? '' : 'no';
+}
+function h(n){ return (n === null || n === undefined) ? null : Math.round(n); }
 
 function build(){
-  var h = '';
+  var out = '';
   YEARS.forEach(function(yr){
     var w = yr.games.filter(function(g){ return g.w; })[0];
-    h += '<section class="yr"><div class="yr-hd"><span class="y">'+yr.year+'</span>'
-      +  '<span class="t">'+ (w ? w.zh : '') +'</span>'
-      +  '<span class="c" data-yc="'+yr.year+'"></span></div><div class="cards">';
+    out += '<div class="year"><span class="y">'+yr.year+'</span>'
+        +  '<span class="w">'+ (w ? w.zh : '') +'</span>'
+        +  '<span class="c" data-yc="'+yr.year+'"></span></div>';
     yr.games.forEach(function(g, i){
       var k = keyOf(yr.year, i), pc = g.pc ? 1 : 0;
       var plats = (g.plats||[]).map(function(p){
         var c = p.indexOf('PC')===0?'pc':p.indexOf('PS')===0?'ps':p.indexOf('NS')===0?'ns':'xb';
-        return '<span class="pl '+c+'">'+p.replace('Switch','NS').replace('Nintendo','NS')+'</span>';
+        return '<span class="pl '+c+'">'+p+'</span>';
       }).join('');
-      h += '<div class="card" data-k="'+k+'" data-year="'+yr.year+'" data-pc="'+pc+'">'
-        +  '<div class="nm"><div class="name">'+g.zh + (g.w?'<span class="win">GOTY</span>':'') +'</div>'
-        +  '<div class="sub">'+(g.en && g.en!==g.zh?'<span class="en">'+g.en+'</span>':'<span class="en"></span>')
-        +  '<span class="plats">'+plats+'</span></div></div>'
-        +  '<div class="btns">'
-        +  '<button class="b" data-v="done" aria-label="通关">✓</button>'
-        +  '<button class="b" data-v="half" aria-label="玩过没通">◐</button>'
-        +  '<button class="b" data-v="want" aria-label="想玩">♡</button>'
-        +  '<button class="b" data-v="skip" aria-label="不打算玩">✕</button>'
-        +  '<button class="b" data-v="no" aria-label="没得玩">⊘</button>'
-        +  '</div></div>';
+      var dur = '';
+      if (g.endless) {
+        dur = '<span class="dur"><b>长期</b></span>';
+      } else if (g.main != null) {
+        dur = '<span class="dur"><b>'+h(g.main)+'</b>h'
+            + (g.comp != null && g.comp !== g.main ? ' <span class="to">→ '+h(g.comp)+'h</span>' : '')
+            + '</span>';
+      } else {
+        dur = '';
+      }
+      out += '<div class="row" data-k="'+k+'" data-pc="'+pc+'" data-zh="'+g.zh+'" data-main="'+(g.main||0)+'" data-comp="'+(g.comp||g.main||0)+'">'
+          +  '<div class="info"><div class="t">'+g.zh + (g.w?'<span class="goty">GOTY</span>':'') +'</div>'
+          +  '<div class="m"><span class="plats">'+plats+'</span>'
+          +  (g.en && g.en!==g.zh ? '<span class="en">'+g.en+'</span>' : '')
+          +  dur + '</div></div>'
+          +  '<div class="acts">'
+          +  '<button class="b" data-v="done" title="通关">✓</button>'
+          +  '<button class="b" data-v="half" title="玩过没通">◐</button>'
+          +  '<button class="b" data-v="want" title="想玩">♡</button>'
+          +  '<button class="b" data-v="skip" title="不打算玩">✕</button>'
+          +  '<button class="b" data-v="no" title="没得玩">⊘</button>'
+          +  '</div></div>';
     });
-    h += '</div></section>';
   });
-  document.getElementById('list').innerHTML = h;
-  cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+  document.getElementById('list').innerHTML = out;
+  cards = Array.prototype.slice.call(document.querySelectorAll('.row'));
 }
 
 function paint(){
-  var n = {done:0, half:0, want:0, skip:0, no:0, blank:0}, playable = 0;
+  var n = {done:0, half:0, want:0, skip:0, no:0, blank:0}, playable = 0, hours = 0, wantCount = 0;
   cards.forEach(function(c){
     var k = c.dataset.k, pc = c.dataset.pc === '1';
     if (pc) playable++;
-    var v = eff(k, pc);
+    var v = eff(k, pc, c.dataset.zh);
     c.dataset.s = v || '';
     Array.prototype.forEach.call(c.querySelectorAll('.b'), function(b){
       b.classList.toggle('on', v === b.dataset.v);
     });
     if (v) n[v]++; else n.blank++;
+    if (v === 'want') { wantCount++; hours += parseFloat(c.dataset.comp) || 0; }
     var show = filter === 'all'
       || (filter === 'todo' && !v)
-      || (filter === 'played' && (v==='done'||v==='half'))
-      || (filter === 'want' && v==='want')
-      || (filter === 'no' && v==='no');
+      || (filter === 'want' && v === 'want')
+      || (filter === 'played' && (v === 'done' || v === 'half'))
+      || (filter === 'no' && v === 'no');
     c.style.display = show ? '' : 'none';
   });
+
   var played = n.done + n.half;
-  document.getElementById('cDone').textContent = played;
-  document.getElementById('ofTotal').textContent = '/ ' + playable + ' 可玩';
-  document.getElementById('pct').textContent = (playable ? Math.round(played/playable*100) : 0) + '%';
-  document.getElementById('barA').style.width = (playable ? n.done/playable*100 : 0) + '%';
-  document.getElementById('barB').style.width = (playable ? n.half/playable*100 : 0) + '%';
-  document.getElementById('mDone').textContent = n.done;
-  document.getElementById('mHalf').textContent = n.half;
-  document.getElementById('mWant').textContent = n.want;
-  document.getElementById('mSkip').textContent = n.skip;
-  document.getElementById('mNo').textContent = n.no;
+  document.getElementById('kHours').textContent = Math.round(hours);
+  document.getElementById('kDays').textContent = hours > 0
+    ? '按每天 3 小时 · ' + Math.ceil(hours / 3) + ' 天'
+    : '每天 3 小时能玩完';
+  document.getElementById('kWant').textContent = wantCount;
+  document.getElementById('kWantSub').textContent = '在可玩 ' + playable + ' 席里';
+  document.getElementById('kPlayed').textContent = played;
+  document.getElementById('kPlayedSub').textContent = '通关 ' + n.done + ' · 没通 ' + n.half;
+  document.getElementById('lgPlayable').textContent = playable;
+  document.getElementById('lgMarked').textContent = played + n.want + n.skip;
+  document.getElementById('lgLocked').textContent = n.no;
+  document.getElementById('barA').style.width = (playable ? n.done / playable * 100 : 0) + '%';
+  document.getElementById('barB').style.width = (playable ? n.half / playable * 100 : 0) + '%';
+
   YEARS.forEach(function(yr){
-    var el = document.querySelector('[data-yc="'+yr.year+'"]'); if(!el) return;
-    var y=0, tot=yr.games.length, p=0;
-    yr.games.forEach(function(g,i){
+    var el = document.querySelector('[data-yc="'+yr.year+'"]'); if (!el) return;
+    var y = 0, p = 0;
+    yr.games.forEach(function(g, i){
       var pc = g.pc ? 1 : 0; if (pc) p++;
-      var v = eff(keyOf(yr.year,i), pc);
-      if (v==='done'||v==='half') y++;
+      var v = eff(keyOf(yr.year, i), pc, g.zh);
+      if (v === 'done' || v === 'half') y++;
     });
-    el.textContent = p ? (y+'/'+p) : ('— /'+tot);
-    el.style.color = (p && y===p) ? 'var(--done)' : '';
+    el.textContent = p ? (y + '/' + p) : '—';
   });
+
   var any = cards.some(function(c){ return c.style.display !== 'none'; });
   document.getElementById('empty').style.display = any ? 'none' : 'block';
 }
@@ -282,58 +325,50 @@ function toast(msg){
 document.addEventListener('click', function(ev){
   var b = ev.target.closest('.b');
   if (b) {
-    var card = b.closest('.card'), k = card.dataset.k, v = b.dataset.v;
-    var cur = eff(k, card.dataset.pc === '1');
-    if (cur === v) { delete state[k]; } else { state[k] = v; }
+    var row = b.closest('.row'), k = row.dataset.k, v = b.dataset.v;
+    var cur = eff(k, row.dataset.pc === '1', row.dataset.zh);
+    if (cur === v) delete state[k]; else state[k] = v;
     save(); paint();
     if (cur !== v) toast(LABEL[v]);
     return;
   }
-  var tab = ev.target.closest('.tab');
-  if (tab) {
-    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
-    tab.classList.add('on'); filter = tab.dataset.f; paint();
-    window.scrollTo({top: 0, behavior: 'smooth'});
+  var chip = ev.target.closest('.chip');
+  if (chip) {
+    document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+    chip.classList.add('on'); filter = chip.dataset.f; paint();
   }
 });
 
 document.getElementById('btnReset').onclick = function(){
-  if (!confirm('清空所有标记？（主机独占会自动恢复成「没得玩」）')) return;
-  state = {}; save(); paint(); toast('已重来');
+  if (!confirm('清空所有勾选？')) return;
+  state = {}; save(); paint(); toast('已清空');
 };
 
 document.getElementById('btnCopy').onclick = function(){
-  var groups = {done:[], half:[], want:[], skip:[], no:[]};
+  var g = {done:[], half:[], want:[], skip:[], no:[]};
   YEARS.forEach(function(yr){
-    yr.games.forEach(function(g,i){
-      var v = eff(keyOf(yr.year,i), g.pc);
-      if (v) groups[v].push(yr.year + ' ' + g.zh);
+    yr.games.forEach(function(x, i){
+      var v = eff(keyOf(yr.year, i), x.pc, x.zh);
+      if (v) g[v].push(yr.year + ' ' + x.zh + (x.comp ? '（' + h(x.comp) + 'h）' : ''));
     });
   });
-  var head = {done:'✅ 通关过（', half:'◐ 玩过没通（', want:'♡ 想玩（', skip:'✕ 不打算玩（', no:'⊘ 没得玩·平台限制（'};
-  var L = ['TGA 年度游戏提名 2014–2025 · 我的游玩情况'];
-  ['done','half','want','skip','no'].forEach(function(g){
-    if (!groups[g].length) return;
-    L.push('');
-    L.push(head[g] + groups[g].length + '）');
-    L.push(groups[g].join('、'));
+  var hrs = 0;
+  cards.forEach(function(c){ if (eff(c.dataset.k, c.dataset.pc === '1', c.dataset.zh) === 'want') hrs += parseFloat(c.dataset.comp) || 0; });
+  var head = {done:'✅ 通关', half:'◐ 玩过没通', want:'♡ 想玩', skip:'✕ 不打算玩', no:'⊘ 没得玩'};
+  var L = ['TGA 年度游戏提名 2014–2025 · 我的进度'];
+  ['done','half','want','skip','no'].forEach(function(s){
+    if (!g[s].length) return;
+    L.push(''); L.push(head[s] + '（' + g[s].length + '）'); L.push(g[s].join('、'));
   });
-  var p = 0, y = 0;
-  cards.forEach(function(c){
-    if (c.dataset.pc === '1') p++;
-    var v = eff(c.dataset.k, c.dataset.pc === '1');
-    if (v==='done'||v==='half') y++;
-  });
-  L.push('');
-  L.push('—— 可玩 ' + p + ' 席中玩过 ' + y + ' 席（' + Math.round(y/p*100) + '%）');
+  L.push(''); L.push('想玩合计 ' + Math.round(hrs) + ' 小时，按每天 3 小时约 ' + Math.ceil(hrs/3) + ' 天');
   var txt = L.join('\n');
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(txt).then(function(){ toast('已复制到剪贴板'); }, function(){ fb(txt); });
+    navigator.clipboard.writeText(txt).then(function(){ toast('已复制'); }, function(){ fb(txt); });
   } else fb(txt);
   function fb(t){
     var ta = document.createElement('textarea'); ta.value = t;
-    ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
-    ta.select(); try{ document.execCommand('copy'); toast('已复制'); }catch(e){ toast('复制失败'); }
+    ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand('copy'); toast('已复制'); } catch(e){ toast('复制失败'); }
     document.body.removeChild(ta);
   }
 };
