@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="读过的长文，我按主题浓缩成这些。每条都留着原文出处——浓缩会丢细节，真要下判断还得回原文。">
-<title>笔记 · patrick</title>
+<meta name="description" content="这篇文章的核心判断是：AI时代最难被替代的不是“会不会写某种语法”，而是做选择的品味和把结果做稳的工程思维。">
+<title>AI 时代的品味与工程思维 · patrick</title>
 <style>
 *{box-sizing:border-box}
 :root,[data-theme="dark"]{
@@ -115,37 +115,158 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </head>
 <body>
 <div class="bar"><div class="bar-in">
-  <a class="brand" href="../">patrick</a>
+  <a class="brand" href="../../">patrick</a>
   <nav class="nav">
-    <a href="../">首页</a>
-    <a href="./" class="on">笔记</a>
-    <a href="../lab/">Lab</a>
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
   </nav>
 </div></div>
-<div class="wrap"><h1 class="page-title">笔记</h1><p class="lede">读过的长文，我按主题浓缩成这些。每条都留着原文出处——浓缩会丢细节，真要下判断还得回原文。</p><ul class="posts" id="posts"><li data-kind="own"><a href="ai-fatigue/"><h2>AI 疲劳与可持续使用</h2><p class="desc">用 AI 越多越累是真的：审阅和上下文切换的成本被严重低估。怎么安排注意力，比换哪个模型更影响产出。</p><time>October 12, 2026</time></a></li><li data-kind="own"><a href="taste-and-engineering/"><h2>AI 时代的品味与工程思维</h2><p class="desc">AI 消灭的是语法层面的痛苦，留下的是判断：什么该交给它、结果算不算能用、维护成本推给了谁。</p><time>June 24, 2026</time></a></li><li data-kind="own"><a href="research-as-compounding/"><h2>研究方法论与复利思维</h2><p class="desc">研究速度 = 发现自己错了的速度。八个能练的模块：选自己的题、升级信息源、写下来、缩紧循环、盯着输出。</p><time>June 24, 2026</time></a></li><li data-kind="own"><a href="html-artifact/"><h2>AI 输出形态与 HTML Artifact</h2><p class="desc">让模型输出 HTML 而不是长文：能点的原型比一段段文字更快对齐预期。</p><time>June 24, 2026</time></a></li><li data-kind="own"><a href="codex-workflow/"><h2>Codex 与 AI 编程工作流</h2><p class="desc">Codex 的官方用法加上我自己的取舍：任务怎么切、上下文怎么给、什么时候该自己写。</p><time>June 10, 2026</time></a></li><li data-kind="own"><a href="the-70-percent-problem/"><h2>AI 辅助编程的 70% 问题</h2><p class="desc">AI 能把项目做到 70%，剩下 30% 是上下文、维护和「看着对但不好用」——专业性正好落在这 30% 里。</p><time>June 8, 2026</time></a></li><li data-kind="own"><a href="agent-infra-and-runtime/"><h2>Agent Infra 与 Runtime</h2><p class="desc">Agent Infra 既不是训练设施也不是推理服务：它管上下文、工具、状态和验证，决定 Agent 能不能长期跑下去。</p><time>June 8, 2026</time></a></li></ul></div><script>
-(function(){
-  var tabs=document.getElementById('tabs');
-  if(!tabs)return;
-  tabs.addEventListener('click',function(e){
-    var b=e.target.closest('button'); if(!b)return;
-    var f=b.dataset.f;
-    [].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===b);});
-    var shown=0;
-    [].forEach.call(document.querySelectorAll('#posts li'),function(li){
-      var ok=(f==='all'||li.dataset.kind===f);
-      li.style.display=ok?'':'none'; if(ok)shown++;
-    });
-    var empty=document.getElementById('emptyHint');
-    if(empty)empty.style.display=shown?'none':'block';
-  });
-})();
-</script>
+<div class="wrap"><article class="article"><h1>AI 时代的品味与工程思维</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>品味 + 工程思维：AI 时代最难被替代的两件事 · 好奇心周刊第25期 如何让 AI 写好代码</aside><div class="body"><p>这篇文章的核心判断是：AI 时代最难被替代的不是“会不会写某种语法”，而是 <strong>做选择的品味</strong> 和 <strong>把结果做稳的工程思维</strong>。</p>
+<h2>一句话结论</h2>
+<p>AI 消灭的是语法层面的痛苦，保留的是工程判断。</p>
+<p>语法、样板代码、胶水代码可以交给 AI，但人必须负责：</p>
+<ul>
+<li>把需求想清楚；</li>
+<li>把系统设计清楚；</li>
+<li>把风险边界想清楚；</li>
+<li>把结果验证清楚；</li>
+<li>判断生成结果是不是“能跑但不好用”。</li>
+</ul>
+<h2>品味是什么</h2>
+<p>品味不是审美偏好，也不是天赋，而是长期决策力：在多个可行方案里，选择更贴近目标、更省长期维护成本、更让用户少犯错的方案。</p>
+<p>判断一个选择有没有品味，可以问三个问题：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>判断方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>是更贴近目标，还是只是更复杂？</td>
+<td>防止为技术而技术</td>
+</tr>
+<tr>
+<td>是降低长期维护成本，还是只是当下省事？</td>
+<td>防止把成本推给未来</td>
+</tr>
+<tr>
+<td>是让用户更容易成功，还是只是自己写得爽？</td>
+<td>防止只关注实现快感</td>
+</tr>
+</tbody>
+</table>
+<p>放到简历、面试、项目复盘里，品味就是能说清楚：为什么这样取舍，为什么不选另一个方案，长期后果是什么。</p>
+<h2>工程思维是什么</h2>
+<p>工程思维是把“我觉得差不多”替换成“我知道它在这些条件下是对的”。</p>
+<p>它不是会写代码，而是让结果稳定发生的习惯：</p>
+<table>
+<thead>
+<tr>
+<th>习惯</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>拆分</td>
+<td>把大需求拆成能下手的小任务，区分核心和边角</td>
+</tr>
+<tr>
+<td>全局</td>
+<td>不只解决眼前问题，还看和系统其它部分的关系</td>
+</tr>
+<tr>
+<td>三问</td>
+<td>边界在哪、会在哪里坏、怎么证明没坏</td>
+</tr>
+</tbody>
+</table>
+<p>这和 [[Career/工程能力/工程方法论与安全清单|工程方法论与安全清单]] 里的验证、评审、安全清单是一套逻辑：不是追求“写出来”，而是追求“交付后还能稳定运行”。</p>
+<h2>AI 时代的隐藏成本</h2>
+<p>AI 让写代码变便宜，但让错误和复杂度更容易积累。</p>
+<p>常见风险：</p>
+<ul>
+<li><strong>错得更隐蔽</strong>：实现看起来能跑，但边界条件、权限、时区、并发、异常兜底可能有问题。</li>
+<li><strong>复杂度更容易失控</strong>：AI 不会心疼维护成本，可能顺手加抽象、加依赖、复制逻辑。</li>
+<li><strong>天然偏局部最优</strong>：每次只解决当前 prompt，容易和项目已有约定打架。</li>
+</ul>
+<p>所以 AI 不是替你判断，而是放大你的判断。基础能力越强，AI 越像杠杆；基础能力越弱，AI 只会更快地产生不稳定输出。</p>
+<h2>品味、边界和问题</h2>
+<p>“如何让 AI 写好代码”的案例补充了三个更具体的人类责任：</p>
+<ul>
+<li>品味：判断 UI、交互、概念命名和产品结构是否优雅，而不是只看功能是否生成。</li>
+<li>边界：发现代码膨胀、文件过长、重复逻辑和技术债时，及时推动重构、测试和规则更新。</li>
+<li>问题：通过持续追问让 AI 参与方案探索，例如 <code>What is your opinion?</code>、<code>Do you have a better idea?</code>。</li>
+</ul>
+<p>这说明 AI 编程不是让人退出创造过程，而是把人的价值前移到需求澄清、产品判断、架构边界和审美选择上。</p>
+<h2>使用 AI 前的最小规格</h2>
+<p>下次让 AI 干活前，先写一份最小规格：</p>
+<pre><code class="language-text">目标：一句话说明要达成什么
+输入：有哪些已知材料、约束、上下文
+输出：需要什么格式、范围、验收标准
+必须对：哪些地方不能错
+可以先凑合：哪些地方可以后续再优化
+最容易出问题：边界、故障、依赖、权限、数据、并发
+</code></pre>
+<p>这份规格越清楚，AI 输出越可控。很多时候写不出规格，说明自己还没想清楚。</p>
+<h2>练习方法</h2>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>怎么练</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>先拆分</td>
+<td>每个需求先拆成 3-7 个小任务，再让 AI 分步处理</td>
+</tr>
+<tr>
+<td>先跑通</td>
+<td>先做一个可验证的笨版本，再考虑抽象和优化</td>
+</tr>
+<tr>
+<td>常复盘</td>
+<td>做完后问：这次做了什么取舍？哪里最可能坏？重做会删掉什么？</td>
+</tr>
+<tr>
+<td>看 diff</td>
+<td>AI 生成后不要直接接受，先看改动边界、重复代码和异常路径</td>
+</tr>
+<tr>
+<td>写验证</td>
+<td>要求 AI 同时给测试、日志、验收步骤，而不是只给代码</td>
+</tr>
+</tbody>
+</table>
+<h2>面试表达</h2>
+<p>可以把这篇文章转成一句面试表达：</p>
+<blockquote>
+<p>我现在用 AI 写代码，但不会把 AI 当成替代工程判断的东西。语法和样板代码可以交给 AI，但需求拆分、边界判断、异常场景、验证方式还是要自己负责。我一般会先写最小规格，明确输入输出、必须正确的点、最容易出问题的地方，再让 AI 生成实现，最后看 diff 和验证路径。这样 AI 更像放大器，而不是让我更快地产生技术债。</p>
+</blockquote>
+<p>这段可以和 [[Career/工程能力/工程方法论与安全清单|工程方法论与安全清单]]、[[Career/工程能力/Agentic工程架构详解|Agentic 工程架构详解]] 串起来，用来回答：</p>
+<ul>
+<li>“你现在怎么使用 AI？”</li>
+<li>“AI 写代码你怎么保证质量？”</li>
+<li>“你怎么理解工程能力？”</li>
+<li>“你怎么避免 AI 生成一堆不可维护代码？”</li>
+</ul>
+<p>相关补充：</p>
+<ul>
+<li>[[Resources/Codex 与 AI 编程工作流|Codex 与 AI 编程工作流]]</li>
+<li>[[Resources/AI 辅助编程的 70% 问题|AI 辅助编程的 70% 问题]]</li>
+<li>[[Resources/AI 输出形态与 HTML Artifact|AI 输出形态与 HTML Artifact]]</li>
+<li>[[Resources/当 AI 拿走一切之后|当 AI 拿走一切之后]]：判断力、品味、推演三样拿不走的东西，与本文品味→工程思维的论述互补（Airing 偏存在层面，本文偏操作层面）。</li>
+</ul></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
-  © 2026 <a href="../about/">patrick</a>
+  © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script>
 (function(){
