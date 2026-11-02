@@ -1,11 +1,16 @@
 /* 首页特有样式（基础层见 base.css） */
+/* ─── 响应式断点约定（全站统一） ───
+   A 手机     ≤720px
+   B 平板竖屏  721–1023px
+   C 平板横屏 1024–1279px
+   D 桌面     ≥1280px（默认样式即 D，不需要媒体查询）
+   base.css 管外壳，本文件只管本页特有样式；新规则请放进对应档位，别再自创断点。
+   ─────────────────────────────── */
 /* 断点约定：≤720px 移动端 / >720px 桌面 / >1180px 显示右侧目录 */
 *{box-sizing:border-box}
 
 /* top bar */
 
-[data-theme="dark"] .icon-moon{display:none}
-[data-theme="light"] .icon-moon{display:block}
 
 /* index */
 .page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
