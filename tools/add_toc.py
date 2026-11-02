@@ -38,7 +38,7 @@ CSS = """
 .back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
-  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  font-family:var(--sans);font-size:.78rem;line-height:1.55;max-height:calc(100vh - 160px);
   display:flex;flex-direction:column;transition:opacity .2s ease}
 .toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
   font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
