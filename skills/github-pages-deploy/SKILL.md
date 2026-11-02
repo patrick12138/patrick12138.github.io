@@ -10,6 +10,8 @@ version: 3.1.0
 工作副本固定 `/var/minis/workspace/site/`，URL 形态 `https://patrick12138.github.io/<子目录>/`。
 **不要为单个页面新建仓库。**
 
+仓库根的 `AGENTS.md` 是给 agent 的入口（对表清单 / 改哪儿 / 坑点表），本 skill 是它的展开版。
+
 ```
 index.html                首页 = 唯一文章列表（全部 / 搬运 / 个人 三个 tab）
 about/  lab/  tga/  backlog/
