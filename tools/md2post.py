@@ -288,7 +288,8 @@ def to_date(v):
 
 
 def fmt_date(d):
-    return "%s %d, %d" % (MONTHS[d.month - 1], d.day, d.year)
+    """中文日期：2026年10月15日"""
+    return "%d年%d月%d日" % (d.year, d.month, d.day)
 
 
 # ─── 生成 ──────────────────────────────────────────────────
