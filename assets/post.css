@@ -124,7 +124,12 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 384px);width:220px;z-index:30;
-  font-family:var(--sans);font-size:.78rem;line-height:1.55;max-height:calc(100vh - 176px);
+  font-family:var(--sans);font-size:.78rem;line-height:1.55;
+  max-height:calc(100vh - 200px);
+  padding:12px 10px 14px 12px;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:4px;
   display:flex;flex-direction:column;transition:opacity .2s ease}
 .toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
   font-size:.68rem;letter-spacing:.08em;margin-bottom:10px;cursor:pointer;
@@ -135,12 +140,12 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 @media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
 .toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:none;
   border-left:1px solid var(--border)}
-.toc-list{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--text) 24%,transparent) transparent}
-.toc-list:hover{scrollbar-color:color-mix(in srgb,var(--text) 40%,transparent)}
+.toc-list{scrollbar-width:thin;scrollbar-color:rgba(106,162,216,.42) transparent}
+.toc-list:hover{scrollbar-color:rgba(106,162,216,.7) transparent}
 .toc-list::-webkit-scrollbar{width:4px;height:4px}
-.toc-list::-webkit-scrollbar-track{background:color-mix(in srgb,var(--text) 6%,transparent)}
-.toc-list::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text) 26%,transparent);border-radius:4px}
-.toc-list:hover::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text) 42%,transparent)}
+.toc-list::-webkit-scrollbar-track{background:transparent}
+.toc-list::-webkit-scrollbar-thumb{background:rgba(106,162,216,.42);border-radius:3px}
+.toc-list:hover::-webkit-scrollbar-thumb{background:rgba(106,162,216,.7)}
 .toc-list::-webkit-scrollbar-button{display:none;height:0;width:0}
 .toc-list a{display:block;padding:6px 0 6px 12px;margin-left:-1px;color:var(--text-muted);
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
@@ -224,6 +229,19 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .to-top svg{display:block}
 @media (min-width:721px){ .to-top{display:flex} .back-top{display:none} }
 
+<<<<<<< HEAD
 /* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
    用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */
 html,body{overflow-x:clip}
+=======
+[data-theme="light"] .toc-list{scrollbar-color:rgba(45,100,150,.4) transparent}
+[data-theme="light"] .toc-list:hover{scrollbar-color:rgba(45,100,150,.65) transparent}
+[data-theme="light"] .toc-list::-webkit-scrollbar-thumb{background:rgba(45,100,150,.4)}
+[data-theme="light"] .toc-list:hover::-webkit-scrollbar-thumb{background:rgba(45,100,150,.65)}
+
+/* 目录底部渐隐：提示还有内容，且不和页面底部撞在一起 */
+.toc::after{content:'';position:absolute;left:1px;right:9px;bottom:1px;height:34px;
+  background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 88%,transparent));
+  pointer-events:none;border-radius:0 0 4px 4px}
+.toc.is-collapsed::after{display:none}
+>>>>>>> f9504f1 (style(toc): 目录改半透明面板，滚动条用强调色，底部渐隐避免与 footer 冲突)
