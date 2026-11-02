@@ -131,6 +131,38 @@ def check_descriptions():
     return bad
 
 
+# 上线前必须过一遍的脱敏清单：前公司名、证件、联系方式、内网地址、密钥
+PRIVACY_HARD = [
+    ("前公司/客户名", r"合地|保信|华钦|CLPS|富卫|FWD"),
+    ("证件/银行卡", r"身份证|银行卡|社保号"),
+    ("手机号", r"(?<!\d)1[3-9]\d{9}(?!\d)"),
+    ("内网地址", r"\b(?:192\.168|10\.|172\.(?:1[6-9]|2\d|3[01]))\.\d+\.\d+"),
+    ("疑似密钥", r"sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}"),
+]
+PRIVACY_SOFT = [
+    ("邮箱（搬运原文里的公开联系方式，确认无隐私即可）", r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
+    ("求职痕迹", r"求职|面试话术|内推"),
+    ("薪资数字", r"月薪\s*\d|年薪\s*\d|工资\s*\d"),
+]
+
+
+def check_privacy():
+    """P0：前公司名/证件/联系方式/内网/密钥；P1：求职痕迹、薪资。"""
+    hard, soft = [], []
+    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
+        slug = os.path.basename(os.path.dirname(p))
+        s = open(p, encoding="utf-8").read()
+        body = body_of(s)
+        text = re.sub(r"<[^>]+>", " ", body)
+        for name, pat in PRIVACY_HARD:
+            for m in re.finditer(pat, text):
+                hard.append((slug, name, text[max(0, m.start() - 20):m.start() + 24].strip()))
+        for name, pat in PRIVACY_SOFT:
+            for m in re.finditer(pat, text):
+                soft.append((slug, name, text[max(0, m.start() - 16):m.start() + 20].strip()))
+    return hard, soft
+
+
 def main():
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
     total = {k: 0 for k in ("P0", "P1", "P2")}
@@ -145,6 +177,18 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    hard, soft = check_privacy()
+    if hard:
+        print("\n脱敏：必须处理的内容（P0）")
+        for slug, name, ctx in hard[:8]:
+            print("  [P0] %s · %s → %s" % (slug, name, ctx))
+        total["P0"] += len(hard)
+    if soft:
+        print("\n脱敏：建议处理（P1）")
+        for slug, name, ctx in soft[:5]:
+            print("  [P1] %s · %s → %s" % (slug, name, ctx))
+        total["P1"] += len(soft)
+
     desc_bad = check_descriptions()
     if desc_bad:
         print("\n首页摘要不合格（太短 / 把正文或口号当摘要）")

@@ -11,7 +11,7 @@
 <meta property="og:description" content="苏格拉底式编程 + Claude/Gemini/Codex 的专家级协同，100% AI 编程的个人项目经验总结">
 <meta property="og:url" content="https://patrick12138.github.io/posts/make-ai-write-good-code/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=173a6925"><link rel="stylesheet" href="../../assets/post.css?v=9087aa66">
+<link rel="stylesheet" href="../../assets/base.css?v=173a6925"><link rel="stylesheet" href="../../assets/post.css?v=9e7013d2">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -24,7 +24,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">2026年2月26日 · 胡涂说 · 搬运 · <span class="stats">5,313 字 · 约 14 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l3" data-h="h7"></i></span></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
+<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">2026年2月26日 · 胡涂说 · 搬运 · <span class="stats">5,313 字 · 约 14 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li><li class="lvl4"><a href="#h1">好奇心周刊第24期: 关于AI编程的一些体会和设想</a></li><li class="lvl4"><a href="#h2">好奇心周刊第23期: Claude Code 氛围编程初体验</a></li><li class="lvl4"><a href="#h3">好奇心周刊第21期: 推理模型的构建与未来</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l3" data-h="h7"></i><i class="b l4" data-h="h1"></i><i class="b l4" data-h="h2"></i><i class="b l4" data-h="h3"></i></span></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
 <p>在 <a href="https://hutusi.com/weeklies/24">上一期周刊</a> 中，我谈了下对AI编程 / Vibe Coding 的一些看法。在这期里，我想就自己在AI编程上投入最多时间、最长跨度的一个项目为例，谈一谈如何让AI写好代码，实现一个完整的软件项目。这是一个从零开始、历经 400 多个 Commit 打磨、100% 由 AI 编程实现的项目——也是我二十年博客生涯中接触过的最优雅、交互体验最佳的博客框架，我对它颇为满意。</p>
 <p><img alt="la-nascita-di-veneree" src="../../assets/posts/make-ai-write-good-code/4c6240325659.webp"></p>
 <blockquote>
@@ -108,13 +108,13 @@
 <p>文章在微信公众号同步发布</p>
 <h3 id="h7">相关文章</h3>
 <p>2026-01-25 weekly</p>
-<h4><a href="https://hutusi.com/weeklies/24/">好奇心周刊第24期: 关于AI编程的一些体会和设想</a></h4>
+<h4 id="h1"><a href="https://hutusi.com/weeklies/24/">好奇心周刊第24期: 关于AI编程的一些体会和设想</a></h4>
 <p>如何看待及用好 AI 编程和 Code Agent，以及作为程序员应该做什么</p>
 <p>weekly</p>
-<h4><a href="https://hutusi.com/weeklies/23/">好奇心周刊第23期: Claude Code 氛围编程初体验</a></h4>
+<h4 id="h2"><a href="https://hutusi.com/weeklies/23/">好奇心周刊第23期: Claude Code 氛围编程初体验</a></h4>
 <p>Claude Code, Haiku 4.5, Sonnet 4.5, CLAUDE.md 及其他</p>
 <p>weekly</p>
-<h4><a href="https://hutusi.com/weeklies/21/">好奇心周刊第21期: 推理模型的构建与未来</a></h4>
+<h4 id="h3"><a href="https://hutusi.com/weeklies/21/">好奇心周刊第21期: 推理模型的构建与未来</a></h4>
 <p>跟着 Sebastian Raschka 博客学习推理模型</p></div>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../ai-fatigue-is-real/"><span class="pager-k">← 上一篇</span><span class="pager-t">AI fatigue is real and nobody talks about it</span></a><a class="pager-next" href="../why-i-dont-vibe-code/"><span class="pager-k">下一篇 →</span><span class="pager-t">Why I Don’t Vibe Code</span></a></nav>
 <a class="back" href="../../">← 返回首页</a></article></div>

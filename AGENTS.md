@@ -53,6 +53,7 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 | 想改的东西 | 改这里 |
 |---|---|
 | 加文章 | vault 里的 md → `tools/sources.json` → `build.py` |
+| **脱敏** | vault 里的 md 改词（公司名换代号）→ `md2post` 重生成 → `qa.py` 复查 |
 | **下线文章** | `tools/unpublish.py <slug>`（git rm + 移出 sources.json + 重生成列表/feed） |
 | 文章正文排版 | `assets/post.css` |
 | 首页列表/分类/搜索 | `tools/gen_index.py`（**不是** `index.html`） |
@@ -67,7 +68,9 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 2. **生成物不手改**：`index.html`、`posts/**` 改了也会被下次 build 覆盖。
 3. **push 前必须跑 `build.py`**，qa 的 P0 必须为 0。
 4. **按钮里不放文字**，只放图标 + `aria-label`；要文字就用文字链接。
-5. **后处理脚本必须幂等**：跑两遍字节一致、注入标记各只有 1 份。
+5. **上线前脱敏**：前公司名（合地/保信/华钦…）、证件、手机号、内网地址、密钥一律 P0 拦截；
+   求职痕迹、薪资算 P1。细节见 `references/privacy.md`，改 vault 里的 md 不要只改 HTML。
+6. **后处理脚本必须幂等**：跑两遍字节一致、注入标记各只有 1 份。
 
 ## 6. 踩过的坑（别再踩）
 

@@ -206,15 +206,15 @@ def build_toc(doc):
         items.append((tag, hid, plain))
         return '<%s%s id="%s">%s</%s>' % (tag, attrs, hid, text, tag)
 
-    body2 = re.sub(r'<(h2|h3)([^>]*)>(.*?)</\1>', repl, body, flags=re.S)
+    body2 = re.sub(r'<(h2|h3|h4)([^>]*)>(.*?)</\1>', repl, body, flags=re.S)
     if len(items) < 3:
         return doc, ""
     li = "".join(
-        '<li class="lvl%s"><a href="#%s">%s</a></li>' % ("3" if tag == "h3" else "2", hid, htmllib.escape(t))
+        '<li class="lvl%s"><a href="#%s">%s</a></li>' % ({"h2": "2", "h3": "3"}.get(tag, "4"), hid, htmllib.escape(t))
         for tag, hid, t in items
     )
     bars = "".join(
-        '<i class="b %s" data-h="%s"></i>' % ("l3" if tag == "h3" else "l2", hid)
+        '<i class="b %s" data-h="%s"></i>' % ({"h2": "l2", "h3": "l3"}.get(tag, "l4"), hid)
         for tag, hid, _ in items
     )
     doc = doc[:m.start(1)] + body2 + doc[m.end(1):]

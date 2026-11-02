@@ -70,6 +70,7 @@
 .toc-list a:hover{color:var(--heading)}
 .toc-list li.lvl2>a{color:var(--text);font-weight:500}
 .toc-list li.lvl3>a{padding-left:27px;font-size:.8rem;opacity:.9}
+.toc-list li.lvl4>a{padding-left:41px;font-size:.76rem;opacity:.8}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 
 /* ── PC：右缘三条杠，悬停即在旁边展开 ── */
@@ -91,6 +92,7 @@
     transition:opacity .18s ease,background .18s ease,width .18s ease}
   .toc-bars .b.l2{width:18px}
   .toc-bars .b.l3{width:11px;opacity:.34}
+  .toc-bars .b.l4{width:8px;opacity:.28}
   .toc-bars .b.on{opacity:1;background:var(--accent);width:24px}
   .toc-bars .b.l3.on{width:15px}
   .toc-bars.compact{gap:3px}
@@ -108,6 +110,7 @@
   .toc.is-open{transform:none}
   .toc-list a{padding:9px 16px 9px 13px;font-size:.9rem}
   .toc-list li.lvl3>a{padding-left:29px;font-size:.85rem}
+  .toc-list li.lvl4>a{padding-left:44px;font-size:.8rem}
   .toc-handle{display:none}
 
   .toc-fab{display:flex;position:fixed;z-index:61;

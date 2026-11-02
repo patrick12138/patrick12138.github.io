@@ -11,7 +11,7 @@
 <meta property="og:description" content="OpenAI 在 28 天内使用 Codex 发布 Android 版 Sora。AI 辅助规划、转换和并行编码工作流帮助敏捷团队实现快速交付、稳定开发。">
 <meta property="og:url" content="https://patrick12138.github.io/posts/sora-android-28-days/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=173a6925"><link rel="stylesheet" href="../../assets/post.css?v=9087aa66">
+<link rel="stylesheet" href="../../assets/base.css?v=173a6925"><link rel="stylesheet" href="../../assets/post.css?v=9e7013d2">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -24,7 +24,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>我们如何使用 Codex 在 28 天内构建 Android 版 Sora</h1><div class="meta">2025年10月30日 · OpenAI · 搬运 · <span class="stats">4,491 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/" rel="noopener">https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/</a></aside><div class="body"><p>2025年12月12日</p>
+<div class="wrap"><article class="article"><h1>我们如何使用 Codex 在 28 天内构建 Android 版 Sora</h1><div class="meta">2025年10月30日 · OpenAI · 搬运 · <span class="stats">4,491 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/" rel="noopener">https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl4"><a href="#h1">拥抱布鲁克斯定律：保持灵活，快速行动</a></li><li class="lvl4"><a href="#h2">为新任高级工程师提供引导</a></li><li class="lvl4"><a href="#h3">纯文本</a></li><li class="lvl4"><a href="#h4">亲手奠定基础</a></li><li class="lvl4"><a href="#h5">在编写代码前使用 Codex 进行规划</a></li><li class="lvl4"><a href="#h6">分布式工程</a></li><li class="lvl4"><a href="#h7">Codex：跨平台开发的超能力</a></li><li class="lvl4"><a href="#h8">未来的软件工程，现在触手可及</a></li><li class="lvl2"><a href="#h9">继续阅读我们如何构建 OWL —— 驱动基于 ChatGPT 的浏览器 Atlas 的新架构</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l4" data-h="h1"></i><i class="b l4" data-h="h2"></i><i class="b l4" data-h="h3"></i><i class="b l4" data-h="h4"></i><i class="b l4" data-h="h5"></i><i class="b l4" data-h="h6"></i><i class="b l4" data-h="h7"></i><i class="b l4" data-h="h8"></i><i class="b l2" data-h="h9"></i></span></button><div class="body"><p>2025年12月12日</p>
 <p><a href="https://openai.com/zh-Hans-CN/news/engineering/">工程</a> <a href="https://openai.com/news/company-announcements/">公司</a></p>
 <p>作者：Patrick Hum 和 RJ Marsan，技术团队成员</p>
 <p><em>Sora 产品已于 2026 年 4 月 26 日正式关停。</em></p>
@@ -35,12 +35,12 @@
 <p><a class="video-link" href="https://openaiassets.blob.core.windows.net/$web/nf2/blog-final/golden/6eda9a57-5d6d-4890-90ee-61f89e999719/triple_axel.mp4" rel="noopener">观看视频 →</a></p>
 
 <p>Prompt: figure skater performs a triple axle with a cat on her head</p>
-<h4>拥抱布鲁克斯定律：保持灵活，快速行动</h4>
+<h4 id="h1">拥抱布鲁克斯定律：保持灵活，快速行动</h4>
 <p>iOS 版 Sora 一经发布，使用量就呈爆炸式增长。人们立即开始生成大量视频。相较之下，Android 系统中只有一个小型内部原型，而 Google Play 中预注册的用户数量正不断增加。</p>
 <p>面对高风险、时间紧的发布工作，常见的响应策略是积累资源并增加流程。具有如此规模和质量的生产应用通常需要众多工程师花费数月时间来开发，且因协调工作而进展缓慢。</p>
 <p>美国计算机架构师 Fred Brooks 曾有一句广为流传的警言：“向已延期的软件项目增加人手，只会让它更晚完成。”换句话说，当试图快速交付一个复杂项目时，引入更多工程师往往会导致沟通成本增加、任务分散和集成成本攀升而降低效率。我们并未忽视这一洞察，而是选择积极加以利用；我们组建了一个由四名工程师组成的强大团队 — 每位工程师均配置 Codex，以大幅提高其产出能力。</p>
 <p>通过这种方式，我们在 18 天内向员工发布了 Android 版 Sora 内部版本，并在 10 天后公开上线。我们在 Android 工程实践中坚持高标准，在可维护性方面进行投资，并对应用可靠性提出与传统项目相同的要求。（如今，我们仍在广泛使用 Codex，以优化该应用并为其添加新功能）。</p>
-<h4>为新任高级工程师提供引导</h4>
+<h4 id="h2">为新任高级工程师提供引导</h4>
 <p>要了解我们如何与 Codex 开展合作，就必须明确它在哪些方面发挥作用，在哪些方面需要指导。将其视作一名新任高级工程师，就是一个好方法。Codex 的能力意味着我们可以投入更多时间指导和审核代码，而无需自行编写代码。</p>
 <p><strong>Codex 需要指导的环节</strong></p>
 <ol>
@@ -50,7 +50,7 @@
 <li>同样，Codex 在深层架构判断环节也面临挑战：如果不加以引导，它可能会在我们希望扩展现有模型的领域引入额外的视图模型，或者将本应归入存储库的逻辑推向 UI 层。其本能是实现功能运作，而非优先考虑长期代码整洁性。</li>
 </ol>
 <p>我们发现，让 Codex 在整个代码库中创建和维护大量 AGENT.md 文件非常实用。这样，我们就能实现在各个会话间轻松应用相同的指导和最佳实践。例如，为了确保 Codex 按照我们的风格指南编写代码，我们已在顶层 AGENTS.md 中添加以下内容：</p>
-<h4>纯文本</h4>
+<h4 id="h3">纯文本</h4>
 <pre><code>## Formatting and static checks
 - **Always run** `./gradlew detektFix` (or for the affected modules) **before committing**. CI will fail if formatting or detekt issues are present.
 </code></pre>
@@ -64,26 +64,26 @@
 <li>提高工作效率：在实践中，我们花在审核和指导代码上的时间比自行编写代码的时间还多。话虽如此，Codex 也十分擅长代码审核，常在代码合并前发现漏洞，从而提升可靠性。</li>
 </ol>
 <p>一旦认识到这些特性，我们的工作模型就会变得更加简单明了。我们依靠 Codex 在已知模式和明确范围内完成大量繁重的工作，而我们的团队则专注于架构、用户体验、系统性变更和最终质量。</p>
-<h4>亲手奠定基础</h4>
+<h4 id="h4">亲手奠定基础</h4>
 <p>即便新任资深员工能力再强，也无法立刻掌握长期权衡的精准视角。为了充分利用 Codex 并确保其运作的稳健性和可维护性，我们必须亲自监督应用的系统设计和关键权衡事宜。这些任务包括设计应用的架构、模块化、依赖项注入和导航；我们还实施了身份验证和基础网络流程。</p>
 <p>在此基础上，我们编写了部分具有代表性的端到端功能。我们采用整个代码库都应遵循的规则，并在此过程中记录了项目级模式。通过将 Codex 指向具有代表性的功能，它能够在我们的标准范围内更加独立地运作。对于某个我们估计由 Codex 编写了 85% 代码的项目，精心规划的基础可避免代价高昂的回溯和重构。这是我们做出的关键决策之一。</p>
 <p>我们的目标并非尽快开发“能运作的程序”，而是打造出“符合预期运作方式的程序。”编写代码的“正确”方法多种多样。我们无需提示 Codex 应执行哪些操作，而是需要向其展示我们团队定义的“正确”操作。一旦我们确定了切入点和构建方式，Codex 就能开始执行操作。</p>
 <p>为了解实际运行情况，我们确实会尝试以下提示：“基于 iOS 代码构建 Sora Android 应用。开始吧”，但我们很快就放弃了这个方案。虽然 Codex 创建的技术具备可行性，但产品体验并不理想。由于对端点、数据和用户流缺乏清晰的理解，Codex 的一次性代码并不可靠（即使未采用智能体，合并数千行代码也是有风险的）。</p>
 <p>我们推测，在精心编写的示例所构成的沙盒中，Codex 能发挥最佳性能；而事实印证了这一点。在几乎没有任何上下文的情况下，要求 Codex“构建这个设置界面”并不可靠。要求 Codex“使用与你刚才看到的另一个界面相同的架构和模式来构建此设置界面”，则更为有效。人类负责结构性决策和设定核心约束，随后 Codex 在此结构内填充大量代码。</p>
-<h4>在编写代码前使用 Codex 进行规划</h4>
+<h4 id="h5">在编写代码前使用 Codex 进行规划</h4>
 <p>为了进一步挖掘 Codex 的潜力，我们的下一个目标是攻克其自动化运维难题 — 即如何让 Codex 在无人值守的情况下，实现超长时间（ <a href="https://openai.com/zh-Hans-CN/index/gpt-5-1-codex-max/">近期已突破 24 小时 ⁠</a> ）的持续稳定运行。</p>
 <p>在刚开始使用 Codex 时，我们经常直接用这样的提示：“这是要实现的功能，这是相关文件，把它做出来。”这种方法颇为有效，但大多数情况下生成的代码在技术上可以编译，但却偏离了我们的架构和目标。</p>
 <p>因此，我们更改了工作流程。对于任何实质性变更，我们首先要求 Codex 帮助我们理解系统和代码的运作原理。例如，我们会要求它读取一组相关文件并总结该功能的运作原理；例如，数据如何从 API 流向存储库层、视图模型，并进入用户界面。然后，我们会纠正或完善其理解。（例如，我们会指出某个抽象实际上属于不同的层级，或者某个类只适用于离线模式，而不应扩展）。</p>
 <p>就像你可能会与一位新入职且能力出众的队友合作一样，我们也与 Codex 共同制定了完善的实施计划。该计划看似一个微型设计文档，用于指示哪些文件需要更改，哪些新状态应引入，以及逻辑流程应如何调整。然后，我们才会要求 Codex 开始逐步实施计划。一个实用提示：对于冗长的任务，当我们达到上下文窗口的限制时，我们会要求 Codex 将其计划存入一个文件，以便在不同实例中应用相同的方向。</p>
 <p>事实证明，这一额外的规划环节值得投入时间。由于我们掌握了 Codex 的计划，因此我们可以确保其在“无人监督”的情况下长时间运行；并轻松完成代码审核，因为我们可以根据计划检查实施情况，而无需在缺乏上下文的情况下研究差异。当出现问题时，我们可以先调试计划，然后再调试代码。</p>
 <p>这种动态策略就像一份完善的设计文档，让技术负责人对项目充满信心。我们不仅仅是在生成代码，而是在生成可支持共享路线图的代码。</p>
-<h4>分布式工程</h4>
+<h4 id="h6">分布式工程</h4>
 <p>在项目高峰期，我们经常会同时运行多个 Codex 会话。一个会话负责回放，一个负责搜索，一个负责错误处理，还有一个则负责测试或重构。这不像是在使用工具，而更像是在管理一个团队。</p>
 <p>每个会话都会定期向我们返回进度报告。有的会话可能会表示：“我已完成该模块的计划；以下是我的建议。”而另一个会话则可能会针对某项新功能做出大量更改。每个会话都需要关注、反馈和审核。这与技术主管管理多名新任工程师的场景非常相似，所有人都在不断进步，每个人都需要指导。</p>
 <p>其结果是形成协作流程。Codex 的原始编码能力帮助我们摆脱了大量手动输入工作。我们可以投入更多时间来思考架构，仔细研究 Pull Request（合并请求），并测试应用。</p>
 <p>同时，效率的提升意味着我们的审核队列中总是存在待处理的项目。Codex 不会因上下文切换而受阻，但我们却会受其影响。我们在开发中的瓶颈从编写代码转变为制定决策、提供反馈和整合变更。</p>
 <p>这也为布鲁克斯的洞察提供了全新的立足点。你不能仅仅通过增加 Codex 会话就期望获得线性的速度提升，正如你无法通过不断增派工程师就指望项目工期线性缩短一样。每增加一双“手”，即使是虚拟的，也会增加协调工作的开销。我们已经从速度更快的独奏者转变为乐团的指挥。</p>
-<h4>Codex：跨平台开发的超能力</h4>
+<h4 id="h7">Codex：跨平台开发的超能力</h4>
 <p>我们基于关键里程碑启动项目：Sora 已面向 iOS 系统正式发布。我们经常将 Codex 指向 iOS 和后端代码库，助其理解关键要求和限制条件。在整个项目中，我们常开玩笑说：我们重新定义了跨平台框架的概念。忘掉 React Native 或 Flutter 吧； <em>跨平台的未来正是 Codex。</em></p>
 <p>这句俏皮话背后有两个原则：</p>
 <ol>
@@ -95,14 +95,14 @@
 <p>一个小而实用的技巧是在 <code>~/.codex/AGENTS.md</code> 中详细记录本地代码仓库的位置及其内容。这有助于 Codex 轻松探索和浏览相关代码。</p>
 <p>实际上，我们通过转换而非共享抽象来进行跨平台开发。由于大部分转换工作由 Codex 负责，我们可以借此避免实施成本加倍增长。</p>
 <p>更广泛的教训是，对于 Codex，上下文就是一切。当 Codex 理解功能在 iOS 系统中的运行方式，并结合我们对 Android 应用结构的认知时，它就能发挥最佳水平。当 Codex 缺乏上下文时，它并不会“拒绝合作”，而是在盲目猜测。我们越是把它视作新队友，并提供正确的输入，它的表现就会越好。</p>
-<h4>未来的软件工程，现在触手可及</h4>
+<h4 id="h8">未来的软件工程，现在触手可及</h4>
 <p>在为期四周的冲刺阶段结束后，使用 Codex 已不再像一次实验，而是成为了我们默认的开发循环。我们用其来理解现有代码、变更计划，并实现功能。我们以审核队友交付成果的方式，对其输出进行审核。这就是我们发布软件的方式。</p>
 <p>显然，AI 辅助开发并未减少对严谨性的需求，反而会增加这种需求。尽管 Codex 功能强大，但其目标是立即从 A 到达 B。正因如此，AI 辅助代码编写无法在缺乏人工干预的情况下正常运作。软件工程师能够理解和应用系统的现实限制条件、最理想的软件架构方法，并在考虑未来开发和产品计划的情况下进行构建。未来软件工程师的超能力，将是对系统的深刻理解，以及与 AI 长期协作的能力。</p>
 <p>软件工程最有趣的环节是构建引人注目的产品、设计可扩展的系统、编写复杂的算法，以及在数据、模式和代码中进行实验。然而，无论过去还是现在，软件工程的日常往往更为平凡：调整按钮位置、对接端口以及编写样板。如今，Codex 帮助我们专注处理软件工程中最具价值的任务，并保留了我们热爱这门技艺的初心。</p>
 <p>一旦将 Codex 放入上下文丰富的环境中，助其了解你的目标和偏好的构建方式，任何团队都能加倍提升其能力。我们的发布回顾并非“放之四海而皆准”，也并未声称已解决 AI 辅助开发的问题。但我们希望：我们的经验能助你轻松确定赋能 Codex 的最佳方式，从而赋能团队。</p>
 <p>七个月前，当 Codex 推出研究预览版时，软件工程的面貌与现在大不相同。借助 Sora，我们得以探索工程的新篇章。随着我们的模型和工具不断优化，AI 将成为构建过程中不可或缺的组成部分。</p>
 <p>你会用自己的 Codex 团队创造什么呢？</p>
-<h2>继续阅读<a href="https://openai.com/zh-Hans-CN/index/building-chatgpt-atlas/">我们如何构建 OWL —— 驱动基于 ChatGPT 的浏览器 Atlas 的新架构</a></h2>
+<h2 id="h9">继续阅读<a href="https://openai.com/zh-Hans-CN/index/building-chatgpt-atlas/">我们如何构建 OWL —— 驱动基于 ChatGPT 的浏览器 Atlas 的新架构</a></h2>
 <p>[</p>
 <p>工程</p>
 <p>](https://openai.com/zh-Hans-CN/index/building-chatgpt-atlas/)</p></div>
@@ -125,6 +125,118 @@
   });
   document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  /* 手机：静置淡出，滚动时浮现（面板开着就一直显示） */
+  var idleTimer=null;
+  function pokeFab(){
+    fab.classList.add('is-active');
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(function(){
+      if(!toc.classList.contains('is-open')) fab.classList.remove('is-active');
+    }, 1500);
+  }
+
+  /* 面板显隐 */
+  function setOpen(open){
+    toc.classList.toggle('is-open', open);
+    toc.setAttribute('aria-hidden', open ? 'false' : 'true');
+    fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open){ syncActive(); scrollActiveIntoView(); }
+    else { pokeFab(); }
+  }
+  fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+
+  /* PC（有鼠标、宽屏）：贴边把手悬停即展开，移开延时收起 */
+  var handle=document.getElementById('tocHandle');
+  var canHover = window.matchMedia('(hover:hover) and (min-width:1024px)').matches;
+  if(handle){
+    handle.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+  }
+  if(handle && canHover){
+    var _closeTimer=null;
+    function hoverOpen(){ clearTimeout(_closeTimer); setOpen(true); }
+    function hoverClose(){ clearTimeout(_closeTimer); _closeTimer=setTimeout(function(){ setOpen(false); }, 220); }
+    handle.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseleave', hoverClose);
+    handle.addEventListener('mouseleave', hoverClose);
+  }
+  document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
+
+  /* 滚动条只在滚动时出现 */
+  var _st=null;
+  list.addEventListener('scroll', function(){
+    list.classList.add('is-scrolling');
+    clearTimeout(_st);
+    _st=setTimeout(function(){ list.classList.remove('is-scrolling'); }, 900);
+  });
+
+  /* 平滑跳转（WebView 不支持 scrollIntoView smooth） */
+  function goTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target); },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      goTo(el); mark(id); setOpen(false);
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  /* 当前所在小节高亮 */
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>30) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
+  }
+  function syncActive(){
+    var best=null, bestTop=-1e9;
+    for(var i=0;i<targets.length;i++){
+      var t=targets[i]; if(!t) continue;
+      var top=t.getBoundingClientRect().top;
+      if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+    }
+    if(!best && targets[0]) best=targets[0];
+    if(best) mark(best.id);
+  }
+  function scrollActiveIntoView(){
+    var on=list.querySelector('a.on'); if(!on) return;
+    var r=on.getBoundingClientRect(), lr=list.getBoundingClientRect();
+    if(r.top<lr.top || r.bottom>lr.bottom) list.scrollTop += r.top-lr.top-list.clientHeight/3;
+  }
+  var ticking=false;
+  window.addEventListener('scroll', function(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
+  }, {passive:true});
+  if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
+
+  window.addEventListener('scroll', pokeFab, {passive:true});
+  if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }
+  else { fab.classList.add('is-active'); }
+
+
 })();
 </script>
 </body>

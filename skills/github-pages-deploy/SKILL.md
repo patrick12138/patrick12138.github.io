@@ -29,7 +29,9 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 4. **动手前先对表**：`git remote -v` 确认是 `patrick12138/patrick12138.github.io`、工作副本只有
    `/var/minis/workspace/site` 一处；`git fetch && git rev-list --left-right --count HEAD...origin/main`
    必须是 `0 0`（这个仓库经常被别的会话并发推），并向用户明确报「本地 = 远端 @ <commit>」。
-5. **后处理脚本必须幂等**：跑两遍 diff 为空、注入标记计数为 1，才算做完（详见 `references/content.md`）。
+5. **上线前必过脱敏**：前公司/客户名、证件、手机号、内网地址、密钥一旦出现在页面上就是 P0
+   （`qa.py` 的 `check_privacy()` 会自动拦），改的是 vault 里的 md 而不是 HTML。
+6. **后处理脚本必须幂等**：跑两遍 diff 为空、注入标记计数为 1，才算做完（详见 `references/content.md`）。
 
 ## 按需读的参考文件
 
@@ -39,6 +41,7 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 | 推代码、凭据、DNS 抽风、验证线上、已知坑 | `references/deploy.md` |
 | 新页面设计（按钮、目录、深浅色、组件规范） | `references/design.md` |
 | 下线 / 恢复一篇文章 | `references/unpublish.md` |
+| **上线前脱敏**（公司名、证件、联系方式、求职痕迹） | `references/privacy.md` |
 | 写仓库 README（中英双语） | `references/readme.md` |
 
 **脚本不在这里存副本**（存过一份，跟仓库漂移了）。一律用仓库里的 `/var/minis/workspace/site/tools/`：

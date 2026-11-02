@@ -8,11 +8,11 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="patrick">
 <meta property="og:title" content="LLM Wiki 实践指南">
-<meta property="og:description" content="这篇是从LLMWiki和Obsidian+ClaudeCode：用Karpathy的方法，搭建真正可用的第二大脑编译出来的操作指南。">
-<meta property="og:url" content="https://patrick12138.github.io/posts/llm-wiki-guide/">
+<meta property="og:description" content="{{DESC}}">
+<meta property="og:url" content="https://patrick12138.github.io/posts/{{SLUG}}/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
 <link rel="stylesheet" href="../../assets/base.css?v=173a6925">
-<link rel="stylesheet" href="../../assets/post.css?v=9087aa66">
+<link rel="stylesheet" href="../../assets/post.css?v=9e7013d2">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -26,7 +26,7 @@
   </nav>
 </div></div>
 <div class="wrap"><article class="article"><h1>LLM Wiki 实践指南</h1>
-<div class="meta">2026年9月10日 · 个人 · <span class="stats">1,131 字 · 约 3 分钟</span></div>
+<div class="meta">2026年9月10日 · 个人 · <span class="stats">1,136 字 · 约 3 分钟</span></div>
 
 <nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心区别</a></li><li class="lvl2"><a href="#h2">三层结构</a></li><li class="lvl2"><a href="#h3">导入时 agent 要做什么</a></li><li class="lvl2"><a href="#h4">查询时 agent 要做什么</a></li><li class="lvl2"><a href="#h5">定期修复检查</a></li><li class="lvl2"><a href="#h6">自我迭代闭环</a></li><li class="lvl2"><a href="#h7">常用指令</a></li><li class="lvl2"><a href="#h8">使用外部 AI 时</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l2" data-h="h8"></i></span></button><div class="body"><p>这篇是从 LLM Wiki 和 Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑 编译出来的操作指南。</p>
 <p>核心不是“把文章存起来以后再搜”，而是让 agent 先完整阅读资料，再把知识编译进一个持续维护的 wiki。</p>
@@ -76,7 +76,7 @@
 <tr>
 <td>Wiki</td>
 <td><code>Career/</code>、<code>Work/</code>、<code>Resources/</code></td>
-<td>保存整理后的知识、方法、项目复盘、面试话术</td>
+<td>保存整理后的知识、方法、项目复盘、沟通素材</td>
 </tr>
 <tr>
 <td>Schema</td>
@@ -89,7 +89,7 @@
 <h2 id="h3">导入时 agent 要做什么</h2>
 <p>导入一篇新资料时，不是简单移动文件，而是做一次小型编译：</p>
 <ol>
-<li>判断资料类型：求职、工作项目、通用方法、剪藏阅读、附件。</li>
+<li>判断资料类型：职业发展、工作项目、通用方法、剪藏阅读、附件。</li>
 <li>保留原文到 <code>Sources/</code>：文章剪藏先进入 <code>Sources/Clippings/</code> 待处理，处理完成后 raw 文件移到 <code>Sources/Inbox/</code> 归档。</li>
 <li>提取长期有价值的内容：概念、方法、事实、决策、风险、可复用话术。</li>
 <li>更新已有页面，而不是重复造一堆孤立页面。</li>
@@ -102,7 +102,7 @@
 <p>查询不是直接全库乱搜，而是按顺序来：</p>
 <ol>
 <li>先读 Index，判断相关入口。</li>
-<li>再读对应专题页，例如 <code>Career/</code>、<code>Work/合地/</code>、<code>Work/保信/</code>。</li>
+<li>再读对应专题页，例如 <code>Career/</code>、<code>Work/公司A/</code>、<code>Work/公司B/</code>。</li>
 <li>必要时回看 <code>Sources/</code> 原文。</li>
 <li>生成答案时带上 Obsidian 链接。</li>
 <li>如果答案形成了可复用结论，写回 wiki，并更新 <code>Index.md</code> 和 <code>Log.md</code>。</li>
@@ -155,9 +155,9 @@
 </code></pre>
 <pre><code class="language-text">处理 Sources/Inbox 里的新资料，先判断是否已经是已处理剪藏归档；未处理的按知识库规则编译，更新相关专题、Index.md 和 Log.md。
 </code></pre>
-<pre><code class="language-text">基于 Index.md 和 Career/，帮我总结最近求职准备还有哪些短板。
+<pre><code class="language-text">基于 Index.md 和 Career/，帮我梳理职业准备还有哪些短板。
 </code></pre>
-<pre><code class="language-text">基于 Work/合地/需求 和 Work/合地/记录，整理合地项目的业务地图。
+<pre><code class="language-text">基于 Work/公司A/需求 和 Work/公司A/记录，整理公司A项目的业务地图。
 </code></pre>
 <pre><code class="language-text">lint 一下知识库，检查旧路径、断链、孤立页面、重复概念和过时内容。
 </code></pre>
