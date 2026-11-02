@@ -287,9 +287,30 @@ def wrap_tables(doc):
     """
     if 'class="tablewrap"' in doc:
         return doc
-    return re.sub(r"<table(\s[^>]*)?>.*?</table>",
-                  lambda m: '<div class="tablewrap">' + m.group(0) + "</div>",
-                  doc, flags=re.S)
+    return re.sub(r"<table(\s[^>]*)?>.*?</table>", lambda m: _wrap(m.group(0)), doc, flags=re.S)
+
+
+NUM_RE = re.compile(r"^[\s\d.,%/×x~+\-—–$¥€£元个条次天小时月年]*\d[\s\d.,%/×x~+\-—–$¥€£元个条次天小时月年]*$")
+
+
+def _wrap(table_html):
+    """包一层滚动容器；顺手给「数字列」打上 n2/n3 之类的类，让它们右对齐。"""
+    rows = re.findall(r"<tr[^>]*>(.*?)</tr>", table_html, flags=re.S)
+    cells = [re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, flags=re.S) for r in rows]
+    cells = [c for c in cells if c]
+    num = []
+    if cells:
+        ncol = max(len(c) for c in cells)
+        for i in range(ncol):
+            col = [re.sub(r"<[^>]+>", "", c[i]).strip() for c in cells if len(c) > i]
+            col = [v for v in col if v]
+            if col and sum(1 for v in col if NUM_RE.match(v)) / len(col) >= 0.6:
+                num.append("n%d" % (i + 1))
+    if num:
+        table_html = re.sub(r"<table([^>]*)>", lambda m: "<table%s class=\"%s\""
+                            % (m.group(1) if "class=" not in m.group(1) else m.group(1), " ".join(num)),
+                            table_html, count=1)
+    return '<div class="tablewrap">' + table_html + "</div>"
 
 
 def process(path):

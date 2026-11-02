@@ -59,12 +59,28 @@ a{color:inherit}
   padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
 .body pre code{background:none;padding:0;font-size:.84em}
 .body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
-.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body table{width:100%;border-collapse:collapse;margin:1.8em 0;font-size:.9em;
+  font-variant-numeric:tabular-nums}
 /* 表格的横滑容器：table 自己当滚动容器时宽度会被撑开，反而拖不动 */
-.body .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;margin:1.5em 0}
-.body .tablewrap>table{margin:0;width:100%;min-width:max-content}
-.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
-.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;margin:1.8em 0}
+.body .tablewrap>table{margin:0;width:100%}
+/* 固定布局：列宽均分，避免某格长文本把整张表撑得一边倒 */
+@media (min-width:721px){.body .tablewrap>table{table-layout:fixed}}
+.body td,.body th{overflow-wrap:anywhere}
+/* 数据行：只留极淡的横线，且不与正文的左右边界错位 */
+.body th,.body td{border-bottom:1px solid var(--rule);padding:10px 14px;text-align:left;
+  vertical-align:top;line-height:1.55}
+.body th:first-child,.body td:first-child{padding-left:0}
+.body th:last-child,.body td:last-child{padding-right:0}
+.body th{border-bottom:1px solid var(--border);padding-bottom:9px;
+  font-family:var(--mono);font-size:.76em;font-weight:600;letter-spacing:.02em;
+  color:var(--text-muted);white-space:nowrap}
+.body tbody tr:last-child td{border-bottom:0}
+.body tbody tr:hover td{background:color-mix(in srgb,var(--text) 3%,transparent)}
+/* 数字列右对齐（构建时自动判断，见 add_toc.py） */
+.body .n1 :is(td,th):nth-child(1),.body .n2 :is(td,th):nth-child(2),
+.body .n3 :is(td,th):nth-child(3),.body .n4 :is(td,th):nth-child(4),
+.body .n5 :is(td,th):nth-child(5),.body .n6 :is(td,th):nth-child(6){text-align:right}
 .body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
 .body a:hover{border-bottom-color:var(--accent)}
 .body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}

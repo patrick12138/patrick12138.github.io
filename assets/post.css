@@ -18,8 +18,8 @@
 /* 表格：宽度超出时在表格内部横向滚动，不要把整页撑宽 */
 @media (max-width:720px){
   /* 手机：表格按内容宽度排开、在容器里横滑（容器见 .tablewrap） */
-  .body th,.body td{padding:8px 12px}
-  .body th{white-space:nowrap}
+  .body .tablewrap>table{min-width:max-content}
+  .body th,.body td{padding:9px 12px}
 }
 
 .refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
