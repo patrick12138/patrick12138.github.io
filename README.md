@@ -38,6 +38,25 @@ assets/posts/*/     Images downloaded from original posts
 - Every page stores its state in `localStorage`. Nothing is uploaded anywhere.
 - `/` and `/tga/` load no external fonts or CDN. `/about/` pulls Figtree and JetBrains Mono from Google Fonts and falls back to system fonts if that fails.
 
+## Development
+
+Everything is generated from `tools/` — no hand-edited HTML.
+
+| Script | Purpose |
+| --- | --- |
+| `build.py` | One command: rebuild → TOC → index → asset hashes → QA → optional push |
+| `md2post.py` | Markdown → one post page (localises images, turns media into links) |
+| `rebuild.py` | Rebuild every post from `sources.json` |
+| `add_toc.py` | Inject / refresh table of contents (idempotent) |
+| `gen_index.py` | Regenerate the home list by scanning `posts/` |
+| `qa.py` | Typography check — any P0 blocks deploy |
+
+```bash
+python3 tools/build.py --push "feat: new post"
+```
+
+Asset versions (`?v=`) are content hashes written by `build.py`; never edit them by hand.
+
 ## License
 
 Personal project. Code is free to read and borrow.

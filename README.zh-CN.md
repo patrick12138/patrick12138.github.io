@@ -38,6 +38,25 @@ assets/posts/*/     从原文下载的图片
 - 每个页面的状态都存在 `localStorage` 里，不上传到任何地方。
 - `/` 和 `/tga/` 不加载外部字体和 CDN；`/about/` 从 Google Fonts 取 Figtree 和 JetBrains Mono，取不到就走系统字体兜底。
 
+## 开发
+
+一切都由 `tools/` 生成，不手写文章 HTML。
+
+| 脚本 | 用途 |
+| --- | --- |
+| `build.py` | 一条命令：重建 → 目录 → 首页 → 资源哈希 → 体检 → 可选推送 |
+| `md2post.py` | 单篇 markdown 转文章页（图片本地化、媒体转外链） |
+| `rebuild.py` | 按 `sources.json` 全量重建 |
+| `add_toc.py` | 注入 / 刷新目录（幂等） |
+| `gen_index.py` | 扫描 `posts/` 重新生成首页列表 |
+| `qa.py` | 排版体检，P0 不为 0 不许上线 |
+
+```bash
+python3 tools/build.py --push "feat: 新文章"
+```
+
+页面里的 `?v=` 是 `build.py` 写入的内容哈希，不要手改。
+
 ## 许可
 
 个人项目，代码随便看、随便抄。

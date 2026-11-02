@@ -1,0 +1,162 @@
+# 设计规范：交互元素、目录、主题、组件
+
+## 按钮只放图标（Patrick 硬性要求）
+
+- **按钮里尽量不放文字。** 浮动/工具按钮（目录、返回顶部、主题、关闭）一律
+  「图标 + `aria-label`」，最多配 `title`。文字说明交给页面本身，不塞进按钮。
+- 浮动图标按钮统一：**圆形 40×40、`border-radius:999px`**、1px 边 `var(--border)`，
+  静止 `var(--text-muted)` → hover/focus `var(--accent)`（边色取 45% accent）。
+  手机端 `right:18px;bottom:24px`。同页同类按钮尺寸必须一致。
+- **要文字就用文字链接**：`← 返回首页`、`↑ 回到顶部`、`Lab →` 这类是
+  `.back` / `.back-top` 的等宽字体链接，不是按钮。
+- 只有表单/命令类按钮（`复制结果`、`只看想玩`、`重来`）可以带文字，那是动作名。
+- 不用 emoji 当图标；线性图标 stroke 1.7–2，和现有风格一致。
+
+## 目录（toc）
+
+`tools/add_toc.py` 注入，可重复执行，正文 h2/h3 少于 3 个自动跳过。
+
+- **PC（>1180px）**：固定正文右侧 `left:calc(50% + 392px)`，宽 196px，滚动高亮当前节。
+  目录条目**用无衬线（`var(--sans)`）而不是等宽字体**：英文标题在 12px 等宽 + letter-spacing 下会发虚，
+  换成 sans、`.84rem` / 500、`line-height:1.45`、`letter-spacing:0` 之后清楚很多。等宽只留导航、meta、来源块。
+  折叠开关**只有一个列表图标**：不带「目录」二字、不做按钮框、不做边缘贴条，
+  点图标收起/展开，状态存 `localStorage.tocCollapsed`。
+- **手机（≤1180px）**：右下**圆形图标按钮**（40px，无文字，`aria-label="目录"`），
+  点开底部面板（模糊底、最大 60vh、× 关闭），点条目跳转后自动收起。
+- 坑 1：`scrollIntoView({behavior:'smooth'})` 在 WebView（含 Minis 内置）里是空操作 →
+  用 `window.scrollTo({behavior:'smooth'})`，400ms 后位置没变就硬跳兜底。
+- 坑 2：后台标签页 `requestAnimationFrame` 会被暂停，**不要**用 rAF 做滚动动画；
+  高亮在点击时直接 mark，别只靠 scroll 监听。
+- 锚点用 `scroll-margin-top:84px` 避开 52px 的 sticky bar。
+- 文末「← 返回首页」旁自动带「↑ 回到顶部」（`.back-top` 文字链接）；
+  首页 PC 是列表末尾同样一条文字链接，手机是右下圆形箭头按钮（`#toTop`）。
+
+## 站名下拉（文章页左上角）
+
+`patrick ⌄` → 全部文章 / 搬运 / 个人，目标地址 `/?tab=repost|own|all`（首页读参数并初始化即 `apply()`）。
+
+- 触发器用“站名 + caret”，不加大按钮框；hover 提亮，展开时 caret 旋转 180°。
+- 面板贴着导航栏下沿（`top:calc(100% + 14px)`），**用 `::before` 补 14px 透明缓冲区**，
+  否则鼠标穿过空隙时菜单会关掉。
+- 实色 `var(--bg)` + 1px `var(--border)`，阴影按主题区分（深色更实、浅色更淡），不要半透明底。
+- **当前文章所属分类高亮**：从页面 `<div class="meta">… · 搬运/原创</div>` 读出来，
+  对应项用强调色 + 左侧 2px 竖条，让人一眼知道自己在哪一类。
+- 移动端行高加大（`padding:9px 16px`），别让手指点不中。
+
+## 样式组织：文章统一，工具各自为政
+
+- 博客部分（首页 / Lab 索引 / 所有 post）共用 `assets/post.css`、`assets/home.css`、`assets/site.js`，
+  改文章排版只改一处。断点固定：`≤720px` 移动、`>720px` 桌面、`>1180px` 右侧目录。
+- `/tga/`、`/backlog/`、`/about/` 这类工具页各自独立内联样式。
+  Patrick 明确说过：清单是他自己的工具，风格不同很正常，**不要为"统一"去合并**。
+
+## 页面写法
+
+- **单文件自包含**：CSS/JS/数据内联在一个 `index.html`，不引 CDN 之外的相对资源。
+  静态数据用 `<script type="application/json">` 内嵌，前端 `JSON.parse`。
+- 状态存 `localStorage`，key 带版本号（`xxx_v2`），改结构做迁移。
+- 必须响应式：手机单列 + PC 两列/三列。
+- 配色：低饱和"雾色"比纯色耐看，深底强调色 `#6aa2d8`、浅底 `#2d6496`，对比度 ≥ 4.5:1。
+
+## 中英切换（about 页那套）
+
+`data-i18n` 标记 + 一张 JS 字典，不要复制两份 DOM：
+
+```html
+<span data-i18n="hero.1">English</span>
+```
+
+```js
+var I18N = { "hero.1": {en:"...", zh:"..."} };
+function applyLang(l, typed){
+  document.documentElement.lang = (l === 'zh' ? 'zh-CN' : 'en');
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var d = I18N[el.dataset.i18n]; if (!d || !d[l]) return;
+    if (el.classList.contains('terminal-type')) el.dataset.typeText = d[l];
+    if (typed !== false) el.textContent = d[l];
+  });
+}
+```
+
+- 默认 `en`，选择存 `localStorage.lang`；切换按钮写 **`EN / ZH`**，当前语言用强调色。
+- **坑**：`applyLang(lang, lang !== 'en')` 在 en 首次加载时不会写 `textContent`，
+  所以非 `terminal-type` 元素的静态 HTML 文案必须直接写成英文最终值，否则切回 EN 会残留旧文案。
+- 切换时先 `finish()` 结束打字动画再换文案，否则两种语言交错。
+
+## 打字机动画的两个坑
+
+1. 后台标签页 `setTimeout` 被节流 → 给时间预算：
+   `if (Date.now() - started > 4200) return finish();`
+2. 兜底定时器与动画循环抢同一节点会重复文本（出现过 `whoamioami`）→
+   `finish()` 里加 `done` 标志，每步检查 `if (done) return;`。
+
+## 设计风向参考
+
+做新页面前读（本地已装）：
+
+- `/var/minis/skills/design-taste-frontend/SKILL.md`（taste-skill v2）
+- `/var/minis/skills/ui-taste/SKILL.md`（Uizze）
+
+最相关的几条：彩色只上数据（界面彩色占比 ≤3%）；KPI 用排版不用卡片；
+表面扁平（1px 线分层，不要阴影卡片墙）；工作型页面标题 ≤24px；
+删掉没有 claim 的段落；数据诚实（0 就是 0，缺值给灰破折号）。
+
+## 移动端浮动按钮：别被浏览器工具栏挡住
+
+移动浏览器底部自带工具栏（Chrome / 微信 / 夸克都约 56px 高）。
+浮动按钮写成 `position:fixed; bottom:24px` 会正好落在工具栏下面 ——
+用户点到的其实是浏览器，表现就是**「按钮点了没反应」**，而 JS 和 CSS
+在 DevTools 里查起来一切正常（`el.click()` 手动调用也能工作）。
+
+正确写法：
+
+```css
+.toc-fab{
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px) + 56px);
+}
+```
+
+配套的底部面板（`.toc.is-open`）也要抬到 `bottom: calc(84px + … + 56px)`，
+否则面板贴底，最后几项看不到。
+
+**排查口径**：用户说「点了没反应」时，先手动 `el.click()`。
+- 手动能开 → 是点击区域问题（被遮挡 / z-index / pointer-events），不是逻辑问题
+- 手动也不开 → 才去看 JS 绑定（很可能是被绑了多次、toggle 抵消，见 content.md）
+
+## hover 状态在 WebView 里测不出来
+
+`browser_use` 的 `hover` 动作不会触发 CSS `:hover`
+（`el.matches(':hover')` 返回 `false`，截图也没变化）。
+
+要验证 hover 效果，直接用 JS 写内联样式模拟：
+
+```js
+el.style.background = 'var(--accent)';
+el.style.color = '#fff';
+```
+
+截图看视觉是否正确，逻辑本身（CSS 规则在不在）用 `document.styleSheets` 遍历确认。
+
+## 目录字体：统一用无衬线，别用等宽
+
+`.toc` 原来继承 `var(--mono)`（JetBrains Mono），中文没有对应字形会 fallback 到系统字体。
+结果：**中文文章**的目录是 PingFang，**英文文章**的目录是 JetBrains Mono，
+同一站在不同文章里观感完全不一样。
+
+定下来的标准：
+
+```css
+.toc{font-family:var(--sans);font-size:.78rem;line-height:1.55}
+.toc-list a{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",
+              "Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  font-size:.84rem;font-weight:400;line-height:1.5;letter-spacing:0;
+}
+.toc-head{font-family:var(--sans)}
+```
+
+- **字号 0.84rem / 字重 400 / 行高 1.5**，中英文共用一套。
+- 等宽字体只留给代码、命令、日期这类"需要对齐"的地方，目录是阅读导航，不该用。
+- 改完同步 `tools/add_toc.py` 里的 CSS 模板，否则 `rebuild` 会把旧样式刷回来。
+
+判断标准：打开一篇中文和一篇英文的文章页，目录的字重、行距、字号应该看不出差别。

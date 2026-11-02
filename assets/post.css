@@ -137,9 +137,9 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .toc-ico{display:block}
 .toc-title{display:none}
 @media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
-.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:none;
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:transparent transparent;
   border-left:1px solid var(--border)}
-.toc-list{scrollbar-width:thin;scrollbar-color:transparent transparent}
+
 .toc-list:hover,.toc-list.is-scrolling{scrollbar-color:rgba(106,162,216,.6) transparent}
 .toc-list::-webkit-scrollbar{width:4px;height:4px}
 .toc-list::-webkit-scrollbar-track{background:transparent}

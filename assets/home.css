@@ -117,9 +117,8 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .toc-fab{width:42px;height:42px;border-radius:50%;padding:0;
   align-items:center;justify-content:center;letter-spacing:0;font-size:0;
   box-shadow:0 4px 16px rgba(0,0,0,.22)}
-.toc-tab svg,.toc-fab svg{display:block}
 
-.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
+.toc-tab svg,.toc-fab svg{display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;pointer-events:none}
 .toc-tab,.toc-fab{position:fixed}
 
 /* 目录：更紧凑 + 头部用图标 */
@@ -140,8 +139,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 @media (max-width:720px){.to-top{right:18px;bottom:80px}}
 /* PC：列表末尾的「回到顶部」文字链接；手机才用右下圆形按钮 */
 
-.tools{display:flex;align-items:center;gap:10px;margin:26px 0 0;
-  border-bottom:1px solid var(--border);padding-bottom:12px}
 .tools .tabs{margin:0;flex:0 0 auto;border:none;padding:0}
 .sbtn{background:none;border:none;padding:0;margin-left:auto;color:var(--text-muted);cursor:pointer;
   width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:color .15s}
