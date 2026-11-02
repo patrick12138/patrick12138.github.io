@@ -18,9 +18,8 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · chenmijiang · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Git Worktree 完全指南</a></li><li class="lvl2"><a href="#h2">1. 概述</a></li><li class="lvl3"><a href="#h3">1.1 什么是 Git Worktree</a></li><li class="lvl3"><a href="#h4">1.2 Worktree 的工作原理</a></li><li class="lvl3"><a href="#h5">1.3 与 clone / stash 的区别</a></li><li class="lvl2"><a href="#h6">2. 基本概念</a></li><li class="lvl3"><a href="#h7">2.1 主 worktree 与附加 worktree</a></li><li class="lvl3"><a href="#h8">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</a></li><li class="lvl3"><a href="#h9">2.3 Detached HEAD worktree</a></li><li class="lvl2"><a href="#h10">3. 安装与前置条件</a></li><li class="lvl2"><a href="#h11">4. 基本用法</a></li><li class="lvl3"><a href="#h12">4.1 查看 worktree 列表</a></li><li class="lvl3"><a href="#h13">4.2 创建新的 worktree</a></li><li class="lvl3"><a href="#h14">4.3 切换分支（在特定 worktree 内）</a></li><li class="lvl3"><a href="#h15">4.4 删除 worktree</a></li><li class="lvl3"><a href="#h16">4.5 移动 worktree（move）</a></li><li class="lvl3"><a href="#h17">4.6 锁定 worktree（lock/unlock）</a></li><li class="lvl3"><a href="#h18">4.7 修复 worktree（repair）</a></li><li class="lvl3"><a href="#h19">4.8 清理遗留元数据（prune）</a></li><li class="lvl2"><a href="#h20">5. 日常开发场景</a></li><li class="lvl3"><a href="#h21">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</a></li><li class="lvl3"><a href="#h22">5.2 场景 2：并行跑测试/构建</a></li><li class="lvl3"><a href="#h23">5.3 场景 3：Review PR 或复现 CI 失败</a></li><li class="lvl3"><a href="#h24">5.4 场景 4：用 detached worktree debug 和修复老版本</a></li><li class="lvl3"><a href="#h25">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</a></li><li class="lvl2"><a href="#h26">6. 常用命令速查</a></li><li class="lvl3"><a href="#h27">6.1 常见错误与定位</a></li><li class="lvl2"><a href="#h28">7. 最佳实践与注意事项</a></li><li class="lvl3"><a href="#h29">7.1 Worktree 目录放哪里</a></li><li class="lvl3"><a href="#h30">7.2 给 worktree 起”能排序”的名字</a></li><li class="lvl3"><a href="#h31">7.3 不要在多个 worktree 共享同一个构建输出目录</a></li><li class="lvl3"><a href="#h32">7.4 删除 worktree 前先处理分支生命周期</a></li><li class="lvl3"><a href="#h33">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</a></li><li class="lvl3"><a href="#h34">7.6 子模块与 worktree</a></li><li class="lvl2"><a href="#h35">8. Git Worktree vs 相关命令</a></li><li class="lvl3"><a href="#h36">8.1 Worktree vs Stash</a></li><li class="lvl3"><a href="#h37">8.2 Worktree vs Clone</a></li><li class="lvl2"><a href="#h38">9. 常见问题（FAQ）</a></li><li class="lvl2"><a href="#h39">10. 总结</a></li><li class="lvl3"><a href="#h40">10.1 速查表</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><h2 id="h1">Git Worktree 完全指南</h2>
-<h2 id="h2">1. 概述</h2>
-<h3 id="h3">1.1 什么是 Git Worktree</h3>
+<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · chenmijiang · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">1. 概述</a></li><li class="lvl3"><a href="#h2">1.1 什么是 Git Worktree</a></li><li class="lvl3"><a href="#h3">1.2 Worktree 的工作原理</a></li><li class="lvl3"><a href="#h4">1.3 与 clone / stash 的区别</a></li><li class="lvl2"><a href="#h5">2. 基本概念</a></li><li class="lvl3"><a href="#h6">2.1 主 worktree 与附加 worktree</a></li><li class="lvl3"><a href="#h7">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</a></li><li class="lvl3"><a href="#h8">2.3 Detached HEAD worktree</a></li><li class="lvl2"><a href="#h9">3. 安装与前置条件</a></li><li class="lvl2"><a href="#h10">4. 基本用法</a></li><li class="lvl3"><a href="#h11">4.1 查看 worktree 列表</a></li><li class="lvl3"><a href="#h12">4.2 创建新的 worktree</a></li><li class="lvl3"><a href="#h13">4.3 切换分支（在特定 worktree 内）</a></li><li class="lvl3"><a href="#h14">4.4 删除 worktree</a></li><li class="lvl3"><a href="#h15">4.5 移动 worktree（move）</a></li><li class="lvl3"><a href="#h16">4.6 锁定 worktree（lock/unlock）</a></li><li class="lvl3"><a href="#h17">4.7 修复 worktree（repair）</a></li><li class="lvl3"><a href="#h18">4.8 清理遗留元数据（prune）</a></li><li class="lvl2"><a href="#h19">5. 日常开发场景</a></li><li class="lvl3"><a href="#h20">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</a></li><li class="lvl3"><a href="#h21">5.2 场景 2：并行跑测试/构建</a></li><li class="lvl3"><a href="#h22">5.3 场景 3：Review PR 或复现 CI 失败</a></li><li class="lvl3"><a href="#h23">5.4 场景 4：用 detached worktree debug 和修复老版本</a></li><li class="lvl3"><a href="#h24">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</a></li><li class="lvl2"><a href="#h25">6. 常用命令速查</a></li><li class="lvl3"><a href="#h26">6.1 常见错误与定位</a></li><li class="lvl2"><a href="#h27">7. 最佳实践与注意事项</a></li><li class="lvl3"><a href="#h28">7.1 Worktree 目录放哪里</a></li><li class="lvl3"><a href="#h29">7.2 给 worktree 起”能排序”的名字</a></li><li class="lvl3"><a href="#h30">7.3 不要在多个 worktree 共享同一个构建输出目录</a></li><li class="lvl3"><a href="#h31">7.4 删除 worktree 前先处理分支生命周期</a></li><li class="lvl3"><a href="#h32">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</a></li><li class="lvl3"><a href="#h33">7.6 子模块与 worktree</a></li><li class="lvl2"><a href="#h34">8. Git Worktree vs 相关命令</a></li><li class="lvl3"><a href="#h35">8.1 Worktree vs Stash</a></li><li class="lvl3"><a href="#h36">8.2 Worktree vs Clone</a></li><li class="lvl2"><a href="#h37">9. 常见问题（FAQ）</a></li><li class="lvl2"><a href="#h38">10. 总结</a></li><li class="lvl3"><a href="#h39">10.1 速查表</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><h2 id="h1">1. 概述</h2>
+<h3 id="h2">1.1 什么是 Git Worktree</h3>
 <p><code>git worktree</code> 用来管理本地同一个仓库（repository）下的多个工作区（working tree）。它允许你在不同目录中同时检出多个分支或提交，从而并行开发/测试。</p>
 <p>它解决的核心痛点是：</p>
 <ul>
@@ -29,7 +28,7 @@
 <li>你希望并行跑不同分支的测试/构建，而不是反复 <code>git checkout</code></li>
 </ul>
 <p>一句话： <code>git worktree</code> 让”一个仓库，多份工作区”成为原生能力。</p>
-<h3 id="h4">1.2 Worktree 的工作原理</h3>
+<h3 id="h3">1.2 Worktree 的工作原理</h3>
 <p>Git 的一个”仓库”（repository）可以绑定多个工作区：</p>
 <ul>
 <li>一个 <strong>主工作区</strong> （通常就是你 <code>git clone</code> 得到的目录）</li>
@@ -75,10 +74,10 @@ repo/.git/worktrees/       # worktree 元数据（每个附加 worktree 一份�
                   └─────────┘      └────────┘
 </code></pre>
 <blockquote>
-<p><strong>注意</strong> ：附加 worktree 目录中通常不会有完整的 <code>.git/</code> 目录，而是一个指向主仓库的”gitfile”。</p>
+<p><strong>注意</strong>：附加 worktree 目录中通常不会有完整的 <code>.git/</code> 目录，而是一个指向主仓库的”gitfile”。</p>
 </blockquote>
-<h3 id="h5">1.3 与 clone / stash 的区别</h3>
-<p>很多人第一次遇到并行开发需求时，会用 <code>git stash</code> 或者多次 <code>git clone</code> 。它们都能”凑合”，但 <code>git worktree</code> 更适合长期和频繁并行。</p>
+<h3 id="h4">1.3 与 clone / stash 的区别</h3>
+<p>很多人第一次遇到并行开发需求时，会用 <code>git stash</code> 或者多次 <code>git clone</code>。它们都能”凑合”，但 <code>git worktree</code> 更适合长期和频繁并行。</p>
 <table>
 <thead>
 <tr>
@@ -109,13 +108,13 @@ repo/.git/worktrees/       # worktree 元数据（每个附加 worktree 一份�
 </tr>
 </tbody>
 </table>
-<h2 id="h6">2. 基本概念</h2>
-<h3 id="h7">2.1 主 worktree 与附加 worktree</h3>
+<h2 id="h5">2. 基本概念</h2>
+<h3 id="h6">2.1 主 worktree 与附加 worktree</h3>
 <ul>
-<li><strong>主 worktree</strong> ：你最初 clone 得到的目录；它可以检出任意分支</li>
-<li><strong>附加 worktree</strong> ：额外创建的工作目录；通常绑定到某个特定分支</li>
+<li><strong>主 worktree</strong>：你最初 clone 得到的目录；它可以检出任意分支</li>
+<li><strong>附加 worktree</strong>：额外创建的工作目录；通常绑定到某个特定分支</li>
 </ul>
-<h3 id="h8">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</h3>
+<h3 id="h7">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</h3>
 <p>Git 默认不允许同一个本地分支同时被多个 worktree 检出：</p>
 <ul>
 <li>原因：同一个分支的 HEAD / index / working directory 状态无法被多地同时维护</li>
@@ -131,29 +130,29 @@ git worktree add ../repo-main2 main
 <li>使用 detached HEAD（临时检出，可修改但改动需及时保存）</li>
 <li>再 clone（极少数需要完全隔离配置时）</li>
 </ol>
-<h3 id="h9">2.3 Detached HEAD worktree</h3>
+<h3 id="h8">2.3 Detached HEAD worktree</h3>
 <p>你可以把 worktree 绑定到某个提交（而不是分支），这样的 worktree 称为 detached HEAD 状态：</p>
 <pre><code class="language-bash">git worktree add --detach ../repo-debug HEAD~3
 </code></pre>
-<p><strong>核心特性</strong> ：</p>
+<p><strong>核心特性</strong>：</p>
 <ul>
 <li>✅ 可以修改、测试、甚至提交（非只读）</li>
 <li>✅ 修改不会影响任何分支</li>
 <li>⚠️ 改动必须创建分支才能保存，否则删除 worktree 时会丢失</li>
 </ul>
 <blockquote>
-<p><strong>重要</strong> ：在 detached worktree 里做了改动就 <strong>立刻创建分支</strong> <code>git switch -c &lt;branch&gt;</code> 保存。</p>
+<p><strong>重要</strong>：在 detached worktree 里做了改动就 <strong>立刻创建分支</strong> <code>git switch -c &lt;branch&gt;</code> 保存。</p>
 </blockquote>
-<h2 id="h10">3. 安装与前置条件</h2>
+<h2 id="h9">3. 安装与前置条件</h2>
 <p><code>git worktree</code> 从 Git 2.5 引入，现代 Git 基本都内置。</p>
 <pre><code class="language-bash">git --version
 # 建议 &gt;= 2.30（体验更好）
 </code></pre>
 <blockquote>
-<p><strong>说明</strong> ：不同平台自带 Git 版本差异较大（特别是 macOS 的系统 Git）。如果遇到行为不一致，优先升级 Git（例如 brew 安装）。</p>
+<p><strong>说明</strong>：不同平台自带 Git 版本差异较大（特别是 macOS 的系统 Git）。如果遇到行为不一致，优先升级 Git（例如 brew 安装）。</p>
 </blockquote>
-<h2 id="h11">4. 基本用法</h2>
-<h3 id="h12">4.1 查看 worktree 列表</h3>
+<h2 id="h10">4. 基本用法</h2>
+<h3 id="h11">4.1 查看 worktree 列表</h3>
 <pre><code class="language-bash">git worktree list
 </code></pre>
 <p>输出示例：</p>
@@ -165,7 +164,7 @@ git worktree add ../repo-main2 main
 <pre><code class="language-bash"># 输出机器可读格式（便于脚本解析）
 git worktree list --porcelain
 </code></pre>
-<h3 id="h13">4.2 创建新的 worktree</h3>
+<h3 id="h12">4.2 创建新的 worktree</h3>
 <h4>4.2.1 不指定分支时的默认行为</h4>
 <p>当你只提供路径时：</p>
 <pre><code class="language-bash">git worktree add ../hotfix
@@ -185,15 +184,15 @@ git worktree add -b feature/x ../repo-feature-x origin/main
 </code></pre>
 <p>含义：</p>
 <ul>
-<li><code>-b feature/x</code> ：创建本地分支</li>
-<li><code>../repo-feature-x</code> ：worktree 目录</li>
-<li><code>origin/main</code> ：以哪个起点创建（也可以是 <code>main</code> 或某个 commit）</li>
+<li><code>-b feature/x</code>：创建本地分支</li>
+<li><code>../repo-feature-x</code>：worktree 目录</li>
+<li><code>origin/main</code>：以哪个起点创建（也可以是 <code>main</code> 或某个 commit）</li>
 </ul>
 <h4>4.2.4 使用 detached HEAD 创建</h4>
 <pre><code class="language-bash"># 基于某个版本号或提交 hash 创建 detached worktree
 git worktree add --detach ../repo-debug v1.2.3
 </code></pre>
-<h3 id="h14">4.3 切换分支（在特定 worktree 内）</h3>
+<h3 id="h13">4.3 切换分支（在特定 worktree 内）</h3>
 <p>进入某个 worktree 后，它和普通仓库使用方式一致：</p>
 <pre><code class="language-bash">cd ../repo-feature-x
 git status
@@ -201,24 +200,24 @@ git status
 git switch -c feature/x-2
 </code></pre>
 <blockquote>
-<p><strong>注意</strong> ：如果你在附加 worktree 里 <code>git switch main</code> ，可能会失败（因为 main 已在主 worktree 检出）。</p>
+<p><strong>注意</strong>：如果你在附加 worktree 里 <code>git switch main</code>，可能会失败（因为 main 已在主 worktree 检出）。</p>
 </blockquote>
-<h3 id="h15">4.4 删除 worktree</h3>
+<h3 id="h14">4.4 删除 worktree</h3>
 <pre><code class="language-bash">git worktree remove ../repo-feature-x
 </code></pre>
 <p>只有”干净”的 worktree（无已跟踪文件修改、无未跟踪文件）才能被删除；否则 Git 会拒绝：</p>
 <pre><code class="language-bash"># 强制删除（谨慎）
 git worktree remove --force ../repo-feature-x
 </code></pre>
-<h3 id="h16">4.5 移动 worktree（move）</h3>
-<p>当你需要重命名目录或调整 worktree 的存放位置时，优先用 <code>move</code> 而不是手动 <code>mv</code> ：</p>
+<h3 id="h15">4.5 移动 worktree（move）</h3>
+<p>当你需要重命名目录或调整 worktree 的存放位置时，优先用 <code>move</code> 而不是手动 <code>mv</code>：</p>
 <pre><code class="language-bash"># 把 worktree 移动到新路径
 git worktree move ../repo-feature-x ../repo-feature-x-renamed
 </code></pre>
 <blockquote>
-<p><strong>注意</strong> ：主 worktree 不能用 <code>move</code> 。如果你手动移动了主 worktree，建议用 <code>git worktree repair</code> 重新建立关联。</p>
+<p><strong>注意</strong>：主 worktree 不能用 <code>move</code>。如果你手动移动了主 worktree，建议用 <code>git worktree repair</code> 重新建立关联。</p>
 </blockquote>
-<h3 id="h17">4.6 锁定 worktree（lock/unlock）</h3>
+<h3 id="h16">4.6 锁定 worktree（lock/unlock）</h3>
 <p>当 worktree 放在可移动磁盘/网络盘上（可能会临时断开挂载）时，建议锁定它以避免被自动清理：</p>
 <pre><code class="language-bash"># 锁定，附带原因说明
 git worktree lock --reason &quot;mounted on external disk&quot; ../repo-debug
@@ -226,7 +225,7 @@ git worktree lock --reason &quot;mounted on external disk&quot; ../repo-debug
 # 解锁
 git worktree unlock ../repo-debug
 </code></pre>
-<h3 id="h18">4.7 修复 worktree（repair）</h3>
+<h3 id="h17">4.7 修复 worktree（repair）</h3>
 <p>当你手动移动了 worktree 目录，或 <code>.git</code> 连接文件损坏导致 worktree 失联时，可以尝试修复：</p>
 <pre><code class="language-bash"># 在任意 worktree 里执行，修复当前 worktree
 git worktree repair
@@ -234,15 +233,15 @@ git worktree repair
 # 修复指定路径（可一次多个）
 git worktree repair ../repo-feature-x ../repo-hotfix
 </code></pre>
-<h3 id="h19">4.8 清理遗留元数据（prune）</h3>
+<h3 id="h18">4.8 清理遗留元数据（prune）</h3>
 <p>当你手动删除了 worktree 目录，或者目录损坏时，仓库内可能残留记录。</p>
 <pre><code class="language-bash">git worktree prune
 </code></pre>
 <p>建议搭配检查：</p>
 <pre><code class="language-bash">git worktree list
 </code></pre>
-<h2 id="h20">5. 日常开发场景</h2>
-<h3 id="h21">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</h3>
+<h2 id="h19">5. 日常开发场景</h2>
+<h3 id="h20">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</h3>
 <p>目标：</p>
 <ul>
 <li><code>../repo-feature-x</code> 开发 feature</li>
@@ -276,7 +275,7 @@ git push
 <li>✅ 不需要频繁 checkout</li>
 <li>✅ 两条线互不影响</li>
 </ul>
-<h3 id="h22">5.2 场景 2：并行跑测试/构建</h3>
+<h3 id="h21">5.2 场景 2：并行跑测试/构建</h3>
 <p>例子：</p>
 <ul>
 <li><code>main</code> 跑全量测试</li>
@@ -291,9 +290,9 @@ cd ../repo-feature-x
 npm run dev
 </code></pre>
 <blockquote>
-<p><strong>提示</strong> ：如果项目会生成大量构建产物（dist、.next、target 等），worktree 比 “同目录切分支” 更干净。</p>
+<p><strong>提示</strong>：如果项目会生成大量构建产物（dist、.next、target 等），worktree 比 “同目录切分支” 更干净。</p>
 </blockquote>
-<h3 id="h23">5.3 场景 3：Review PR 或复现 CI 失败</h3>
+<h3 id="h22">5.3 场景 3：Review PR 或复现 CI 失败</h3>
 <p>你可以把某个远端分支拉到独立 worktree，用完就删：</p>
 <pre><code class="language-bash"># 1. 拉取 PR 分支
 git fetch origin pull/123/head:pr/123
@@ -311,7 +310,7 @@ cd ../repo
 git worktree remove ../repo-pr-123
 git branch -D pr/123
 </code></pre>
-<h3 id="h24">5.4 场景 4：用 detached worktree debug 和修复老版本</h3>
+<h3 id="h23">5.4 场景 4：用 detached worktree debug 和修复老版本</h3>
 <p>detached worktree 特别适合调试历史版本。根据需求不同，有两类操作流程：</p>
 <h4>5.4.1 场景 A：验证老版本（临时查看，无需保存改动）</h4>
 <p>目标：快速在某个历史版本验证 bug 是否存在，验证后丢弃。</p>
@@ -356,8 +355,8 @@ git worktree remove ../repo-bugfix
 git log -1 --oneline fix/v0.9.0-patch
 git switch fix/v0.9.0-patch  # 继续在该分支上工作
 </code></pre>
-<p><strong>核心原则</strong> ：改动完成立即创建分支，否则删除 worktree 时丢失。</p>
-<h3 id="h25">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</h3>
+<p><strong>核心原则</strong>：改动完成立即创建分支，否则删除 worktree 时丢失。</p>
+<h3 id="h24">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</h3>
 <p>当你需要对比 rebase 前后行为，worktree 特别好用：</p>
 <pre><code class="language-bash"># 1. 创建一个对照 worktree（记录 rebase 前状态）
 git worktree add ../repo-before-rebase main
@@ -378,8 +377,8 @@ npm test
 # 5. 对比结果，确认 rebase 安全后清理
 git worktree remove ../repo-before-rebase
 </code></pre>
-<h2 id="h26">6. 常用命令速查</h2>
-<h3 id="h27">6.1 常见错误与定位</h3>
+<h2 id="h25">6. 常用命令速查</h2>
+<h3 id="h26">6.1 常见错误与定位</h3>
 <p>遇到问题时可以用以下命令快速诊断：</p>
 <pre><code class="language-bash"># 查看分支被哪个 worktree 占用
 git worktree list
@@ -393,8 +392,8 @@ git worktree list
 # 清理失效元数据
 git worktree prune
 </code></pre>
-<h2 id="h28">7. 最佳实践与注意事项</h2>
-<h3 id="h29">7.1 Worktree 目录放哪里</h3>
+<h2 id="h27">7. 最佳实践与注意事项</h2>
+<h3 id="h28">7.1 Worktree 目录放哪里</h3>
 <p>推荐策略：</p>
 <ul>
 <li>主仓库： <code>~/code/repo</code></li>
@@ -405,20 +404,20 @@ git worktree prune
 <li>清理方便</li>
 <li>不会把 worktree 嵌套到另一个 worktree 内（避免混乱）</li>
 </ul>
-<h3 id="h30">7.2 给 worktree 起”能排序”的名字</h3>
+<h3 id="h29">7.2 给 worktree 起”能排序”的名字</h3>
 <pre><code>repo-wt-main
 repo-wt-feature-x
 repo-wt-hotfix-urgent
 repo-wt-pr-123
 </code></pre>
 <p>文件夹名能直接体现用途，比只用分支名更直观。</p>
-<h3 id="h31">7.3 不要在多个 worktree 共享同一个构建输出目录</h3>
+<h3 id="h30">7.3 不要在多个 worktree 共享同一个构建输出目录</h3>
 <p>某些构建脚本会写入固定路径（比如 <code>dist/</code> ），这在 worktree 模式下一般没事， 但如果你把输出目录重定向到共享路径（例如 <code>../dist</code> ），可能造成互相覆盖。</p>
 <ul>
 <li>✅ 每个 worktree 自己产出一套 build</li>
 <li>❌ 多个 worktree 写同一个 build 目录</li>
 </ul>
-<h3 id="h32">7.4 删除 worktree 前先处理分支生命周期</h3>
+<h3 id="h31">7.4 删除 worktree 前先处理分支生命周期</h3>
 <p>worktree 删除只影响工作区，不一定会删除分支。</p>
 <p>常见流程：</p>
 <pre><code class="language-bash"># 1. 先 remove worktree
@@ -429,14 +428,14 @@ git branch -d feature/x
 # 或强制删除
 git branch -D feature/x
 </code></pre>
-<h3 id="h33">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</h3>
+<h3 id="h32">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</h3>
 <pre><code class="language-bash"># 先清理元数据
 git worktree prune
 
 # 再确认
 git worktree list
 </code></pre>
-<h3 id="h34">7.6 子模块与 worktree</h3>
+<h3 id="h33">7.6 子模块与 worktree</h3>
 <p>worktree 对子模块也能用，但注意：</p>
 <ul>
 <li>子模块本身也有自己的工作区状态</li>
@@ -447,8 +446,8 @@ git worktree list
 <li>在每个 worktree 内独立运行 <code>git submodule update --init --recursive</code></li>
 <li>避免在多个 worktree 同时对同一个子模块做改动</li>
 </ul>
-<h2 id="h35">8. Git Worktree vs 相关命令</h2>
-<h3 id="h36">8.1 Worktree vs Stash</h3>
+<h2 id="h34">8. Git Worktree vs 相关命令</h2>
+<h3 id="h35">8.1 Worktree vs Stash</h3>
 <table>
 <thead>
 <tr>
@@ -480,7 +479,7 @@ git worktree list
 </tr>
 </tbody>
 </table>
-<h3 id="h37">8.2 Worktree vs Clone</h3>
+<h3 id="h36">8.2 Worktree vs Clone</h3>
 <table>
 <thead>
 <tr>
@@ -512,7 +511,7 @@ git worktree list
 </tr>
 </tbody>
 </table>
-<h2 id="h38">9. 常见问题（FAQ）</h2>
+<h2 id="h37">9. 常见问题（FAQ）</h2>
 <p><strong>Q1：为什么我不能在第二个 worktree 里 checkout main？</strong></p>
 <p>因为 main 已被另一个 worktree 检出，Git 会阻止同一分支被多个 worktree 同时使用。</p>
 <p>解决思路：</p>
@@ -547,11 +546,11 @@ git worktree remove --force ../repo-feature-x
 <p><strong>Q5：worktree 对大仓库有特殊支持吗？</strong></p>
 <p>有。worktree 特别适合大仓库：</p>
 <ul>
-<li>省空间：共享 <code>.git/objects</code> ，不重复存储</li>
+<li>省空间：共享 <code>.git/objects</code>，不重复存储</li>
 <li>快速：创建 worktree 只需几毫秒（vs clone 需要分钟级）</li>
 <li>节省带宽：无需重复下载对象</li>
 </ul>
-<h2 id="h39">10. 总结</h2>
+<h2 id="h38">10. 总结</h2>
 <p><code>git worktree</code> 是解决并行分支开发的”正统方案”，尤其适合：</p>
 <ul>
 <li>同时处理 feature / hotfix / release</li>
@@ -562,10 +561,10 @@ git worktree remove --force ../repo-feature-x
 <ul>
 <li>✅ 一个仓库可以有多个工作区，节省空间</li>
 <li>✅ 同一分支不能被多个 worktree 同时检出</li>
-<li>✅ 用完及时 <code>git worktree remove</code> ，异常时 <code>git worktree prune</code></li>
+<li>✅ 用完及时 <code>git worktree remove</code>，异常时 <code>git worktree prune</code></li>
 <li>✅ detached worktree 适合临时 debug，但要记得创建分支保存提交</li>
 </ul>
-<h3 id="h40">10.1 速查表</h3>
+<h3 id="h39">10.1 速查表</h3>
 <table>
 <thead>
 <tr>
@@ -606,11 +605,16 @@ git worktree remove --force ../repo-feature-x
 <td>清掉失效 worktree 元数据</td>
 </tr>
 </tbody>
-</table></div><a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
+</table></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script src="../../assets/site.js"></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>

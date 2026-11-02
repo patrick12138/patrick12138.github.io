@@ -107,6 +107,38 @@ def pull_source_block(body):
     return re.sub(r"\s{2,}", " ", text).strip(), "\n".join(lines[:i] + lines[j:])
 
 
+def normalize_md(body):
+    """剪藏 md 的排版修补：反转义、给标题/列表补空行（跳过代码块）。"""
+    body = body.replace("\r\n", "\n")
+    body = re.sub(r"\\([`*_\[\]#()!+])", r"\1", body)
+    out, fence = [], False
+    for ln in body.split("\n"):
+        st = ln.strip()
+        if st.startswith("```") or st.startswith("~~~"):
+            fence = not fence
+            out.append(ln)
+            continue
+        if fence:
+            out.append(ln)
+            continue
+        glued = re.search(r"(?<=[^\s|])(#{2,6}\s+\S)", ln)
+        if glued and not st.startswith("#"):
+            out.append("")
+            ln = ln[:glued.start(1)] + "\n\n" + ln[glued.start(1):]
+            st = ln.strip()
+        is_head = re.match(r"^#{1,6}\s+\S", st)
+        is_item = re.match(r"^([-*+]|\d+\.)\s+\S", st)
+        if (is_head or is_item) and out:
+            prev = out[-1]
+            ps = prev.strip()
+            if (ps and not re.match(r"^([-*+]|\d+\.)\s+", ps)
+                    and not re.match(r"^#{1,6}\s", ps) and not ps.startswith("|")
+                    and not prev.startswith("    ") and not ps.endswith("|")):
+                out.append("")
+        out.append(ln)
+    return "\n".join(out)
+
+
 def strip_clip_junk(body):
     out = []
     for line in body.split("\n"):
@@ -172,6 +204,9 @@ def fetch_asset(url, slug, out_dir):
     folder = os.path.join(ROOT, "assets", out_dir, slug)
     os.makedirs(folder, exist_ok=True)
     path = os.path.join(folder, name)
+    webp = os.path.splitext(path)[0] + ".webp"
+    if ext != ".webp" and os.path.exists(webp):
+        return "../../assets/%s/%s/%s" % (out_dir, slug, os.path.basename(webp)), os.path.getsize(webp)
     if not os.path.exists(path):
         p = urllib.parse.urlparse(url)
         req = urllib.request.Request(url, headers={"User-Agent": UA,
@@ -239,7 +274,7 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
 
     body = strip_title_heading(body, title)
     source_note, body = pull_source_block(body)
-    body = strip_clip_junk(body)
+    body = unwiki(strip_clip_junk(normalize_md(body)))
     if not desc:
         desc = first_paragraph(body)
 
@@ -255,6 +290,12 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
         body, extensions=["extra", "sane_lists", "fenced_code", "tables", "nl2br"],
         output_format="html5")
     html_body = re.sub(r"</p>\s*<p>", "</p>\n<p>", html_body)
+    # 排版收尾：空段落、中文句中硬换行、中文标点前的空格
+    html_body = re.sub(r"<p>(?:\s|&nbsp;)*</p>", "", html_body)
+    html_body = re.sub(r"(?<=[\u4e00-\u9fff，。；：！？、）])[ \t]*<br ?/?>[ \t]*(?=[\u4e00-\u9fff])", "", html_body)
+    html_body = re.sub(r"(?<=[\u4e00-\u9fff>])[ \t]+(?=[，。；：！？、])", "", html_body)
+    html_body = re.sub(r"\n[ \t]+\n", "\n\n", html_body)
+    html_body = re.sub(r"\n{3,}", "\n\n", html_body)
 
     tpl = open(TEMPLATE, encoding="utf-8").read()
     head, rest = tpl.split('<div class="wrap"><article class="article">', 1)

@@ -1,0 +1,298 @@
+[
+ {
+  "slug": "after-ai-takes-everything",
+  "md": "Sources/Inbox/当 AI 拿走一切之后.md",
+  "author": "Airing",
+  "date": "June 12, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "agent-infra-and-runtime",
+  "md": "Resources/Agent Infra 与 Runtime.md",
+  "author": "",
+  "date": "June 8, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "ai-fatigue-is-real",
+  "md": "Sources/Inbox/AI fatigue is real and nobody talks about it.md",
+  "author": "Siddhant Khare",
+  "date": "February 8, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "ai-fatigue",
+  "md": "Resources/AI 疲劳与可持续使用.md",
+  "author": "",
+  "date": "October 12, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "ai-native-dev-workflow",
+  "md": "Sources/Clippings/我的 AI 原生开发流程：一个真实案例的完整复盘.md",
+  "author": "宝玉",
+  "date": "August 24, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "ai-token-pricing",
+  "md": "Resources/AI 订阅额度与 token 比价（2026-10）.md",
+  "author": "",
+  "date": "October 26, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "best-harness-deepseek-v4-flash",
+  "md": "Sources/Inbox/Finding the Best Harness for DeepSeek V4 Flash.md",
+  "author": "Sunil Kumar Dash",
+  "date": "August 11, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "can-ai-replace-programmers",
+  "md": "Sources/Inbox/AI 究竟能不能替代程序员.md",
+  "author": "Lenciel",
+  "date": "June 8, 2025",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "claude-code-review",
+  "md": "Sources/Inbox/一个半月高强度 Claude Code 使用后感受.md",
+  "author": "王巍（onevcat）",
+  "date": "August 3, 2025",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "claude-code-team-review",
+  "md": "Sources/Published/How the Claude Code team does code review.md",
+  "author": "Addy Osmani 等",
+  "date": "October 15, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "client-dev-choices",
+  "md": "Sources/Clippings/你不知道的客户端开发：选型、原生、多端与借力 1.md",
+  "author": "Tw93",
+  "date": "October 23, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "codex-best-practices",
+  "md": "Sources/Inbox/把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读.md",
+  "author": "字节笔记本",
+  "date": "June 10, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "codex-workflow",
+  "md": "Resources/Codex 与 AI 编程工作流.md",
+  "author": "",
+  "date": "June 10, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "dsh-vs-pi-agent",
+  "md": "Sources/Inbox/DeepSeek Harness (DSH) vs Pi Agent Everything You Need to Know.md",
+  "author": "Shrijal",
+  "date": "September 8, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "git-worktree",
+  "md": "Sources/Clippings/Git Worktree 完全指南.md",
+  "author": "chenmijiang",
+  "date": "July 21, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "harness-engineering",
+  "md": "Sources/Inbox/工程技术：在智能体优先的世界中利用 Codex.md",
+  "author": "Ryan Lopopolo",
+  "date": "May 27, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "how-i-work-with-agents",
+  "md": "Sources/Published/How I work with Agents.md",
+  "author": "Thorsten Ball",
+  "date": "October 25, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "how-to-ask-questions",
+  "md": "Sources/Clippings/How-To-Ask-Questions-The-Smart-WayREADME-zh_CN.md at main.md",
+  "author": "Eric S. Raymond",
+  "date": "July 14, 2026",
+  "kind": "repost",
+  "title": "提问的智慧"
+ },
+ {
+  "slug": "how-to-be-good-at-research",
+  "md": "Sources/Inbox/how to be good at research.md",
+  "author": "@itsreallyvivek",
+  "date": "June 10, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "how-to-earn-a-billion-dollars",
+  "md": "Sources/Inbox/How to Earn a Billion Dollars.md",
+  "author": "Paul Graham",
+  "date": "June 14, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "html-artifact",
+  "md": "Resources/AI 输出形态与 HTML Artifact.md",
+  "author": "",
+  "date": "June 24, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "html-is-unreasonably-effective",
+  "md": "Sources/Inbox/Using Claude Code The unreasonable effectiveness of HTML.md",
+  "author": "Anthropic",
+  "date": "May 29, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "make-ai-write-good-code",
+  "md": "Sources/Inbox/好奇心周刊第25期 如何让AI写好代码.md",
+  "author": "胡涂说",
+  "date": "February 26, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "obsidian-claude-code",
+  "md": "Sources/Inbox/Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑.md",
+  "author": "@TomWhit30172697",
+  "date": "June 7, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "research-as-compounding",
+  "md": "Resources/研究方法论与复利思维.md",
+  "author": "",
+  "date": "June 24, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "sora-android-28-days",
+  "md": "Sources/Inbox/我们如何使用 Codex 在 28 天内构建 Android 版 Sora（OpenAI 官方原文）.md",
+  "author": "OpenAI",
+  "date": "October 30, 2025",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "standing-at-the-turn",
+  "md": "Sources/Inbox/当我们站在变革的开端.md",
+  "author": "@jiayuan_jy",
+  "date": "March 6, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "state-of-open-models-2026",
+  "md": "Sources/Inbox/State of Open Models Summer 2026 Observations.md",
+  "author": "Hugging Face",
+  "date": "August 14, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "taste-and-engineering",
+  "md": "Resources/AI 时代的品味与工程思维.md",
+  "author": "",
+  "date": "June 24, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "the-70-percent-problem",
+  "md": "Resources/AI 辅助编程的 70% 问题.md",
+  "author": "",
+  "date": "June 8, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "the-70-problem",
+  "md": "Sources/Inbox/The 70% problem Hard truths about AI-assisted coding.md",
+  "author": "Addy Osmani",
+  "date": "December 5, 2024",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "two-weeks-inside-china-ai",
+  "md": "Sources/Inbox/在中国 AI 生态圈摸底了两周，我学到了什么.md",
+  "author": "宝玉（译）",
+  "date": "March 26, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "warp-self-improving-agents",
+  "md": "Sources/Clippings/Warp 如何让 Agent 自我进化.md",
+  "author": "宝玉",
+  "date": "August 28, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "what-are-artifacts",
+  "md": "Sources/Inbox/What are artifacts and how do I use them.md",
+  "author": "Anthropic",
+  "date": "March 25, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "what-is-agent",
+  "md": "Sources/Clippings/Agent 到底是什么  Pi Agent 原理与实现.md",
+  "author": "",
+  "date": "May 26, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "why-ai-makes-workers-tired",
+  "md": "Sources/Inbox/AI 越来越强，为什么打工人反而越来越累、越来越内耗了？.md",
+  "author": "程序员海军",
+  "date": "September 7, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "why-i-dont-vibe-code",
+  "md": "Sources/Inbox/Why I Don’t Vibe Code.md",
+  "author": "Jacob Harris",
+  "date": "March 5, 2026",
+  "kind": "repost",
+  "title": ""
+ }
+]

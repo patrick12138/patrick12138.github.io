@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="五个月交付一款内部 beta，没有一行代码是人手写的。人负责掌舵、智能体负责执行。">
+<meta name="description" content="作者：Ryan Lopopolo，技术人员">
 <title>工程技术：在智能体优先的世界中利用 Codex · patrick</title>
 <link rel="stylesheet" href="../../assets/post.css">
 </head>
@@ -11,7 +11,7 @@
 <div class="bar"><div class="bar-in">
   <a class="brand" href="../../">patrick</a>
   <nav class="nav">
-    <a href="../../">首页</a><a href="../../lab/">Lab</a>
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -20,7 +20,7 @@
 </div></div>
 <div class="wrap"><article class="article"><h1>工程技术：在智能体优先的世界中利用 Codex</h1><div class="meta">May 27, 2026 · Ryan Lopopolo · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://openai.com/zh-Hans-CN/index/harness-engineering/" target="_blank" rel="noopener">https://openai.com/zh-Hans-CN/index/harness-engineering/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">我们从一个空的 Git 代码仓库开始</a></li><li class="lvl2"><a href="#h2">重新定义工程师的角色</a></li><li class="lvl2"><a href="#h3">提高应用程序的可读性</a></li><li class="lvl2"><a href="#h4">我们将代码仓库设为记录系统</a></li><li class="lvl2"><a href="#h5">目标是智能体的可读性</a></li><li class="lvl2"><a href="#h6">规范架构与品味</a></li><li class="lvl2"><a href="#h7">吞吐量改变了合并的理念</a></li><li class="lvl2"><a href="#h8">“智能体生成”实际上意味着什么</a></li><li class="lvl2"><a href="#h9">不断提高的自主水平</a></li><li class="lvl2"><a href="#h10">熵与垃圾收集</a></li><li class="lvl2"><a href="#h11">我们仍在学习的内容</a></li><li class="lvl2"><a href="#h12">作者</a></li><li class="lvl2"><a href="#h13">致谢</a></li><li class="lvl2"><a href="#h14">继续阅读用 Codex 构建可自我改进的税务智能体</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>2026年2月11日</p>
 <p><a href="https://openai.com/zh-Hans-CN/news/engineering/">工程</a></p>
-<p>在过去五个月里，我们的团队一直在进行一项实验：构建并交付一款软件产品的内部 beta 版， <strong>其中没有一行代码是人工编写的</strong> 。</p>
+<p>在过去五个月里，我们的团队一直在进行一项实验：构建并交付一款软件产品的内部 beta 版， <strong>其中没有一行代码是人工编写的</strong>。</p>
 <p>该产品有内部日常活跃用户和外部 Alpha 测试者。它经历了交付、部署、故障和修复的整个过程。与众不同的是，每一行代码 — 从应用逻辑、测试、CI 配置、文档、可观察性到内部工具 — 全都是由 Codex 编写的。据估计，我们只用了手工编写代码所需的大约 1/10 的时间就完成了这项工作。</p>
 <p><strong>人类掌舵。智能体执行。</strong></p>
 <p>我们有意选择这一限制，以便构建必要的内容，从而将工程速度提升数个数量级。我们用了几周的时间来交付最终达到一百万行代码的项目。为此，我们需要了解，当软件工程团队的主要工作不再是编写代码，而是设计环境、明确意图和构建反馈回路，从而使 Codex 智能体能够可靠地工作时，会发生哪些变化。</p>
@@ -30,9 +30,9 @@
 <p>初始架构 — 包括代码仓库结构、CI 配置、格式化规则、包管理器设置和应用框架 — 是在一小套现有模板的指导下，由 Codex CLI 使用 GPT‑5 生成的。就连指导智能体如何在代码仓库中工作的初始 AGENTS.md 文件本身也是由 Codex 编写的。</p>
 <p>该系统没有预存任何人工编写的代码。从一开始，代码仓库就由智能体塑造。</p>
 <p>五个月后，该代码仓库已经拥有约一百万行代码，从应用逻辑、基础设施、工具、文档到内部开发者工具应有尽有。在那段时间内，大约有 1,500 个 Pull Request 被打开与合并，而推动 Codex 的仅仅是一个由三名工程师组成的小团队。这相当于平均每位工程师每天处理 3.5 个 PRs 的吞吐量，而且令人惊讶的是，随着团队规模扩大到现在的七名工程师，吞吐量甚至还 <em>增加</em> 了。重要的是，这并非为了输出而输出：该产品已在数百名内测用户那里投入使用，其中包括每天都在使用的内测高级用户。</p>
-<p>在整个开发过程中，人类从未直接直接贡献过任何代码。这成为团队的核心理念： <strong>不手动编写代码</strong> 。</p>
+<p>在整个开发过程中，人类从未直接直接贡献过任何代码。这成为团队的核心理念： <strong>不手动编写代码</strong>。</p>
 <h2 id="h2">重新定义工程师的角色</h2>
-<p>由于缺乏人工编码的实践， <strong>工程师工作的重点转向了系统、架构和杠杆作用</strong> 。</p>
+<p>由于缺乏人工编码的实践， <strong>工程师工作的重点转向了系统、架构和杠杆作用</strong>。</p>
 <p>早期进展比我们所预期的要慢，而这并不是因为 Codex 不具备相应的能力，而是因为环境的规范不够明确。该智能体缺乏实现高级目标所需的工具、抽象层和内部结构，因而无法取得进展。我们工程团队的主要任务成了协助智能体完成有用的工作。</p>
 <p>在实践中，这意味着采用深度优先的工作方式：将更大的目标拆解为更小的构建模块（设计、代码、评审、测试等），提示智能体去构建这些模块，并使用它们去解锁更复杂的任务。当事情进行不顺利时，解决方案基本上再也不会是“再努力一点”。因为取得进展的唯一方式是让 Codex 来完成工作，而人类工程师则总是介入这项任务并追问：“究竟还需要什么样的能力，我们又该如何让这个能力对智能体来说既清晰可读又可强制执行？”</p>
 <p>人类几乎完全通过提示与系统交互：工程师描述任务，运行智能体，并允许其打开一个 Pull Request。为了推动 PR 的完成，我们会指示 Codex 在本地审核其自身的更改，在本地和云端请求额外的特定智能体审查，对任何人工或智能体给出的反馈做出响应，并循环往复，直到所有智能体审核人员都满意为止（这实际上是一个 <a href="https://ghuntley.com/loop/">Ralph Wiggum 循环 ⁠</a> ）。Codex 直接使用我们的标准开发工具（gh、本地脚本和嵌入代码仓库的技能）来收集情境，而无需人工将内容复制粘贴到 CLI 中。</p>
@@ -53,7 +53,7 @@
 <li><strong>它会立即腐烂。</strong> 一本庞杂的手册会变成陈旧规则的坟场。智能体无法判断哪些信息仍然有效，一旦人类停止维护它，此文件就会悄然成为一个颇具吸引力的麻烦源头。</li>
 <li><strong>这很难核实。</strong> 单个 blob 不适合进行机械检查（覆盖率、新鲜度、所有权、交叉链接），因此漂移是不可避免的。</li>
 </ul>
-<p>因此，我们不再将 <code>AGENTS.md</code> 视为百科全书，而是将其视为 <strong>内容目录</strong> 。</p>
+<p>因此，我们不再将 <code>AGENTS.md</code> 视为百科全书，而是将其视为 <strong>内容目录</strong>。</p>
 <p>代码仓库的知识库位于一个结构化了的 <code>docs/</code> 目录中，此目录被当作记录系统来使用。一份简短的 <code>AGENTS.md</code> （大约 100 行）被注入到情境中，主要用作地图，并指向其他地方更深层次的真实信息来源。</p>
 <h4>纯文本</h4>
 <pre><code>AGENTS.md
@@ -89,7 +89,7 @@ docs/
 <p>代码仓库内知识存储布局。</p>
 <p>设计文档已被编目和索引，其中包括验证状态和一套核心理念，定义了智能体优先的操作原则。 <a href="https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html">架构文档 ⁠</a> 提供域和包分层的顶层地图。一份高质量的文档会对每个产品领域和架构层进行评分，并随着时间的推移追踪差距。</p>
 <p>计划被视为一流的工件。临时轻量计划用于小幅变更，而复杂工作则记录在 <a href="https://cookbook.openai.com/articles/codex_exec_plans">执行计划 ⁠</a> 中，并附带进度和决策日志，这些日志会被提交到代码仓库。活跃计划、已完成计划和已知的技术债务都已进行版本控制并集中存放，使智能体能够在不依赖外部情境的情况下运行。</p>
-<p>这实现了 <strong>渐进式披露</strong> ：智能体从一个小而稳定的切入点开始，并被指导下一步该去哪里查看，而不是一开始就被淹没。</p>
+<p>这实现了 <strong>渐进式披露</strong>：智能体从一个小而稳定的切入点开始，并被指导下一步该去哪里查看，而不是一开始就被淹没。</p>
 <p>我们严格执行这一点。专职的 linter 和 CI 作业会验证知识库的更新状况、是否已交叉链接且结构正确。一个定期运行的“doc-gardening”智能体会扫描那些不再反映真实代码行为的过时或废弃文档，并发起修复用的 Pull Request。</p>
 <h2 id="h5">目标是智能体的可读性</h2>
 <p>随着代码库的发展，Codex 的设计决策框架也需要随之演变。</p>
@@ -100,7 +100,7 @@ docs/
 <p>这一框架明确了许多取舍。我们倾向于选择那些可以完全内化于在仓库中进行推理的依赖项和抽象。对智能体来说，通常被称为“枯燥”的技术，由于其可组合性、API 稳定性和在训练集里的表现，往往更容易建立模型。在某些情况下，让智能体重新实现部分功能子集比绕过公共库中不透明的上游行为更便宜。例如，我们没有引入通用的 <code>p-limit</code> 风格包，而是投入使用了我们自己的带并发的 map 辅助函数：它与我们的 OpenTelemetry 仪表紧密集成，具备 100% 的测试覆盖率，并且其行为完全符合我们的运行时预期。</p>
 <p>将系统的更多部分转化为智能体可以检查、验证并直接修改的形式，可以直接提高杠杆效应 — 这不仅适用于 Codex，也适用于其他智能体（例如 <a href="https://openai.com/zh-Hans-CN/index/introducing-aardvark/">Aardvark</a>) 也在参与代码库的开发。</p>
 <h2 id="h6">规范架构与品味</h2>
-<p>仅靠文档本身，是没法保持完全由智能体生成的代码库的连贯性的。 <strong>通过强制执行不变量，而非对实施过程进行微观管理，我们令智能体能够快速交付，而且不会削弱基础。</strong> 例如，我们要求 Codex <a href="https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/">在边界处解析数据形状 ⁠</a> ，但不规定具体实现方式（模型似乎偏好 Zod，但我们没有指定特定库）。</p>
+<p>仅靠文档本身，是没法保持完全由智能体生成的代码库的连贯性的。 <strong>通过强制执行不变量，而非对实施过程进行微观管理，我们令智能体能够快速交付，而且不会削弱基础。</strong> 例如，我们要求 Codex <a href="https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/">在边界处解析数据形状 ⁠</a>，但不规定具体实现方式（模型似乎偏好 Zod，但我们没有指定特定库）。</p>
 <p>智能体在具有 <a href="https://bits.logic.inc/p/ai-is-forcing-us-to-write-good-code">严格边界和可预测结构 ⁠</a> 的环境中最为高效，因此我们围绕一个严格的架构模型构建了该应用。每个业务域都划分为一组固定的层，依赖方向经过严格验证，并且仅允许有限的一组边。这些约束是通过自定义的 linter（当然是由 Codex 生成的！）和结构测试机械地强制执行的。</p>
 <p>下图展示了规则：在每个业务领域内（例如应用设置），代码只能“向前”依赖于一组固定的层（Types → Config → Repo → Service → Runtime → UI）。横切关注点（认证、连接器、遥测、功能标志）通过一个单一的显式接口进入：Providers。其他任何内容都不被允许，并将通过自动化方式强制执行。</p>
 <p>这种架构通常要等到你拥有数百名工程师时才会推迟。对于编码智能体来说，这是一个早期的先决条件：有了约束，速度才不会下降，架构才不会漂移。</p>
@@ -154,8 +154,8 @@ docs/
 <p>到目前为止，这一策略在 OpenAI 的内部发布和采纳过程中表现良好。为真实用户打造真实产品，帮助我们将投资锚定在现实中，并引导我们实现长期的可维护性。</p>
 <p>我们尚不清楚的是，在一个完全由智能体生成的系统中，架构连贯性会如何随着时间的推移而演变。我们仍在学习人类的判断力在哪些方面能发挥最大作用，以及如何对这种判断力进行编码，使其发挥更大作用。我们也不知道，随着时间的推移，模型的功能不断增强，这一系统将如何演变。</p>
 <p>显而易见的是：构建软件仍然需要纪律，但纪律更多地体现在支撑结构上，而不是代码上。保持代码库一致性的工具、抽象和反馈回路变得越发重要。</p>
-<p><strong>我们当前最棘手的挑战集中在设计环境、反馈回路和控制系统方面</strong> ，帮助智能体实现我们的目标：大规模构建和维护复杂、可靠的软件。</p>
-<p>随着像 Codex 这样的智能体在软件生命周期中占据越来越大的比重，这些问题将变得更加重要。我们希望通过分享一些早期的经验教训，帮助你理清投入精力的方向，以便 <a href="https://openai.com/zh-Hans-CN/codex/">你可以直接开始构建</a> 。</p>
+<p><strong>我们当前最棘手的挑战集中在设计环境、反馈回路和控制系统方面</strong>，帮助智能体实现我们的目标：大规模构建和维护复杂、可靠的软件。</p>
+<p>随着像 Codex 这样的智能体在软件生命周期中占据越来越大的比重，这些问题将变得更加重要。我们希望通过分享一些早期的经验教训，帮助你理清投入精力的方向，以便 <a href="https://openai.com/zh-Hans-CN/codex/">你可以直接开始构建</a>。</p>
 <h2 id="h12">作者</h2>
 <p>Ryan Lopopolo</p>
 <h2 id="h13">致谢</h2>
@@ -172,6 +172,10 @@ docs/
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script src="../../assets/site.js"></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>

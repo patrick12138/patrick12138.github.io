@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="苏格拉底式编程 + Claude/Gemini/Codex 的专家级协同，100% AI 编程的个人项目经验总结">
-<title>好奇心周刊第 25 期：如何让 AI 写好代码 · patrick</title>
+<title>好奇心周刊第25期: 如何让AI写好代码 · patrick</title>
 <link rel="stylesheet" href="../../assets/post.css">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
   <a class="brand" href="../../">patrick</a>
   <nav class="nav">
-    <a href="../../">首页</a><a href="../../lab/">Lab</a>
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>好奇心周刊第 25 期：如何让 AI 写好代码</h1><div class="meta">February 26, 2026 · 胡涂说 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" target="_blank" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a> 。</p>
+<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">February 26, 2026 · 胡涂说 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" target="_blank" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
 <p>在 <a href="https://hutusi.com/weeklies/24">上一期周刊</a> 中，我谈了下对AI编程 / Vibe Coding 的一些看法。在这期里，我想就自己在AI编程上投入最多时间、最长跨度的一个项目为例，谈一谈如何让AI写好代码，实现一个完整的软件项目。这是一个从零开始、历经 400 多个 Commit 打磨、100% 由 AI 编程实现的项目——也是我二十年博客生涯中接触过的最优雅、交互体验最佳的博客框架，我对它颇为满意。</p>
 <p><img alt="la-nascita-di-veneree" src="../../assets/posts/make-ai-write-good-code/4c6240325659.webp"></p>
 <blockquote>
@@ -35,7 +35,7 @@
 <p>最初我在决定选用哪种工具作为该项目的编程主力的时候，分别用同样的提示词向它们下达了指令，对 Gemini CLI 创建的网站样式最为满意。其实 Claude Code 创建的网站样式也不差，不过因为当时我还在写另外一个项目，想着把 Claude Code 抠门的 Token 限额留给该项目，就选用了 Gemini CLI 作为编程主力。当时 Codex 的 GPT-5.3-Codex 模型还没出来，效果相对其他两个感觉上差了点，因此没有选。</p>
 <p>后来使用 Gemini CLI 提交了约200多个 Commit, 功能越来越复杂后，感觉 Gemini CLI 有些力不从心了。我希望它在首页设计个轮播图的效果，尽管 Google 在 Token 额度方面非常慷慨，Gemini CLI 一遍又一遍的规划设计生成尝试，最终也没能设计出一个让我感到满意的效果来。于是我让 Claude Code 出手，它理解了项目代码后立刻就设计出了让我满意的样式（修改代码参见 <a href="https://github.com/hutusi/amytis/commit/0d74bfa2203106bd03e7dd9f74a28dc3f562e851">Commit</a> ）。当然，在它设计出来之前，我也不知道应该设计成什么样。后面一些特性增加或界面优化我开始尝试让 Gemini CLI 和 Claude Code 分别完成，但 Claude Code 实现效果明显要高于 Gemini CLI, 因此后面我便将 Claude Code 改为了编程主力，而 Gemini CLI 则被用来做生成文档、测试等任务。Claude Code 的网站设计能力明显强于其他 AI 编程工具。</p>
 <p>有一次遇到个bug，我尝试用 Claude Code 修复，结果它似乎进入了自证陷阱，消耗了一个时间窗的 Token 也没有修复。我想到微信公众号读者留言说 Codex + GPT-5.3 不错，于是我便尝试了下，结果出乎意料，Codex 很快就修复了，验证无误，Codex 修复该 bug 的代码参见 <a href="https://github.com/hutusi/amytis/commit/9731f7bc1a4624d2f0245ade5e0d00b17584ac98">Commit</a>.</p>
-<p>此后，我便在该 Web 项目中并行使用三种 AI 编程工具，主力编程使用 Claude Code, 文档和测试生成使用 Gemini CLI, 复杂问题解决使用 Codex. 过程中用到了 Git Worktree 的技巧，给每个工具各拉出不同的分支在不同的工作空间中，通过 GitHub PR 上库。在提交 PR 的时候，我发现它自动触发了早前配置的 CodeRabbit 检视，起初我没当回事，对 CodeRabbit 的印象还停留在 GPT-3 的时代，那时候它的用处不大。一次我看到 CodeRabbit 竟然在 Claude Code 写的代码里提了 <a href="https://github.com/hutusi/amytis/pull/11">十几条检视意见</a> ，于是我把 PR 链接发给 Claude Code 让它判断下这些检视意见是否正确，是否值得修复，结果 Claude Code 仔细分析后说大部分都是有价值的，我挑了几条看下确实如此。因此，这四种 AI 编程工具便在这个项目中和谐共存着。</p>
+<p>此后，我便在该 Web 项目中并行使用三种 AI 编程工具，主力编程使用 Claude Code, 文档和测试生成使用 Gemini CLI, 复杂问题解决使用 Codex. 过程中用到了 Git Worktree 的技巧，给每个工具各拉出不同的分支在不同的工作空间中，通过 GitHub PR 上库。在提交 PR 的时候，我发现它自动触发了早前配置的 CodeRabbit 检视，起初我没当回事，对 CodeRabbit 的印象还停留在 GPT-3 的时代，那时候它的用处不大。一次我看到 CodeRabbit 竟然在 Claude Code 写的代码里提了 <a href="https://github.com/hutusi/amytis/pull/11">十几条检视意见</a>，于是我把 PR 链接发给 Claude Code 让它判断下这些检视意见是否正确，是否值得修复，结果 Claude Code 仔细分析后说大部分都是有价值的，我挑了几条看下确实如此。因此，这四种 AI 编程工具便在这个项目中和谐共存着。</p>
 <p>简单总结一下：</p>
 <ul>
 <li>Claude Code (Opus 4.5/4.6)：它是我的“首席架构师”、“首席设计师”和“主力开发工程师”。它对现代 Web 框架（Next.js/React）的审美和交互设计理解极其深刻，在从 Gemini CLI 切换到它时便再没有变过。</li>
@@ -115,6 +115,10 @@
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script src="../../assets/site.js"></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>

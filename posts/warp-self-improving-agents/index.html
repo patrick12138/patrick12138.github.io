@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-28/warp-self-improving-agents</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 做 Code Review，缺的不是能力，而是记忆</a></li><li class="lvl2"><a href="#h2">两个 Skill，加上人类反馈</a></li><li class="lvl2"><a href="#h3">Warp 总结的 6 条最佳实践</a></li><li class="lvl3"><a href="#h4">1. 写原则，不要写死规则</a></li><li class="lvl3"><a href="#h5">2. 解释为什么</a></li><li class="lvl3"><a href="#h6">3. 让反馈没有摩擦、毫不费力</a></li><li class="lvl3"><a href="#h7">4. 保持 Skill 精简，并使用渐进式披露</a></li><li class="lvl3"><a href="#h8">5. 反馈质量大于数量，但数量也有帮助</a></li><li class="lvl3"><a href="#h9">6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</a></li><li class="lvl2"><a href="#h10">如果反馈本身是错的呢？</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a> ，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong> 。</p>
+<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-28/warp-self-improving-agents</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 做 Code Review，缺的不是能力，而是记忆</a></li><li class="lvl2"><a href="#h2">两个 Skill，加上人类反馈</a></li><li class="lvl2"><a href="#h3">Warp 总结的 6 条最佳实践</a></li><li class="lvl3"><a href="#h4">1. 写原则，不要写死规则</a></li><li class="lvl3"><a href="#h5">2. 解释为什么</a></li><li class="lvl3"><a href="#h6">3. 让反馈没有摩擦、毫不费力</a></li><li class="lvl3"><a href="#h7">4. 保持 Skill 精简，并使用渐进式披露</a></li><li class="lvl3"><a href="#h8">5. 反馈质量大于数量，但数量也有帮助</a></li><li class="lvl3"><a href="#h9">6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</a></li><li class="lvl2"><a href="#h10">如果反馈本身是错的呢？</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a>，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong>。</p>
 <p>这个问题我以前也研究过，我写了一个反编译 JS 代码的 Skill（ <a href="https://github.com/JimLiu/decode-">GitHub</a> ），每次 Agent 反编译的时候遇到新的场景解决了就自己更新自己的 Skill，效果还不错，能一直优化，就是 Skill 文件越来越大。</p>
 <p>我还研究过写作的自我进化 Skill，那个就一言难尽，因为它其实没有自己统一的标准，经常负优化，越写越糟糕。</p>
 <h2 id="h1">Agent 做 Code Review，缺的不是能力，而是记忆</h2>
@@ -26,13 +26,13 @@
 <p>初期他们采取了很多补救措施：</p>
 <ul>
 <li>手动根据失败案例改系统提示词</li>
-<li>完善项目的 <code>AGENTS.md</code> 文件（有意思的是这篇文章是 Claude 发的，但是用的是 <code>AGENTS.md</code> 而不是 <code>CLAUDE.md</code> ，我记得 Claude 默认不支持 <code>AGENTS.md</code> 的）</li>
+<li>完善项目的 <code>AGENTS.md</code> 文件（有意思的是这篇文章是 Claude 发的，但是用的是 <code>AGENTS.md</code> 而不是 <code>CLAUDE.md</code>，我记得 Claude 默认不支持 <code>AGENTS.md</code> 的）</li>
 </ul>
 <p>但效果并不理想，一方面它依赖于人主动去做，成本较高；另一方面团队成员在 Code Review 时人工在 PR 写的高质量评论完全没用上。</p>
 <h2 id="h2">两个 Skill，加上人类反馈</h2>
 <p>所以他们搞了个解决方案，一个基础 Skill 负责做代码审查，一个改进 Skill 负责定期收集人类工程师在代码审查时的评论，尤其是对 Agent 审查结果的评论，根据人类工程师的评论去更新代码审查的 Skill。</p>
-<p><img alt="Warp 的 Skill 自我改进循环" src="../../assets/posts/warp-self-improving-agents/be30a0c320d2.png" /></p>
-<p>换句话说，它不是依赖于模型自己去改进自己，而是 <strong>Agent 根据人类对模型结果的标注（人类对代码审查的评论），去改进技能</strong> 。</p>
+<p><img alt="Warp 的 Skill 自我改进循环" src="../../assets/posts/warp-self-improving-agents/eb1244afcb34.webp"></p>
+<p>换句话说，它不是依赖于模型自己去改进自己，而是 <strong>Agent 根据人类对模型结果的标注（人类对代码审查的评论），去改进技能</strong>。</p>
 <p>只不过它把这个事做的摩擦力极低，不需要人手工去收集整理评论，不需要填写调查问卷，人只要自然地去代码下写评论，后面的事情都是 Agent 自动完成。</p>
 <blockquote>
 <p>这可能正是 Agent 的最佳实践方案之一：人负责高维度的标注、评论、反馈这些事情，Agent 去做执行的工作，Agent 根据人类的反馈去改进 Skill。</p>
@@ -52,16 +52,21 @@
 <p>即使样本量相对较小，只要反馈来自掌握领域知识的人，而且足够详细，你也能得到非常好的信号——这些知识是智能体通过其他方式根本无法获得的。话虽如此，优质信号的语料越多，效果越好。</p>
 <h3 id="h9">6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</h3>
 <p>把改进 Skill（也就是前面提到的一个代码审查 Skill、一个改进 Skill）做好，收益不只限于眼前这套 Agent 循环，因为改进 Skill 在不同用例之间具有很高的复用性。除了领域专用知识这一部分，它其实是一套相当通用、可复用的机制。代码审查 Agent 的改进 Skill，也可以应用到其他 Skill 的改进上。</p>
-<p><img alt="让 Skill 持续进化的六条原则" src="../../assets/posts/warp-self-improving-agents/f0f5c1d11813.png" /></p>
+<p><img alt="让 Skill 持续进化的六条原则" src="../../assets/posts/warp-self-improving-agents/e4df9049c127.webp"></p>
 <h2 id="h10">如果反馈本身是错的呢？</h2>
 <p>可能有人会担心：如果反馈本身是错的呢？</p>
 <p>Warp 的做法是永远不让 Agent 盲目接受反馈。给它足够的上下文来做基本的合理性检查，限制谁的反馈有权影响技能更新（不是所有人的意见都同等重要），最后始终保留人在循环中审核改动。</p>
 <p>对于那些有明确标准答案的领域，比如代码是否通过了测试、部署是否成功，可以先建一个验证基准，让 Agent 自己对着基准跑。没有标准答案的领域，比如代码风格、文档质量，就靠领域专家的判断，不要开放给所有人随意反馈。</p>
-<hr /></div><a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
+<hr></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script src="../../assets/site.js"></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>

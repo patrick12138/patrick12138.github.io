@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+"""按 tools/sources.json 重新生成所有文章页，然后统一注入目录。
+
+用法：
+  python3 tools/rebuild.py            # 全部重建
+  python3 tools/rebuild.py slug1 slug2 # 只重建指定 slug
+"""
+import json
+import os
+import re
+import sys
+from datetime import datetime
+
+MONTHS = {m: i + 1 for i, m in enumerate(
+    ["January", "February", "March", "April", "May", "June",
+     "July", "August", "September", "October", "November", "December"])}
+
+
+def iso(d):
+    m = re.match(r"([A-Z][a-z]+)\s+(\d+),\s*(\d{4})", (d or "").strip())
+    if not m:
+        return d
+    return "%04d-%02d-%02d" % (int(m.group(3)), MONTHS[m.group(1)], int(m.group(2)))
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import add_toc  # noqa: E402
+import md2post  # noqa: E402
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+VAULT = "/var/minis/mounts/Patrick's_Obsidian"
+
+
+def main():
+    only = set(sys.argv[1:])
+    rows = json.load(open(os.path.join(ROOT, "tools", "sources.json"), encoding="utf-8"))
+    done, skipped = 0, []
+    for r in rows:
+        if only and r["slug"] not in only:
+            continue
+        md = os.path.join(VAULT, r["md"]) if r.get("md") else ""
+        if not md or not os.path.exists(md):
+            skipped.append(r["slug"])
+            continue
+        print("· %s" % r["slug"])
+        md2post.build(md, r["slug"], date_arg=iso(r.get("date")), author_arg=r.get("author"),
+                      kind=r.get("kind", "repost"), out_dir="posts", images=True,
+                      back_href="../../", title_arg=r.get("title") or None)
+        done += 1
+    print("重建 %d 篇，跳过 %d 篇 %s" % (done, len(skipped), skipped or ""))
+    add_toc.main()
+
+
+if __name__ == "__main__":
+    main()

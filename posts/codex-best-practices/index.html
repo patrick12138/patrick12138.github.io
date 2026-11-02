@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="OpenAI 官方 Codex Best Practices 的中文解读：任务怎么切、上下文怎么给、什么时候该并行。">
-<title>把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · patrick</title>
+<meta name="description" content="OpenAI 的开发者文档发布 Best Practices">
+<title>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读 · patrick</title>
 <link rel="stylesheet" href="../../assets/post.css">
 </head>
 <body>
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>把 Codex 用到极致！OpenAI 官方最佳实践完整解读</h1><div class="meta">June 10, 2026 · 字节笔记本 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
+<div class="wrap"><article class="article"><h1>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读</h1><div class="meta">June 10, 2026 · 字节笔记本 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
 <p>OpenAI 的开发者文档发布一篇 Best Practices 的文章。</p>
 <p><img alt="图片" src="../../assets/posts/codex-best-practices/80c88c3ca4c6.webp"></p>
 <p>这篇文档描述的 Codex 用法，和大多数人实际在用的方式，差距相当大，本文把官方文档的所有内容逐条拆解，补充具体操作案例。</p>
@@ -43,10 +43,10 @@
 <p>在大型仓库或者高风险任务里工作，清晰的 prompt 能让结果更稳定、更容易 review。</p>
 <p>官方推荐的 prompt 四要素框架：</p>
 <ul>
-<li>• <strong>Goal</strong> ：你想改什么、想做什么</li>
-<li>• <strong>Context</strong> ：哪些文件、目录、文档、报错信息和这个任务相关（可以直接 @ 文件）</li>
-<li>• <strong>Constraints</strong> ：Codex 需要遵守哪些规范、架构约定、安全要求</li>
-<li>• <strong>Done when</strong> ：什么条件满足了才算完成（测试通过、行为符合预期、bug 不再复现）</li>
+<li>• <strong>Goal</strong>：你想改什么、想做什么</li>
+<li>• <strong>Context</strong>：哪些文件、目录、文档、报错信息和这个任务相关（可以直接 @ 文件）</li>
+<li>• <strong>Constraints</strong>：Codex 需要遵守哪些规范、架构约定、安全要求</li>
+<li>• <strong>Done when</strong>：什么条件满足了才算完成（测试通过、行为符合预期、bug 不再复现）</li>
 </ul>
 <p>这四个要素帮助 Codex 保持在范围内工作，减少假设，让你的 review 更轻松。</p>
 <p><strong>差的写法和好的写法对比</strong></p>
@@ -56,10 +56,10 @@
 </blockquote>
 <p>好：</p>
 <blockquote>
-<p><strong>Goal</strong> ：减少 <code>src/checkout/</code> 里重复的支付校验逻辑</p>
-<p><strong>Context</strong> ：相关文件在 <code>src/checkout/</code> 和 <code>src/orders/validation.ts</code> ，后者有现成的 helper 可以参考</p>
-<p><strong>Constraints</strong> ：不改变公开 API 的响应格式，不引入新的依赖</p>
-<p><strong>Done when</strong> ：跑完 <code>pnpm test --filter checkout</code> 全部通过，diff 只涉及 <code>src/checkout/</code> 目录，最终回复列出改动文件和剩余风险</p>
+<p><strong>Goal</strong>：减少 <code>src/checkout/</code> 里重复的支付校验逻辑</p>
+<p><strong>Context</strong>：相关文件在 <code>src/checkout/</code> 和 <code>src/orders/validation.ts</code>，后者有现成的 helper 可以参考</p>
+<p><strong>Constraints</strong>：不改变公开 API 的响应格式，不引入新的依赖</p>
+<p><strong>Done when</strong>：跑完 <code>pnpm test --filter checkout</code> 全部通过，diff 只涉及 <code>src/checkout/</code> 目录，最终回复列出改动文件和剩余风险</p>
 </blockquote>
 <p><strong>关于推理级别的选择</strong></p>
 <p>官方文档明确说，不同任务适合不同的推理强度：</p>
@@ -77,7 +77,7 @@
 <p>这是官方文档里我认为最值得深挖的部分之一，官方提供了三种规划方式，很多人只知道第一种。</p>
 <p><strong>方式一：Plan mode（最常用）</strong></p>
 <p>Plan mode 是最简单、最有效的选项。它让 Codex 先收集上下文、问清楚问题、建立更完整的计划，然后再开始写代码。</p>
-<p>切换方式：CLI 里用 <code>/plan</code> ，或者按 <code>Shift</code> + <code>Tab</code> 。</p>
+<p>切换方式：CLI 里用 <code>/plan</code>，或者按 <code>Shift</code> + <code>Tab</code>。</p>
 <p><strong>方式二：让 Codex 来问你</strong></p>
 <p>如果你脑子里有个大概的方向，但不确定怎么清晰地描述，可以直接对 Codex 说：</p>
 <blockquote>
@@ -100,7 +100,7 @@
 <p>两步走比一步走多花两分钟，但省掉了可能几小时的返工。</p>
 <hr>
 <h2 id="h4">AGENTS.md，持久指引的核心</h2>
-<p>一旦某个 prompt 模式有效了，下一步就是不要每次重复它，把它写进 <code>AGENTS.md</code> 。</p>
+<p>一旦某个 prompt 模式有效了，下一步就是不要每次重复它，把它写进 <code>AGENTS.md</code>。</p>
 <p><code>AGENTS.md</code> 是 agent 的 README。它会自动加载到上下文里，是编码你和团队想要 Codex 如何在仓库里工作的最佳位置。</p>
 <p><strong>一个好的 AGENTS.md 覆盖的内容</strong></p>
 <p>官方列出了几个核心类别：</p>
@@ -114,20 +114,20 @@
 </ul>
 <p><strong>三个层级，优先级从高到低</strong></p>
 <ul>
-<li>• <code>~/.codex/</code> 里的全局 <code>AGENTS.md</code> ：个人默认值</li>
-<li>• 仓库根目录的 <code>AGENTS.md</code> ：团队共享标准</li>
-<li>• 子目录里的 <code>AGENTS.md</code> ：局部规则，优先级最高</li>
+<li>• <code>~/.codex/</code> 里的全局 <code>AGENTS.md</code>：个人默认值</li>
+<li>• 仓库根目录的 <code>AGENTS.md</code>：团队共享标准</li>
+<li>• 子目录里的 <code>AGENTS.md</code>：局部规则，优先级最高</li>
 </ul>
 <p>离当前工作目录越近的文件，优先级越高，你可以给前端目录和后端目录各写一套不同的规范。</p>
 <p><strong>快速起点</strong></p>
-<p>在 CLI 里跑 <code>/init</code> ，会自动在当前目录生成一个 <code>AGENTS.md</code> 的初始版本。但官方提醒：这只是起点，要根据你团队实际的构建、测试、review、发布方式来修改它。</p>
+<p>在 CLI 里跑 <code>/init</code>，会自动在当前目录生成一个 <code>AGENTS.md</code> 的初始版本。但官方提醒：这只是起点，要根据你团队实际的构建、测试、review、发布方式来修改它。</p>
 <p><strong>怎么让 AGENTS.md 保持实用</strong></p>
-<p>官方给了一条非常好的原则： <strong>短而准确的 AGENTS.md，比长而模糊的更有用</strong> 。先写基础部分，只有在你发现重复错误之后再增加新规则。</p>
+<p>官方给了一条非常好的原则： <strong>短而准确的 AGENTS.md，比长而模糊的更有用</strong>。先写基础部分，只有在你发现重复错误之后再增加新规则。</p>
 <p>如果文件开始变得太长，主文件保持精简，把具体任务的指导（比如 code review 规范、架构说明）抽成独立的 markdown 文件，在 AGENTS.md 里引用。</p>
 <p><strong>让 AGENTS.md 随时间进化的方法</strong></p>
 <p>当 Codex 对同一个问题犯了两次错，让它做一个复盘，然后把纠正的规则更新进 AGENTS.md。</p>
 <p>比如 Codex 两次在 TypeScript 文件里引入了 <code>any</code> 类型：</p>
-<pre><code>修复：不要使用 \`any\` 类型，用 \`unknown\` 加类型守卫替代
+<pre><code>修复：不要使用 `any` 类型，用 `unknown` 加类型守卫替代
 </code></pre>
 <p>把这条加进 AGENTS.md，这个问题就不会再出现了。AGENTS.md 是你和 Codex 之间不断积累的"工程协议"。</p>
 <hr>
@@ -137,8 +137,8 @@
 <p><strong>配置分层</strong></p>
 <p>官方推荐的模式：</p>
 <ul>
-<li>• <code>~/.codex/config.toml</code> ：个人默认值（从 Codex App 的 Settings → Configuration 打开）</li>
-<li>• <code>.codex/config.toml</code> ：仓库专属配置</li>
+<li>• <code>~/.codex/config.toml</code>：个人默认值（从 Codex App 的 Settings → Configuration 打开）</li>
+<li>• <code>.codex/config.toml</code>：仓库专属配置</li>
 <li>• 命令行参数：只用于一次性的临时调整（如果用 CLI 的话）</li>
 </ul>
 <p><code>config.toml</code> 是定义持久偏好的地方：MCP 服务器、profiles、multi-agent 设置、实验性功能等。可以手动编辑，也可以直接让 Codex 帮你更新。</p>
@@ -222,17 +222,17 @@
 <p><strong>CLI 里的关键 slash 命令</strong></p>
 <p>官方文档列出了这些：</p>
 <ul>
-<li>• <code>/experimental</code> ：开关实验性功能，同时写入 <code>config.toml</code></li>
-<li>• <code>/resume</code> ：恢复一个保存过的会话</li>
-<li>• <code>/fork</code> ：基于当前线程创建新线程，同时保留原始记录</li>
-<li>• <code>/compact</code> ：当线程变得很长时，生成一个摘要版本的上下文（Codex 也会自动 compact）</li>
-<li>• <code>/agent</code> ：在并行运行多个 agent 时，切换当前活跃的 agent 线程</li>
-<li>• <code>/theme</code> ：选择语法高亮主题</li>
-<li>• <code>/apps</code> ：直接在 Codex 里使用 ChatGPT apps</li>
-<li>• <code>/status</code> ：查看当前会话状态</li>
+<li>• <code>/experimental</code>：开关实验性功能，同时写入 <code>config.toml</code></li>
+<li>• <code>/resume</code>：恢复一个保存过的会话</li>
+<li>• <code>/fork</code>：基于当前线程创建新线程，同时保留原始记录</li>
+<li>• <code>/compact</code>：当线程变得很长时，生成一个摘要版本的上下文（Codex 也会自动 compact）</li>
+<li>• <code>/agent</code>：在并行运行多个 agent 时，切换当前活跃的 agent 线程</li>
+<li>• <code>/theme</code>：选择语法高亮主题</li>
+<li>• <code>/apps</code>：直接在 Codex 里使用 ChatGPT apps</li>
+<li>• <code>/status</code>：查看当前会话状态</li>
 </ul>
 <p><strong>关于 /fork 的使用时机</strong></p>
-<p>如果工作还属于同一个问题，留在同一个线程里通常比新开一个好，因为它保留了推理上下文。只有当工作真正分叉成两个方向的时候，再用 <code>/fork</code> 。</p>
+<p>如果工作还属于同一个问题，留在同一个线程里通常比新开一个好，因为它保留了推理上下文。只有当工作真正分叉成两个方向的时候，再用 <code>/fork</code>。</p>
 <p><strong>Worktree 和并行工作</strong></p>
 <p>Codex 的 multi-agent 工作流可以让你把一些有边界的工作从主线程里分离出去。</p>
 <p>主 agent 专注核心问题，子 agent 负责探索、写测试、分类问题等。</p>
@@ -326,6 +326,9 @@
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script src="../../assets/site.js"></script>
+<script></script>
+<script></script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>

@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI 究竟能不能替代程序员？ · patrick</title>
+<meta name="description" content="lenciel&#x27;s blog">
+<title>AI 究竟能不能替代程序员? · patrick</title>
 <link rel="stylesheet" href="../../assets/post.css">
 </head>
 <body>
@@ -17,53 +18,53 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>AI 究竟能不能替代程序员？</h1>
-<div class="meta">June 8, 2025 · Lenciel · 搬运</div>
-<aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://lenciel.com/2025/06/the-cycle-of-replacing-developers-1/" target="_blank" rel="noopener">https://lenciel.com/2025/06/the-cycle-of-replacing-developers-1/</a></aside>
-<nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#s1">先说结论</a></li><li class="lvl2"><a href="#s2">为什么消灭不了程序员</a></li><li class="lvl3"><a href="#s3">非编码工作</a></li><li class="lvl3"><a href="#s4">编码工作</a></li></ol></nav>
-<div class="body"><p>最近在董事会汇报，进入「any questions？」环节，一位董事问：「我们现在还有这么多研发，是不是可以考虑用 AI 替换？我现在投的好几个公司自从用 Cursor 之后，效率都提高了 30% 到 40%。」</p>
+<div class="wrap"><article class="article"><h1>AI 究竟能不能替代程序员?</h1><div class="meta">June 8, 2025 · Lenciel · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://lenciel.com/2025/06/the-cycle-of-replacing-developers-1/" target="_blank" rel="noopener">https://lenciel.com/2025/06/the-cycle-of-replacing-developers-1/</a></aside><div class="body"><p>最近在董事会汇报，进入「any questions？」环节，一位董事问：「我们现在还有这么多研发，是不是可以考虑用 AI 替换？我现在投的好几个公司自从用 Cursor 之后，效率都提高了 30% 到 40%。」</p>
 <p>这是一个我这两年被反复问过的问题：在美帝的设计师朋友问过我，是不是现在有个点子就能用 AI 写代码创业；在基金里的同学问过我，是不是 Cursor 这类产品产出会超过程序员；当然，最多的还是类似于董事会上这种场景，公司究竟能不能通过这些技术，替代那些昂贵的程序员。</p>
 <p>受限于讨论这个问题的时间、场合和提问人的知识背景，我应该给了虽然意思相对统一，但都不太完整的答案。而且，三年前系统对 <a href="https://lenciel.com/2022/09/what-could-happen-after-ism/">类似问题</a> 的观点现在确实有更新，所以不如再整理一次。</p>
-<h3 id="s1" id="_2" id="s1">先说结论</h3>
+<h3>先说结论</h3>
 <p>我认为：</p>
 <ol>
 <li>在 AI 消灭人类之前，不会消灭程序员；</li>
 <li>但 AI 绝对可以解放和发展现有的生产力；</li>
-<li>就个体而言：<br />
-    a. 不去动手研究 AI 的管理者特别是技术管理者是不合格的；<br />
-    b. 不去掌握和应用 AI 的程序员也是不合格的；</li>
-<li>就公司而言:<br />
-    a. 仅仅用 AI 降低成本的，会被真正用 AI 拓展能力的打垮；<br />
-    b. 应该优先考虑清楚 AI 层面的交互然后再构建其他的交互；</li>
+<li>
+<p>就个体而言：<br>
+    a. 不去动手研究 AI 的管理者特别是技术管理者是不合格的；<br>
+    b. 不去掌握和应用 AI 的程序员也是不合格的；</p>
+</li>
+<li>
+<p>就公司而言:<br>
+    a. 仅仅用 AI 降低成本的，会被真正用 AI 拓展能力的打垮；<br>
+    b. 应该优先考虑清楚 AI 层面的交互然后再构建其他的交互；</p>
+</li>
 </ol>
-<h3 id="s2" id="_3" id="s2">为什么消灭不了程序员</h3>
+<h3>为什么消灭不了程序员</h3>
 <p>程序员的工作如果粗略分成编码和非编码两部分，我们来看看究竟 AI 能替代里面的哪些。</p>
-<h4 id="s3" id="_4">非编码工作</h4>
+<h4>非编码工作</h4>
 <p>不同层级的工程师花在非编码工作的时间是不同的。但即便是最基层的自称「码农」的工程师，编码在整个工作中的占比不会超过 50%。还会有大量的时间用于沟通评审（需求、测试用例、交互设计）、文档写作、环境配置等工作（摸鱼这些非工作的我就不提了）。</p>
-<p>这些工作需要很多上下文对齐，就像 Mozilla 的 Senior Staff <a href="https://chelseatroy.com/about/">Chelsea Troy</a> 在一个反驳 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566">这篇</a> 号称 AI 对编程提效 26%的论文时 <a href="https://www.youtube.com/watch?v=bg4z70cOOF4">说的那样</a> ：</p>
+<p>这些工作需要很多上下文对齐，就像 Mozilla 的 Senior Staff <a href="https://chelseatroy.com/about/">Chelsea Troy</a> 在一个反驳 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566">这篇</a> 号称 AI 对编程提效 26%的论文时 <a href="https://www.youtube.com/watch?v=bg4z70cOOF4">说的那样</a>：</p>
 <blockquote>
 <p>Large language models have not wholesale wiped out programming jobs so much as they have called us to a more advanced, more contextually aware, and more communally oriented skill set that we frankly were already being called to anyway…. On relatively simple problems, we can get away with outsourcing some of our judgment. As the problems become more complicated, we can’t.</p>
 </blockquote>
-<h4 id="s4" id="_5">编码工作</h4>
+<h4>编码工作</h4>
 <p>只要真正用过 Cursor、Windsurf 或类似产品，就得承认它们比大部分没写过十万行代码的程序员，都写得更快更好。</p>
 <p><strong>这很像人类对化纤材料或者转基因技术的使用一样：虽然没有办法提高上限，但绝对大大提高了下限。</strong></p>
 <p>不过，编码工作会被 AI 取代吗？</p>
 <p>我仍然持怀疑态度。</p>
 <p>倒并不是说有些代码的生产就会像羊绒一样永远雍容华贵，而是没有真正干过程序员的人没理解，整个编码工作如果往细了拆，仍然可以分解成写代码、读代码和调代码等部分，并且对象可以是自己的代码，但更可能是别人的代码。</p>
-<h5 id="_6">和已有代码交互</h5>
+<h5>和已有代码交互</h5>
 <p>除开一些创业项目或者自己练手的 solo 项目，大部分公司里的编码工作都是所谓的「屎山雕花」：阅读调试修改其他人代码的时间远远超过自己写代码。</p>
 <p>这部分工作，不仅时间上占比更高，难度也比自己撸高。《K&amp;R C》和 AWK 的作者，Kernighan 在《The Elements of Programming Style》里说过一句我印象很深的话，它如此有名以至于被称为 Kernighan 定律：</p>
 <blockquote>
 <p>Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.</p>
 </blockquote>
 <p>消化一个代码库的架构和细节，搞清楚别人代码的逻辑和实现，「认知负担」确实挺高的。这些工作可以在 AI 的辅助下加速，但是很难被 AI 替代。</p>
-<h5 id="_7">自己新写的代码</h5>
+<h5>自己新写的代码</h5>
 <p>自己写代码的时候借助 AI 生成和辅助，现在好像被叫做「vibe coding」。</p>
 <p>这部分完全交给 AI 行不行？我看不行，理由如下。</p>
-<h6 id="_8">什么是「代码」</h6>
+<h6>什么是「代码」</h6>
 <p>代码是资产还是负债？</p>
 <p>差不多十年前，Kellan 在那篇可能是历史上关于「技术债」最精彩的 <a href="https://kellanem.com/notes/towards-an-understanding-of-technical-debt">文章</a> 中指出，它既不是资产也不是债务，而是 liability：一个项目里的每一行代码，无论来自人还是 AI，都只代表了对待解决问题当前的最佳理解，都需要被测试、维护、确保安全。</p>
-<p>并且如果你同意我 <a href="https://lenciel.com/2021/02/how-to-work-as-an-architect-1/#%E9%97%AE%E9%A2%98%E5%87%BA%E5%9C%A8%E5%93%AA%E9%87%8C">说的</a> ：</p>
+<p>并且如果你同意我 <a href="https://lenciel.com/2021/02/how-to-work-as-an-architect-1/#%E9%97%AE%E9%A2%98%E5%87%BA%E5%9C%A8%E5%93%AA%E9%87%8C">说的</a>：</p>
 <blockquote>
 <p>要把软件开发看成一个对需要解决的问题和解决的技术进行学习的过程，把架构和代码都当成这个过程的副产品</p>
 </blockquote>
@@ -74,12 +75,12 @@
 <li>哪怕是走得非常前沿的推行 AI 编程的 Harper Reed 也说，他在回归瀑布模型，也就是在交给 AI 之前花大量的时间梳理需求文档、交互设计和测试用例，然后把这些内容以专门优化过的 propmt 给到 AI。</li>
 </ul>
 <p>因此，我认为从长期看，完全让 AI 来写代码在大型项目里还是很难发生。</p>
-<h6 id="_9">用自然语言也是「编程」</h6>
+<h6>用自然语言也是「编程」</h6>
 <p>前几年，在 NoCode 或者 LowCode 或者 RPA 还很火的时候，我跟一些朋友开玩笑说，如果无代码或者低代码那套拖拉拽的东西就能完整解决问题，那它本质上就是图灵完备的，于是，它仍然是一门程序语言：你只是在用拖拉拽的方式 coding，谈不上 NoCode。</p>
 <p>同理，如果像 Harper Reed 那样，用一个完整的瀑布流来给 AI 输入，然后不断调整、测试、上线…我认为他也在编码，只是用自然语言而已。</p>
 <p>编程的两个核心，逻辑的梳理和数据的治理，被拆成过各种概念，运用了各种工具，万变不离其宗。</p>
-<h6 id="_10">可能会带来更多的「程序员」</h6>
-<p>最后，你读到这里可能会认为我很反对 AI 辅助编程（或者，我认为更合适的名称应该是 AI 辅助代码/文档/测试用例…生成），那请你相信我 <a href="https://lenciel.com/2025/06/the-cycle-of-replacing-developers/#%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA">前面的结论</a> 。</p>
+<h6>可能会带来更多的「程序员」</h6>
+<p>最后，你读到这里可能会认为我很反对 AI 辅助编程（或者，我认为更合适的名称应该是 AI 辅助代码/文档/测试用例…生成），那请你相信我 <a href="https://lenciel.com/2025/06/the-cycle-of-replacing-developers/#%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA">前面的结论</a>。</p>
 <p>只是，我不认为会替代程序员，而是更多的人，可能成为「程序员」。</p>
 <p>因为历史上，从给纸片打孔至今，每一次计算机编程方面的进步，都在不断降低成为一名程序员的认知负担，都曾经引起过「这是不是可以取代程序员」的妄念或者是担忧，最终，都带来了更多的程序员。</p>
 <p>我还记得我刚入行的时候，IBM 等公司正在推通过 UML图生成代码取代程序员。</p>
@@ -93,8 +94,14 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button>
-<button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button>
+<script src="../../assets/site.js"></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
 <script></script>
 <script>
 (function(){
