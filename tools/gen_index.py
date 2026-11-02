@@ -47,7 +47,12 @@ for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
     meta = re.search(r'<div class="meta">(.*?)</div>', s, re.S)
     meta_txt = re.sub(r"<[^>]+>", "", meta.group(1)).strip() if meta else ""
     st = re.search(r'<span class="stats">([^<]*)</span>', s)
-    stat = ''   # 首页不再显示字数/时长，留在文章页
+    word_count = ""
+    if st:
+        m_wc = re.search(r"(\d[\d,]*\s*字)", st.group(1))
+        if m_wc:
+            word_count = m_wc.group(1).strip()
+    stat = word_count
     desc = re.search(r'<meta name="description" content="([^"]*)"', s)
     desc_txt = html.unescape(desc.group(1)) if desc else ""
     parts = [x.strip() for x in meta_txt.split(" · ") if x.strip()]
@@ -56,6 +61,8 @@ for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
         meta_txt = parts[0] + " · " + parts[-1]
     elif parts:
         meta_txt = parts[0]
+    if word_count:
+        meta_txt += " · " + word_count
     key, date_txt = parse_date(meta_txt)
     kind = "own" if ("个人" in meta_txt or "原创" in meta_txt) else "repost"
     items.append({"slug": slug, "title": title, "meta": meta_txt,
@@ -224,8 +231,8 @@ page = """<!DOCTYPE html>
 <div class="bar"><div class="bar-in">
   <a class="brand" href="./">patrick</a>
   <nav class="nav">
-    <a href="./" class="on">首页</a>
     <a href="lab/">Lab</a>
+    <a href="about/">About</a>
     %s
   </nav>
 </div></div>
