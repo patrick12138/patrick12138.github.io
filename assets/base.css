@@ -93,10 +93,17 @@ footer{padding:0 0 34px}
 .foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
 .foot-in a:hover{color:var(--accent)}
 
-/* 回到顶部按钮：位置由各页决定，外观在这里统一 */
-.to-top.show{opacity:1;transform:none;pointer-events:auto}
-.to-top:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
-.to-top svg{display:block}
+/* 回到顶部：外观全站只有这一份（不加边框的箭头），各页只改 --totop-bottom 让位 */
+.to-top{display:flex;position:fixed;right:20px;z-index:50;
+  bottom:calc(var(--totop-bottom, 30px) + env(safe-area-inset-bottom, 0px));
+  width:36px;height:36px;padding:0;align-items:center;justify-content:center;
+  border:0;background:transparent;color:var(--text-faint);cursor:pointer;
+  opacity:0;transform:translateY(8px);pointer-events:none;text-shadow:0 0 6px var(--bg);
+  transition:opacity .22s ease,transform .22s ease,color .15s}
+.to-top.show{opacity:.85;transform:none;pointer-events:auto}
+.to-top:hover{opacity:1;color:var(--accent)}
+.to-top svg{width:17px;height:17px;display:block}
+@media (max-width:720px){.to-top{right:18px;--totop-bottom:76px}}
 
 /* Lab 暗门：默认不显示；长按主题图标 1.5s（或 /?u=lab）后出现 */
 .nav-lab{display:none}

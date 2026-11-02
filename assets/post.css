@@ -169,16 +169,6 @@
   color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
 .body .video-link:hover{border-bottom-color:var(--accent)}
 
-/* 回到顶部：文章页只留一个安静箭头（目录才是主按钮，别让两个圆钮挤在一起） */
-.to-top{display:flex;position:fixed;right:20px;bottom:calc(72px + env(safe-area-inset-bottom,0px));
-  z-index:50;width:36px;height:36px;padding:0;align-items:center;justify-content:center;
-  border:0;border-radius:999px;background:transparent;color:var(--text-faint);cursor:pointer;
-  opacity:0;transform:translateY(8px);pointer-events:none;
-  transition:opacity .22s ease,transform .22s ease,color .15s}
-.to-top.show{opacity:.85;transform:none;pointer-events:auto}
-.to-top:hover{color:var(--accent)}
-.to-top svg{width:17px;height:17px}
-
 /* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
    用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */
 html,body{overflow-x:clip}
@@ -205,9 +195,9 @@ html,body{overflow-x:clip}
   }
 }
 
-/* 桌面：回到顶部与目录按钮右缘对齐，叠在目录按钮上方 */
-@media (min-width:1024px){
-  .to-top{right:24px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+/* 平板竖屏：目录面板从底部滑出，箭头抬高让开它（外观同上，只有位置不同） */
+@media (min-width:600px) and (max-width:1023px){
+  .to-top{--totop-bottom:76px}
 }
 
 /* 上一篇 / 下一篇：全局按发布时间，不受首页分类影响 */
