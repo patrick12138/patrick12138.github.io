@@ -220,3 +220,17 @@ python3 tools/gen_search.py     # 生成 search.json（45 篇约 154KB，gzip �
 - `/` 直接开搜，`Esc` 退出
 
 改索引字段时注意：`tools/gen_index.py` 里的 `score()` 和 `mark()` 依赖 `s/t/d/h/b` 这几个键名。
+
+## 相关阅读（gen_related.py）
+
+不做标签体系——45 篇的量，自动共词比人工归类省事，也不会因为漏打标签失效。
+
+```bash
+python3 tools/gen_related.py      # 插到 <nav class="pager"> 之前，幂等
+```
+
+- 词源：标题（权重 3）、小标题（2）、摘要（1）、正文前 1200 字（1）
+- 中文按 2 字滑窗切，英文按单词；出现率 >45% 的词当停用词丢掉
+- 相似度用 **tf-idf 余弦**：不 IDF 加权的话「Codex」这种高频词会把所有文章连成一坨
+- 每篇最多 3 条，分数低于 0.06 就不显示（宁缺毋滥）
+- 调参在这几个常量：`MAX_RELATED`、`MIN_SCORE`、`DF_CAP`

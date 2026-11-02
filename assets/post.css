@@ -273,3 +273,12 @@ html,body{overflow-x:clip}
 .readpos-tip a{color:var(--accent);text-decoration:none;margin-left:6px;
   border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
 @media (min-width:721px){.readpos-tip{padding-right:80px}}   /* 给右下返回顶部按钮让位 */
+
+/* 相关阅读：文末、上一篇之前，一条淡标题 + 竖排链接 */
+.related{margin:52px 0 0}
+.related-k{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;
+  color:var(--text-faint);margin-bottom:10px}
+.related ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.related a{font-size:.94rem;line-height:1.5;color:var(--text-muted);text-decoration:none;
+  transition:color .15s}
+.related a:hover{color:var(--accent)}

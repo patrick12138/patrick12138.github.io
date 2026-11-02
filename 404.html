@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>404 · patrick</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="/assets/base.css?v=96ee29f1">
+<link rel="stylesheet" href="/assets/home.css?v=6b14f855">
+<style>
+  .nf{padding:96px 0 120px}
+  .nf-k{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;color:var(--text-faint);margin:0}
+  .nf-h{font-size:1.55rem;line-height:1.5;color:var(--heading);font-weight:700;
+    margin:14px 0 10px;letter-spacing:-.01em}
+  .nf-p{color:var(--text-muted);line-height:1.8;margin:0 0 26px;font-size:.95rem}
+  .nf form{display:flex;align-items:center;gap:10px;max-width:420px;
+    border-bottom:1px solid var(--border);padding-bottom:9px;margin-bottom:26px}
+  .nf input{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--text);
+    font-family:var(--sans);font-size:1rem;padding:2px 0}
+  .nf input::placeholder{color:var(--text-faint)}
+  .nf button{background:none;border:0;padding:0;color:var(--text-muted);cursor:pointer;
+    display:flex;align-items:center}
+  .nf button:hover{color:var(--accent)}
+  .nf-back{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+    text-decoration:none;transition:color .15s}
+  .nf-back:hover{color:var(--accent)}
+  @media (max-width:720px){.nf{padding:64px 0 88px}.nf-h{font-size:1.3rem}}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="/">patrick</a>
+  <nav class="nav">
+    <a href="/lab/" class="nav-lab">Lab</a>
+    <a href="/about/">About</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </nav>
+</div></div>
+
+<div class="wrap">
+  <div class="nf">
+    <p class="nf-k">404</p>
+    <h1 class="nf-h">这一页不存在。</h1>
+    <p class="nf-p">可能是链接写错了，也可能是文章被下线了。可以直接搜一下：</p>
+    <form action="/" method="get">
+      <input name="q" type="search" placeholder="搜索标题、摘要或正文…" autocomplete="off" aria-label="搜索">
+      <button type="submit" aria-label="搜索">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+    </form>
+    <a class="nf-back" href="/">← 回首页</a>
+  </div>
+</div>
+
+<footer><div class="wrap"><div class="foot-in">
+  © 2023–2026 <a href="/about/">patrick</a>
+</div></div></footer>
+<script src="/assets/site.js?v=e764082e"></script>
+</body>
+</html>
