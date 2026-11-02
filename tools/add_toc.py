@@ -262,7 +262,41 @@ def build_toc(doc):
     return doc, li
 
 
+TOP_BTN = ('<button class="to-top" id="toTop" aria-label="返回顶部" title="返回顶部">'
+           '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+           'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+           '<path d="M12 19V5M5 12l7-7 7 7"/></svg></button>')
+
+TOP_JS = """
+(function(){
+  var b=document.getElementById('toTop'); if(!b) return;
+  function go(){ var y=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
+  }
+  function upd(){ b.classList.toggle('show', window.pageYOffset>600); }
+  window.addEventListener('scroll',upd,{passive:true});
+  b.addEventListener('click',go);
+  if('IntersectionObserver' in window){
+    var s=document.createElement('div');
+    s.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;visibility:hidden';
+    document.body.appendChild(s);
+    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(s);
+  }
+  upd();
+})();
+"""
+
 BRAND_RE = re.compile(r'<a class="brand" href="([^"]*)">patrick</a>')
+
+
+def inject_top_btn(doc):
+    """PC 的浮动「回到顶部」，与首页同款；手机端仍用文末文字链接。"""
+    if 'id="toTop"' in doc:
+        return doc
+    if '<a class="back"' in doc:
+        doc = doc.replace('</body>', TOP_BTN + '<script>' + TOP_JS + '</script>\n</body>', 1)
+    return doc
 
 
 def inject_brand(doc):
@@ -273,8 +307,8 @@ def inject_brand(doc):
     if not m:
         return doc
     base = m.group(1)
-    mk = re.search(r'<div class="meta">[^<]*·\s*(搬运|原创)', doc)
-    cur = {"搬运": "repost", "原创": "own"}.get(mk.group(1) if mk else "", "")
+    mk = re.search(r'<div class="meta">[^<]*·\s*(搬运|原创|个人)', doc)
+    cur = {"搬运": "repost", "原创": "own", "个人": "own"}.get(mk.group(1) if mk else "", "")
     menu = "".join(
         '<a role="menuitem" href="%s?tab=%s"%s>%s</a>'
         % (base, f, ' class="on"' if f == cur else "", label)
@@ -295,6 +329,7 @@ def process(path):
         return False
     doc = strip_toc(doc)
     doc = inject_brand(doc)
+    doc = inject_top_btn(doc)
     doc, li = build_toc(doc)
     if not li:
         doc = doc.replace("</style>", CSS + "</style>", 1)

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="OpenAI 在 28 天内使用 Codex 发布 Android 版 Sora。AI 辅助规划、转换和并行编码工作流帮助敏捷团队实现快速交付、稳定开发。">
 <title>我们如何使用 Codex 在 28 天内构建 Android 版 Sora · patrick</title>
-<link rel="stylesheet" href="../../assets/post.css?v=e7e34ebe">
+<link rel="stylesheet" href="../../assets/post.css?v=4abbe4b2">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -105,6 +105,25 @@
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script src="../../assets/site.js?v=978883fc"></script>
+<button class="to-top" id="toTop" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button><script>
+(function(){
+  var b=document.getElementById('toTop'); if(!b) return;
+  function go(){ var y=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
+  }
+  function upd(){ b.classList.toggle('show', window.pageYOffset>600); }
+  window.addEventListener('scroll',upd,{passive:true});
+  b.addEventListener('click',go);
+  if('IntersectionObserver' in window){
+    var s=document.createElement('div');
+    s.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;visibility:hidden';
+    document.body.appendChild(s);
+    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(s);
+  }
+  upd();
+})();
+</script>
 <script>
 (function(){
   var b=document.getElementById('backTop'); if(!b) return;
