@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="OpenAI 官方 Codex Best Practices 的中文解读：任务怎么切、上下文怎么给、什么时候该并行。">
+<title>把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>把 Codex 用到极致！OpenAI 官方最佳实践完整解读</h1><div class="meta">June 10, 2026 · 字节笔记本 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
+<p>OpenAI 的开发者文档发布一篇 Best Practices 的文章。</p>
+<p><img alt="图片" src="../../assets/posts/codex-best-practices/80c88c3ca4c6.webp"></p>
+<p>这篇文档描述的 Codex 用法，和大多数人实际在用的方式，差距相当大，本文把官方文档的所有内容逐条拆解，补充具体操作案例。</p>
+<hr>
+<h2 id="h1">六个支柱</h2>
+<p>其实整篇最佳实践的核心思路就是要把Codex当可配置的队友，给它建立对你的仓库、你的规范、你的工作习惯的持久记忆。</p>
+<p>官方给出的六个支柱：</p>
+<ul>
+<li>• 从正确的任务上下文出发</li>
+<li>• 用 <code>AGENTS.md</code> 写入持久指引</li>
+<li>• 通过配置文件统一行为</li>
+<li>• 用 MCP 连接外部系统</li>
+<li>• 把重复工作封装成 Skills</li>
+<li>• 把稳定流程变成 Automations</li>
+</ul>
+<p>后面的所有最佳实践都围绕这几点来展开。</p>
+<hr>
+<h2 id="h2">Prompt 要包含四个要素</h2>
+<blockquote>
+<p>"Codex is already strong enough to be useful even when your prompt isn't perfect."</p>
+</blockquote>
+<p>在大型仓库或者高风险任务里工作，清晰的 prompt 能让结果更稳定、更容易 review。</p>
+<p>官方推荐的 prompt 四要素框架：</p>
+<ul>
+<li>• <strong>Goal</strong> ：你想改什么、想做什么</li>
+<li>• <strong>Context</strong> ：哪些文件、目录、文档、报错信息和这个任务相关（可以直接 @ 文件）</li>
+<li>• <strong>Constraints</strong> ：Codex 需要遵守哪些规范、架构约定、安全要求</li>
+<li>• <strong>Done when</strong> ：什么条件满足了才算完成（测试通过、行为符合预期、bug 不再复现）</li>
+</ul>
+<p>这四个要素帮助 Codex 保持在范围内工作，减少假设，让你的 review 更轻松。</p>
+<p><strong>差的写法和好的写法对比</strong></p>
+<p>差：</p>
+<blockquote>
+<p>"帮我优化一下 checkout 流程"</p>
+</blockquote>
+<p>好：</p>
+<blockquote>
+<p><strong>Goal</strong> ：减少 <code>src/checkout/</code> 里重复的支付校验逻辑</p>
+<p><strong>Context</strong> ：相关文件在 <code>src/checkout/</code> 和 <code>src/orders/validation.ts</code> ，后者有现成的 helper 可以参考</p>
+<p><strong>Constraints</strong> ：不改变公开 API 的响应格式，不引入新的依赖</p>
+<p><strong>Done when</strong> ：跑完 <code>pnpm test --filter checkout</code> 全部通过，diff 只涉及 <code>src/checkout/</code> 目录，最终回复列出改动文件和剩余风险</p>
+</blockquote>
+<p><strong>关于推理级别的选择</strong></p>
+<p>官方文档明确说，不同任务适合不同的推理强度：</p>
+<ul>
+<li>• Low：快速、范围明确的任务</li>
+<li>• Medium / High：复杂改动或者调试问题</li>
+<li>• Extra High：长时间运行的 agentic 任务、需要深度推理的场景</li>
+</ul>
+<p>不是所有任务都需要最高推理级别，会明显影响速度和成本，我个人推荐使用Medium，兼具速度和性价比： <a href="https://mp.weixin.qq.com/s?__biz=MzIzMzQyMzUzNw==&amp;mid=2247517707&amp;idx=1&amp;sn=ee7ebe78be5e5a738412666547d078a4&amp;payreadticket=HGrSSjJsm1TC8KkbuHztDZxtPs34UhR3PTufTz2ROYtKfyDnNalxnQ8RhJeWzC020BKw1fM&amp;scene=21#wechat_redirect">拿什么拯救你，我的 Codex 额度！</a></p>
+<p><strong>一个冷门技巧</strong></p>
+<p>在 Codex App 里可以用语音输入代替打字来描述任务。这在需要描述复杂上下文的时候比打字快很多。</p>
+<p><img alt="图片" src="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='1px' height='1px' viewBox='0 0 1 1' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3E%3C/title%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0'%3E%3Cg transform='translate(-249.000000, -126.000000)' fill='%23FFFFFF'%3E%3Crect x='249' y='126' width='1' height='1'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3">)</p>
+<hr>
+<h2 id="h3">复杂任务，先规划再动手</h2>
+<p>这是官方文档里我认为最值得深挖的部分之一，官方提供了三种规划方式，很多人只知道第一种。</p>
+<p><strong>方式一：Plan mode（最常用）</strong></p>
+<p>Plan mode 是最简单、最有效的选项。它让 Codex 先收集上下文、问清楚问题、建立更完整的计划，然后再开始写代码。</p>
+<p>切换方式：CLI 里用 <code>/plan</code> ，或者按 <code>Shift</code> + <code>Tab</code> 。</p>
+<p><strong>方式二：让 Codex 来问你</strong></p>
+<p>如果你脑子里有个大概的方向，但不确定怎么清晰地描述，可以直接对 Codex 说：</p>
+<blockquote>
+<p>"我想做 X，但还没想清楚。先问我几个问题，挑战一下我的假设，帮我把这个模糊的想法变成可以写代码的具体需求，然后再动手。"</p>
+</blockquote>
+<p>这种方式在需求探索阶段特别有用。相当于把 Codex 临时变成一个产品讨论伙伴，而不是直接执行者。</p>
+<p><strong>方式三：PLANS.md 模板</strong></p>
+<p>更高级的工作流，在仓库里维护一个 <code>PLANS.md</code> 或者执行计划模板，配置 Codex 在处理长期任务或多步骤工作时按照这个模板执行。</p>
+<p><strong>一个典型案例：跨模块重构</strong></p>
+<p>错误方式：直接告诉 Codex "重构一下用户权限系统"，结果它改了一堆文件，你发现方向完全不对，全部回退。</p>
+<p>正确方式：</p>
+<p>第一条 prompt：</p>
+<blockquote>
+<p>"先读一下 <code>src/auth/</code> 和 <code>src/permissions/</code> 的结构，不要改任何文件。解释一下当前的权限检查流程是怎么走的，列出如果我要把角色检查统一到 middleware 层，需要改动哪些文件，然后给一个最小化的实现方案。"</p>
+</blockquote>
+<p>等它回复，你 review 方案，确认方向，再发第二条：</p>
+<blockquote>
+<p>"按照上面确认的方案实现。保持现有 API 接口不变。改完之后跑权限相关的测试，把没有覆盖到的测试盲区也列出来。"</p>
+</blockquote>
+<p>两步走比一步走多花两分钟，但省掉了可能几小时的返工。</p>
+<hr>
+<h2 id="h4">AGENTS.md，持久指引的核心</h2>
+<p>一旦某个 prompt 模式有效了，下一步就是不要每次重复它，把它写进 <code>AGENTS.md</code> 。</p>
+<p><code>AGENTS.md</code> 是 agent 的 README。它会自动加载到上下文里，是编码你和团队想要 Codex 如何在仓库里工作的最佳位置。</p>
+<p><strong>一个好的 AGENTS.md 覆盖的内容</strong></p>
+<p>官方列出了几个核心类别：</p>
+<ul>
+<li>• 仓库结构和重要目录</li>
+<li>• 如何运行这个项目</li>
+<li>• 构建、测试、lint 命令</li>
+<li>• 工程规范和 PR 要求</li>
+<li>• 约束和"不能做"的边界</li>
+<li>• 验收标准和验证方式</li>
+</ul>
+<p><strong>三个层级，优先级从高到低</strong></p>
+<ul>
+<li>• <code>~/.codex/</code> 里的全局 <code>AGENTS.md</code> ：个人默认值</li>
+<li>• 仓库根目录的 <code>AGENTS.md</code> ：团队共享标准</li>
+<li>• 子目录里的 <code>AGENTS.md</code> ：局部规则，优先级最高</li>
+</ul>
+<p>离当前工作目录越近的文件，优先级越高，你可以给前端目录和后端目录各写一套不同的规范。</p>
+<p><strong>快速起点</strong></p>
+<p>在 CLI 里跑 <code>/init</code> ，会自动在当前目录生成一个 <code>AGENTS.md</code> 的初始版本。但官方提醒：这只是起点，要根据你团队实际的构建、测试、review、发布方式来修改它。</p>
+<p><strong>怎么让 AGENTS.md 保持实用</strong></p>
+<p>官方给了一条非常好的原则： <strong>短而准确的 AGENTS.md，比长而模糊的更有用</strong> 。先写基础部分，只有在你发现重复错误之后再增加新规则。</p>
+<p>如果文件开始变得太长，主文件保持精简，把具体任务的指导（比如 code review 规范、架构说明）抽成独立的 markdown 文件，在 AGENTS.md 里引用。</p>
+<p><strong>让 AGENTS.md 随时间进化的方法</strong></p>
+<p>当 Codex 对同一个问题犯了两次错，让它做一个复盘，然后把纠正的规则更新进 AGENTS.md。</p>
+<p>比如 Codex 两次在 TypeScript 文件里引入了 <code>any</code> 类型：</p>
+<pre><code>修复：不要使用 \`any\` 类型，用 \`unknown\` 加类型守卫替代
+</code></pre>
+<p>把这条加进 AGENTS.md，这个问题就不会再出现了。AGENTS.md 是你和 Codex 之间不断积累的"工程协议"。</p>
+<hr>
+<h2 id="h5">配置文件，让行为跨会话保持一致</h2>
+<p>配置是让 Codex 行为在不同会话和不同入口之间保持一致的核心手段。</p>
+<p>可以配置的内容包括：模型选择、推理强度、沙箱模式、审批策略、profiles、MCP 设置等。</p>
+<p><strong>配置分层</strong></p>
+<p>官方推荐的模式：</p>
+<ul>
+<li>• <code>~/.codex/config.toml</code> ：个人默认值（从 Codex App 的 Settings → Configuration 打开）</li>
+<li>• <code>.codex/config.toml</code> ：仓库专属配置</li>
+<li>• 命令行参数：只用于一次性的临时调整（如果用 CLI 的话）</li>
+</ul>
+<p><code>config.toml</code> 是定义持久偏好的地方：MCP 服务器、profiles、multi-agent 设置、实验性功能等。可以手动编辑，也可以直接让 Codex 帮你更新。</p>
+<hr>
+<h2 id="h6">测试和 Review，不要只看最终回复</h2>
+<p>不要满足于让 Codex 做出改动，要让它在必要时写测试、运行相关检查、确认结果、在你接受之前 review 工作。</p>
+<p>但 Codex 只有知道"好"是什么样的，才能自己做这个循环。这个信息要么来自 prompt，要么来自 AGENTS.md。</p>
+<p><strong>让 Codex 完成完整循环的内容</strong></p>
+<ul>
+<li>• 为改动编写或更新测试</li>
+<li>• 运行对应的测试套件</li>
+<li>• 检查 lint、格式、类型</li>
+<li>• 确认最终行为符合请求</li>
+<li>• Review diff，找 bug、回归、有风险的 pattern</li>
+</ul>
+<p><strong>Codex App 的 diff 面板</strong></p>
+<p>Codex App 有专门的 diff 面板，可以直接在本地 review 改动。点击 diff 里的某一行，可以直接给出反馈，这个反馈会作为上下文传给 Codex 的下一轮。这是一个比在聊天框里打字反馈更高效的方式。</p>
+<p><strong><code>/review</code> 命令</strong></p>
+<p><code>/review</code> slash command，这个比很多人知道的要全：</p>
+<ul>
+<li>• 和 base branch 对比，做 PR 风格的 review</li>
+<li>• Review 未提交的改动</li>
+<li>• Review 某个特定 commit</li>
+<li>• 使用自定义的 review 指令</li>
+</ul>
+<p>如果你和团队维护了一个 <code>code_review.md</code> 文件，在 AGENTS.md 里引用它，Codex 在 review 的时候就会遵循这套规范。</p>
+<hr>
+<h2 id="h7">Skills，把可复用的方法封装起来</h2>
+<p>一旦某个工作流变得可重复，就不要再依赖长 prompt 或者反复来回了，用 Skill 来封装指令。</p>
+<p>Skill 的核心是一个 <code>SKILL.md</code> 文件，加上上下文和支持 Codex 稳定执行的辅助逻辑。Skills 在 CLI、IDE 插件和 Codex App 里都可以用。</p>
+<p><strong>怎么设计一个好的 Skill</strong></p>
+<p>官方的建议：</p>
+<ul>
+<li>• 每个 Skill 聚焦一件事</li>
+<li>• 从 2-3 个具体的使用案例出发</li>
+<li>• 定义清晰的输入和输出</li>
+<li>• Description 要说清楚这个 Skill 做什么、什么时候用，包括用户会说的触发词</li>
+<li>• 不要一开始就覆盖所有边界情况</li>
+</ul>
+<p>一个实用的经验法则： <strong>如果你反复在用同一个 prompt，或者反复在纠正同一个工作流，那它就应该变成一个 Skill。</strong></p>
+<p><strong>典型的 Skill 候选</strong></p>
+<ul>
+<li>• 日志分类分析</li>
+<li>• 发版说明自动生成</li>
+<li>• 按 checklist 做 PR review</li>
+<li>• 迁移方案规划</li>
+<li>• 遥测数据或故障摘要整理</li>
+<li>• 标准调试流程</li>
+</ul>
+<p><strong>如何创建 Skill</strong></p>
+<p>推荐用 <code>$skill-creator</code> Skill 来生成第一版框架，用 <code>$skill-installer</code> Skill 来安装到本地。</p>
+<p><strong>Skills 的存储位置</strong></p>
+<ul>
+<li>• 个人 Skills： <code>$HOME/.agents/skills</code></li>
+<li>• 团队共享 Skills：仓库里的 <code>.agents/skills</code> 目录（可以提交进 git）</li>
+</ul>
+<p>团队共享 Skills 对新成员 onboarding 很有帮助，clone 仓库就可以用团队积累的所有 Skills。</p>
+<hr>
+<h2 id="h8">Automations，让稳定的工作流自动跑</h2>
+<p>一旦工作流变得稳定，就可以让 Codex 在后台自动帮你跑它。</p>
+<p>在 Codex App 的 Automations 标签里，</p>
+<p>可以配置选择哪个项目、用什么 prompt（可以调用 Skills）、跑的频率、在专用 git worktree 还是本地环境里运行。</p>
+<p><strong>适合自动化的任务</strong></p>
+<ul>
+<li>• 总结最近的 commit</li>
+<li>• 扫描可能的 bug</li>
+<li>• 起草发版说明</li>
+<li>• 检查 CI 失败</li>
+<li>• 生成每日站会摘要</li>
+<li>• 按计划跑重复性分析</li>
+</ul>
+<p>Automations 不只是用来执行的，也可以用来反思和维护。让 Codex 定期 review 最近的 session、总结重复出现的摩擦点、更新 prompt 或者工作流配置。</p>
+<p><strong>Skills 和 Automations 的分工</strong></p>
+<p>Skills 定义方法，Automations 定义节奏。如果一个工作流还需要大量人工干预，先把它做成稳定的 Skill，稳定之后再自动化。</p>
+<hr>
+<h2 id="h9">Session 管理，别让一个线程干所有事</h2>
+<p>这部分是官方文档里很多人没注意到的内容，但对日常使用影响很大。</p>
+<p>Codex 的 session 不只是聊天记录，而是包含了上下文、决策过程和操作历史的工作线程。怎么管理它，直接影响输出质量。</p>
+<p><strong>Codex App 里的管理方式</strong></p>
+<p>App 里可以置顶线程，也可以创建 worktree。</p>
+<p><strong>CLI 里的关键 slash 命令</strong></p>
+<p>官方文档列出了这些：</p>
+<ul>
+<li>• <code>/experimental</code> ：开关实验性功能，同时写入 <code>config.toml</code></li>
+<li>• <code>/resume</code> ：恢复一个保存过的会话</li>
+<li>• <code>/fork</code> ：基于当前线程创建新线程，同时保留原始记录</li>
+<li>• <code>/compact</code> ：当线程变得很长时，生成一个摘要版本的上下文（Codex 也会自动 compact）</li>
+<li>• <code>/agent</code> ：在并行运行多个 agent 时，切换当前活跃的 agent 线程</li>
+<li>• <code>/theme</code> ：选择语法高亮主题</li>
+<li>• <code>/apps</code> ：直接在 Codex 里使用 ChatGPT apps</li>
+<li>• <code>/status</code> ：查看当前会话状态</li>
+</ul>
+<p><strong>关于 /fork 的使用时机</strong></p>
+<p>如果工作还属于同一个问题，留在同一个线程里通常比新开一个好，因为它保留了推理上下文。只有当工作真正分叉成两个方向的时候，再用 <code>/fork</code> 。</p>
+<p><strong>Worktree 和并行工作</strong></p>
+<p>Codex 的 multi-agent 工作流可以让你把一些有边界的工作从主线程里分离出去。</p>
+<p>主 agent 专注核心问题，子 agent 负责探索、写测试、分类问题等。</p>
+<p>并行工作有效的前提是：写入范围不冲突。</p>
+<p>好的并行拆分：</p>
+<ul>
+<li>• 后端改动 + 文档更新</li>
+<li>• 一个 agent 写测试，另一个查根本原因</li>
+<li>• 多个 agent 分别提出备选方案</li>
+<li>• 一个 agent 实现，另一个只做 review</li>
+</ul>
+<p>不好的并行拆分：</p>
+<ul>
+<li>• 多个 agent 重构同一批文件</li>
+<li>• 需求还没确认就跑多个实现</li>
+<li>• schema 和调用方同时改动但没有协调</li>
+</ul>
+<p><strong>每个任务一个线程，而不是每个项目一个线程。</strong> 把一个项目的所有工作都放在一个线程里，会导致上下文膨胀，输出质量随时间下降。</p>
+<hr>
+<h2 id="h10">八个官方明确点名的错误用法</h2>
+<p>官方文档在最后总结了一组常见错误。</p>
+<p><strong>错误一：把持久规则堆在 prompt 里</strong></p>
+<p>每次 prompt 都把项目规范、代码风格、约束条件重新描述一遍，而不是把它们写进 AGENTS.md 或者 Skill。</p>
+<p>结果：上下文浪费，而且一旦忘了写就失效。</p>
+<p>正确做法：持久规则进 AGENTS.md，一次写入，永久生效。</p>
+<p><strong>错误二：不告诉 Codex 怎么运行和测试代码</strong></p>
+<p>给 Codex 一个任务，但没有告诉它构建和测试命令是什么，等于让它在黑盒里工作。</p>
+<p>结果：Codex 猜不出验证方式，只能靠"写完了感觉对了"来判断完成。</p>
+<p>正确做法：AGENTS.md 里写清楚验证命令，每个任务的 Done when 里也要有具体的检查步骤。</p>
+<p><strong>错误三：复杂任务跳过规划</strong></p>
+<p>直接让 Codex 开工，没有先让它理解系统、提出方案。</p>
+<p>结果：它套用了一个"看起来合理"的方案，但不适配你实际的代码结构。</p>
+<p>正确做法：复杂任务先用 Plan mode 或者要求 Codex 先解释再实现。</p>
+<p><strong>错误四：没弄清楚工作流就给了完整权限</strong></p>
+<p>一开始就给 Codex 对电脑的完整访问权限，觉得权限越大越好用。</p>
+<p>结果：可能出现意外的全局改动，或者影响到不该影响的文件。</p>
+<p>正确做法：从默认的收紧权限开始，理解了工作流之后再针对性地放宽。</p>
+<p><strong>错误五：不用 worktree 在同一批文件上同时跑多个线程</strong></p>
+<p>多个 Codex 会话同时修改同一批文件，没有隔离。</p>
+<p>结果：改动冲突，搞不清楚哪个版本是对的。</p>
+<p>正确做法：用 git worktree 隔离并行工作，每个线程在独立的 worktree 里操作。</p>
+<p><strong>错误六：还没手动验证可靠就把工作流自动化</strong></p>
+<p>急着把一个不稳定的工作流变成 Automation。</p>
+<p>结果：自动化把不稳定的行为规模化了，反而比手动更难处理。</p>
+<p>正确做法：先把工作流做成稳定的 Skill，跑几次验证它是可靠的，再设置自动化。</p>
+<p><strong>错误七：像盯着初级员工一样盯着 Codex</strong></p>
+<p>每一步都在旁边看着，不敢让它跑完再检查结果。</p>
+<p>结果：Codex 的异步和并行优势完全发挥不出来，效率和直接自己写差不多。</p>
+<p>正确做法：启动任务之后去做自己的工作，回来 review 结果。把 Codex 当后台任务，不是实时对话。</p>
+<p><strong>错误八：每个项目一个线程</strong></p>
+<p>在一个线程里积累整个项目的所有工作记录。</p>
+<p>结果：上下文越来越膨胀，Codex 越来越难从噪音里找到相关信息，输出质量随时间劣化。</p>
+<p>正确做法：每个任务或者每个独立工作单元开一个新线程。用 <code>/fork</code> 在保留上下文的情况下创建分支线程。</p>
+<hr>
+<h2 id="h11">一个完整的工作流</h2>
+<p>把官方文档的所有建议串起来，一个成熟的 Codex 工作流大概是这样的：</p>
+<p><strong>初始化阶段（一次性）</strong></p>
+<ol>
+<li>1. 在仓库里跑 <code>/init</code> 生成 AGENTS.md 初始版本</li>
+<li>2. 修改 AGENTS.md 写入实际的构建命令、验证命令、约束和 pattern</li>
+<li>3. 在 <code>~/.codex/config.toml</code> 里配置个人默认值</li>
+<li>4. 接入高价值的 MCP 服务器（一两个就够）</li>
+</ol>
+<p><strong>日常任务流程</strong></p>
+<ol>
+<li>1. 每个任务开一个独立线程</li>
+<li>2. 按四要素框架写 prompt（Goal + Context + Constraints + Done when）</li>
+<li>3. 复杂任务先用 Plan mode 或者让 Codex 先问你</li>
+<li>4. 启动之后去做自己的其他工作</li>
+<li>5. 回来检查结果，用 diff 面板 review</li>
+<li>6. 发现稳定的 pattern 就封装成 Skill</li>
+</ol>
+<p><strong>持续改进</strong></p>
+<ol>
+<li>1. Codex 犯了同一个错误两次，更新 AGENTS.md</li>
+<li>2. Skill 稳定了，设置 Automation</li>
+<li>3. 定期让 Codex 回顾最近的 session，更新配置和 AGENTS.md</li>
+</ol>
+<hr>
+<h2 id="h12">最后说一句</h2>
+<p>官方文档里有一句话我觉得很准：</p>
+<blockquote>
+<p>"Codex shouldn't just generate code. With the right instructions, it can also help test it, check it, and review it."</p>
+</blockquote>
+<p>把这个理解吃透，Codex 就从一个写代码的工具变成了一个完成整个开发循环的系统。</p>
+<p>继续滑动看下一个</p>
+<p>字节笔记本</p>
+<p>向上滑动看下一个</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

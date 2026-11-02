@@ -225,11 +225,11 @@ def fmt_date(d):
 
 # ─── 生成 ──────────────────────────────────────────────────
 def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
-          out_dir="posts", images=True, back_href="../../"):
+          out_dir="posts", images=True, back_href="../../", title_arg=None):
     raw = open(md_path, encoding="utf-8").read()
     meta, body = split_front(raw)
 
-    title = str(meta.get("title") or "").strip()
+    title = str(title_arg or meta.get("title") or "").strip()
     if not title:
         m = re.search(r"(?m)^#\s+(.+)$", body)
         title = m.group(1).strip() if m else os.path.splitext(os.path.basename(md_path))[0]
@@ -296,6 +296,7 @@ def main():
     ap.add_argument("slug")
     ap.add_argument("--date")
     ap.add_argument("--author")
+    ap.add_argument("--title", help="覆盖标题（爬下来的页面标题往往很脏）")
     ap.add_argument("--kind", default="repost", choices=["repost", "own"])
     ap.add_argument("--out", default="posts", help="posts（文章）或 notes（笔记）")
     ap.add_argument("--back", default=None, help="返回链接，默认笔记 ../、文章 ../../")
@@ -303,7 +304,7 @@ def main():
     a = ap.parse_args()
     back = a.back or ("../" if a.out == "notes" else "../../")
     print("· %s" % a.md)
-    info = build(a.md, a.slug, a.date, a.author, a.kind, a.out, not a.no_images, back)
+    info = build(a.md, a.slug, a.date, a.author, a.kind, a.out, not a.no_images, back, a.title)
     print("  %s | %s | %s" % (fmt_date(info["date"]), info["author"] or "-", info["title"]))
 
 

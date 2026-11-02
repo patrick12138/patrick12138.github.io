@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="一位西方 VC 深入中国 AI 生态圈的第一手观察：创始人特质、硬件壁垒、软件泡沫与那个被忽视的不对称性">
+<title>在中国 AI 生态圈摸底了两周，我学到了什么 · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>在中国 AI 生态圈摸底了两周，我学到了什么</h1><div class="meta">March 26, 2026 · 宝玉（译） · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/translations/2026-03-26/what-i-learned-from-two-weeks-inside-china-s-ai-ecosystem" target="_blank" rel="noopener">https://baoyu.io/translations/2026-03-26/what-i-learned-from-two-weeks-inside-china-s-ai-ecosystem</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">创始人的特质之谜 (The Founder Question)</a></li><li class="lvl2"><a href="#h2">VC 正在推波助澜 (VCs Are Reinforcing the Pattern)</a></li><li class="lvl2"><a href="#h3">深圳与硬件生态 (Shenzhen and the hardware ecosystem)</a></li><li class="lvl2"><a href="#h4">对中国软件市场持悲观态度 (Bearish on Chinese Software)</a></li><li class="lvl2"><a href="#h5">估值泡沫 (The Valuation Bubble)</a></li><li class="lvl2"><a href="#h6">值得关注的“不对称性” (The Asymmetry Worth Paying Attention To)</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><blockquote>
+<p>译注：关于作者<br>
+José Maria Macedo（若泽·马里亚·马塞多），Delphi Ventures 创始合伙人、Delphi Labs 创始人兼 CEO。Delphi Digital 成立于 2018 年，是加密货币和数字资产领域最具影响力的独立研究机构之一，旗下 Delphi Ventures 管理着超过 200 个投资组合项目。Macedo 本人在加密货币行业深耕多年，曾就读于布鲁塞尔国际学校，学习政治、哲学与经济学（PPE），在校期间就创办了多家盈利企业，并获得过约克公爵青年企业家奖等荣誉。近年来，Delphi Ventures 的投资触角正从 Crypto 延伸到 AI 和深度科技领域，本文正是 Macedo 在中国进行 AI 生态实地考察后写的观察总结。</p>
+</blockquote>
+<p>最近，我在中国待了两个星期，拜访了 AI 生态圈里的各位创始人、风险投资人（VC）以及上市公司的 CEO。去之前，我对这个生态是非常看好的（bullish），满心期待能在这里以远低于西方的估值，发掘到世界级的 AI 人才。</p>
+<p>但离开时，我的看法变得更加复杂且微妙： <strong>我对中国硬件的看好程度超出了我的预期，但对软件却更为看衰（bearish）</strong> ；同时，我对中国创始人们的一些观察，也让我感到十分惊讶。</p>
+<h2 id="h1">创始人的特质之谜 (The Founder Question)</h2>
+<p>我所投资过的那些伟大的创始人，身上都有一种极具辨识度的“基因”： <strong>独立思考、一身反骨、激情四射且极其执着</strong> 。他们绝不乖乖听话，总是不断地问“为什么”，并且拒绝盲从现成的经验。他们做出的决定在外人看来往往匪夷所思，但对他们自己来说却顺理成章。他们骨子里有一种毫不妥协的冲劲，这往往体现在他们过往那种近乎痴迷和追求极致的经历中。在 VC 每天接触的茫茫多的高智商人群里，他们身上那种“锋芒”（spikiness）总能让你一眼就认出来。</p>
+<p>然而，我在中国遇到的很多创始人，却属于另一种完全不同的类型——这让我挺吃惊的。</p>
+<p>他们无疑是极其优秀的：顶尖名校毕业，在字节跳动或大疆（DJI）有过光鲜履历，在《自然》（Nature）杂志发过论文，手握多项专利。在西方，只有最顶尖那一拨技术人才才具备的成就，在这里简直成了“入场券”。而且， <strong>他们比我见过的几乎任何人都要拼命</strong> 。我们的会议可以安排在任何时间、周末、甚至跨越不同的城市。有一位创始人，甚至在妻子分娩当天还跑来见我们！</p>
+<p>但是， <strong>那种独立思考的能力、那种反叛精神、那种从零到一（zero-to-one）的愿景，却很难在他们身上看到</strong> 。这些创始人的背景高度同质化，他们的商业计划书更为规避风险，他们的点子往往只是现有产品的豪华 V2 版（V2s），而非真正意义上的原创押注。考虑到中国培养了如此海量的技术人才，我本以为能在这里听到更多前所未闻的奇思妙想。</p>
+<blockquote>
+<p>V2s 即 Version 2，指在现有产品基础上的迭代升级版；zero-to-one 指从无到有的颠覆性创新。</p>
+</blockquote>
+<p>我的解读是， <strong>中国的教育体系培养出了卓越的人才，但却没有给“离经叛道”留出足够的空间</strong> 。这导致产出的创始人往往是解决已知问题的顶尖执行者，而不是那种能揪出一个“没人知道它存在”的问题并将其解决的人。</p>
+<h2 id="h2">VC 正在推波助澜 (VCs Are Reinforcing the Pattern)</h2>
+<p>更有意思的是，本土的投资人们正在加剧这种现象。</p>
+<p>很多中国投资基金的核心投资逻辑，就是 <strong>押注来自字节跳动或大疆的优秀前员工——他们看重“血统”而非“锋芒”，看重“光环”而非“信念”</strong> 。VC 们的背景也折射出了这一点：大多数人都有着大厂、咨询公司或投行的背景，这和十年前欧洲的 VC 圈如出一辙。</p>
+<p>讽刺的是，回顾历史，中国最顶尖的创始人——那些真正缔造了时代级伟大公司的企业家—— <strong>往往根本没在大厂打过工</strong> ：</p>
+<ul>
+<li><strong>马云</strong> 是个高考落榜两次的英语老师</li>
+<li><strong>任正非</strong> 离开部队后，在 43 岁创办了华为</li>
+<li><strong>刘强东</strong> 是从摆地摊开始创办京东的</li>
+<li><strong>王兴</strong> 博士辍学，从第一天起就开始创业</li>
+<li><strong>梁文锋</strong> 除了自己的公司外，从未在其他任何地方上过班，却打造出了 DeepSeek</li>
+</ul>
+<p>他们都是打破常规的异类，是没有光鲜“证书”的人——而恰恰是这类人，在当前的投资体系下大概率会被直接筛掉。</p>
+<p><strong>发掘这类创始人才能带来真正的超额收益（alpha）</strong> ，但在我看来，现在几乎没有人在关注这个群体。</p>
+<blockquote>
+<p>alpha 是金融术语，指超越市场平均水平的回报，这里借指独特的投资眼光与回报。</p>
+</blockquote>
+<h2 id="h3">深圳与硬件生态 (Shenzhen and the hardware ecosystem)</h2>
+<p>我在中国看到的最震撼的东西，不是哪场创业路演。</p>
+<p>而是深圳的“地下硬件工坊”——在那些车间里，工程师们 <strong>系统性地采购西方的高端产品，然后把它们大卸八块，以极其严谨的方法对每一个零部件进行逆向工程（reverse engineering）</strong> 。离开时我真的有些怀疑，大部分西方做硬件的创始人，到底知不知道自己面对的竞争对手是个什么怪物。这里的网络效应不是停留在纸面上的理论，而是实体存在的、高度密集的，且是经过几十年积累而成的。</p>
+<p>我们遇到的创业者用数据印证了这一点： <strong>超过 70% 的硬件原材料采购自大湾区，接近 100% 来自中国本土</strong> 。这种供应链优势，让他们的产品迭代周期快到西方硬件公司根本无法企及。</p>
+<p>我遇到的大多数创始人都在复制“大疆模式”：在某个垂直细分领域打造消费级硬件——比如电动轮椅、割草机器人、新一代健身设备——将营收规模做到千万甚至上亿美元，然后利用积累的客户群或底层技术，向相邻的品类扩张。有些公司的规模已经远超你的想象。我见到的最令人惊叹的公司是 <strong>拓竹（Bambu）</strong> ，一家大多数西方人可能都没听过的 3D 打印公司，据说它的 <strong>年利润高达 5 亿美元，并且还在以每年翻倍的速度增长</strong> 。</p>
+<h2 id="h4">对中国软件市场持悲观态度 (Bearish on Chinese Software)</h2>
+<p>相比来的时候，离开时我对中国软件领域的投资机会更加持怀疑态度。</p>
+<p>在模型层（model layer），中国的开源（open source）模型确实令人瞩目——但 <strong>闭源模型（closed models）与西方最顶尖水平相比仍有显著差距，而且这个差距很可能会越来越大</strong> 。这背后的资本支出（CapEx）差距是巨大的。获取 GPU 依然受到限制。而且西方的顶级 AI 实验室正越来越严厉地打击模型蒸馏（distillation）。营收数据更是将差距体现得淋漓尽致：据报道， <strong>Anthropic 仅在二月份就实现了 60 亿美元的收入；而中国最好的模型，其年度经常性收入（ARR）也不过在几千万美元的量级</strong> 。</p>
+<blockquote>
+<p>CapEx 指购买 GPU 等计算基础设施的大额投资；distillation（模型蒸馏）是一种让小模型通过学习大模型输出，来走捷径提升能力的训练方法。</p>
+</blockquote>
+<p>在软件初创公司方面，目前的主流画像是前字节跳动的产品经理和研究员，他们正在针对西方市场开发各种具有智能体（agentic）功能或环境感知的消费者软件。人才确实顶尖，但 <strong>很多这类产品完全处于海外大型 AI 实验室未来原生自带功能的射程范围内——一旦大厂更新，它们就会变得多余</strong> 。我还注意到，中国普遍缺乏那种规模庞大、增长迅猛的非上市软件公司。在西方，除了做大模型的公司之外，已经涌现出了一批 ARR 达到千万甚至上亿美元、且增速惊人的明星初创企业，比如 Cursor、Loveable、ElevenLabs、Harvey 和 Glean。 <strong>这种级别的破局者在中国基本看不到</strong> ——而仅有的几个例外，比如 HeyGen、Manus 和 GenSpark，一旦找到了破局点，最终也都选择了“出海”离开。</p>
+<h2 id="h5">估值泡沫 (The Valuation Bubble)</h2>
+<p>撇开软件不谈，无论是在早期还是中后期，市场的泡沫都是实打实的。</p>
+<p>在早期阶段，虽然从字节跳动、DeepSeek 和月之暗面（Moonshot）出来的顶尖人才，其薪酬成本仍远低于美国同等水平的人才，但 <strong>公司的估值中位数却已经与美国看齐</strong> 。甚至还没有产品的消费级初创公司，估值在一到两亿美元之间是常态。种子前轮（Pre-seed）融资超过 3000 万美元也见怪不怪。</p>
+<p>到了中后期，这些估值数字就更难自圆其说了：</p>
+<table>
+<thead>
+<tr>
+<th>公司</th>
+<th>估值</th>
+<th>ARR</th>
+<th>估值/营收倍数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MiniMax</td>
+<td>~400 亿美元</td>
+<td>&lt;1 亿美元</td>
+<td>~400x</td>
+</tr>
+<tr>
+<td>智谱（Zhipu）</td>
+<td>~250 亿美元</td>
+<td>~5000 万美元</td>
+<td>~500x</td>
+</tr>
+<tr>
+<td>OpenAI（对比）</td>
+<td>融资顶峰</td>
+<td>—</td>
+<td>~66x</td>
+</tr>
+<tr>
+<td>Anthropic（对比）</td>
+<td>—</td>
+<td>—</td>
+<td>~61x</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="" src="../../assets/posts/two-weeks-inside-china-ai/ffad353263d1.webp"></p>
+<p>像月之暗面这样的非上市模型公司，正是利用这些公开市场的可比估值（comps），在短短几个月内以 60 亿、100 亿甚至 180 亿美元的估值进行融资。币圈（Crypto）的投资人对这种套路绝对不陌生： <strong>投资人正在用非上市公司的估值，去对标一个解锁前的公开市场标价</strong> 。此外，支撑智谱和 MiniMax 维持在如此高位的另一个原因是，目前它们是投资人押注“中国 AI 叙事”仅有的渠道，这种稀缺性自然带来了溢价。但随着更多公司进入市场稀释份额，这种情况将会改变。最后， <strong>IPO 的窗口期向来是说关就关、毫无征兆的</strong> ——你根本无法确定，在你用来对标的那个价格暴跌之前，你能不能顺利完成套利（arb）。</p>
+<blockquote>
+<p>“解锁前的公开市场标价”是加密货币圈术语，指由于代币尚未解锁流通，导致盘面资金极小、价格被严重虚高的现象。</p>
+</blockquote>
+<p>人形机器人（humanoid）领域的情况也如出一辙。中国大约有 <strong>200 家</strong> 人形机器人公司，其中约 <strong>20 家</strong> 融资金额超过 1 亿美元，有几家甚至高达数十亿美元—— <strong>几乎所有这些公司都还未产生收入（pre-revenue）</strong> ，大部分都计划在 2026 或 2027 年赴港 IPO。如果这个市场真的存在，中国在硬件领域的绝对优势会让长期的竞争格局变得非常清晰。但商业化的落地时间，很可能会比当前这疯狂的融资节奏所预期的要漫长得多。而且，我非常怀疑香港股市能否承接得住目前排着队等待上市的这么多估值几十亿美元的人形机器人公司。所以我目前选择观望。</p>
+<p><a href="https://www.google.com/search?q=videos/video-001-4kR5KuxbPoBDn_ED.mp4">video</a></p>
+<h2 id="h6">值得关注的“不对称性” (The Asymmetry Worth Paying Attention To)</h2>
+<p>有一点完全出乎我的意料：我遇到的 <strong>几乎所有创始人，都是优先瞄准全球市场，其次才是中国市场</strong> 。他们日常使用 Claude Code 写代码，看 Dwarkesh 的硬核访谈播客。他们对旧金山的创业圈生态了如指掌，有时候甚至比那些没怎么密切关注市场的西方投资人还要清楚。</p>
+<p><strong>西方对中国的防备心理，要远高于中国对西方的不满。</strong> 中国的创始人们觉得，把中国顶级的工程执行力和深厚的硬件功底，与西方的走向市场（go-to-market）策略和产品愿景结合起来，是再自然不过的事。这种结合一旦落在一个对的创业团队身上，必将诞生出一些真正令人惊叹的伟大公司。</p>
+<p>找到这样的创始人——那些不符合本土 VC 圈刻板“精英履历”标准的异类——正是我们现在的首要目标。</p>
+<hr>
+<p><em>特别感谢 @woutergort 向我们分享了他强大的中国关系网，感谢 @PonderingDurian 组织了这次行程，也感谢 Claude 耐心地润色了我在飞机上的这些碎碎念。</em></p>
+<p>原文：What I Learned from Two Weeks Inside China's AI Ecosystem <a href="https://x.com/ZeMariaMacedo/status/2036779960598163864">https://x.com/ZeMariaMacedo/status/2036779960598163864</a></p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>
