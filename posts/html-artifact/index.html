@@ -111,6 +111,54 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
 }
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -124,8 +172,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>AI 输出形态与 HTML Artifact</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>Using Claude Code: The unreasonable effectiveness of HTML</aside><div class="body"><p>这篇文章的重点是：当 agent 输出越来越复杂时，Markdown 不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码 review 和交互式调参，HTML Artifact 往往更清楚、更可读、更容易分享。</p>
-<h2>什么时候用 HTML</h2>
+<div class="wrap"><article class="article"><h1>AI 输出形态与 HTML Artifact</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>Using Claude Code: The unreasonable effectiveness of HTML</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">什么时候用 HTML</a></li><li class="lvl2"><a href="#h2">和 Codex 工作流的关系</a></li><li class="lvl2"><a href="#h3">可复用 prompt</a></li><li class="lvl2"><a href="#h4">Claude Artifacts 完整能力（2026 更新）</a></li><li class="lvl3"><a href="#h5">AI-Powered Artifacts</a></li><li class="lvl3"><a href="#h6">MCP 集成</a></li><li class="lvl3"><a href="#h7">持久化存储</a></li><li class="lvl3"><a href="#h8">版本控制与多 Artifact</a></li><li class="lvl3"><a href="#h9">错误处理</a></li><li class="lvl2"><a href="#h10">与本页原有内容的关系</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>这篇文章的重点是：当 agent 输出越来越复杂时，Markdown 不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码 review 和交互式调参，HTML Artifact 往往更清楚、更可读、更容易分享。</p>
+<h2 id="h1">什么时候用 HTML</h2>
 <table>
 <thead>
 <tr>
@@ -157,7 +205,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </tbody>
 </table>
 <p>Markdown 仍适合长期知识沉淀和可编辑笔记；HTML 更适合需要视觉结构、交互、密集信息和一次性审阅的输出。</p>
-<h2>和 Codex 工作流的关系</h2>
+<h2 id="h2">和 Codex 工作流的关系</h2>
 <p>[[Resources/Codex 与 AI 编程工作流|Codex 与 AI 编程工作流]] 强调“人要留在审查回路里”。HTML Artifact 的意义就在这里：它把复杂输出变成更容易被人审阅和操控的界面。</p>
 <p>典型链路：</p>
 <ol>
@@ -167,7 +215,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>页面导出 prompt、JSON、diff 或 Markdown。</li>
 <li>再把结果交给 agent 执行或写回文档。</li>
 </ol>
-<h2>可复用 prompt</h2>
+<h2 id="h3">可复用 prompt</h2>
 <pre><code class="language-text">把这个问题整理成一个单页 HTML artifact：
 - 顶部给 3 句话结论；
 - 中间用表格比较方案；
@@ -188,33 +236,33 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 - 显示约束、依赖和警告；
 - 提供 copy as JSON / Markdown / prompt 按钮。
 </code></pre>
-<h2>Claude Artifacts 完整能力（2026 更新）</h2>
+<h2 id="h4">Claude Artifacts 完整能力（2026 更新）</h2>
 <p>来源：[[Sources/Inbox/What are artifacts and how do I use them|What are artifacts and how do I use them]]（Anthropic 官方文档, 2026-03）</p>
 <p>Claude Artifacts 已从单纯的"独立内容展示"进化为一套完整的应用生成和分发平台。以下补充本页未覆盖的新能力。</p>
-<h3>AI-Powered Artifacts</h3>
+<h3 id="h5">AI-Powered Artifacts</h3>
 <p>Artifacts 可以内嵌 AI 能力，变成 AI 驱动的应用。用户通过文本 API 使用 Claude 的智能——问答、创意生成、个性化教练、游戏、问题解决。</p>
 <ul>
 <li>创建者只需描述想要什么 → Claude 写代码 → 应用运行在 Anthropic 基础设施上</li>
 <li>使用者用自己 Claude 账户认证，消耗自己配额，不给创建者增加成本</li>
 <li>分享免费，无论 10 人还是 10000 人</li>
 </ul>
-<h3>MCP 集成</h3>
+<h3 id="h6">MCP 集成</h3>
 <p>Artifacts 可通过 MCP（Model Context Protocol）连接外部服务（Asana、Google Calendar、Slack 等），也支持自定义 MCP 服务器。首次交互需用户批准，偏好持久化。</p>
-<h3>持久化存储</h3>
+<h3 id="h7">持久化存储</h3>
 <p>Pro/Max/Team/Enterprise 计划支持跨会话存储：<br>
 - <strong>个人存储</strong>：每个用户独立数据（如日志只自己可见）<br>
 - <strong>共享存储</strong>：所有用户看同一份数据（如排行榜）<br>
 - 20MB/artifact 限制，纯文本<br>
 - 取消发布会永久删除存储数据</p>
-<h3>版本控制与多 Artifact</h3>
+<h3 id="h8">版本控制与多 Artifact</h3>
 <ul>
 <li>使用版本选择器在前端切换版本</li>
 <li>编辑历史消息可产生不同对话分支，各有独立 artifact 集</li>
 <li>可同时打开多个 artifact，通过 chat controls 切换</li>
 </ul>
-<h3>错误处理</h3>
+<h3 id="h9">错误处理</h3>
 <p>artifact 出现错误时，点击 "Try fixing with Claude" 自动把错误信息复制到新消息，让 Claude 诊断修复。</p>
-<h2>与本页原有内容的关系</h2>
+<h2 id="h10">与本页原有内容的关系</h2>
 <p>本页原有的 HTML Artifact 使用场景（方案对比、代码 review、设计原型等）仍然成立。新增的 AI-powered、MCP 集成和持久化存储能力让 Artifact 从"一次性展示"升级为"有状态应用"——可以用来做日志、追踪器、仪表盘、协作工具等需要状态保持的东西。</p>
 <p>本 Vault 的长期知识仍优先用 Markdown，因为 Obsidian 双链、索引和长期维护更适合 <code>.md</code>。</p>
 <p>HTML 更适合临时或半持久产物：</p>
@@ -242,6 +290,84 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     try{localStorage.setItem('theme',n);}catch(e){}
     setTimeout(function(){h.classList.remove('theme-switching');},300);
   });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
 })();
 </script>
 </body>

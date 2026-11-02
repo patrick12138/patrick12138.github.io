@@ -120,6 +120,54 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
 }
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -133,10 +181,10 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-28/warp-self-improving-agents</a></aside><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a> ，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong> 。</p>
+<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-28/warp-self-improving-agents</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 做 Code Review，缺的不是能力，而是记忆</a></li><li class="lvl2"><a href="#h2">两个 Skill，加上人类反馈</a></li><li class="lvl2"><a href="#h3">Warp 总结的 6 条最佳实践</a></li><li class="lvl3"><a href="#h4">1. 写原则，不要写死规则</a></li><li class="lvl3"><a href="#h5">2. 解释为什么</a></li><li class="lvl3"><a href="#h6">3. 让反馈没有摩擦、毫不费力</a></li><li class="lvl3"><a href="#h7">4. 保持 Skill 精简，并使用渐进式披露</a></li><li class="lvl3"><a href="#h8">5. 反馈质量大于数量，但数量也有帮助</a></li><li class="lvl3"><a href="#h9">6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</a></li><li class="lvl2"><a href="#h10">如果反馈本身是错的呢？</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a> ，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong> 。</p>
 <p>这个问题我以前也研究过，我写了一个反编译 JS 代码的 Skill（ <a href="https://github.com/JimLiu/decode-">GitHub</a> ），每次 Agent 反编译的时候遇到新的场景解决了就自己更新自己的 Skill，效果还不错，能一直优化，就是 Skill 文件越来越大。</p>
 <p>我还研究过写作的自我进化 Skill，那个就一言难尽，因为它其实没有自己统一的标准，经常负优化，越写越糟糕。</p>
-<h2>Agent 做 Code Review，缺的不是能力，而是记忆</h2>
+<h2 id="h1">Agent 做 Code Review，缺的不是能力，而是记忆</h2>
 <p>说回来 Warp 这个，Warp 是一个挺有名的终端工具，内部尝试借助 AI 做 Code Review。一开始让 Agent review 代码，效果并不理想，主要问题体现在 Agent 不了解你的项目，不知道你的团队规范，不知道历史经验教训，就算你指出来问题它下次还记不住。简单来说就是没有记忆。</p>
 <p>初期他们采取了很多补救措施：</p>
 <ul>
@@ -144,7 +192,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>完善项目的 <code>AGENTS.md</code> 文件（有意思的是这篇文章是 Claude 发的，但是用的是 <code>AGENTS.md</code> 而不是 <code>CLAUDE.md</code> ，我记得 Claude 默认不支持 <code>AGENTS.md</code> 的）</li>
 </ul>
 <p>但效果并不理想，一方面它依赖于人主动去做，成本较高；另一方面团队成员在 Code Review 时人工在 PR 写的高质量评论完全没用上。</p>
-<h2>两个 Skill，加上人类反馈</h2>
+<h2 id="h2">两个 Skill，加上人类反馈</h2>
 <p>所以他们搞了个解决方案，一个基础 Skill 负责做代码审查，一个改进 Skill 负责定期收集人类工程师在代码审查时的评论，尤其是对 Agent 审查结果的评论，根据人类工程师的评论去更新代码审查的 Skill。</p>
 <p><img alt="Warp 的 Skill 自我改进循环" src="../../assets/posts/warp-self-improving-agents/be30a0c320d2.png" /></p>
 <p>换句话说，它不是依赖于模型自己去改进自己，而是 <strong>Agent 根据人类对模型结果的标注（人类对代码审查的评论），去改进技能</strong> 。</p>
@@ -152,23 +200,23 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <blockquote>
 <p>这可能正是 Agent 的最佳实践方案之一：人负责高维度的标注、评论、反馈这些事情，Agent 去做执行的工作，Agent 根据人类的反馈去改进 Skill。</p>
 </blockquote>
-<h2>Warp 总结的 6 条最佳实践</h2>
+<h2 id="h3">Warp 总结的 6 条最佳实践</h2>
 <p>除此之外，他们还总结了一些最佳实践：</p>
-<h3>1. 写原则，不要写死规则</h3>
+<h3 id="h4">1. 写原则，不要写死规则</h3>
 <p>编写 Skill 时，要像在指导一个聪明人，而不是在给计算机编程。在 Skill 中写“寻找重复代码”，比列出详尽的变量命名规则更有效。</p>
-<h3>2. 解释为什么</h3>
+<h3 id="h5">2. 解释为什么</h3>
 <p>说明规则背后的理由，能让智能体针对问题进行推理，而不是机械执行僵化指令，也因此更容易举一反三。</p>
-<h3>3. 让反馈没有摩擦、毫不费力</h3>
+<h3 id="h6">3. 让反馈没有摩擦、毫不费力</h3>
 <p>在人们原本工作的地方收集反馈，例如直接评论 PR 或 issue。同时让收集过程自动发生，不要增加额外的提交步骤。低摩擦才能让信号持续流动。如果反馈太麻烦，你就收不到反馈，也就无法改进 Skill。</p>
-<h3>4. 保持 Skill 精简，并使用渐进式披露</h3>
+<h3 id="h7">4. 保持 Skill 精简，并使用渐进式披露</h3>
 <p>优秀的 Skill 文件不会很庞大；它会引用资源文件和脚本，而不是一次性把所有内容都塞进上下文。</p>
-<h3>5. 反馈质量大于数量，但数量也有帮助</h3>
+<h3 id="h8">5. 反馈质量大于数量，但数量也有帮助</h3>
 <p>一位资深工程师给出的少量、详细且与领域相关的反馈，可能比大量草率反馈更有价值，因为简单的赞成／反对并不能说明“为什么”。</p>
 <p>即使样本量相对较小，只要反馈来自掌握领域知识的人，而且足够详细，你也能得到非常好的信号——这些知识是智能体通过其他方式根本无法获得的。话虽如此，优质信号的语料越多，效果越好。</p>
-<h3>6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</h3>
+<h3 id="h9">6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</h3>
 <p>把改进 Skill（也就是前面提到的一个代码审查 Skill、一个改进 Skill）做好，收益不只限于眼前这套 Agent 循环，因为改进 Skill 在不同用例之间具有很高的复用性。除了领域专用知识这一部分，它其实是一套相当通用、可复用的机制。代码审查 Agent 的改进 Skill，也可以应用到其他 Skill 的改进上。</p>
 <p><img alt="让 Skill 持续进化的六条原则" src="../../assets/posts/warp-self-improving-agents/f0f5c1d11813.png" /></p>
-<h2>如果反馈本身是错的呢？</h2>
+<h2 id="h10">如果反馈本身是错的呢？</h2>
 <p>可能有人会担心：如果反馈本身是错的呢？</p>
 <p>Warp 的做法是永远不让 Agent 盲目接受反馈。给它足够的上下文来做基本的合理性检查，限制谁的反馈有权影响技能更新（不是所有人的意见都同等重要），最后始终保留人在循环中审核改动。</p>
 <p>对于那些有明确标准答案的领域，比如代码是否通过了测试、部署是否成功，可以先建一个验证基准，让 Agent 自己对着基准跑。没有标准答案的领域，比如代码风格、文档质量，就靠领域专家的判断，不要开放给所有人随意反馈。</p>
@@ -188,6 +236,84 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     try{localStorage.setItem('theme',n);}catch(e){}
     setTimeout(function(){h.classList.remove('theme-switching');},300);
   });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
 })();
 </script>
 </body>

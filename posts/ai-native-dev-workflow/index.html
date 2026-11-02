@@ -111,6 +111,54 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
 }
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -124,12 +172,12 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>我的 AI 原生开发流程：一个真实案例的完整复盘</h1><div class="meta">August 24, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-24/ai-native-dev-workflow" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-24/ai-native-dev-workflow</a></aside><div class="body"><p><img alt="" src="../../assets/posts/ai-native-dev-workflow/82cc656f2aaf.webp"></p>
+<div class="wrap"><article class="article"><h1>我的 AI 原生开发流程：一个真实案例的完整复盘</h1><div class="meta">August 24, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-24/ai-native-dev-workflow" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-24/ai-native-dev-workflow</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">先说结论：流程没变，角色变了</a></li><li class="lvl2"><a href="#h2">需求从哪来</a></li><li class="lvl2"><a href="#h3">第一关：可行性分析——先决定要不要做</a></li><li class="lvl2"><a href="#h4">第二关：设计文档——Agent 之间的桥梁</a></li><li class="lvl2"><a href="#h5">第三关：高精度原型设计——需求、原型、UI 三合一</a></li><li class="lvl2"><a href="#h6">第四关：实现——代码已经不是瓶颈</a></li><li class="lvl2"><a href="#h7">第五关：测试——把自己当普通用户</a></li><li class="lvl2"><a href="#h8">深层思考：到底什么变了？</a></li><li class="lvl3"><a href="#h9">变化一：执行主体从人变成了 Agent</a></li><li class="lvl3"><a href="#h10">变化二：确认环节可以合并，但不能省略</a></li><li class="lvl3"><a href="#h11">变化三：文档重要性更高</a></li><li class="lvl2"><a href="#h12">关于 Skills 的一个反直觉的观点</a></li><li class="lvl2"><a href="#h13">写在最后</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><img alt="" src="../../assets/posts/ai-native-dev-workflow/82cc656f2aaf.webp"></p>
 <p>很多人对 AI 开发的理解停留在"让 AI 帮我写代码"。</p>
 <p>这个理解没有错，但只不完全对。写代码在整个软件开发流程中只是一个环节，而且在 AI 时代，它反而是变化最小、最不需要操心的环节，因为现在的大模型在编码方面已经训练得极好了，简单的自然语言提示词就够了。</p>
 <p>真正有意思的变化是在代码之外：需求怎么分析、方案怎么设计、原型怎么做、测试怎么跑，这些"写代码之外"的事情，才是 AI 原生开发真正改变游戏规则的地方。</p>
 <p>前几天我用 AI 给自己的 App 加了一个新功能，过程比较典型，值得拿出来完整复盘一下。</p>
-<h2>先说结论：流程没变，角色变了</h2>
+<h2 id="h1">先说结论：流程没变，角色变了</h2>
 <p>在展开案例之前，先说一个最核心的认知：</p>
 <p>AI 原生开发，本质上还是传统的软件开发流程——可行性分析、方案设计、原型设计、编码实现、测试验证。这些步骤一个都没少。</p>
 <p>变的是什么？执行主体。</p>
@@ -137,13 +185,13 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>打个比方：你从一线程序员升级成了技术总监。你不再写每一行代码，但你要决定做不做、怎么做、做得对不对。</p>
 <p><img alt="AI 原生开发中人和 Agent 的角色转变" src="../../assets/posts/ai-native-dev-workflow/331bee9a8759.webp"></p>
 <p>这听起来好像没什么大不了？但当你真正跑通一遍完整流程，你会发现效率提升是数量级的。</p>
-<h2>需求从哪来</h2>
+<h2 id="h2">需求从哪来</h2>
 <p><img alt="" src="../../assets/posts/ai-native-dev-workflow/ac587f31acfa.webp"></p>
 <p>这个功能起源于一个 GitHub Issue。有用户给我的字幕转录翻译 App（BaoCut）留言，问能不能加上远程转录功能。</p>
 <p>场景很具体：他有两台电脑，一台性能好算力强的电脑 A，另一台是日常办公用的电脑 B。他想在电脑 B 上用 BaoCut 的时候，把需要算力的转录任务丢给电脑 A 去跑。</p>
 <p>我一看就觉得这是个好需求：场景合理，对用户有价值，和产品定位也吻合。</p>
 <p>但我没有马上打开编辑器写代码。</p>
-<h2>第一关：可行性分析——先决定要不要做</h2>
+<h2 id="h3">第一关：可行性分析——先决定要不要做</h2>
 <p>这是整个流程中最容易被跳过、但最不该被跳过的一步。</p>
 <p>先决定要不要做，再去做。这句话听起来像废话，但我吃过太多亏了。</p>
 <p>就拿前几天来说，我还做了一个用本地文本模型辅助拆分对齐字幕的功能，做可行性分析的时候觉得技术上没问题，做完了实际体验才发现效果很糟糕，最后还是砍掉了，浪费了好几天时间和一堆 token。你看，就算做了可行性分析，有时候也会判断失误。但这不代表可行性分析没用，没有这一步，你踩的坑只会更多。</p>
@@ -165,7 +213,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </ul>
 <p>所以决定按方案 A 推进，同时把方案 0 中"提供 HTTP 转录 API"这个附加功能一并加上。</p>
 <p>注意这里的模式：Agent 做分析和罗列方案，人做最终判断和拍板。这就是"人在关键路径确认"的含义——你不需要自己去研究每个技术方案的细节，但你需要基于自己的产品判断和技术直觉做最终决策。</p>
-<h2>第二关：设计文档——Agent 之间的桥梁</h2>
+<h2 id="h4">第二关：设计文档——Agent 之间的桥梁</h2>
 <p>确定了可行性和技术方向，我还是没有马上写代码。下一步是让 Agent 写设计文档。</p>
 <p>为什么需要文档？这里涉及到 AI 原生开发的一个关键认知：</p>
 <p><strong>文档在 AI 时代有了全新的角色，它是人和 Agent 之间、以及 Agent 和 Agent 之间的桥梁。</strong></p>
@@ -179,7 +227,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>理想状态下，每个阶段结束时都应该生成一份可以留档的交付物，如需求文档、设计方案、原型设计、代码和测试。并且这些产出物要和 git 这样的版本管理工具结合起来，跟踪所有变更，那么这些交付物本身还可以作为审计记录：谁提的需求、Agent 产出了什么、谁批准了它。</p>
 <p>我承认这次我偷了个懒，设计文档写完后直接去做原型了，主要是之前可行性分析阶段给的方案没什么问题，我也比较信任 Fable 5。但如果是更复杂的项目，你应该仔细审查设计文档，这个成本远低于写完代码再推翻。</p>
 <p>这里还有一个关键的操作细节： <strong>确认后的文档，就是下一个 Agent Session 的全部起点。</strong> 当你从"设计"进入"开发"，往往是一个新的 Session。这时候你不需要重新向 Agent 解释来龙去脉，只需要一句话："按 docs/remote-transcription.md 实现"。文档里已经写好了所有决策和细节，新的 Session 读完文档就能开始执行。</p>
-<h2>第三关：高精度原型设计——需求、原型、UI 三合一</h2>
+<h2 id="h5">第三关：高精度原型设计——需求、原型、UI 三合一</h2>
 <p>这一步是我认为 AI 原生开发中变化最大的环节之一。</p>
 <p>传统流程里，需求文档、原型设计、UI 设计是三个独立的步骤，由不同的人完成：产品经理写需求，交互设计师做原型，UI 设计师做视觉稿。每一次交接都有信息损耗，每一次修改都需要多方协调。</p>
 <p>在 AI 的加持下，这三者可以合并成一个步骤——高精度原型设计。什么意思？就是你做出来的原型，不是线框图，而是接近最终成品的高保真设计，直接包含了交互逻辑和视觉设计。</p>
@@ -195,7 +243,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>后来我又发现把这个功能放在设置页面里并不方便，用户需要频繁查看服务状态，埋在设置里太深了。所以又把它挪到了主界面。来来回回好几轮，终于觉得差不多了。</p>
 <p>注意这里的模式：每一次调整，我只需要用自然语言描述我想要什么变化，Agent 就会修改原型。我的注意力全部放在"这个交互是不是友好"、"这个界面是不是美观"、"用户使用起来是不是自然"这些产品层面的判断上，而不是在纠结像素和布局的实现细节。</p>
 <p><strong>为什么原型确认这一步不建议你省掉？</strong> 因为界面和交互一旦开发完成，修改的成本会呈指数级上升。你不仅要改代码逻辑，还要改样式、改状态管理、改测试用例。但在原型阶段，改一个布局可能就是一句话的事。</p>
-<h2>第四关：实现——代码已经不是瓶颈</h2>
+<h2 id="h6">第四关：实现——代码已经不是瓶颈</h2>
 <p>如果你走到这一步，手上已经有了设计文档和确认过的高精度原型，那么让 Agent 写代码，对于现在的模型来说，是一件非常简单的事情。</p>
 <p><img alt="" src="../../assets/posts/ai-native-dev-workflow/1d849e1ad7b4.webp"></p>
 <p><img alt="" src="../../assets/posts/ai-native-dev-workflow/7ca28ee5e42a.webp"></p>
@@ -207,7 +255,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p><strong>瓶颈转移到了代码两侧：左边是设计和确认，右边是测试、验证和部署。</strong> 这些环节仍然在以人类速度运行，它们才是现在需要优化的地方。</p>
 <p><img alt="AI 原生开发的瓶颈转移到代码两侧" src="../../assets/posts/ai-native-dev-workflow/6e6c900f4e4d.webp"></p>
 <p>这也是为什么我在前面的可行性分析、设计文档、原型设计上花了那么多篇幅——在 AI 原生开发中，这些"代码之前"的工作反而是最重要的。</p>
-<h2>第五关：测试——把自己当普通用户</h2>
+<h2 id="h7">第五关：测试——把自己当普通用户</h2>
 <p><img alt="" src="../../assets/posts/ai-native-dev-workflow/829b0eda01c2.webp"></p>
 <p>虽然 Agent 会帮你写测试、跑测试、验证结果，但这不代表你可以完全信赖它。接下来你需要自己动手试一试。</p>
 <p>关键心态转变： <strong>把自己当普通用户，而不是开发者。</strong></p>
@@ -219,17 +267,17 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>看最终成品：远程转录功能已经完整可用了。</p>
 <p>你要问我有没有 Review 代码？没有。我把自己当成 QA，只做了黑盒测试，我信任 Fable 5 的编码能力。这也是前面说的"合并确认环节"的一个具体体现，Agent 在开发过程中已经自己跑过测试、自己截图验证了，我再从用户视角做一轮黑盒测试，两层验证加起来已经足够了。</p>
 <p>当然，这个取舍取决于项目的重要程度。如果是金融系统的核心逻辑，你可能还是需要 Code Review。但对于大部分功能开发来说，黑盒测试足够了。</p>
-<h2>深层思考：到底什么变了？</h2>
+<h2 id="h8">深层思考：到底什么变了？</h2>
 <p>回过头看整个流程：</p>
 <pre><code>可行性分析 → 设计文档 → 原型设计 → 编码实现 → 测试验证
 </code></pre>
 <p>这不就是传统的软件开发流程吗？确实是。</p>
 <p><strong>AI 原生开发不是发明了一套新流程，而是用新的方式跑旧的流程。</strong></p>
 <p>具体来说，有三个本质变化：</p>
-<h3>变化一：执行主体从人变成了 Agent</h3>
+<h3 id="h9">变化一：执行主体从人变成了 Agent</h3>
 <p>每一个环节，真正干活的都是 Agent。你不需要自己写可行性分析报告，不需要自己画原型图，不需要自己写代码，不需要自己写测试用例。你只需要在关键节点做确认和决策。</p>
 <p>你把精力集中在判断和决策上，Agent 处理执行和细节。</p>
-<h3>变化二：确认环节可以合并，但不能省略</h3>
+<h3 id="h10">变化二：确认环节可以合并，但不能省略</h3>
 <p>传统流程中，需求确认、原型确认、UI 确认是三个独立的评审会。现在你可以把它们合并，需求文档、原型设计、UI 设计一体化成高精度原型，一次性确认。设计文档和原型设计也可以放在一起看。</p>
 <p><strong>但确认环节本身绝对不能省。</strong> 每一个确认环节都有它存在的理由：</p>
 <ul>
@@ -239,7 +287,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li><strong>测试确认</strong> ：站在用户角度验证好不好用，而不是站在开发者角度验证能不能跑</li>
 </ul>
 <p>你可以加速确认（合并环节、简化流程），但不能跳过确认。 <strong>人的判断力是整个流程中不可替代的部分。</strong></p>
-<h3>变化三：文档重要性更高</h3>
+<h3 id="h11">变化三：文档重要性更高</h3>
 <p>在传统开发中，文档是附属品，代码写完补文档，甚至不补。但在 AI 原生开发中，文档成了核心基础设施。</p>
 <p>它承担两个关键职能：</p>
 <ol>
@@ -249,7 +297,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>如果你用过 Claude Code，你会对这一点深有体会。每次你开一个新的 Session，你需要把之前的上下文重新给它说一遍。而文档就是最好的上下文传递载体，它比口头描述更精确，比聊天记录更有结构。</p>
 <p>当然文档也会带来新的问题，就是如果版本没有及时更新，反而会产生错误的上下文。</p>
 <p><img alt="AI 原生开发的三个本质变化" src="../../assets/posts/ai-native-dev-workflow/cb3ed3ac6a99.webp"></p>
-<h2>关于 Skills 的一个反直觉的观点</h2>
+<h2 id="h12">关于 Skills 的一个反直觉的观点</h2>
 <p>最后说一个很多人关心的话题：你用了什么 Skills？需不需要装很多开发类的 Skills 来增强 Agent 的编码能力？</p>
 <p>我的答案可能会出乎意料： <strong>大部分开发类 Skills 是没必要的。</strong></p>
 <p>现在的大模型在编码方面已经训练得极好了。你看我整个流程中和 Agent 的对话，都是非常简单的自然语言提示词："帮我分析一下可行性"、"按方案 A 写个设计文档"、"按这个设计做原型"、"按文档实现"。没有复杂的 prompt engineering，没有特殊的 coding skills。</p>
@@ -258,7 +306,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p><strong>第一类是辅助设计确认的——解决左侧瓶颈。</strong> 比如 Claude Design / baoyu-design 这类将原型设计和 UI 设计合二为一的工具。它帮我快速产出高精度原型，让我可以在代码之前就确认界面和交互。</p>
 <p><strong>第二类是自动化减少体力劳动的——解决右侧瓶颈。</strong> 比如自动部署、自动发布这类。编码完成后还有打包、部署、发布这些环节，它们不需要判断力，但耗时间。还有 /goal 这样的命令，可以让 Agent 按里程碑自动推进，减少你手动拆分任务的工作。</p>
 <p>中间那一层——编码本身，模型已经足够好了，简单的指令就能得到高质量的代码。 <strong>把精力花在流程设计上，比花在 prompt 优化上回报大得多。</strong></p>
-<h2>写在最后</h2>
+<h2 id="h13">写在最后</h2>
 <p>回头看这个功能，从 GitHub Issue 到完整可用，写代码我几乎没花时间，花时间最多的地方是可行性的判断、原型的反复打磨、测试时把自己当小白用户去折腾。这些恰恰是 Agent 替代不了的部分：做不做、方向对不对、好不好用，每一个都需要人来拍板。</p>
 <p>AI 原生开发的精髓也在于此：开发流程还是老样子，但人的角色变了。你从写代码的人，变成了管理 Agent 的人；产出不再是代码，而是一个个判断和决策。</p>
 <p>我知道放下对代码的执念不容易，尤其是写了很多年代码的人，不看每一行就合并，心里总有点不踏实。我也是一步步才走到今天这种"只做黑盒测试"的状态。但趋势摆在那里：模型的编码能力只会越来越强，人的价值会越来越集中在代码两侧。越早完成这个角色转换，你从 AI 手里拿到的杠杆就越大。</p>
@@ -279,6 +327,84 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     try{localStorage.setItem('theme',n);}catch(e){}
     setTimeout(function(){h.classList.remove('theme-switching');},300);
   });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
 })();
 </script>
 </body>

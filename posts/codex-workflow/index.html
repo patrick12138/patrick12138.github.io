@@ -111,6 +111,54 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
 }
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -124,9 +172,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Codex 与 AI 编程工作流</h1><div class="meta">June 10, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>来自 Codex 官方团队的分享：如何把 Codex 用到极致 · 把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · 我们如何使用 Codex 在 28 天内构建 Android 版 Sora（OpenAI 官方原文） · 工程技术：在智能体优先的世界中利用 Codex · 一个半月高强度 Claude Code 使用后感受 · 好奇心周刊第25期 如何让 AI 写好代码 · The 70% problem Hard truths about AI-assisted coding · Why I Don’t Vibe Code · AI 早报 2026-05-29 · AI 时代的品味与工程思维</aside><div class="body"><p>这组资料的共同结论是：AI 编程的上限不在“让模型多写几行代码”，而在 <strong>上下文、计划、验证、审查和人的判断</strong> 能不能跟上。</p>
+<div class="wrap"><article class="article"><h1>Codex 与 AI 编程工作流</h1><div class="meta">June 10, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>来自 Codex 官方团队的分享：如何把 Codex 用到极致 · 把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · 我们如何使用 Codex 在 28 天内构建 Android 版 Sora（OpenAI 官方原文） · 工程技术：在智能体优先的世界中利用 Codex · 一个半月高强度 Claude Code 使用后感受 · 好奇心周刊第25期 如何让 AI 写好代码 · The 70% problem Hard truths about AI-assisted coding · Why I Don’t Vibe Code · AI 早报 2026-05-29 · AI 时代的品味与工程思维</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心判断</a></li><li class="lvl2"><a href="#h2">一套可复用流程</a></li><li class="lvl2"><a href="#h3">官方最佳实践六支柱</a></li><li class="lvl2"><a href="#h4">Prompt 四要素</a></li><li class="lvl2"><a href="#h5">复杂任务先计划</a></li><li class="lvl2"><a href="#h6">AGENTS.md 的价值</a></li><li class="lvl2"><a href="#h7">配置、Skills 与 Automations</a></li><li class="lvl2"><a href="#h8">Session 管理</a></li><li class="lvl2"><a href="#h9">智能体优先工程</a></li><li class="lvl2"><a href="#h10">Claude Code 高强度使用经验</a></li><li class="lvl2"><a href="#h11">AI 专家委员会与 Worktree</a></li><li class="lvl2"><a href="#h12">对抗 AI 代码熵增</a></li><li class="lvl2"><a href="#h13">苏格拉底式编程</a></li><li class="lvl2"><a href="#h14">并行 agent 的真实瓶颈</a></li><li class="lvl2"><a href="#h15">不要只用 AI 做旧事</a></li><li class="lvl2"><a href="#h16">验证器比野心重要</a></li><li class="lvl2"><a href="#h17">反面提醒</a></li><li class="lvl2"><a href="#h18">对个人求职的用法</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>这组资料的共同结论是：AI 编程的上限不在“让模型多写几行代码”，而在 <strong>上下文、计划、验证、审查和人的判断</strong> 能不能跟上。</p>
 <p>补充阅读：[[Resources/AI 商品化与价值迁移|AI 商品化与价值迁移]]、[[Resources/AI 辅助编程的 70% 问题|AI 辅助编程的 70% 问题]]、[[Resources/AI 疲劳与可持续使用|AI 疲劳与可持续使用]]、[[Resources/Agent Infra 与 Runtime|Agent Infra 与 Runtime]]</p>
-<h2>核心判断</h2>
+<h2 id="h1">核心判断</h2>
 <p>Codex 更像一组能力很强、但需要明确上下文的新同事，而不是一个可以无条件接管工程责任的按钮。</p>
 <p>适合交给 Codex 的部分：</p>
 <ul>
@@ -142,7 +190,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>哪些场景必须正确，哪些只是局部能跑。</li>
 <li>最终合并、发布、责任和风险判断。</li>
 </ul>
-<h2>一套可复用流程</h2>
+<h2 id="h2">一套可复用流程</h2>
 <table>
 <thead>
 <tr>
@@ -180,7 +228,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </tbody>
 </table>
 <p>这和 [[Resources/LLM Wiki 实践指南|LLM Wiki 实践指南]] 是同一个逻辑：先编译上下文，再复用上下文。</p>
-<h2>官方最佳实践六支柱</h2>
+<h2 id="h3">官方最佳实践六支柱</h2>
 <p>OpenAI Codex Best Practices 的落地思路可以压缩成六个支柱：</p>
 <ul>
 <li>从正确的任务上下文出发。</li>
@@ -191,7 +239,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>把稳定流程变成 Automations。</li>
 </ul>
 <p>这说明 Codex 的使用重点不是“每次写一个更长的 prompt”，而是把上下文、规则、工具、复用流程和验证方式逐步系统化。</p>
-<h2>Prompt 四要素</h2>
+<h2 id="h4">Prompt 四要素</h2>
 <p>复杂任务的 prompt 至少要说清四件事：</p>
 <table>
 <thead>
@@ -220,7 +268,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </tbody>
 </table>
 <p>其中 <code>Done when</code> 很关键。没有完成标准，Codex 容易把“代码写完了”当成“任务完成了”；有完成标准，Codex 才能围绕验证器循环。</p>
-<h2>复杂任务先计划</h2>
+<h2 id="h5">复杂任务先计划</h2>
 <p>复杂任务不要直接让 Codex 开写。更稳的三种方式：</p>
 <ul>
 <li>用 Plan mode，让它先读代码、解释当前结构、列方案和风险。</li>
@@ -232,7 +280,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 第二步：人工确认方向后，再按方案实现、测试、review。
 </code></pre>
 <p>这比直接让 Codex “重构某某系统”慢几分钟，但能减少大面积跑偏。</p>
-<h2>AGENTS.md 的价值</h2>
+<h2 id="h6">AGENTS.md 的价值</h2>
 <p>Sora Android 团队的经验是：Codex 不能自动知道团队偏好的架构模式、静态检查、产品规范和真实用户行为，所以要把这些规则写进 <code>AGENTS.md</code>。</p>
 <p>适合写入规则的内容：</p>
 <ul>
@@ -244,7 +292,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </ul>
 <p>对这个 Vault 来说，<code>AGENTS.md</code> / <code>CLAUDE.md</code> 的作用就是让后续 agent 知道：剪藏要先编译进 Wiki，处理完原文再移到 <code>Sources/Inbox/</code>。</p>
 <p><code>AGENTS.md</code> 要短而准确。它不是百科全书，而是工程协议：目录结构、验证命令、约束边界、常见错误和 PR 要求。重复踩坑两次以上，就把纠正规则写进去；如果内容变长，把具体 review 规范、架构说明、发版流程拆成独立文档再引用。</p>
-<h2>配置、Skills 与 Automations</h2>
+<h2 id="h7">配置、Skills 与 Automations</h2>
 <p>一次性 prompt 适合探索，稳定流程应该沉淀：</p>
 <ul>
 <li><code>~/.codex/config.toml</code> 放个人默认值，如模型、推理强度、sandbox、approval、MCP、profile。</li>
@@ -253,7 +301,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>Automations 用来定义节奏，比如每日摘要、定时检查 CI、扫描可能 bug、生成发版说明。</li>
 </ul>
 <p>Skills 定义方法，Automations 定义节奏。还没稳定的流程先不要自动化，否则只是把不可靠行为规模化。</p>
-<h2>Session 管理</h2>
+<h2 id="h8">Session 管理</h2>
 <p>Codex session 不是普通聊天记录，而是带上下文、决策和操作历史的工作线程。</p>
 <p>实用原则：</p>
 <ul>
@@ -263,7 +311,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>并行 agent 要配 worktree 或清晰写入边界，避免多个线程改同一批文件。</li>
 <li>让 Codex 像后台任务一样跑完，再 review diff；不要像盯初级员工一样盯每一步。</li>
 </ul>
-<h2>智能体优先工程</h2>
+<h2 id="h9">智能体优先工程</h2>
 <p>OpenAI 的 agent-first 工程经验可以拆成几个原则：</p>
 <ul>
 <li><code>AGENTS.md</code> 是地图，不是百科全书。它应该指向关键文件、约束和验证方式，而不是把所有细节塞进去。</li>
@@ -273,7 +321,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>要做 AI residue garbage collection。agent 生成的重复代码、临时方案、过时文档和半成品，需要定期清理。</li>
 </ul>
 <p>这意味着工程师的角色不是消失，而是从“每行代码的作者”转向“系统边界、环境、反馈回路和杠杆的设计者”。</p>
-<h2>Claude Code 高强度使用经验</h2>
+<h2 id="h10">Claude Code 高强度使用经验</h2>
 <p>高强度使用 Claude Code 的经验和 Codex 基本同构：</p>
 <ul>
 <li>现有项目优先用 Plan Mode，让 agent 先读代码、列计划、解释风险，再开始改。</li>
@@ -284,7 +332,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>不要让工具把自己逼死。AI 加速以后，人仍然要管理节奏、注意力和判断疲劳。</li>
 </ul>
 <p>这部分经验可以直接写进项目的本地 agent 规则，让后续会话复用。</p>
-<h2>AI 专家委员会与 Worktree</h2>
+<h2 id="h11">AI 专家委员会与 Worktree</h2>
 <p>“如何让 AI 写好代码”的案例补充了一个很实用的分工模式：不要假设一个 agent 永远最强，而是把不同工具放在不同岗位上。</p>
 <p>可复用分工：</p>
 <ul>
@@ -295,7 +343,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </ul>
 <p>这个模式要配合 Git Worktree 或独立分支使用。每个 agent 在独立工作区里探索，最后通过 PR、diff 或人工 review 回收结果，避免多个 agent 在同一工作区里互相污染。</p>
 <p>这和 [[Resources/Agent Infra 与 Runtime|Agent Infra 与 Runtime]] 的判断一致：agent 能力变强以后，环境隔离、分支、调度和回收机制会变得更重要。</p>
-<h2>对抗 AI 代码熵增</h2>
+<h2 id="h12">对抗 AI 代码熵增</h2>
 <p>AI 产出代码很快，技术债累积也会很快。有效做法不是少用 AI，而是给 AI 更清楚的工程边界。</p>
 <p>需要长期维护的几件事：</p>
 <ul>
@@ -305,7 +353,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>用 review agent 找边界问题，再由主力 agent 和人一起判断；</li>
 <li>不把“100% AI 写代码”误解成“人不需要负责架构和质量”。</li>
 </ul>
-<h2>苏格拉底式编程</h2>
+<h2 id="h13">苏格拉底式编程</h2>
 <p>高质量 AI 编程不是只写命令，而是持续追问。</p>
 <p>有价值的问题包括：</p>
 <ul>
@@ -316,7 +364,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>如果保留用户体验的一致性，技术实现应该如何分层？</li>
 </ul>
 <p>这种问法的价值在于：让 AI 不只是执行用户已经想到的方案，而是参与发现更好的产品和技术表达。人的责任从逐行编码转向品味、边界和问题定义。</p>
-<h2>并行 agent 的真实瓶颈</h2>
+<h2 id="h14">并行 agent 的真实瓶颈</h2>
 <p>多开 Codex 会话不等于线性提速。并行会话越多，人类的工作越像技术负责人：</p>
 <ul>
 <li>要分配任务，避免多个会话改同一块逻辑。</li>
@@ -325,7 +373,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>要判断哪些探索可以丢弃。</li>
 </ul>
 <p>因此，AI 提效后的瓶颈常常从“写代码”转移到“决策、反馈和整合”。</p>
-<h2>不要只用 AI 做旧事</h2>
+<h2 id="h15">不要只用 AI 做旧事</h2>
 <p>[[Resources/AI 商品化与价值迁移|AI 商品化与价值迁移]] 提醒：如果只是用 AI 更快生成传统形态的软件，可能只是“用电动机驱动旧工厂”。真正的效率提升，通常来自围绕新能力重新设计流程。</p>
 <p>对工程工作流来说，就是：</p>
 <ul>
@@ -334,7 +382,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>不只追求多 agent 并行，还要设计任务边界和整合机制。</li>
 <li>不只沉迷一次性原型，还要把有效模式写进 <code>AGENTS.md</code>、文档和知识库。</li>
 </ul>
-<h2>验证器比野心重要</h2>
+<h2 id="h16">验证器比野心重要</h2>
 <p>长时间运行任务、Goals、自动化和 dynamic workflows 都需要可验证终点。没有验证机制的目标，只是在许愿。</p>
 <p>好的验证器包括：</p>
 <ul>
@@ -345,7 +393,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>日志、监控、回归清单。</li>
 </ul>
 <p>当任务很长时，先让 Codex 把计划保存成文件；跨会话继续时，新的实例先读计划，再执行下一步。</p>
-<h2>反面提醒</h2>
+<h2 id="h17">反面提醒</h2>
 <p>[[Sources/Inbox/Why I Don’t Vibe Code|Why I Don’t Vibe Code]] 的价值在于提醒：AI 能降低 accidental complexity，但不能消除 essential complexity。</p>
 <p>需要保留的摩擦：</p>
 <ul>
@@ -365,7 +413,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>工作流还没手动验证可靠就自动化。</li>
 <li>每个项目只开一个超长线程。</li>
 </ul>
-<h2>对个人求职的用法</h2>
+<h2 id="h18">对个人求职的用法</h2>
 <p>这组资料可以转成面试表达：</p>
 <blockquote>
 <p>我会把 Codex 当成很强的新同事来用，而不是直接替我做工程判断。实质性改动前，我会先让它读代码、复述数据流和模块边界，再一起制定计划。实施时可以让它补代码、补测试、跑验证，但架构取舍、用户体验、异常边界和最终 review 还是我负责。AI 提高的是产能，不是免除工程责任。</p>
@@ -393,6 +441,84 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     try{localStorage.setItem('theme',n);}catch(e){}
     setTimeout(function(){h.classList.remove('theme-switching');},300);
   });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
 })();
 </script>
 </body>
