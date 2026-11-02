@@ -358,7 +358,7 @@ JS = """<script>
   setTimeout(function(){ if(state.q) return; if(shown>=matched.length) return;
     if(document.body.scrollHeight <= window.innerHeight + 200) loadMore(); }, 300);
 
-  if(!state.q) apply();
+  if(state.q){ loadIdx(); } else { apply(); }   // 带 ?q= 打开时先把索引拉起来再筛
 })();
 </script>"""
 
