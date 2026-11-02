@@ -177,7 +177,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open .toc-list a{padding:9px 0 9px 12px;font-size:.92rem}
 }
 
-
 /* ─── 站名下拉：回到首页分类 ─── */
 .brandset{position:relative;display:inline-flex}
 .brand-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;
@@ -209,7 +208,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .brand-menu a{padding:9px 16px}
 }
 
-
 /* 浮动按钮里的图标不吃点击 */
 .toc-fab svg,.toc-tab svg,.toc-fab svg *,.toc-tab svg *{pointer-events:none}
 
@@ -229,11 +227,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .to-top svg{display:block}
 @media (min-width:721px){ .to-top{display:flex} .back-top{display:none} }
 
-<<<<<<< HEAD
 /* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
    用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */
 html,body{overflow-x:clip}
-=======
 [data-theme="light"] .toc-list{scrollbar-color:rgba(45,100,150,.4) transparent}
 [data-theme="light"] .toc-list:hover{scrollbar-color:rgba(45,100,150,.65) transparent}
 [data-theme="light"] .toc-list::-webkit-scrollbar-thumb{background:rgba(45,100,150,.4)}
@@ -244,4 +240,3 @@ html,body{overflow-x:clip}
   background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 88%,transparent));
   pointer-events:none;border-radius:0 0 4px 4px}
 .toc.is-collapsed::after{display:none}
->>>>>>> f9504f1 (style(toc): 目录改半透明面板，滚动条用强调色，底部渐隐避免与 footer 冲突)
