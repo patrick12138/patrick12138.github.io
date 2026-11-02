@@ -1,15 +1,18 @@
 # 内容流水线：md → 文章页
 
-vault 在 `/var/minis/mounts/Patrick's_Obsidian/`，文章源是 `Sources/`（搬运）和 `Resources/`（他的浓缩笔记）。
+vault：手机 `/var/minis/mounts/Patrick's_Obsidian/`，PC `C:/Users/Patrick/Documents/Obsidian Vault`
+（写进 PC 的 `tools/config.local.json` 的 `vault_root`，缺省值在 `tools/config.py`）。
+文章源是 `Sources/`（搬运）和 `Resources/`（他的浓缩笔记）。
 
 ## 一篇新文章（极简两步）
 
 ```bash
-cd /var/minis/workspace/site
+cd <当前环境的工作副本>     # 手机 /var/minis/workspace/site，PC F:\patrick12138.github.io
 
 # 1) 转换（自动处理 frontmatter / 图片本地化 / 排版，并自动同步登记到 tools/sources.json）
 python3 tools/md2post.py "/var/minis/mounts/Patrick's_Obsidian/Sources/Inbox/xxx.md" <slug> \
         [--author "作者"] [--date 2026-01-01] [--title "覆盖标题"] [--kind repost|own]
+# PC 上 vault 路径换 "C:/Users/Patrick/Documents/Obsidian Vault/Sources/Inbox/xxx.md"，python3 换 python，flag 写法相同
 
 # 2) 一键构建与上线（自动注入目录、统计字数、生成首页、打资源戳、排版体检、推送）
 python3 tools/build.py --push "feat: 新文章 xxx"
@@ -158,7 +161,7 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 ④.5 gen_feed.py       feed.xml + sitemap.xml + robots.txt
 ⑤ test_pipeline.py    三条幂等回归测试
 ⑥ stamp_assets()      base/home/post.css + site.js 内容哈希
-⑥.5 sync_skills()     仓库 skills/ → /var/minis/skills/
+⑥.5 sync_skills()     仓库 skills/ → /var/minis/skills/（PC/CI 无该目录时自动跳过）
 ⑦ qa.py               排版 / 分类 / 重复注入 / hash / 外壳 / 摘要质量
 ```
 
@@ -173,10 +176,10 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 | 脚本都登记过 | 新加了 `tools/xxx.py` 但 SKILL / AGENTS 里一次都没提 |
 | 引用都存在 | 文档写了 `references/<slug>.md`，但文件不存在 |
 | 参数都属实 | 文档写了 `md2post.py --<flag>`，源码里没这个参数 |
-| 副本同步 | `/var/minis/skills/` 与仓库 `skills/` 内容不同（sync_skills 没跑或手改了副本） |
+| 副本同步 | `/var/minis/skills/` 与仓库 `skills/` 内容不同（sync_skills 没跑或手改了副本；本机无该目录则跳过） |
 
 另外 SKILL.md 硬上限 **100 行**，超了必须把细节挪进 `references/`。
-改完 skill 不要手改 `/var/minis/skills/` —— 那是构建产物的下游，`build.py` 会单向覆盖。
+改完 skill 不要手改 `/var/minis/skills/` —— 那是构建产物的下游，`build.py` 会单向覆盖（本机没有该目录时整步跳过）。
 
 ## 表格怎么转（2026-11 定）
 

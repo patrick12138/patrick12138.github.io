@@ -31,7 +31,7 @@ echo "185.199.108.153 patrick12138.github.io" >> /etc/hosts
 ## 推送与验证
 
 ```bash
-cd /var/minis/workspace/site
+cd <当前工作副本>        # 手机 /var/minis/workspace/site，PC F:\patrick12138.github.io（见 AGENTS.md §0）
 git add -A && git commit -m "…"
 git fetch origin main && git rebase origin/main     # 别的会话可能也在推
 git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/patrick12138/patrick12138.github.io.git"

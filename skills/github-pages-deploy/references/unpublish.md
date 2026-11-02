@@ -3,7 +3,7 @@
 ## 一条命令
 
 ```bash
-cd /var/minis/workspace/site
+cd <当前工作副本>        # 手机 /var/minis/workspace/site，PC F:\patrick12138.github.io（见 AGENTS.md §0）
 python3 tools/unpublish.py <slug> --dry     # 先看会发生什么：删什么、有多少别的文章引用它
 python3 tools/unpublish.py <slug>           # 真下线
 python3 tools/build.py                      # 体检（qa P0 必须 0）

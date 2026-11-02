@@ -7,7 +7,7 @@ version: 3.1.0
 # GitHub Pages 部署（总入口）
 
 站点只有一个仓库：**`patrick12138/patrick12138.github.io`**（`main`，Pages 源 `/`）。
-工作副本固定 `/var/minis/workspace/site/`，URL 形态 `https://patrick12138.github.io/<子目录>/`。
+工作副本两处：手机 `/var/minis/workspace/site/`、PC `F:\patrick12138.github.io`（同一远端，URL 形态 `https://patrick12138.github.io/<子目录>/`）。
 **不要为单个页面新建仓库。**
 
 仓库根的 `AGENTS.md` 是给 agent 的入口（对表清单 / 改哪儿 / 坑点表），本 skill 是它的展开版。
@@ -27,8 +27,9 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
    `tools/rebuild.py` 是从 vault 的 md 重新生成正文，正文没变就别用——它会改动已有页面。
 2. **push 前必须跑 `tools/build.py`（内含 qa），P0 不为 0 不许上线。**
 3. **按钮里不放文字，只放图标**（`aria-label` 说明）；要文字就用文字链接。
-4. **动手前先对表**：`git remote -v` 确认是 `patrick12138/patrick12138.github.io`、工作副本只有
-   `/var/minis/workspace/site` 一处；`git fetch && git rev-list --left-right --count HEAD...origin/main`
+4. **动手前先对表**：`git remote -v` 确认是 `patrick12138/patrick12138.github.io`、当前工作副本只有
+   手机 `/var/minis/workspace/site` / PC `F:\patrick12138.github.io` 两处之一；
+   `git fetch && git rev-list --left-right --count HEAD...origin/main`
    必须是 `0 0`（这个仓库经常被别的会话并发推），并向用户明确报「本地 = 远端 @ <commit>」。
 5. **上线前必过脱敏**：前公司/客户名、证件、手机号、内网地址、密钥一旦出现在页面上就是 P0
    （`qa.py` 的 `check_privacy()` 会自动拦），改的是 vault 里的 md 而不是 HTML。
@@ -46,7 +47,7 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 | **做图标 / favicon** | `references/icons.md`（32 网格、笔画≥4u、16px 灰边验收） |
 | 写仓库 README（中英双语） | `references/readme.md` |
 
-**脚本不在这里存副本**（存过一份，跟仓库漂移了）。一律用仓库里的 `/var/minis/workspace/site/tools/`：
+**脚本不在这里存副本**（存过一份，跟仓库漂移了）。一律用**当前工作副本**仓库内的 `tools/`（两处路径见 AGENTS.md §0）：
 `build.py`（一键：目录→字数→首页→上下篇→相关阅读→搜索索引→RSS→测试→hash→skill 一致性→体检，顺序以它自己的 docstring 为准）、`gen_index.py`、`md2post.py`、`rebuild.py`、`add_toc.py`、`qa.py`、`sources.json`。
 
 ## 最短路径
@@ -54,8 +55,8 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 **一条命令**（推荐）：
 
 ```bash
-cd /var/minis/workspace/site
-python3 tools/build.py --push "feat: 新文章 xxx"
+cd <当前环境的工作副本>          # 手机 /var/minis/workspace/site，PC F:\patrick12138.github.io
+python3 tools/build.py --push "feat: 新文章 xxx"    # PC 用 python tools/build.py
 ```
 
 `build.py` 固定顺序：可选 rebuild → 生成首页 → 重算资源哈希 → qa → 推送。

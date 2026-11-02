@@ -27,7 +27,7 @@
 
 `patrick12138.github.io` 没有 favicon 时，标签栏显示默认地球。
 试过的方向与被否原因：小写 `p`（像 pixiv）、折角纸页 / 缺口方块 / 「」括号 / 句点+横线 / 三条横线 / 层叠方块（都偏“几何残缺”或“线条堆叠”）。
-当前候选与评分见 `/var/minis/workspace/icons/v3/preview.html`（a 逗号 / b 书签 / c 脚注星号 / d 对开页 / e 冒号 / f 一笔），
+当前候选与评分见 `/var/minis/workspace/icons/v3/preview.html`（手机工作站，历史选型记录；a 逗号 / b 书签 / c 脚注星号 / d 对开页 / e 冒号 / f 一笔），
 方法论上 b 书签最锐（16px 墨量 29.7%、灰边 3.1%），**最终选用的是 f「一笔」**
 （一个撇画，墨量 12.1%、灰边 3.5%）——用户偏好手写感、更像个人签名而不是产品图标。
 已落地为仓库根 `favicon.svg`：纯 path、单色、`prefers-color-scheme` 深浅两版，

@@ -108,7 +108,7 @@ function applyLang(l, typed){
 
 ## 设计风向参考
 
-做新页面前读（本地已装）：
+做新页面前读（以下 taste skill 仅手机工作站安装，PC 没有；其规则已摘录于本文，PC 按本文执行）：
 
 - `/var/minis/skills/design-taste-frontend/SKILL.md`（taste-skill v2）
 - `/var/minis/skills/ui-taste/SKILL.md`（Uizze）

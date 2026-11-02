@@ -6,13 +6,13 @@
 ## 0. 每次动手前先对表
 
 ```bash
-cd /var/minis/workspace/site
+# 手机：/var/minis/workspace/site    PC：F:\patrick12138.github.io（cd 到当前那份，以下相对它跑）
 git remote -v                                   # 必须是 patrick12138/patrick12138.github.io
 git fetch origin && git rev-list --left-right --count HEAD...origin/main   # 必须是 0 0
 git status --porcelain                          # 干净才开工
 ```
 
-- 工作副本**只有这一处**，别再 clone 第二份（历史上分叉过）。
+- 工作副本就两处（手机、PC），别建第三份；两边都推 main，动手前必须 fetch 对表。
 - 这个仓库经常被另一个会话并发提交，落后就先 `git rebase origin/main`。
 - 回复用户时明确说「本地 = 远端 @ `<commit>`」。
 
@@ -38,7 +38,7 @@ tools/                生成器与质检脚本（手写）
                       optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
                       unpublish 下线与恢复
                       config.py 环境配置（vault/skills 目录；PC 用 config.local.json 覆盖，已 gitignore）
-skills/               skill 文档（单一源，build 时同步到 /var/minis/skills）
+skills/               skill 文档（单一源，build 时同步到 /var/minis/skills；PC/CI 无此目录自动跳过）
 ```
 
 ## 3. 一条命令构建
@@ -49,6 +49,8 @@ python3 tools/build.py --rebuild  # 另外先从 vault 的 md 重建全部文章
 python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + push
 ```
 
+PC（Windows）首次：`python -m pip install pyyaml markdown pillow`；之后用 `python tools/build.py`（内部子进程已用 sys.executable，不依赖 python3 命令）。
+
 `qa.py` 的 P0 不为 0 会中止，不会推送。
 
 ## 4. 要改什么，先查这张表
@@ -57,7 +59,7 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 |---|---|
 | 加文章 | vault 里的 md → `tools/sources.json` → `build.py` |
 | **新增/改名脚本** | 放进 `tools/` 并在 skill 或本文档里提一句，否则 `check_skills.py` 会让构建失败 |
-| **改 skill 文档** | 改仓库 `skills/` 里的，`build.py` 自动同步到 `/var/minis/skills/`；`SKILL.md` 不超过 100 行 |
+| **改 skill 文档** | 改仓库 `skills/` 里的，`build.py` 自动同步到 `/var/minis/skills/`（PC/CI 无该目录时自动跳过）；`SKILL.md` 不超过 100 行 |
 | **脱敏** | vault 里的 md 改词（公司名换代号）→ `md2post` 重生成 → `qa.py` 复查 |
 | **下线文章** | `tools/unpublish.py <slug>`（git rm + 移出 sources.json + 重生成列表/feed） |
 | 文章正文排版 | `assets/post.css` |
@@ -67,7 +69,7 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 | 主题切换、回到顶部 | `assets/site.js` + 对应 CSS |
 | 部署、凭据、DNS 排障 | `skills/github-pages-deploy/references/deploy.md` |
 
-## 5. 硬规矩（权威版在 SKILL.md，这里只留最容易踩的三条）
+## 5. 硬规矩（权威版在 SKILL.md，这里六条速览）
 
 1. **只有一个站点仓库**，不要为单个页面新建 repo。
 2. **生成物不手改**：`index.html`、`posts/**` 改了也会被下次 build 覆盖。
