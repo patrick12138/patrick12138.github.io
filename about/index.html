@@ -121,7 +121,9 @@ html.hero-typing .terminal-row.is-visible{opacity:1;transform:translateY(0)}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 .btn.hero-cta{display:inline-flex;align-items:center;gap:8px}
 .btn.hero-cta-ghost{border-color:var(--border);color:var(--text-muted)}
-.btn.hero-cta-ghost:hover{background:transparent;border-color:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--accent)}
+.btn.hero-cta-ghost:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.hero-cta-ghost:hover .hero-cta-icon circle{fill:#fff}
+.btn.hero-cta-ghost:hover .hero-cta-icon .tg-plane{fill:var(--accent)}
 .btn.hero-cta-ghost .hero-cta-icon circle{fill:var(--accent)}
 .hero-cta-icon{flex-shrink:0;display:inline-block;vertical-align:-1px}
 html.hero-typing .post-terminal{opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .32s ease,transform .32s ease}
@@ -262,10 +264,10 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
           <span aria-hidden="true">→</span>
         </a>
         <a href="https://t.me/patrick12138" class="btn hero-cta hero-cta-ghost" target="_blank" rel="noopener">
-          <span data-i18n="cta.contact">Contact</span>
+          <span data-i18n="cta.contact">Contact me</span>
           <svg class="hero-cta-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="12" fill="currentColor"/>
-            <path fill="#fff" d="M16.906 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.005-.02.01-.09-.035-.13-.045-.04-.112-.027-.16-.016-.068.016-1.163.742-3.288 2.18-.31.213-.592.317-.845.311-.276-.007-.81-.157-1.203-.286-.558-.177-1.001-.27-1.001-.57 0-.15.22-.31.66-.47 2.578-.997 4.297-1.653 5.16-1.97 2.46-.93 2.96-1.09 3.29-1.09z"/>
+            <path class="tg-plane" fill="#fff" d="M16.906 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.005-.02.01-.09-.035-.13-.045-.04-.112-.027-.16-.016-.068.016-1.163.742-3.288 2.18-.31.213-.592.317-.845.311-.276-.007-.81-.157-1.203-.286-.558-.177-1.001-.27-1.001-.57 0-.15.22-.31.66-.47 2.578-.997 4.297-1.653 5.16-1.97 2.46-.93 2.96-1.09 3.29-1.09z"/>
           </svg>
           <span aria-hidden="true">→</span>
         </a>
@@ -393,9 +395,9 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
       <a href="https://t.me/patrick12138" class="footer-link" target="_blank" rel="noopener">
         <svg class="footer-icon" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="12" fill="currentColor"/>
-          <path fill="#fff" d="M16.906 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.005-.02.01-.09-.035-.13-.045-.04-.112-.027-.16-.016-.068.016-1.163.742-3.288 2.18-.31.213-.592.317-.845.311-.276-.007-.81-.157-1.203-.286-.558-.177-1.001-.27-1.001-.57 0-.15.22-.31.66-.47 2.578-.997 4.297-1.653 5.16-1.97 2.46-.93 2.96-1.09 3.29-1.09z"/>
+          <path class="tg-plane" fill="#fff" d="M16.906 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.005-.02.01-.09-.035-.13-.045-.04-.112-.027-.16-.016-.068.016-1.163.742-3.288 2.18-.31.213-.592.317-.845.311-.276-.007-.81-.157-1.203-.286-.558-.177-1.001-.27-1.001-.57 0-.15.22-.31.66-.47 2.578-.997 4.297-1.653 5.16-1.97 2.46-.93 2.96-1.09 3.29-1.09z"/>
         </svg>
-        <span data-i18n="footer.tg">Telegram</span>
+        <span data-i18n="footer.tg">Contact me</span>
       </a>
       <a href="/" class="footer-link" data-i18n="footer.home">← Back to home</a>
     </div>
@@ -418,8 +420,8 @@ var I18N = {
     zh: "把别扭的流程磨顺。"
   },
   "cta": { en: "Follow on", zh: "关注" },
-  "cta.contact": { en: "Contact", zh: "联系我" },
-  "footer.tg": { en: "Telegram", zh: "联系我" },
+  "cta.contact": { en: "Contact me", zh: "联系我" },
+  "footer.tg": { en: "Contact me", zh: "联系我" },
   "about": {
     en: "I write .NET, mostly business backends — reports, permissions, and data a lot of people quietly depend on. After hours I build things I actually need: static pages, desktop utilities, small scrapers. The bar never changes — when it's done, the annoying step should be gone.",
     zh: "我写 .NET，大部分时间在业务后台：报表、权限，还有一堆很多人默默依赖的数据。业余时间做点自己真用得上的东西——静态页面、桌面小工具、抓数脚本。标准一直没变：做完之后，那个烦人的步骤应该消失。"
