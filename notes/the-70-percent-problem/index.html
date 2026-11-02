@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="这组资料共同指向一个现实：AI辅助编程很擅长把事情推进到“看起来已经差不多”的70%，但最后30%往往才是真正的软件工程。">
+<title>AI 辅助编程的 70% 问题 · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a>
+    <a href="../../notes/">笔记</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>AI 辅助编程的 70% 问题</h1><div class="meta">June 8, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>The 70% problem Hard truths about AI-assisted coding · AI 究竟能不能替代程序员 · 一个半月高强度 Claude Code 使用后感受 · 好奇心周刊第25期 如何让 AI 写好代码 · AI fatigue is real and nobody talks about it</aside><div class="body"><p>这组资料共同指向一个现实：AI 辅助编程很擅长把事情推进到“看起来已经差不多”的 70%，但最后 30% 往往才是真正的软件工程。</p>
+<h2>一句话结论</h2>
+<p>AI 可以显著降低从 0 到 70% 的成本，但从 70% 到可上线、可维护、可解释，仍然依赖人的工程判断。</p>
+<p>前 70% 通常包括：</p>
+<ul>
+<li>原型、页面、脚手架和样板代码；</li>
+<li>常规 CRUD、接口封装、简单测试；</li>
+<li>从现有模式复制相似功能；</li>
+<li>生成文档、总结、重构草案。</li>
+</ul>
+<p>最后 30% 通常包括：</p>
+<ul>
+<li>真实业务边界和异常路径；</li>
+<li>安全、性能、并发、一致性；</li>
+<li>模块边界、依赖方向和长期维护；</li>
+<li>调试复杂 bug、理解历史代码和上线风险；</li>
+<li>判断哪些代码应该删掉，而不是继续堆。</li>
+</ul>
+<h2>知识悖论</h2>
+<p>AI 辅助编程有一个反直觉现象：越懂工程的人，越能从 AI 得到稳定收益；越想用 AI 绕过工程基础的人，越容易卡在 70%。</p>
+<p>原因很简单：</p>
+<ul>
+<li>资深工程师能给出更清楚的约束和验收标准。</li>
+<li>资深工程师能看出 AI 输出哪里只是“像对了”。</li>
+<li>资深工程师知道该让 AI 跑测试、读日志、缩小问题范围。</li>
+<li>新手或非工程人员更容易被 demo 感骗过，直到遇到调试、部署和维护问题。</li>
+</ul>
+<p>所以，AI 没有让工程判断变得不重要，反而让判断变成杠杆。</p>
+<h2>工作流建议</h2>
+<p>可复用做法：</p>
+<ul>
+<li>让 AI 先出第一版，但不要把第一版当终版。</li>
+<li>把大任务拆小，每一步都让 AI 解释改动和验证方式。</li>
+<li>始终保留测试、lint、编译、日志和手工验收。</li>
+<li>对关键路径要求 AI 给出失败场景和边界条件。</li>
+<li>让 AI 辅助 review，而不是只辅助生成。</li>
+<li>出现反复修补时，停下来重新定义问题或重构边界。</li>
+</ul>
+<p>这和 [[Resources/Codex 与 AI 编程工作流|Codex 与 AI 编程工作流]] 的实践一致：上下文、计划、验证、审查，比单纯生成速度更重要。</p>
+<h2>100% AI 编程不等于 0% 人类责任</h2>
+<p>“好奇心周刊第 25 期”的案例很有代表性：一个项目可以 100% 由 AI 写代码、提交 400 多个 commit，并打磨出不错的 Web 产品，但人的责任没有消失，而是换了位置。</p>
+<p>人主要负责三件事：</p>
+<ul>
+<li>品味：判断什么是优雅、好用、有意义，而不是只看能不能跑。</li>
+<li>边界：控制模块拆分、技术债、规则文件、测试和重构节奏。</li>
+<li>问题：不断提出更好的问题，让 AI 参与方案探索，而不是机械执行第一版指令。</li>
+</ul>
+<p>这说明“AI 写代码”真正放大的是产品感和工程判断。没有这两者，AI 很容易快速生成一个 demo；有这两者，AI 才可能被组织成可维护的项目。</p>
+<h2>面向职业的表达</h2>
+<p>这组观点可以转成面试表达：</p>
+<blockquote>
+<p>我会用 AI 快速完成原型、样板和常规实现，但不会把 AI 输出直接等同于工程完成。真正上线前，我会重点检查业务边界、异常路径、可维护性、安全和性能。AI 提高的是我的产能，但最后的工程判断和责任仍然在我这里。</p>
+</blockquote>
+<p>相关页面：</p>
+<ul>
+<li>[[Resources/AI 疲劳与可持续使用|AI 疲劳与可持续使用]]</li>
+<li>[[Resources/AI 商品化与价值迁移|AI 商品化与价值迁移]]</li>
+<li>[[Career/工程能力/工程能力|工程能力]]</li>
+</ul></div>
+<a class="back" href="../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>

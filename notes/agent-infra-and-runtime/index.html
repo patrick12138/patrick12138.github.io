@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="这篇文章的核心观点是：AgentInfra不是训练基础设施，也不是推理服务本身，而是更靠近应用层的AgentRuntime。它要解决的是agent执行复杂任务时的环境、协作、调度、状态和失败恢复问题。">
+<title>Agent Infra 与 Runtime · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a>
+    <a href="../../notes/">笔记</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>Agent Infra 与 Runtime</h1><div class="meta">June 8, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>当我们在谈论 Agent Infra 时我们在谈论什么</aside><div class="body"><p>这篇文章的核心观点是：Agent Infra 不是训练基础设施，也不是推理服务本身，而是更靠近应用层的 <strong>Agent Runtime</strong>。它要解决的是 agent 执行复杂任务时的环境、协作、调度、状态和失败恢复问题。</p>
+<h2>一句话结论</h2>
+<p>真正决定 agent 能不能承担复杂任务的，不只是模型聪不聪明，而是执行是否可控、失败是否廉价、环境是否可替换、协作是否有基础设施兜底。</p>
+<h2>典型 Agent 架构</h2>
+<p>一个常见 agent 系统通常包含：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM / Reasoning Core</td>
+<td>理解上下文、生成计划、决定下一步行动</td>
+</tr>
+<tr>
+<td>Planner / Executor</td>
+<td>拆解复杂目标并逐步执行</td>
+</tr>
+<tr>
+<td>Tools / Skills</td>
+<td>封装 API、代码执行、数据库、浏览器等外部能力</td>
+</tr>
+<tr>
+<td>Memory / Context Store</td>
+<td>保存中间状态、历史行为和长期偏好</td>
+</tr>
+<tr>
+<td>Env</td>
+<td>action 依赖的真实或虚拟执行环境</td>
+</tr>
+</tbody>
+</table>
+<p>这些组件被 agentic loop 串起来：观察状态、思考、行动、获得反馈，再继续下一步。</p>
+<h2>当前瓶颈</h2>
+<h3>顺序执行限制复杂任务</h3>
+<p>多数 agent 仍然是一步一步执行：做一步、等反馈、再做下一步。复杂任务往往需要多路径探索和并行试错，单线程 loop 很容易被某一步失败卡住。</p>
+<h3>Agent 协作还停留在协议层</h3>
+<p>A2A、MCP、多 agent 框架解决了一部分“能不能通信”的问题，但还没有充分解决“怎么稳定协同”的问题。真正的协作需要任务分支、共享上下文、消息总线、生命周期管理和失败恢复。</p>
+<h3>长程任务会污染环境</h3>
+<p>复杂任务里的 action 大多有副作用。执行越久，工作区越容易混乱：临时代码、重复文档、日志风格不一、多个 subagent 覆盖彼此修改。</p>
+<p>Git Worktree 是当前 coding agent 场景里最朴素也最有效的隔离方案：每个 agent 在独立工作区里探索，最后只回收 diff 或 PR。</p>
+<h3>物理世界最后一公里很脆弱</h3>
+<p>没有稳定 API 的现实任务，比如下单、支付、预订、登录、风控验证，很难只靠 tool 调用解决。现实世界有大量隐式状态，agent 需要更可控的执行环境和可复现的 action。</p>
+<h2>Skill + Env = Box</h2>
+<p>文章提出一个很有启发的抽象：<code>Box = Skill + Env</code>。</p>
+<p>Box 不是单纯的工具函数，而是把某个能力和一个可复现、可丢弃的执行环境绑定在一起：</p>
+<ul>
+<li>action 在隔离环境里执行；</li>
+<li>成功路径可以缓存和复用；</li>
+<li>失败路径可以直接丢弃；</li>
+<li>对上层暴露语义化接口，而不是暴露底层执行细节；</li>
+<li>多个 box 可以组合成更复杂的能力。</li>
+</ul>
+<p>这个思路和容器、不可变基础设施、IaC 的历史经验很像：不要只要求人小心，而是让系统提供稳定、可重复、可销毁的执行基础。</p>
+<h2>Agents 的 Kubernetes</h2>
+<p>如果每个 action 都能放进 box，那么下一层需求就是调度和管理这些 box。</p>
+<p>可能的 Agent Runtime 组件：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context Manager</td>
+<td>管理结构化上下文、对话历史、文件空间和协作状态</td>
+</tr>
+<tr>
+<td>Branching</td>
+<td>把任务执行中的不同可能性变成一等能力，多路径探索但不共享副作用</td>
+</tr>
+<tr>
+<td>Messaging Hub</td>
+<td>让 box / agent 之间发送消息、订阅事件、汇报进展</td>
+</tr>
+<tr>
+<td>Scheduler + Lifecycle Manager</td>
+<td>控制并发、超时、取消、重试、失败恢复和资源分配</td>
+</tr>
+<tr>
+<td>Box Runtime</td>
+<td>提供可复现、可丢弃、语义化的执行环境</td>
+</tr>
+</tbody>
+</table>
+<p>对 coding agent 来说，这相当于把现在手工使用的 worktree、分支、PR、日志、测试和临时工作区，升级成可编排的基础设施。</p>
+<h2>对个人和项目的启发</h2>
+<p>可以直接迁移到自己的工作流：</p>
+<ul>
+<li>复杂任务不要让多个 agent 共享同一个脏工作区。</li>
+<li>每个探索方向用独立分支、worktree 或明确的文件边界隔离。</li>
+<li>让 agent 输出 diff、报告和验证结果，而不是直接把所有尝试混进主线。</li>
+<li>对长任务保留上下文文件、执行日志和停止条件。</li>
+<li>把可复用能力沉淀成 skill、脚本、命令或规则文档。</li>
+</ul>
+<p>相关页面：</p>
+<ul>
+<li>[[Resources/Codex 与 AI 编程工作流|Codex 与 AI 编程工作流]]</li>
+<li>[[Resources/AI 产品与模型 Co-Design|AI 产品与模型 Co-Design]]</li>
+<li>[[Resources/AI 行业观察|AI 行业观察]]</li>
+</ul></div>
+<a class="back" href="../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>

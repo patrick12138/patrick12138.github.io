@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="这篇文章的重点是：当agent输出越来越复杂时，Markdown不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码review和交互式调参，HTMLArtifact往往更清楚、更可读、更容易分享。">
+<title>AI 输出形态与 HTML Artifact · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a>
+    <a href="../../notes/">笔记</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>AI 输出形态与 HTML Artifact</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>Using Claude Code: The unreasonable effectiveness of HTML</aside><div class="body"><p>这篇文章的重点是：当 agent 输出越来越复杂时，Markdown 不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码 review 和交互式调参，HTML Artifact 往往更清楚、更可读、更容易分享。</p>
+<h2>什么时候用 HTML</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>HTML 的优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规格和规划</td>
+<td>可以放 mockup、数据流、代码片段、选项对比和导航</td>
+</tr>
+<tr>
+<td>代码 review</td>
+<td>可以渲染 diff、严重级别、调用图、模块关系和批注</td>
+</tr>
+<tr>
+<td>设计原型</td>
+<td>可以直接做交互、动画、状态切换和参数面板</td>
+</tr>
+<tr>
+<td>报告研究</td>
+<td>可以把多源信息整理成图表、时间线、流程图</td>
+</tr>
+<tr>
+<td>临时编辑器</td>
+<td>可以做拖拽、筛选、表单、复制 JSON / Markdown / prompt</td>
+</tr>
+</tbody>
+</table>
+<p>Markdown 仍适合长期知识沉淀和可编辑笔记；HTML 更适合需要视觉结构、交互、密集信息和一次性审阅的输出。</p>
+<h2>和 Codex 工作流的关系</h2>
+<p>[[Resources/Codex 与 AI 编程工作流|Codex 与 AI 编程工作流]] 强调“人要留在审查回路里”。HTML Artifact 的意义就在这里：它把复杂输出变成更容易被人审阅和操控的界面。</p>
+<p>典型链路：</p>
+<ol>
+<li>让 agent 读代码、资料或设计约束。</li>
+<li>生成一个 HTML explainer / plan / review 页面。</li>
+<li>人在页面里比较方案、查看批注、调参数。</li>
+<li>页面导出 prompt、JSON、diff 或 Markdown。</li>
+<li>再把结果交给 agent 执行或写回文档。</li>
+</ol>
+<h2>可复用 prompt</h2>
+<pre><code class="language-text">把这个问题整理成一个单页 HTML artifact：
+- 顶部给 3 句话结论；
+- 中间用表格比较方案；
+- 用流程图说明数据流；
+- 标出风险点和待确认问题；
+- 最后提供可复制的实施计划。
+</code></pre>
+<pre><code class="language-text">帮我 review 这个 PR，生成一个 HTML artifact：
+- 渲染关键 diff；
+- 按严重级别标注问题；
+- 解释核心调用链；
+- 给出需要人工确认的点；
+- 最后生成一份可复制的 review comment。
+</code></pre>
+<pre><code class="language-text">为这个配置/提示词/任务列表做一个一次性 HTML 编辑器：
+- 左侧可编辑；
+- 右侧实时预览；
+- 显示约束、依赖和警告；
+- 提供 copy as JSON / Markdown / prompt 按钮。
+</code></pre>
+<h2>Claude Artifacts 完整能力（2026 更新）</h2>
+<p>来源：[[Sources/Inbox/What are artifacts and how do I use them|What are artifacts and how do I use them]]（Anthropic 官方文档, 2026-03）</p>
+<p>Claude Artifacts 已从单纯的"独立内容展示"进化为一套完整的应用生成和分发平台。以下补充本页未覆盖的新能力。</p>
+<h3>AI-Powered Artifacts</h3>
+<p>Artifacts 可以内嵌 AI 能力，变成 AI 驱动的应用。用户通过文本 API 使用 Claude 的智能——问答、创意生成、个性化教练、游戏、问题解决。</p>
+<ul>
+<li>创建者只需描述想要什么 → Claude 写代码 → 应用运行在 Anthropic 基础设施上</li>
+<li>使用者用自己 Claude 账户认证，消耗自己配额，不给创建者增加成本</li>
+<li>分享免费，无论 10 人还是 10000 人</li>
+</ul>
+<h3>MCP 集成</h3>
+<p>Artifacts 可通过 MCP（Model Context Protocol）连接外部服务（Asana、Google Calendar、Slack 等），也支持自定义 MCP 服务器。首次交互需用户批准，偏好持久化。</p>
+<h3>持久化存储</h3>
+<p>Pro/Max/Team/Enterprise 计划支持跨会话存储：<br>
+- <strong>个人存储</strong>：每个用户独立数据（如日志只自己可见）<br>
+- <strong>共享存储</strong>：所有用户看同一份数据（如排行榜）<br>
+- 20MB/artifact 限制，纯文本<br>
+- 取消发布会永久删除存储数据</p>
+<h3>版本控制与多 Artifact</h3>
+<ul>
+<li>使用版本选择器在前端切换版本</li>
+<li>编辑历史消息可产生不同对话分支，各有独立 artifact 集</li>
+<li>可同时打开多个 artifact，通过 chat controls 切换</li>
+</ul>
+<h3>错误处理</h3>
+<p>artifact 出现错误时，点击 "Try fixing with Claude" 自动把错误信息复制到新消息，让 Claude 诊断修复。</p>
+<h2>与本页原有内容的关系</h2>
+<p>本页原有的 HTML Artifact 使用场景（方案对比、代码 review、设计原型等）仍然成立。新增的 AI-powered、MCP 集成和持久化存储能力让 Artifact 从"一次性展示"升级为"有状态应用"——可以用来做日志、追踪器、仪表盘、协作工具等需要状态保持的东西。</p>
+<p>本 Vault 的长期知识仍优先用 Markdown，因为 Obsidian 双链、索引和长期维护更适合 <code>.md</code>。</p>
+<p>HTML 更适合临时或半持久产物：</p>
+<ul>
+<li>复杂方案对比；</li>
+<li>项目复盘可视化；</li>
+<li>UI / 数据流审查；</li>
+<li>面试话术演练器；</li>
+<li>需要交互调参的提示词或配置。</li>
+</ul>
+<p>如果 HTML 里的结论有长期价值，应再编译回 Markdown wiki 页，并更新 [[Index|Index]] 和 [[Log|Log]]。</p></div>
+<a class="back" href="../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>
