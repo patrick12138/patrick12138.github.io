@@ -87,3 +87,7 @@
 .tools.searching .sclr:not([hidden]){display:flex;align-items:center}
 .sclr:hover{color:var(--accent)}
 .sclr svg{display:block}
+
+/* 搜索命中高亮：只做一点点强调，不抢正文 */
+.posts mark{background:color-mix(in srgb,var(--accent) 20%,transparent);color:inherit;
+  border-radius:2px;padding:0 1px}

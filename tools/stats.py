@@ -14,11 +14,20 @@ CN_RE = re.compile(r"[\u4e00-\u9fff]")
 EN_RE = re.compile(r"[A-Za-z][A-Za-z'-]*")
 
 
+def body_html(html):
+    """取正文。不能用非贪婪匹配到第一个 </div>——表格外面现在包了 .tablewrap，
+    那样会在第一张表处截断（曾经把 1678 字算成 162 字）。改用结束标记定位。"""
+    i = html.find('<div class="body"')
+    if i < 0:
+        return html
+    i = html.find('>', i) + 1
+    ends = [html.find(x, i) for x in ('<nav class="pager"', '<a class="back"')]
+    ends = [e for e in ends if e > 0]
+    return html[i:min(ends) if ends else len(html)]
+
+
 def text_of(html):
-    body = re.search(r'<div class="body">(.*?)</div>\s*<a class="back"', html, re.S)
-    if not body:
-        body = re.search(r'<div class="body">(.*?)</div>', html, re.S)
-    s = body.group(1) if body else html
+    s = body_html(html)
     s = re.sub(r"<script.*?</script>", "", s, flags=re.S)
     s = re.sub(r"<[^>]+>", " ", s)
     return s

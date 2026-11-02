@@ -11,6 +11,7 @@
   2. add_toc.py            注入目录 / 站名下拉 / 回到顶部按钮 / 对齐导航
   3. stats.py              给文章页补字数与阅读时间
   4. gen_index.py          扫描 posts/ 生成首页
+  4.3 gen_search.py      生成 search.json（首页搜索只在点开时才 fetch）
   5. test_pipeline.py      回归测试（幂等 + 注入唯一），失败即中止
   6. stamp_assets()        给 base/home/post.css 与 site.js 写内容哈希
   7. check_skills.py       skill 与代码一致性（脚本未登记 / 引用失效 / 参数不存在 / 副本不同步）
@@ -106,6 +107,9 @@ def main():
 
     print("④.2 上一篇 / 下一篇 …")
     print("   " + sh("python3 tools/gen_prevnext.py").strip())
+
+    print("④.3 搜索索引 …")
+    print("   " + sh("python3 tools/gen_search.py").strip())
 
     print("④.5 生成 RSS / sitemap …")
     print("   " + sh("python3 tools/gen_feed.py").strip())
