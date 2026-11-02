@@ -213,3 +213,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 
 /* 浮动按钮里的图标不吃点击 */
 .toc-fab svg,.toc-tab svg,.toc-fab svg *,.toc-tab svg *{pointer-events:none}
+
+/* 视频一律外链，不内嵌播放器 */
+.body .video-link{display:inline-block;padding:6px 0;font-size:.9rem;
+  color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.body .video-link:hover{border-bottom-color:var(--accent)}

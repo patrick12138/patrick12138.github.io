@@ -107,7 +107,23 @@ def pull_source_block(body):
     return re.sub(r"\s{2,}", " ", text).strip(), "\n".join(lines[:i] + lines[j:])
 
 
+def video_to_link(body):
+    """内嵌 <video> 改成外链文字，不做播放器。"""
+    import re as _re
+
+    def repl(m):
+        m2 = _re.search(r'src="([^"]+)"', m.group(0))
+        if not m2:
+            return ""
+        return '\n\n[观看视频 →](%s)\n\n' % m2.group(1)
+
+    body = _re.sub(r"<video[^>]*>.*?</video>|<video[^>]*/?>", repl, body, flags=_re.S)
+    body = _re.sub(r"<iframe[^>]*src=\"([^\"]+)\"[^>]*>.*?</iframe>", r"\n\n[打开嵌入内容 →](\1)\n\n", body, flags=_re.S)
+    return body
+
+
 def normalize_md(body):
+    body = video_to_link(body)
     """剪藏 md 的排版修补：反转义、给标题/列表补空行（跳过代码块）。"""
     body = body.replace("\r\n", "\n")
     body = re.sub(r"\\([`*_\[\]#()!+])", r"\1", body)
