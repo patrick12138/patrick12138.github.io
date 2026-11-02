@@ -60,7 +60,8 @@ for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
     items.append({"slug": slug, "title": title, "meta": meta_txt,
                   "date": date_txt, "key": key, "desc": desc_txt, "kind": kind, "stat": stat})
 
-items.sort(key=lambda x: x["key"], reverse=True)
+items.sort(key=lambda x: x["slug"])                      # 先按 slug 定序，保证同日文章的先后稳定
+items.sort(key=lambda x: x["key"], reverse=True)         # 再按日期倒序（稳定排序，同日保持 slug 顺序）
 
 rows = []
 for it in items:
