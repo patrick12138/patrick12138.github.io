@@ -79,7 +79,7 @@
 }
 
 /* 首页顶部的一行元信息（替代原来的「首页」大标题） */
-.page-meta{margin:56px 0 0;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;
-  color:var(--text-faint)}
+.page-meta{margin:56px 0 0;font-family:var(--mono);font-size:.74rem;letter-spacing:.03em;
+  color:var(--text-muted)}
 .tools{margin-top:18px}
 @media (max-width:720px){ .page-meta{margin-top:36px} }
