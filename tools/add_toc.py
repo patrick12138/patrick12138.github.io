@@ -28,7 +28,9 @@ CSS = """
   font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
   background:none;border:none;padding:0;font-family:var(--mono)}
 .toc-head:hover{color:var(--accent)}
-.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-ico{display:block}
+.toc-title{display:none}
+@media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
 .toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
   border-left:1px solid var(--border)}
 .toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
@@ -37,7 +39,7 @@ CSS = """
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .chev{transform:rotate(-90deg)}
+
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
@@ -145,12 +147,17 @@ BACKTOP_JS = """
 """
 
 HEAD = ('<nav class="toc" id="toc" aria-label="文章目录">'
-        '<button class="toc-head" id="tocHead" aria-expanded="true">'
-        '<span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" '
-        'stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'
-        '<path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">\u00d7</span></button>'
+        '<button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true">'
+        '<svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
+        '<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/>'
+        '<line x1="9" y1="18" x2="20" y2="18"/>'
+        '<circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/>'
+        '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
+        '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>'
+        '<span class="toc-title">目录</span>'
+        '<span class="toc-close" aria-hidden="true">\u00d7</span></button>'
         '<ol class="toc-list" id="tocList">%s</ol></nav>'
-
         '<button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button>')
 
 HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>目录</button>', re.S)

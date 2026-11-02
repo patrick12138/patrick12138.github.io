@@ -133,7 +133,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
   background:none;border:none;padding:0;font-family:var(--mono)}
 .toc-head:hover{color:var(--accent)}
-.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-ico{display:block}
+.toc-title{display:none}
+@media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
 .toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
   border-left:1px solid var(--border)}
 .toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
@@ -142,7 +144,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .chev{transform:rotate(-90deg)}
+
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
@@ -175,7 +177,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>把 Codex 用到极致！OpenAI 官方最佳实践完整解读</h1><div class="meta">June 10, 2026 · 字节笔记本 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
+<div class="wrap"><article class="article"><h1>把 Codex 用到极致！OpenAI 官方最佳实践完整解读</h1><div class="meta">June 10, 2026 · 字节笔记本 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
 <p>OpenAI 的开发者文档发布一篇 Best Practices 的文章。</p>
 <p><img alt="图片" src="../../assets/posts/codex-best-practices/80c88c3ca4c6.webp"></p>
 <p>这篇文档描述的 Codex 用法，和大多数人实际在用的方式，差距相当大，本文把官方文档的所有内容逐条拆解，补充具体操作案例。</p>
@@ -496,6 +498,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   });
 })();
 </script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>

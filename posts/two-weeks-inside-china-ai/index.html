@@ -133,7 +133,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
   background:none;border:none;padding:0;font-family:var(--mono)}
 .toc-head:hover{color:var(--accent)}
-.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-ico{display:block}
+.toc-title{display:none}
+@media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
 .toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
   border-left:1px solid var(--border)}
 .toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
@@ -142,7 +144,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .chev{transform:rotate(-90deg)}
+
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
@@ -175,7 +177,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>在中国 AI 生态圈摸底了两周，我学到了什么</h1><div class="meta">March 26, 2026 · 宝玉（译） · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/translations/2026-03-26/what-i-learned-from-two-weeks-inside-china-s-ai-ecosystem" target="_blank" rel="noopener">https://baoyu.io/translations/2026-03-26/what-i-learned-from-two-weeks-inside-china-s-ai-ecosystem</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">创始人的特质之谜 (The Founder Question)</a></li><li class="lvl2"><a href="#h2">VC 正在推波助澜 (VCs Are Reinforcing the Pattern)</a></li><li class="lvl2"><a href="#h3">深圳与硬件生态 (Shenzhen and the hardware ecosystem)</a></li><li class="lvl2"><a href="#h4">对中国软件市场持悲观态度 (Bearish on Chinese Software)</a></li><li class="lvl2"><a href="#h5">估值泡沫 (The Valuation Bubble)</a></li><li class="lvl2"><a href="#h6">值得关注的“不对称性” (The Asymmetry Worth Paying Attention To)</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><blockquote>
+<div class="wrap"><article class="article"><h1>在中国 AI 生态圈摸底了两周，我学到了什么</h1><div class="meta">March 26, 2026 · 宝玉（译） · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/translations/2026-03-26/what-i-learned-from-two-weeks-inside-china-s-ai-ecosystem" target="_blank" rel="noopener">https://baoyu.io/translations/2026-03-26/what-i-learned-from-two-weeks-inside-china-s-ai-ecosystem</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">创始人的特质之谜 (The Founder Question)</a></li><li class="lvl2"><a href="#h2">VC 正在推波助澜 (VCs Are Reinforcing the Pattern)</a></li><li class="lvl2"><a href="#h3">深圳与硬件生态 (Shenzhen and the hardware ecosystem)</a></li><li class="lvl2"><a href="#h4">对中国软件市场持悲观态度 (Bearish on Chinese Software)</a></li><li class="lvl2"><a href="#h5">估值泡沫 (The Valuation Bubble)</a></li><li class="lvl2"><a href="#h6">值得关注的“不对称性” (The Asymmetry Worth Paying Attention To)</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><blockquote>
 <p>译注：关于作者<br>
 José Maria Macedo（若泽·马里亚·马塞多），Delphi Ventures 创始合伙人、Delphi Labs 创始人兼 CEO。Delphi Digital 成立于 2018 年，是加密货币和数字资产领域最具影响力的独立研究机构之一，旗下 Delphi Ventures 管理着超过 200 个投资组合项目。Macedo 本人在加密货币行业深耕多年，曾就读于布鲁塞尔国际学校，学习政治、哲学与经济学（PPE），在校期间就创办了多家盈利企业，并获得过约克公爵青年企业家奖等荣誉。近年来，Delphi Ventures 的投资触角正从 Crypto 延伸到 AI 和深度科技领域，本文正是 Macedo 在中国进行 AI 生态实地考察后写的观察总结。</p>
 </blockquote>
@@ -290,6 +292,7 @@ José Maria Macedo（若泽·马里亚·马塞多），Delphi Ventures 创始合
   });
 })();
 </script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>
