@@ -166,6 +166,9 @@ HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>
 def strip_toc(doc):
     doc = HEAD_RE.sub("", doc)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
+    # 别的会话注入过的英文版浮动按钮，重复的话一并清掉
+    doc = re.sub(r'<button class="toc-fab"[^>]*aria-label="Contents".*?</button>', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="toc-tab"[^>]*aria-label="Expand[^"]*".*?</button>', "", doc, flags=re.S)
     doc = re.sub(r"\n<script>\n\(function\(\)\{\n  var b=document\.getElementById\('backTop'\).*?\}\)\(\);\n</script>", "", doc, flags=re.S)
     doc = re.sub(r'\n/\* ─── 目录（toc） ─── \*/.*?(?=</style>)', "", doc, flags=re.S)
     doc = re.sub(r'\n\(function\(\)\{\n  var toc=document\.getElementById\(\'toc\'\).*?\}\)\(\);\n', "", doc, flags=re.S)
