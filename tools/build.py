@@ -71,16 +71,19 @@ def main():
     print("② 注入目录 …")
     print(sh("python3 tools/add_toc.py").strip().splitlines()[-1])
 
-    print("③ 生成首页 …")
+    print("③ 字数与阅读时间 …")
+    print(sh("python3 tools/stats.py").strip().splitlines()[-1])
+
+    print("④ 生成首页 …")
     print(sh("python3 tools/gen_index.py").strip().splitlines()[0])
 
-    print("④ 重算资源版本号 …")
+    print("⑤ 重算资源版本号 …")
     vs, n = stamp_assets()
     for k, v in vs.items():
         print("   %-18s %s" % (k, v))
     print("   更新了 %d 个页面" % n)
 
-    print("⑤ 排版体检 …")
+    print("⑥ 排版体检 …")
     p = subprocess.run("python3 tools/qa.py", shell=True, cwd=ROOT,
                        capture_output=True, text=True)
     tail = "\n".join(p.stdout.strip().splitlines()[-6:])
@@ -93,7 +96,7 @@ def main():
 
     if do_push:
         msg = args[args.index("--push") + 1] if len(args) > args.index("--push") + 1 else "chore: rebuild site"
-        print("⑥ 推送 …")
+        print("⑦ 推送 …")
         sh('git add -A && git commit -m "%s" || true' % msg, check=False)
         sh('git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/patrick12138/patrick12138.github.io.git"')
         r = subprocess.run("git pull --rebase origin main && git push origin main",

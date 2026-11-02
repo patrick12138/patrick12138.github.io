@@ -242,3 +242,6 @@ html,body{overflow-x:clip}
 
 /* 目录滚到底时取消底部渐隐，最后一项完整显示 */
 .toc.at-bottom::after{display:none}
+
+/* 字数与阅读时间：淡到几乎不抢眼 */
+.meta .stats{color:var(--text-faint);opacity:.9}

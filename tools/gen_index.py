@@ -27,12 +27,14 @@ for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
     title = re.sub(r"<[^>]+>", "", h1.group(1)).strip()
     meta = re.search(r'<div class="meta">(.*?)</div>', s, re.S)
     meta_txt = re.sub(r"<[^>]+>", "", meta.group(1)).strip() if meta else ""
+    st = re.search(r'<span class="stats">([^<]*)</span>', s)
+    stat = (' · ' + st.group(1)) if st else ''
     desc = re.search(r'<meta name="description" content="([^"]*)"', s)
     desc_txt = html.unescape(desc.group(1)) if desc else ""
     key, date_txt = parse_date(meta_txt)
     kind = "own" if ("个人" in meta_txt or "原创" in meta_txt) else "repost"
     items.append({"slug": slug, "title": title, "meta": meta_txt,
-                  "date": date_txt, "key": key, "desc": desc_txt, "kind": kind})
+                  "date": date_txt, "key": key, "desc": desc_txt, "kind": kind, "stat": stat})
 
 items.sort(key=lambda x: x["key"], reverse=True)
 
