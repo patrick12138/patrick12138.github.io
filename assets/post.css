@@ -253,3 +253,8 @@ html,body{overflow-x:clip}
 
 /* 字数与阅读时间：淡到几乎不抢眼 */
 .meta .stats{color:var(--text-faint);opacity:.9}
+
+/* 1024–1279（平板横屏）：顶栏撑满，左右对齐正文与目录边缘 */
+@media (min-width:1024px) and (max-width:1279px){
+  .bar-in{max-width:none;padding-left:28px;padding-right:28px}
+}

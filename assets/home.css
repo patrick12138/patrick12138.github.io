@@ -150,3 +150,8 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .tools.searching .tabs{display:none}
 .tools.searching{gap:8px}
 .tools.searching .sinput{display:block}
+
+/* 平板横屏：首页顶栏同样撑满，不挤在 720px 里 */
+@media (min-width:1024px) and (max-width:1279px){
+  .bar-in{max-width:none;padding-left:28px;padding-right:28px}
+}
