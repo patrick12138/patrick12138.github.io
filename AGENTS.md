@@ -33,6 +33,7 @@ assets/site.js        主题切换 / 回到顶部 / Lab 暗门
 tools/                生成器与质检脚本（手写）
                       build.py 一键构建 / md2post 转文章 / mdclean 剪藏 md 清洗管线（md2post 调用） / add_toc 目录与页脚 / gen_index 首页
                       gen_prevnext 上一篇下一篇 / gen_feed RSS+sitemap / stats 字数 / qa 体检
+                      gen_legal 搬运页版权信号（canonical 指回原文 + noindex + 文末提示）
                       home_snippets 首页内嵌 JS/图标常量（gen_index 调用）
                       post_snippets 文章页注入的 JS 片段（add_toc 调用）
                       optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
@@ -66,6 +67,7 @@ PC（Windows）首次：`python -m pip install pyyaml markdown pillow`；之后�
 | 首页列表/分类/搜索 | `tools/gen_index.py`（**不是** `index.html`） |
 | 导航条（Lab / About） | `tools/gen_index.py` + `tools/post_template.html` + `lab/index.html`（三处） |
 | 右侧目录 / 站名下拉 | `tools/add_toc.py` + `assets/post.css` |
+| **搬运页版权**（canonical / noindex / 文末提示） | `tools/gen_legal.py`（联系方式在文件头 `CONTACT`）+ `assets/base.css` 的 `.legal-note` |
 | 主题切换、回到顶部 | `assets/site.js` + 对应 CSS |
 | 部署、凭据、DNS 排障 | `skills/github-pages-deploy/references/deploy.md` |
 

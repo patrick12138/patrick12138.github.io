@@ -42,6 +42,16 @@ a{color:inherit}
 .src-url{color:var(--accent);text-decoration:none;word-break:break-all;
   border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
 .src-url:hover{border-bottom-color:var(--accent)}
+/* 搬运页的版权提示：与 .source 同族（等宽、低对比、左边不出声），但用整框收住正文 */
+.legal-note{margin:48px 0 0;padding:16px 18px;border:1px solid var(--border);border-radius:4px;
+  background:color-mix(in srgb,var(--text) 3%,transparent);
+  font-size:.82rem;line-height:1.9;color:var(--text-muted)}
+.legal-note .legal-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-right:10px}
+.legal-link{color:var(--accent);text-decoration:none;white-space:nowrap;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.legal-link:hover{border-bottom-color:var(--accent)}
+@media (max-width:640px){.legal-note{padding:14px 15px;font-size:.78rem}}
 .body{font-size:1.125rem;line-height:1.95;color:var(--text)}
 .body p{margin:0 0 1.35em}
 .body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}

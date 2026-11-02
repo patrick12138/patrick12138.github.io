@@ -5,8 +5,15 @@
 <link>https://patrick12138.github.io/</link>
 <description>写点东西，也搬运点好东西。</description>
 <language>zh-CN</language>
-<lastBuildDate>Sat, 31 Oct 2026 00:00:00 +0000</lastBuildDate>
+<lastBuildDate>Mon, 02 Nov 2026 00:00:00 +0000</lastBuildDate>
 <atom:link href="https://patrick12138.github.io/feed.xml" rel="self" type="application/rss+xml" />
+<item>
+<title>东北工业废墟上的精神考古与体制突围——解析《我的朋友安德烈》</title>
+<link>https://patrick12138.github.io/posts/my-friend-andrei/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/my-friend-andrei/</guid>
+<pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+<description>从铁西区的生铁味到全景监狱式的教室：双雪涛原著与董子健电影《我的朋友安德烈》里的教育、父辈与幸存者愧疚。</description>
+</item>
 <item>
 <title>Super-agent 设计探索：迈向更自主的 Agent 系统</title>
 <link>https://patrick12138.github.io/posts/super-agent-design/</link>

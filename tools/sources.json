@@ -25,9 +25,9 @@
  },
  {
   "slug": "ai-fatigue",
-  "md": "C:/Users/Patrick/Documents/Obsidian Vault\\Resources\\AI 疲劳与可持续使用.md",
+  "md": "Resources/AI 疲劳与可持续使用.md",
   "author": "",
-  "date": "October 18, 2026",
+  "date": "October 12, 2026",
   "kind": "own",
   "title": "AI 疲劳与可持续使用"
  },
@@ -368,5 +368,13 @@
   "date": "March 17, 2020",
   "kind": "repost",
   "title": "RSS 的二十年"
+ },
+ {
+  "slug": "my-friend-andrei",
+  "md": "Resources/我的朋友安德烈：废墟上的精神考古与体制突围.md",
+  "author": "",
+  "date": "November 2, 2026",
+  "kind": "own",
+  "title": ""
  }
 ]

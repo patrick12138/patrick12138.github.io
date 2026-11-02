@@ -217,10 +217,14 @@ def sync_to_sources_json(slug, md_path, author, d, kind, title_arg=None):
     try:
         rows = json.load(open(json_path, encoding="utf-8"))
         import config
-        vault_prefix = config.load()["vault_root"].rstrip("/") + "/"
-        rel_md = md_path
-        if md_path.startswith(vault_prefix):
-            rel_md = md_path[len(vault_prefix):]
+        # 归一再比：Windows 上 os.path.join 会给出混合分隔符（C:/a\b），
+        # 直接 startswith 比不过，整条绝对路径就会写进 sources.json（换机器即废）。
+        vault_root = os.path.normpath(config.load()["vault_root"])
+        if os.path.normcase(os.path.normpath(md_path)).startswith(
+                os.path.normcase(vault_root) + os.sep):
+            rel_md = os.path.relpath(md_path, vault_root).replace(os.sep, "/")
+        else:
+            rel_md = md_path
         date_str = "%s %d, %d" % (MONTHS[d.month - 1], d.day, d.year) if d else ""
         found = False
         for r in rows:

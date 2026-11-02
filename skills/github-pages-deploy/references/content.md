@@ -150,18 +150,36 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 - `build.py` 第 ③ 步执行，不用手动跑
 
 
+## 搬运页版权信号（tools/gen_legal.py）
+
+全文搬运 + 署名 + 原文链接 **不等于** 授权：署名只解决署名权，复制权/信息网络传播权那一项还在。
+`gen_legal.py` 干三件事，只针对 `meta` 里带「搬运」的页面：
+
+1. `<link rel="canonical" href="原文">` —— 技术上声明正本在原文那边；
+2. `<meta name="robots" content="noindex,follow">` —— 搬运页不和原文抢搜索位
+   （`sitemap.xml` 里同时剔除，否则自相矛盾；`feed.xml` 保留，那是给订阅者的）；
+3. 文末 `.legal-note` —— 版权归属 + 删除通道（联系方式是脚本头的 `CONTACT`，与 about 页一致）。
+
+原创页会被**剥干净**：把一篇从 `repost` 改成 `own` 后跑一遍 build 就自动收敛。
+同样幂等（按 `data-legal` 签名先剥再注），`test_pipeline.py` 有对应用例。
+真要彻底降风险，仍然只有两条路：**拿许可**，或**不复制全文**。
+
 ## 构建顺序（tools/build.py）
 
 ```
 ① (可选) rebuild.py   从 vault 重建全部文章（会改正文，慎用）
 ② add_toc.py          目录 / 站名下拉 / 回到顶部 / 去重
+②.5 gen_legal.py      搬运页版权信号（canonical / noindex / 文末提示）
 ③ stats.py            字数与阅读时间
 ④ gen_index.py        生成首页（唯一文章列表）
 ④.2 gen_prevnext.py   文末「上一篇 / 下一篇」（全局按发布时间）
+④.25 gen_related.py   文末「相关阅读」（tf-idf 共词，自动挑 3 篇）
+④.3 gen_search.py     search.js（首页搜索索引，点开才加载）
 ④.5 gen_feed.py       feed.xml + sitemap.xml + robots.txt
-⑤ test_pipeline.py    三条幂等回归测试
+⑤ test_pipeline.py    幂等回归测试
 ⑥ stamp_assets()      base/home/post.css + site.js 内容哈希
 ⑥.5 sync_skills()     仓库 skills/ → /var/minis/skills/（PC/CI 无该目录时自动跳过）
+⑥.8 check_skills.py   skill 与代码一致性（脚本登记 / 引用 / 参数）
 ⑦ qa.py               排版 / 分类 / 重复注入 / hash / 外壳 / 摘要质量
 ```
 

@@ -102,6 +102,9 @@ def main():
     print("② 注入目录 …")
     print(sh('"%s" tools/add_toc.py' % PY).strip().splitlines()[-1])
 
+    print("②.5 搬运页版权信号 …")
+    print(sh('"%s" tools/gen_legal.py' % PY).strip().splitlines()[-1])
+
     print("③ 字数与阅读时间 …")
     print(sh('"%s" tools/stats.py' % PY).strip().splitlines()[-1])
 

@@ -55,6 +55,8 @@ def collect():
             "desc": html.unescape(desc.group(1)) if desc else "",
             "date": parse_date(meta.group(1) if meta else ""),
             "link": "%s/posts/%s/" % (BASE, slug),
+            # 搬运页被 gen_legal 标了 noindex：留在 sitemap 里等于自相矛盾。
+            "noindex": 'content="noindex' in s,
         })
     # 先按 slug 定序，再按日期倒序（稳定排序）——glob 顺序随文件系统而变，
     # 只按日期排会让同日文章在 Linux CI 和本地之间来回翻转，CI 直接红。
@@ -86,7 +88,8 @@ def write_feed(items):
 
 
 def write_sitemap(items):
-    urls = ["%s/" % BASE, "%s/about/" % BASE] + [it["link"] for it in items]
+    # noindex 的搬运页不进 sitemap（进了就等于让搜索引擎去抓一个自己声明别抓的页）
+    urls = ["%s/" % BASE, "%s/about/" % BASE] + [it["link"] for it in items if not it.get("noindex")]
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
