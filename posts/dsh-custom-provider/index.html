@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://patrick12138.github.io/posts/dsh-custom-provider/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
 <link rel="stylesheet" href="../../assets/base.css?v=173a6925">
-<link rel="stylesheet" href="../../assets/post.css?v=98ee372f">
+<link rel="stylesheet" href="../../assets/post.css?v=8f743299">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -163,6 +163,7 @@ dsh web --patch ./local-ds.yml               # 不写 profile、临时试
 <hr>
 <h2 id="h9">五、和 Pi 的关系（为什么这条路成立）</h2>
 <p>DSH 没有另写 provider 抽象，<strong>直接复用了 Pi 的模型层</strong>（<code>dsh-llm-pi-ai</code>）。所以 Pi 能接的（Ollama、vLLM、OpenRouter、自定义 OpenAI 兼容端点、切模型），DSH 这条路由也能接；反过来，官方 DeepSeek 原生适配器只在跑 V4 Pro / Flash 时才有优势（它懂 DeepSeek 的协议细节）。</p></div>
+<nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../claude-code-team-review/"><span class="pager-k">← 上一篇</span><span class="pager-t">How the Claude Code team does code review</span></a><a class="pager-next" href="../client-dev-choices/"><span class="pager-k">下一篇 →</span><span class="pager-t">你不知道的客户端开发：选型、原生、多端与借力</span></a></nav>
 <a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>

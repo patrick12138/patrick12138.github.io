@@ -197,3 +197,21 @@ html,body{overflow-x:clip}
 @media (min-width:1024px){
   .to-top{right:24px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
 }
+
+/* 上一篇 / 下一篇：全局按发布时间，不受首页分类影响 */
+.pager{display:flex;gap:24px;align-items:flex-start;justify-content:space-between;
+  margin:56px 0 0;padding-top:24px;border-top:1px solid var(--border)}
+.pager a{display:flex;flex-direction:column;gap:5px;max-width:48%;text-decoration:none;
+  transition:color .15s}
+.pager-next{margin-left:auto;text-align:right}
+.pager-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--text-faint)}
+.pager-t{font-size:.92rem;line-height:1.45;color:var(--text-muted);
+  transition:color .15s}
+.pager a:hover .pager-t,.pager a:hover .pager-k{color:var(--accent)}
+.pager-empty{flex:1}
+@media (max-width:720px){
+  .pager{flex-direction:column;gap:18px}
+  .pager a{max-width:none}
+  .pager-next{text-align:left;margin-left:0}
+  .pager-empty{display:none}
+}

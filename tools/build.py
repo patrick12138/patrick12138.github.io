@@ -103,6 +103,9 @@ def main():
     print("④ 生成首页 …")
     print(sh("python3 tools/gen_index.py").strip().splitlines()[0])
 
+    print("④.2 上一篇 / 下一篇 …")
+    print("   " + sh("python3 tools/gen_prevnext.py").strip())
+
     print("④.5 生成 RSS / sitemap …")
     print("   " + sh("python3 tools/gen_feed.py").strip())
 
