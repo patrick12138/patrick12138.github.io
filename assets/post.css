@@ -41,68 +41,68 @@
   padding:26px 0 60px;margin-left:18px;transition:color .15s}
 .back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
-.toc{position:fixed;top:104px;left:calc(50% + 384px);width:238px;z-index:30;
-  font-family:var(--sans);font-size:.78rem;line-height:1.55;
-  max-height:calc(100vh - 200px);
-  padding:12px 10px 14px 12px;
-  background:color-mix(in srgb,var(--bg) 82%,transparent);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  display:flex;flex-direction:column;transition:opacity .2s ease}
-.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
-  font-size:.68rem;letter-spacing:.08em;margin-bottom:10px;cursor:pointer;
-  background:none;border:none;padding:0;font-family:var(--sans)}
-.toc-head:hover{color:var(--accent)}
-.toc-ico{display:block}
-.toc-title{display:none}
-@media (max-width:1023px){ .toc.is-open .toc-title{display:inline} }
-.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:transparent transparent;
-  border-left:1px solid var(--border)}
+/* ─── 目录：浮动按钮 + 点按弹出面板（PC / iPad / 手机同一套） ─── */
+.toc{display:none;position:fixed;z-index:60;
+  right:calc(18px + env(safe-area-inset-right,0px));
+  bottom:calc(74px + env(safe-area-inset-bottom,0px));
+  width:min(78vw,268px);max-height:min(62vh,520px);
+  flex-direction:column;padding:0;overflow:hidden;
+  background:var(--bg);border:1px solid var(--border);
+  box-shadow:0 18px 44px rgba(0,0,0,.34);border-radius:10px;
+  font-family:var(--sans)}
+[data-theme="light"] .toc{box-shadow:0 16px 36px rgba(16,24,40,.14)}
+.toc.is-open{display:flex}
 
+.toc-head{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:1;
+  padding:12px 14px 10px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);
+  background:var(--bg);border-bottom:1px solid var(--border)}
+.toc-ico{display:block;opacity:.7}
+.toc-title{flex:1}
+.toc-close{background:none;border:none;padding:0 2px;margin:0;cursor:pointer;line-height:1;
+  font-size:1rem;color:var(--text-faint);transition:color .15s}
+.toc-close:hover{color:var(--accent)}
+
+.toc-list{list-style:none;margin:0;padding:6px 0 8px;overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:transparent transparent}
 .toc-list:hover,.toc-list.is-scrolling{scrollbar-color:rgba(106,162,216,.6) transparent}
 .toc-list::-webkit-scrollbar{width:4px;height:4px}
 .toc-list::-webkit-scrollbar-track{background:transparent}
 .toc-list::-webkit-scrollbar-thumb{background:transparent;border-radius:3px}
 .toc-list:hover::-webkit-scrollbar-thumb,.toc-list.is-scrolling::-webkit-scrollbar-thumb{background:rgba(106,162,216,.6)}
 .toc-list::-webkit-scrollbar-button{display:none;height:0;width:0}
-.toc-list a{display:block;padding:6px 0 6px 12px;margin-left:-1px;color:var(--text-muted);
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
-  font-size:.84rem;font-weight:400;line-height:1.5;letter-spacing:0;
-  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
-.toc-list a:hover{color:var(--heading)}
-.toc-list li.lvl3 a{padding-left:22px;font-size:.8rem;font-weight:400;opacity:.9}
-.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
-.toc.is-collapsed .toc-list{display:none}
 
-.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 手机：浮动按钮 + 底部面板 */
-.toc-fab{display:none;position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(130px + env(safe-area-inset-bottom,0px));z-index:40;
+.toc-list a{display:block;padding:7px 16px 7px 13px;margin-left:0;
+  font-size:.84rem;font-weight:400;line-height:1.45;letter-spacing:0;
+  color:var(--text-muted);text-decoration:none;
+  border-left:2px solid transparent;transition:color .15s,border-color .15s,background .15s}
+.toc-list a:hover{color:var(--heading);background:color-mix(in srgb,var(--text) 5%,transparent)}
+.toc-list li.lvl2>a{font-weight:500;color:var(--text)}
+.toc-list li.lvl3>a{padding-left:26px;font-size:.8rem;opacity:.9}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+
+/* 触发按钮：全端统一（圆形列表图标，无文字） */
+.toc-fab{display:flex;position:fixed;z-index:61;
+  right:calc(18px + env(safe-area-inset-right,0px));
+  bottom:calc(18px + env(safe-area-inset-bottom,0px));
   width:40px;height:40px;padding:0;align-items:center;justify-content:center;border-radius:999px;
   background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
-  border:1px solid var(--border);cursor:pointer;transition:color .15s,border-color .15s}
-.toc-fab svg{display:block}
+  border:1px solid var(--border);cursor:pointer;
+  transition:color .15s,border-color .15s,opacity .2s}
 .toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.toc-fab svg{display:block}
+.toc-fab svg,.toc-fab svg *{pointer-events:none}
+.toc.is-open ~ .toc-fab{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 
-/* 平板横屏：右侧目录贴边，不再居中偏移（否则 1024 宽会溢出屏幕） */
-@media (min-width:1024px) and (max-width:1279px){
-  /* 正文左移让位，目录贴右，避免两者重叠 */
-  .wrap{max-width:680px;margin-left:28px;margin-right:auto}
-  .toc{left:auto;right:20px;width:220px}
+@media (min-width:1024px){
+  .toc{right:24px;bottom:calc(126px + env(safe-area-inset-bottom,0px));width:288px}
+  .toc-fab{right:24px;bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+  .to-top{right:24px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
 }
-
-@media (max-width:1023px){
-  .toc{display:none}
-  .toc-fab{display:flex}
-  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px) + 56px);max-height:60vh;
-    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
-    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
-  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
-  .toc.is-open .toc-close{display:inline}
-  .toc.is-open ~ .toc-fab{display:none}
-  .toc.is-open .toc-list{display:block !important}
-  .toc.is-open .toc-list a{padding:9px 0 9px 12px;font-size:.92rem}
-  /* 面板里也要分级：lvl3 缩进 + 稍小字号，别和一级挤在同一行 */
-  .toc.is-open .toc-list li.lvl2>a{padding-left:14px;font-size:.92rem}
-  .toc.is-open .toc-list li.lvl3>a{padding-left:34px;font-size:.84rem;opacity:.82;line-height:1.5}
+@media (max-width:720px){
+  .toc{left:12px;right:12px;width:auto;bottom:calc(132px + env(safe-area-inset-bottom,0px));max-height:60vh}
+  .toc-list a{padding:9px 16px 9px 13px;font-size:.9rem}
+  .toc-list li.lvl3>a{padding-left:28px;font-size:.85rem}
 }
 
 /* ─── 站名下拉：回到首页分类 ─── */
@@ -137,7 +137,7 @@
 }
 
 /* 浮动按钮里的图标不吃点击 */
-.toc-fab svg,.toc-tab svg,.toc-fab svg *,.toc-tab svg *{pointer-events:none}
+.toc-fab svg,.toc-fab svg *{pointer-events:none}
 
 /* 视频一律外链，不内嵌播放器 */
 .body .video-link{display:inline-block;padding:6px 0;font-size:.9rem;
@@ -160,21 +160,7 @@ html,body{overflow-x:clip}
 [data-theme="light"] .toc-list:hover::-webkit-scrollbar-thumb,[data-theme="light"] .toc-list.is-scrolling::-webkit-scrollbar-thumb{background:rgba(45,100,150,.55)}
 
 /* 目录底部渐隐：提示还有内容，且不和页面底部撞在一起 */
-.toc::after{content:'';position:absolute;left:1px;right:9px;bottom:1px;height:34px;
-  background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 88%,transparent));
-  pointer-events:none;border-radius:0 0 4px 4px}
-.toc.is-collapsed::after{display:none}
 
-/* 目录滚到底时取消底部渐隐，最后一项完整显示 */
-.toc.at-bottom::after{display:none}
-
-/* 字数与阅读时间：淡到几乎不抢眼 */
-.meta .stats{color:inherit;opacity:.72}
-
-/* 1024–1279（平板横屏）：顶栏撑满，左右对齐正文与目录边缘 */
-@media (min-width:1024px) and (max-width:1279px){
-  .bar-in{max-width:none;padding-left:28px;padding-right:28px}
-}
 
 /* 抽出来的 svg 图表：撑满内容宽度，别缩成小图标 */
 .body img[src$=".svg"]{width:100%;height:auto;max-width:100%}
@@ -186,4 +172,9 @@ html,body{overflow-x:clip}
     width:420px;max-width:calc(100vw - 48px);
     padding:18px 20px;
   }
+}
+
+/* 桌面：回到顶部与目录按钮右缘对齐，叠在目录按钮上方 */
+@media (min-width:1024px){
+  .to-top{right:24px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
 }

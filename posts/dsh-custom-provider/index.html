@@ -6,7 +6,7 @@
 <meta name="description" content="记录时间：2026-10-22环境：DSH0.2.1-rc.2（本机dsh已装），profile目录%USERPROFILE%\.dsh\profiles\{web,desktop}。">
 <title>DSH 接自建模型与 Profile 配置 · patrick</title>
 <link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
-<link rel="stylesheet" href="../../assets/post.css?v=0ca7241f">
+<link rel="stylesheet" href="../../assets/post.css?v=1812ff69">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -22,7 +22,7 @@
 <div class="wrap"><article class="article"><h1>DSH 接自建模型与 Profile 配置</h1>
 <div class="meta">2026年10月22日 · 个人 · <span class="stats">1,107 字 · 约 3 分钟</span></div>
 
-<nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、先理解 DSH 的配置模型</a></li><li class="lvl2"><a href="#h2">二、接自建 / 本地 DeepSeek 的完整步骤</a></li><li class="lvl3"><a href="#h3">1. 把模型起成 OpenAI 兼容服务</a></li><li class="lvl3"><a href="#h4">2. 在 profile 的 patch 层声明一条路由</a></li><li class="lvl3"><a href="#h5">3. 切默认模型（不改也行，可在 GUI 里逐会话选）</a></li><li class="lvl3"><a href="#h6">4. 验证</a></li><li class="lvl2"><a href="#h7">三、字段与硬约束</a></li><li class="lvl2"><a href="#h8">四、坑</a></li><li class="lvl2"><a href="#h9">五、和 Pi 的关系（为什么这条路成立）</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p><strong>记录时间</strong>：2026-10-22<br>
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、先理解 DSH 的配置模型</a></li><li class="lvl2"><a href="#h2">二、接自建 / 本地 DeepSeek 的完整步骤</a></li><li class="lvl3"><a href="#h3">1. 把模型起成 OpenAI 兼容服务</a></li><li class="lvl3"><a href="#h4">2. 在 profile 的 patch 层声明一条路由</a></li><li class="lvl3"><a href="#h5">3. 切默认模型（不改也行，可在 GUI 里逐会话选）</a></li><li class="lvl3"><a href="#h6">4. 验证</a></li><li class="lvl2"><a href="#h7">三、字段与硬约束</a></li><li class="lvl2"><a href="#h8">四、坑</a></li><li class="lvl2"><a href="#h9">五、和 Pi 的关系（为什么这条路成立）</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p><strong>记录时间</strong>：2026-10-22<br>
 <strong>环境</strong>：DSH <code>0.2.1-rc.2</code>（本机 <code>dsh</code> 已装），profile 目录 <code>%USERPROFILE%\.dsh\profiles\{web,desktop}</code>。</p>
 <p>一句话结论：<strong>DSH 的官方 DeepSeek 适配器不给你改端点，接自建/本地 DeepSeek 必须走 <code>dsh-llm-pi-ai</code> 的手工 provider 路由（<code>api: openai-completions</code>）。</strong></p>
 <p>相关：Agent Harness 版图与个人选型、Tern 架构与插件实践</p>
@@ -181,88 +181,85 @@ dsh web --patch ./local-ds.yml               # 不写 profile、临时试
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
-  var head=document.getElementById('tocHead');
   var fab=document.getElementById('tocFab');
+  var closeBtn=document.getElementById('tocClose');
   var links=[].slice.call(list.querySelectorAll('a'));
-  // 滚动条只在滚动时出现，静置时隐藏
-  var _st=null;
-  function edge(){
-    // 滚到底就不显示底部渐隐；不需要滚动时也算到底
-    var atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
-    toc.classList.toggle('at-bottom', atBottom);
-  }
-  if(list){
-    list.addEventListener('scroll',function(){
-      list.classList.add('is-scrolling');
-      clearTimeout(_st);
-      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
-      edge();
-    },{passive:true});
-  }
-  edge();
   if(!links.length) return;
 
-  var key='tocCollapsed';
-  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
-  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+  /* 面板显隐 */
+  function setOpen(open){
+    toc.classList.toggle('is-open', open);
+    toc.setAttribute('aria-hidden', open ? 'false' : 'true');
+    fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open){ syncActive(); scrollActiveIntoView(); }
+  }
+  fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+  closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
+  document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
 
-  var mobile=window.matchMedia('(max-width:1180px)');
-  head.addEventListener('click',function(){
-    if(mobile.matches){ toc.classList.remove('is-open'); return; }
-    toc.classList.toggle('is-collapsed');
-    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
+  /* 滚动条只在滚动时出现 */
+  var _st=null;
+  list.addEventListener('scroll', function(){
+    list.classList.add('is-scrolling');
+    clearTimeout(_st);
+    _st=setTimeout(function(){ list.classList.remove('is-scrolling'); }, 900);
   });
-  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
 
-  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
-  function smoothTo(el){
+  /* 平滑跳转（WebView 不支持 scrollIntoView smooth） */
+  function goTo(el){
     var target=el.getBoundingClientRect().top+window.pageYOffset-84;
     if(target<0) target=0;
     var before=window.pageYOffset;
-    try{ window.scrollTo({top:target,behavior:'smooth'}); }
-    catch(e){ window.scrollTo(0,target); }
-    setTimeout(function(){
-      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
-    },400);
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target); },400);
   }
 
   links.forEach(function(a){
-    a.addEventListener('click',function(e){
+    a.addEventListener('click', function(e){
       var id=a.getAttribute('href').slice(1);
       var el=document.getElementById(id); if(!el) return;
       e.preventDefault();
-      smoothTo(el);
-      mark(id);
-      toc.classList.remove('is-open');
+      goTo(el); mark(id); setOpen(false);
       history.replaceState(null,'','#'+id);
     });
   });
 
+  /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
   }
-  var ticking=false;
-  function onScroll(){
-    if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){
-      ticking=false;
-      var best=null, bestTop=-1e9;
-      for(var i=0;i<targets.length;i++){
-        var t=targets[i]; if(!t) continue;
-        var top=t.getBoundingClientRect().top;
-        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
-      }
-      if(!best && targets[0]) best=targets[0];
-      if(best) mark(best.id);
-    });
+  function syncActive(){
+    var best=null, bestTop=-1e9;
+    for(var i=0;i<targets.length;i++){
+      var t=targets[i]; if(!t) continue;
+      var top=t.getBoundingClientRect().top;
+      if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+    }
+    if(!best && targets[0]) best=targets[0];
+    if(best) mark(best.id);
   }
-  window.addEventListener('scroll',onScroll,{passive:true});
-  syncChev();
-  if(location.hash) mark(location.hash.slice(1));
-  onScroll();
+  function scrollActiveIntoView(){
+    var on=list.querySelector('a.on'); if(!on) return;
+    var r=on.getBoundingClientRect(), lr=list.getBoundingClientRect();
+    if(r.top<lr.top || r.bottom>lr.bottom) list.scrollTop += r.top-lr.top-list.clientHeight/3;
+  }
+  var ticking=false;
+  window.addEventListener('scroll', function(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+  }, {passive:true});
+  if(location.hash){ mark(location.hash.slice(1)); }
+
+  /* 半程后出现浮动按钮（顶部两屏内不打扰） */
+  function updFab(){
+    var half=Math.max(window.innerHeight, document.body.scrollHeight*0.5);
+    fab.style.opacity = window.pageYOffset>200 ? '1' : '0.35';
+    fab.style.pointerEvents='auto';
+  }
+  window.addEventListener('scroll',updFab,{passive:true});
+  updFab();
 })();
 </script>
 </body>
