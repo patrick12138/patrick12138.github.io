@@ -186,3 +186,22 @@ el.style.color = '#fff';
 - `.toc{left:calc(50% + 384px)}` 在 1024 宽下会算出 896px 起点 + 238 宽 = 溢出屏幕。
   中等宽度必须改成 `left:auto;right:20px`。
 - 只把目录贴右不移正文，会和正文重叠约 90px。正文 `margin-left` 要固定值让位，不能 `margin:0 auto`。
+
+## 目录底部面板的三种宽度
+
+```
+≤599px     手机：left:16 right:16，拉满（窄屏没有留白问题）
+600–1023   平板竖屏：left:auto right:24 width:420 —— 收成抽屉
+1024–1279  横屏平板：右侧固定目录
+≥1280      桌面：右侧目录
+```
+
+**为什么平板竖屏要单独收窄**：768px 宽的 iPad 竖屏如果用 `left:16 right:16`，
+面板宽 736px，但目录文字一行就占满了，右边大片留白，看着像没做完。
+收到 420px 靠右，密度才对。
+
+```css
+@media (min-width:600px) and (max-width:1023px){
+  .toc.is-open{left:auto;right:24px;width:420px;max-width:calc(100vw - 48px);padding:18px 20px}
+}
+```

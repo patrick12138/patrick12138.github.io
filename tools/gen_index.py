@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """扫描 posts/ 生成首页 index.html。用法：python3 tools/gen_index.py"""
 import os, re, glob, html
+from datetime import datetime
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(SITE, "index.html")
@@ -10,6 +11,21 @@ STYLE = '<link rel="stylesheet" href="assets/home.css">'   # ?v= 由 tools/build
 MONTHS = {m: i for i, m in enumerate(
     ["January","February","March","April","May","June","July",
      "August","September","October","November","December"], 1)}
+
+def cn_date(meta):
+    """October 26, 2026 · 个人 → 10月26日 · 个人（非当年补年份）"""
+    m = re.match(r"([A-Z][a-z]+)\s+(\d+),\s*(\d{4})(.*)", meta or "")
+    if not m:
+        return meta
+    mon, day, year, rest = m.group(1), int(m.group(2)), int(m.group(3)), m.group(4)
+    mi = MONTHS.get(mon, 0)
+    if not mi:
+        return meta
+    label = "%d月%d日" % (mi, day)
+    if year != datetime.now().year:
+        label = "%d年%s" % (year, label)
+    return label + rest
+
 
 def parse_date(s):
     m = re.search(r"([A-Z][a-z]+)\s+(\d+),\s+(\d{4})", s or "")
@@ -28,9 +44,15 @@ for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
     meta = re.search(r'<div class="meta">(.*?)</div>', s, re.S)
     meta_txt = re.sub(r"<[^>]+>", "", meta.group(1)).strip() if meta else ""
     st = re.search(r'<span class="stats">([^<]*)</span>', s)
-    stat = (' · ' + st.group(1)) if st else ''
+    stat = ''   # 首页不再显示字数/时长，留在文章页
     desc = re.search(r'<meta name="description" content="([^"]*)"', s)
     desc_txt = html.unescape(desc.group(1)) if desc else ""
+    parts = [x.strip() for x in meta_txt.split(" · ") if x.strip()]
+    parts = [x for x in parts if not re.search(r"字|分钟", x)]
+    if len(parts) >= 2:
+        meta_txt = parts[0] + " · " + parts[-1]
+    elif parts:
+        meta_txt = parts[0]
     key, date_txt = parse_date(meta_txt)
     kind = "own" if ("个人" in meta_txt or "原创" in meta_txt) else "repost"
     items.append({"slug": slug, "title": title, "meta": meta_txt,
@@ -44,7 +66,7 @@ for it in items:
         '<li data-kind="%s"><a href="posts/%s/">'
         '<h2>%s</h2><p class="desc">%s</p><time>%s</time></a></li>'
         % (it["kind"], it["slug"], html.escape(it["title"]),
-           html.escape(it["desc"][:150]), html.escape(it["meta"])))
+           html.escape(it["desc"][:150]), html.escape(cn_date(it["meta"]))))
 
 body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
         '<div class="tools"><div class="tabs" id="tabs">'
