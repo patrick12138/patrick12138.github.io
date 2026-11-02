@@ -24,12 +24,23 @@ JS = """
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
 
+  /* 手机：静置淡出，滚动时浮现（面板开着就一直显示） */
+  var idleTimer=null;
+  function pokeFab(){
+    fab.classList.add('is-active');
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(function(){
+      if(!toc.classList.contains('is-open')) fab.classList.remove('is-active');
+    }, 1500);
+  }
+
   /* 面板显隐 */
   function setOpen(open){
     toc.classList.toggle('is-open', open);
     toc.setAttribute('aria-hidden', open ? 'false' : 'true');
     fab.setAttribute('aria-expanded', open ? 'true' : 'false');
     if(open){ syncActive(); scrollActiveIntoView(); }
+    else { pokeFab(); }
   }
   fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
 
@@ -106,14 +117,11 @@ JS = """
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
 
-  /* 半程后出现浮动按钮（顶部两屏内不打扰） */
-  function updFab(){
-    var half=Math.max(window.innerHeight, document.body.scrollHeight*0.5);
-    fab.style.opacity = window.pageYOffset>200 ? '1' : '0.35';
-    fab.style.pointerEvents='auto';
-  }
-  window.addEventListener('scroll',updFab,{passive:true});
-  updFab();
+  window.addEventListener('scroll', pokeFab, {passive:true});
+  if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }
+  else { fab.classList.add('is-active'); }
+
+
 })();
 """
 

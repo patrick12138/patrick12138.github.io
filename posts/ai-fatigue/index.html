@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="这组资料提醒：AI让很多任务变快，但不一定让人的一天变轻松。它把负担从“亲手生产”转移到“持续判断、审查、切换上下文和兜底”。">
 <title>AI 疲劳与可持续使用 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=53d358bc">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=dd5d92d3">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -134,12 +134,23 @@
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
 
+  /* 手机：静置淡出，滚动时浮现（面板开着就一直显示） */
+  var idleTimer=null;
+  function pokeFab(){
+    fab.classList.add('is-active');
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(function(){
+      if(!toc.classList.contains('is-open')) fab.classList.remove('is-active');
+    }, 1500);
+  }
+
   /* 面板显隐 */
   function setOpen(open){
     toc.classList.toggle('is-open', open);
     toc.setAttribute('aria-hidden', open ? 'false' : 'true');
     fab.setAttribute('aria-expanded', open ? 'true' : 'false');
     if(open){ syncActive(); scrollActiveIntoView(); }
+    else { pokeFab(); }
   }
   fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
 
@@ -216,14 +227,11 @@
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
 
-  /* 半程后出现浮动按钮（顶部两屏内不打扰） */
-  function updFab(){
-    var half=Math.max(window.innerHeight, document.body.scrollHeight*0.5);
-    fab.style.opacity = window.pageYOffset>200 ? '1' : '0.35';
-    fab.style.pointerEvents='auto';
-  }
-  window.addEventListener('scroll',updFab,{passive:true});
-  updFab();
+  window.addEventListener('scroll', pokeFab, {passive:true});
+  if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }
+  else { fab.classList.add('is-active'); }
+
+
 })();
 </script>
 </body>

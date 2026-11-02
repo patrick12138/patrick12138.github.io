@@ -197,3 +197,18 @@ html,body{overflow-x:clip}
   .toc.is-open{transform:translateY(-50%) translateX(0)}
   .toc-fab{display:none}
 }
+
+/* ─── 移动端：浮动按钮静置淡出，滚动时浮现；面板带轻微滑入 ─── */
+@media (max-width:1023px){
+  .toc-fab{opacity:0;transform:translateY(10px) scale(.94);pointer-events:none;
+    transition:opacity .24s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
+  .toc-fab.is-active{opacity:1;transform:none;pointer-events:auto}
+  /* 面板打开时按钮让位，避免压在面板底边上（面板自带关闭 ×） */
+  .toc.is-open ~ .toc-fab{opacity:0;transform:translateY(10px) scale(.94);pointer-events:none}
+  .toc-fab:active{transform:scale(.92)}
+
+  /* 面板：从下浮上来，避免硬切 */
+  .toc{display:flex;opacity:0;visibility:hidden;transform:translateY(14px) scale(.985);
+    transition:opacity .22s ease,transform .22s cubic-bezier(.22,.61,.36,1),visibility .22s}
+  .toc.is-open{opacity:1;visibility:visible;transform:none}
+}
