@@ -6,7 +6,7 @@
 <meta name="description" content="这篇是从LLMWiki和Obsidian+ClaudeCode：用Karpathy的方法，搭建真正可用的第二大脑编译出来的操作指南。">
 <title>LLM Wiki 实践指南 · patrick</title>
 <link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
-<link rel="stylesheet" href="../../assets/post.css?v=eb8b8d2b">
+<link rel="stylesheet" href="../../assets/post.css?v=27449873">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -22,7 +22,7 @@
 <div class="wrap"><article class="article"><h1>LLM Wiki 实践指南</h1>
 <div class="meta">2026年9月10日 · 个人 · <span class="stats">1,131 字 · 约 3 分钟</span></div>
 
-<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心区别</a></li><li class="lvl2"><a href="#h2">三层结构</a></li><li class="lvl2"><a href="#h3">导入时 agent 要做什么</a></li><li class="lvl2"><a href="#h4">查询时 agent 要做什么</a></li><li class="lvl2"><a href="#h5">定期修复检查</a></li><li class="lvl2"><a href="#h6">自我迭代闭环</a></li><li class="lvl2"><a href="#h7">常用指令</a></li><li class="lvl2"><a href="#h8">使用外部 AI 时</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>这篇是从 LLM Wiki 和 Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑 编译出来的操作指南。</p>
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心区别</a></li><li class="lvl2"><a href="#h2">三层结构</a></li><li class="lvl2"><a href="#h3">导入时 agent 要做什么</a></li><li class="lvl2"><a href="#h4">查询时 agent 要做什么</a></li><li class="lvl2"><a href="#h5">定期修复检查</a></li><li class="lvl2"><a href="#h6">自我迭代闭环</a></li><li class="lvl2"><a href="#h7">常用指令</a></li><li class="lvl2"><a href="#h8">使用外部 AI 时</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><p>这篇是从 LLM Wiki 和 Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑 编译出来的操作指南。</p>
 <p>核心不是“把文章存起来以后再搜”，而是让 agent 先完整阅读资料，再把知识编译进一个持续维护的 wiki。</p>
 <h2 id="h1">核心区别</h2>
 <table>
@@ -188,7 +188,6 @@
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var fab=document.getElementById('tocFab');
-  var closeBtn=document.getElementById('tocClose');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
 
@@ -227,7 +226,6 @@
     toc.addEventListener('mouseleave', hoverClose);
     handle.addEventListener('mouseleave', hoverClose);
   }
-  closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="2026 年 10 月实测：Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算。">
 <title>AI 订阅额度与 token 比价（2026-10） · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=eb8b8d2b">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=27449873">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>AI 订阅额度与 token 比价（2026-10）</h1><div class="meta">2026年10月26日 · 个人 · <span class="stats">1,678 字 · 约 5 分钟</span></div><aside class="source"><span class="src-label">来源</span>2026-10-26 会话内实测调研（官方定价页 + 第三方网关门禁实测 + 社区个人实测）。</aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句话结论</a></li><li class="lvl2"><a href="#h2">一、官方定价与近两个月的变动</a></li><li class="lvl2"><a href="#h3">二、实测：一周额度值多少 API 美元</a></li><li class="lvl2"><a href="#h4">三、换算锚点：1 亿 token 值多少钱</a></li><li class="lvl2"><a href="#h5">四、各套餐能跑多少（含缓存的总 token，每月）</a></li><li class="lvl2"><a href="#h6">五、口径陷阱（比数字本身更重要）</a></li><li class="lvl2"><a href="#h7">六、判断</a></li><li class="lvl2"><a href="#h8">七、数据源与时效</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>相关：Codex 与 AI 编程工作流、Agent Harness 版图与个人选型、AI 商品化与价值迁移</p>
+<div class="wrap"><article class="article"><h1>AI 订阅额度与 token 比价（2026-10）</h1><div class="meta">2026年10月26日 · 个人 · <span class="stats">1,678 字 · 约 5 分钟</span></div><aside class="source"><span class="src-label">来源</span>2026-10-26 会话内实测调研（官方定价页 + 第三方网关门禁实测 + 社区个人实测）。</aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句话结论</a></li><li class="lvl2"><a href="#h2">一、官方定价与近两个月的变动</a></li><li class="lvl2"><a href="#h3">二、实测：一周额度值多少 API 美元</a></li><li class="lvl2"><a href="#h4">三、换算锚点：1 亿 token 值多少钱</a></li><li class="lvl2"><a href="#h5">四、各套餐能跑多少（含缓存的总 token，每月）</a></li><li class="lvl2"><a href="#h6">五、口径陷阱（比数字本身更重要）</a></li><li class="lvl2"><a href="#h7">六、判断</a></li><li class="lvl2"><a href="#h8">七、数据源与时效</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><p>相关：Codex 与 AI 编程工作流、Agent Harness 版图与个人选型、AI 商品化与价值迁移</p>
 <h2 id="h1">一句话结论</h2>
 <p>2026 年 10 月，<strong>Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍</strong>；官方倍率（5x / 20x）与实测基本对不上，<strong>Max 20x 只比 Max 5x 多 30–100%，价格却是 2 倍</strong>。Copilot 不属于同一赛道，它是按 API 价约 1.0–1.8 折转售。</p>
 <h2 id="h2">一、官方定价与近两个月的变动</h2>
@@ -570,7 +570,6 @@
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var fab=document.getElementById('tocFab');
-  var closeBtn=document.getElementById('tocClose');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
 
@@ -609,7 +608,6 @@
     toc.addEventListener('mouseleave', hoverClose);
     handle.addEventListener('mouseleave', hoverClose);
   }
-  closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
 

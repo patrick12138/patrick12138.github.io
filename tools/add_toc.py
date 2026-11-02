@@ -20,7 +20,6 @@ JS = """
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var fab=document.getElementById('tocFab');
-  var closeBtn=document.getElementById('tocClose');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
 
@@ -59,7 +58,6 @@ JS = """
     toc.addEventListener('mouseleave', hoverClose);
     handle.addEventListener('mouseleave', hoverClose);
   }
-  closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
 
@@ -141,14 +139,6 @@ BRAND_JS = """
 """
 
 HEAD = ('<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true">'
-        '<div class="toc-head">' + '<svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        'stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
-        '<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/>'
-        '<line x1="9" y1="18" x2="20" y2="18"/>'
-        '<circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/>'
-        '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
-        '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>' +
-        '<button class="toc-close" id="tocClose" aria-label="关闭目录">\u00d7</button></div>'
         '<ol class="toc-list" id="tocList">%s</ol></nav>'
         '<button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc">'
         + '<svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
@@ -159,13 +149,10 @@ HEAD = ('<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true">
         '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
         '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>' + '</button>'
         '<button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1">'
-        + '<svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        'stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
-        '<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/>'
-        '<line x1="9" y1="18" x2="20" y2="18"/>'
-        '<circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/>'
-        '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
-        '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>' + '</button>')
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+        '<line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/>'
+        '<line x1="6" y1="17" x2="18" y2="17"/></svg></button>')
 
 
 def strip_toc(doc):
