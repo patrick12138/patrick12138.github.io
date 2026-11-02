@@ -79,7 +79,9 @@ for it in items:
         % (it["kind"], it["slug"], html.escape(it["title"]),
            html.escape(it["desc"][:150]), html.escape(cn_date(it["meta"]))))
 
-body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
+latest = cn_date(items[0]["meta"]).split(" · ")[0] if items else ""
+meta_line = '<p class="page-meta">%d 篇 · 最新 %s</p>' % (len(items), latest)
+body = ('<div class="wrap">' + meta_line +
         '<div class="tools"><div class="tabs" id="tabs">'
         '<button class="on" data-f="all">全部</button>'
         '<button data-f="repost">搬运</button>'
@@ -90,8 +92,8 @@ body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
         '</button></div>'
-        '<ul class="posts" id="posts">%s</ul>'
-        '<div id="sentinel" aria-hidden="true"></div></div>' % "".join(rows))
+        '<ul class="posts" id="posts">' + "".join(rows) + '</ul>'
+        '<div id="sentinel" aria-hidden="true"></div></div>')
 # 样式统一写在 assets/home.css（页面已改为外链，这里不再往 <style> 里塞）
 body += ('<div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);'
          'padding:0 0 60px">这个分类下还没有文章。</p></div>')
