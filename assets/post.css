@@ -176,3 +176,21 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 [data-theme="light"] .toc-list::-webkit-scrollbar-thumb{background:rgba(45,100,150,.25)}
 [data-theme="light"] .toc-list:hover::-webkit-scrollbar-thumb{background:rgba(45,100,150,.45)}
 .toc-list::-webkit-scrollbar-button{display:none;height:0;width:0}
+
+/* ─── 站名下拉：回到首页分类 ─── */
+.brandset{position:relative;display:inline-flex}
+.brand-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;padding:0;
+  cursor:pointer;font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  color:var(--heading);transition:color .15s}
+.brand-btn:hover{color:var(--accent)}
+.brand-btn:focus{outline:none}
+.brand-btn:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+.brand-btn .caret{opacity:.5;transition:transform .18s ease}
+.brandset.open .brand-btn .caret{transform:rotate(180deg)}
+.brand-menu{display:none;position:absolute;top:calc(100% + 10px);left:-10px;z-index:60;min-width:124px;
+  background:var(--bg);border:1px solid var(--border);
+  padding:6px 0;box-shadow:0 14px 30px rgba(0,0,0,.28)}
+.brandset.open .brand-menu{display:block}
+.brand-menu a{display:block;padding:7px 16px;font-family:var(--mono);font-size:.76rem;
+  color:var(--text-muted);text-decoration:none;transition:color .15s,background .15s}
+.brand-menu a:hover{color:var(--accent);background:color-mix(in srgb,var(--text) 5%,transparent)}

@@ -8,6 +8,7 @@
 可重复执行：已经加过的页面会先剥掉旧的 toc 标记再重算。
 """
 import glob
+import hashlib
 import html as htmllib
 import os
 import re
@@ -246,6 +247,15 @@ def build_toc(doc):
     return doc, li
 
 
+def stamp_css(doc):
+    """post.css 用内容哈希做 ?v=，改完样式自动失效缓存。"""
+    path = os.path.join(ROOT, "assets", "post.css")
+    if not os.path.exists(path):
+        return doc
+    h = hashlib.sha1(open(path, "rb").read()).hexdigest()[:8]
+    return re.sub(r"assets/post\.css\?v=[0-9a-f]+", "assets/post.css?v=%s" % h, doc)
+
+
 BRAND_RE = re.compile(r'<a class="brand" href="([^"]*)">patrick</a>')
 
 
@@ -276,6 +286,7 @@ def process(path):
         return False
     doc = strip_toc(doc)
     doc = inject_brand(doc)
+    doc = stamp_css(doc)
     doc, li = build_toc(doc)
     if not li:
         doc = doc.replace("</style>", CSS + "</style>", 1)
