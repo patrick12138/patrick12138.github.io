@@ -8,10 +8,11 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="patrick">
 <meta property="og:title" content="我们如何使用 Codex 在 28 天内构建 Android 版 Sora">
-<meta property="og:description" content="OpenAI 在 28 天内使用 Codex 发布 Android 版 Sora。AI 辅助规划、转换和并行编码工作流帮助敏捷团队实现快速交付、稳定开发。">
-<meta property="og:url" content="https://patrick12138.github.io/posts/sora-android-28-days/">
+<meta property="og:description" content="{{DESC}}">
+<meta property="og:url" content="https://patrick12138.github.io/posts/{{SLUG}}/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=173a6925"><link rel="stylesheet" href="../../assets/post.css?v=9e7013d2">
+<link rel="stylesheet" href="../../assets/base.css?v=f07b3ae0">
+<link rel="stylesheet" href="../../assets/post.css?v=5d5f65c4">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -24,7 +25,11 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>我们如何使用 Codex 在 28 天内构建 Android 版 Sora</h1><div class="meta">2025年10月30日 · OpenAI · 搬运 · <span class="stats">4,491 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/" rel="noopener">https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl4"><a href="#h1">拥抱布鲁克斯定律：保持灵活，快速行动</a></li><li class="lvl4"><a href="#h2">为新任高级工程师提供引导</a></li><li class="lvl4"><a href="#h3">纯文本</a></li><li class="lvl4"><a href="#h4">亲手奠定基础</a></li><li class="lvl4"><a href="#h5">在编写代码前使用 Codex 进行规划</a></li><li class="lvl4"><a href="#h6">分布式工程</a></li><li class="lvl4"><a href="#h7">Codex：跨平台开发的超能力</a></li><li class="lvl4"><a href="#h8">未来的软件工程，现在触手可及</a></li><li class="lvl2"><a href="#h9">继续阅读我们如何构建 OWL —— 驱动基于 ChatGPT 的浏览器 Atlas 的新架构</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l4" data-h="h1"></i><i class="b l4" data-h="h2"></i><i class="b l4" data-h="h3"></i><i class="b l4" data-h="h4"></i><i class="b l4" data-h="h5"></i><i class="b l4" data-h="h6"></i><i class="b l4" data-h="h7"></i><i class="b l4" data-h="h8"></i><i class="b l2" data-h="h9"></i></span></button><div class="body"><p>2025年12月12日</p>
+<div class="wrap"><article class="article"><h1>我们如何使用 Codex 在 28 天内构建 Android 版 Sora</h1>
+<div class="meta">2025年10月30日 · OpenAI · 搬运 · <span class="stats">4,483 字 · 约 12 分钟</span></div>
+<aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/">https://openai.com/zh-Hans-CN/index/shipping-sora-for-android-with-codex/</a></aside>
+
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl4"><a href="#h1">拥抱布鲁克斯定律：保持灵活，快速行动</a></li><li class="lvl4"><a href="#h2">为新任高级工程师提供引导</a></li><li class="lvl4"><a href="#h3">纯文本</a></li><li class="lvl4"><a href="#h4">亲手奠定基础</a></li><li class="lvl4"><a href="#h5">在编写代码前使用 Codex 进行规划</a></li><li class="lvl4"><a href="#h6">分布式工程</a></li><li class="lvl4"><a href="#h7">Codex：跨平台开发的超能力</a></li><li class="lvl4"><a href="#h8">未来的软件工程，现在触手可及</a></li><li class="lvl2"><a href="#h9">延伸阅读</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l4" data-h="h1"></i><i class="b l4" data-h="h2"></i><i class="b l4" data-h="h3"></i><i class="b l4" data-h="h4"></i><i class="b l4" data-h="h5"></i><i class="b l4" data-h="h6"></i><i class="b l4" data-h="h7"></i><i class="b l4" data-h="h8"></i><i class="b l2" data-h="h9"></i></span></button><div class="body"><p>2025年12月12日</p>
 <p><a href="https://openai.com/zh-Hans-CN/news/engineering/">工程</a> <a href="https://openai.com/news/company-announcements/">公司</a></p>
 <p>作者：Patrick Hum 和 RJ Marsan，技术团队成员</p>
 <p><em>Sora 产品已于 2026 年 4 月 26 日正式关停。</em></p>
@@ -32,8 +37,7 @@
 <p>我们在 11 月面向全球推出 Sora Android 应用，支持任何拥有 Android 设备的用户将简短的提示转化为生动的视频。应用上线当天，便登上 Play Store 榜首。Android 用户已在前 24 小时内生成超过 100 万个视频。</p>
 <p>发布背后的故事：Sora 的 Android 应用初始版本在 28 天内构建完成，这要归功于任何团队或开发人员均可使用的智能体：Codex。</p>
 <p>2025 年 10 月 8 日至 11 月 5 日，一支精干的工程团队与 Codex 携手合作，消耗约 50 亿 token，将 Android 版 Sora 从原型阶段推向全球发布。尽管规模庞大，但该应用的无崩溃率高达 99.9%，其架构也让我们深感自豪。如果你想知道我们是否使用了某个秘密模型，其实我们用的是 GPT‑5.1‑Codex 模型的早期版本 — 任何开发人员或企业均可通过 CLI、IDE 扩展或 Web 应用使用的相同版本。</p>
-<p><a class="video-link" href="https://openaiassets.blob.core.windows.net/$web/nf2/blog-final/golden/6eda9a57-5d6d-4890-90ee-61f89e999719/triple_axel.mp4" rel="noopener">观看视频 →</a></p>
-
+<p><a href="https://openaiassets.blob.core.windows.net/$web/nf2/blog-final/golden/6eda9a57-5d6d-4890-90ee-61f89e999719/triple_axel.mp4">观看视频 →</a></p>
 <p>Prompt: figure skater performs a triple axle with a cat on her head</p>
 <h4 id="h1">拥抱布鲁克斯定律：保持灵活，快速行动</h4>
 <p>iOS 版 Sora 一经发布，使用量就呈爆炸式增长。人们立即开始生成大量视频。相较之下，Android 系统中只有一个小型内部原型，而 Google Play 中预注册的用户数量正不断增加。</p>
@@ -102,16 +106,14 @@
 <p>一旦将 Codex 放入上下文丰富的环境中，助其了解你的目标和偏好的构建方式，任何团队都能加倍提升其能力。我们的发布回顾并非“放之四海而皆准”，也并未声称已解决 AI 辅助开发的问题。但我们希望：我们的经验能助你轻松确定赋能 Codex 的最佳方式，从而赋能团队。</p>
 <p>七个月前，当 Codex 推出研究预览版时，软件工程的面貌与现在大不相同。借助 Sora，我们得以探索工程的新篇章。随着我们的模型和工具不断优化，AI 将成为构建过程中不可或缺的组成部分。</p>
 <p>你会用自己的 Codex 团队创造什么呢？</p>
-<h2 id="h9">继续阅读<a href="https://openai.com/zh-Hans-CN/index/building-chatgpt-atlas/">我们如何构建 OWL —— 驱动基于 ChatGPT 的浏览器 Atlas 的新架构</a></h2>
-<p>[</p>
-<p>工程</p>
-<p>](https://openai.com/zh-Hans-CN/index/building-chatgpt-atlas/)</p></div>
+<h2 id="h9">延伸阅读</h2>
+<p><a href="https://openai.com/zh-Hans-CN/index/building-chatgpt-atlas/">我们如何构建 OWL —— 驱动基于 ChatGPT 的浏览器 Atlas 的新架构</a></p></div>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../claude-code-review/"><span class="pager-k">← 上一篇</span><span class="pager-t">一个半月高强度 Claude Code 使用后感受</span></a><a class="pager-next" href="../steam-steel-infinite-minds/"><span class="pager-k">下一篇 →</span><span class="pager-t">Steam, Steel, and Infinite Minds</span></a></nav>
 <a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=2ef9b8fc"></script>
+<script src="../../assets/site.js?v=78edc0a6"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

@@ -124,3 +124,62 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { init(); initCodeCopy(); });
   else { init(); initCodeCopy(); }
 })();
+
+/* 阅读位置记忆：只存本地（localStorage），按文章路径记「当前标题 + 比例」
+   刷新、关掉重开都能回到那个标题；从站内点进来则从顶部开始。 */
+(function () {
+  var body = document.querySelector('.body');
+  if (!body || !window.localStorage) return;
+  var key = 'readpos:' + location.pathname;
+  var fromInside = false;
+  try { fromInside = document.referrer && document.referrer.indexOf(location.origin) === 0; } catch (e) {}
+  var heads = function () {
+    return [].slice.call(body.querySelectorAll('h2[id],h3[id],h4[id]'));
+  };
+  function save() {
+    var cur = null, hs = heads();
+    for (var i = 0; i < hs.length; i++) {
+      if (hs[i].getBoundingClientRect().top <= 96) cur = hs[i]; else break;
+    }
+    try {
+      localStorage.setItem(key, JSON.stringify({
+        id: cur ? cur.id : null,
+        ratio: (window.scrollY / Math.max(1, document.body.scrollHeight - innerHeight)).toFixed(4),
+        title: cur ? cur.textContent.trim().slice(0, 40) : null,
+        t: Date.now()
+      }));
+    } catch (e) {}
+  }
+  var tm = null;
+  window.addEventListener('scroll', function () {
+    clearTimeout(tm); tm = setTimeout(save, 350);
+  }, { passive: true });
+  window.addEventListener('pagehide', save);
+
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+  if (!saved || fromInside || location.hash) return;
+  // 只恢复 30 天内的位置，且确实读到有内容的地方
+  if (Date.now() - (saved.t || 0) > 30 * 864e5) return;
+  if (saved.ratio < 0.03) return;
+
+  function restore() {
+    var y = 0, el = saved.id ? document.getElementById(saved.id) : null;
+    if (el) y = el.getBoundingClientRect().top + window.scrollY - 88;
+    else y = saved.ratio * (document.body.scrollHeight - innerHeight);
+    window.scrollTo(0, y);
+    var tip = document.createElement('div');
+    tip.className = 'readpos-tip';
+    tip.innerHTML = '已回到' + (saved.title ? '「' + saved.title + '」' : '上次位置') +
+      ' · <a href="#top" data-top>从头读</a>';
+    document.body.appendChild(tip);
+    requestAnimationFrame(function () { tip.classList.add('on'); });
+    tip.querySelector('[data-top]').addEventListener('click', function (e) {
+      e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); hide();
+    });
+    function hide() { tip.classList.remove('on'); setTimeout(function () { tip.remove(); }, 300); }
+    setTimeout(hide, 6000);
+  }
+  if (document.readyState === 'complete') restore();
+  else window.addEventListener('load', restore);
+})();

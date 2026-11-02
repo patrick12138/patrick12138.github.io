@@ -242,3 +242,16 @@ html,body{overflow-x:clip}
   background:color-mix(in srgb,var(--accent) 55%,transparent)}
 .body pre::-webkit-scrollbar-button,.body table::-webkit-scrollbar-button{display:none;height:0;width:0}
 .body pre{padding-bottom:18px}   /* 给横向滚动条留位置，不压住最后一行代码 */
+
+/* 「回到上次位置」：贴底的一条细栏，不压正文中间 */
+.readpos-tip{position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:color-mix(in srgb,var(--bg) 96%,var(--text) 4%);
+  border-top:1px solid var(--rule);
+  padding:9px 22px calc(9px + env(safe-area-inset-bottom));
+  font-family:var(--mono);font-size:.72rem;color:var(--text-muted);
+  text-align:center;opacity:0;transform:translateY(100%);
+  transition:opacity .2s ease,transform .22s ease}
+.readpos-tip.on{opacity:1;transform:none}
+.readpos-tip a{color:var(--accent);text-decoration:none;margin-left:6px;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+@media (min-width:721px){.readpos-tip{padding-right:80px}}   /* 给右下返回顶部按钮让位 */

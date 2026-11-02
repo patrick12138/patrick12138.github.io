@@ -15,6 +15,21 @@ STYLE = ('<meta property="og:type" content="website">'
          '<link rel="stylesheet" href="assets/base.css">'
          '<link rel="stylesheet" href="assets/home.css">')   # ?v= 由 tools/build.py 统一写
 
+def trim_desc(s, limit=92):
+    """首页只显示两行：在句末标点处截断并补省略号，别把半句话硬切。"""
+    s = re.sub(r"\s+", " ", html.unescape(s or "")).strip()
+    s = re.sub(r"\s*[-–—-]\s*(?:How-To|README|at main).*$", "", s)  # 抓正文带进来的尾巴
+    if len(s) <= limit:
+        return s
+    cut = s[:limit]
+    ends = max(cut.rfind(c) for c in "。！？；.!?;")
+    comma = max(cut.rfind("，"), cut.rfind("、"))
+    pos = ends if ends >= limit * 0.5 else (comma if comma >= limit * 0.6 else -1)
+    if pos > 0:
+        cut = cut[:pos + 1]
+    return cut.rstrip("，、；,; ") + "…"
+
+
 MONTHS = {m: i for i, m in enumerate(
     ["January","February","March","April","May","June","July",
      "August","September","October","November","December"], 1)}
@@ -83,7 +98,7 @@ for it in items:
         '<li data-kind="%s"><a href="posts/%s/">'
         '<h2>%s</h2><p class="desc">%s</p><time>%s</time></a></li>'
         % (it["kind"], it["slug"], html.escape(it["title"]),
-           html.escape(it["desc"][:150]), html.escape(cn_date(it["meta"]))))
+           html.escape(trim_desc(it["desc"])), html.escape(cn_date(it["meta"]))))
 
 latest = cn_date(items[0]["meta"]).split(" · ")[0] if items else ""
 meta_line = '<p class="page-meta">%d 篇 · 最新 %s</p>' % (len(items), latest)

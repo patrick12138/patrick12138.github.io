@@ -44,6 +44,7 @@ def main():
         print("· %s" % r["slug"])
         md2post.build(md, r["slug"], date_arg=iso(r.get("date")), author_arg=r.get("author"),
                       kind=r.get("kind", "repost"), images=True,
+                      desc_arg=r.get("desc"),
                       title_arg=r.get("title") or None)
         done += 1
     print("重建 %d 篇，跳过 %d 篇 %s" % (done, len(skipped), skipped or ""))

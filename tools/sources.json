@@ -70,7 +70,8 @@
   "author": "王巍（onevcat）",
   "date": "August 3, 2025",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "onevcat 一个半月高强度使用 Claude Code 之后的真实记录：哪些环节真的省事，哪些地方它比人更慢、也更危险。"
  },
  {
   "slug": "claude-code-team-review",
@@ -118,7 +119,8 @@
   "author": "chenmijiang",
   "date": "July 21, 2026",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "把同一份仓库同时检出到多个目录：worktree 的目录结构、常用命令，以及「一边开发一边修 hotfix」这类日常场景的完整流程。"
  },
  {
   "slug": "harness-engineering",
@@ -143,7 +145,8 @@
   "author": "Eric S. Raymond",
   "date": "July 14, 2026",
   "kind": "repost",
-  "title": "提问的智慧"
+  "title": "提问的智慧",
+  "desc": "Eric S. Raymond 的经典长文：提问之前该先做什么，怎样描述问题才能让别人愿意回答。"
  },
  {
   "slug": "how-to-be-good-at-research",
@@ -224,7 +227,8 @@
   "author": "Hugging Face",
   "date": "August 14, 2026",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "Hugging Face 的 2026 夏季开放模型观察：开源模型的能力梯队、许可变化，以及和闭源之间还差多少。"
  },
  {
   "slug": "taste-and-engineering",
@@ -272,7 +276,8 @@
   "author": "Anthropic",
   "date": "March 25, 2026",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "Claude 的 artifacts 是什么、能拿来做什么，以及它和普通对话输出在可编辑、可分享上的区别。"
  },
  {
   "slug": "what-is-agent",
@@ -312,7 +317,8 @@
   "author": "Matt Shumer",
   "date": "May 29, 2026",
   "kind": "repost",
-  "title": "Something Big Is Happening"
+  "title": "Something Big Is Happening",
+  "desc": "Matt Shumer 谈 2026 年的转折点：模型能力进入自我加速之后，个人和团队该怎样重新安排自己的工作。"
  },
  {
   "slug": "steam-steel-infinite-minds",

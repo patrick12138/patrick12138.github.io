@@ -110,7 +110,7 @@
 <link>https://patrick12138.github.io/posts/state-of-open-models-2026/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/state-of-open-models-2026/</guid>
 <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
-<description>We’re on a journey to advance and democratize artificial intelligence through open source and open science.</description>
+<description>Hugging Face 的 2026 夏季开放模型观察：开源模型的能力梯队、许可变化，以及和闭源之间还差多少。</description>
 </item>
 <item>
 <title>Finding the Best Harness for DeepSeek V4 Flash</title>
@@ -124,14 +124,14 @@
 <link>https://patrick12138.github.io/posts/git-worktree/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/git-worktree/</guid>
 <pubDate>Tue, 21 Jul 2026 00:00:00 +0000</pubDate>
-<description>A comprehensive repository of AI-generated technical guides</description>
+<description>把同一份仓库同时检出到多个目录：worktree 的目录结构、常用命令，以及「一边开发一边修 hotfix」这类日常场景的完整流程。</description>
 </item>
 <item>
 <title>提问的智慧</title>
 <link>https://patrick12138.github.io/posts/how-to-ask-questions/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/how-to-ask-questions/</guid>
 <pubDate>Tue, 14 Jul 2026 00:00:00 +0000</pubDate>
-<description>本文原文由知名 Hacker Eric S. Raymond 所撰寫，教你如何正確的提出技術問題並獲得你滿意的答案。 - How-To-Ask-Questions-The-Smart-Way/README-zh_CN.md at main · ryanhanwu/How-To-Ask-Questions-The-Smart-Way</description>
+<description>Eric S. Raymond 的经典长文：提问之前该先做什么，怎样描述问题才能让别人愿意回答。</description>
 </item>
 <item>
 <title>AI 时代的品味与工程思维</title>
@@ -222,7 +222,7 @@
 <link>https://patrick12138.github.io/posts/something-big-is-happening/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/something-big-is-happening/</guid>
 <pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate>
-<description>A simple tool for saving web pages to read later on iOS, Android, computer, Kindle or Kobo eReaders.</description>
+<description>Matt Shumer 谈 2026 年的转折点：模型能力进入自我加速之后，个人和团队该怎样重新安排自己的工作。</description>
 </item>
 <item>
 <title>工程技术：在智能体优先的世界中利用 Codex</title>
@@ -250,7 +250,7 @@
 <link>https://patrick12138.github.io/posts/what-are-artifacts/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/what-are-artifacts/</guid>
 <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-<description>Accessing artifacts in the sidebar and Claude-powered artifacts are supported on free, Pro, Max, Team, and Enterprise pl…</description>
+<description>Claude 的 artifacts 是什么、能拿来做什么，以及它和普通对话输出在可编辑、可分享上的区别。</description>
 </item>
 <item>
 <title>当我们站在变革的开端</title>
@@ -299,7 +299,7 @@
 <link>https://patrick12138.github.io/posts/claude-code-review/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/claude-code-review/</guid>
 <pubDate>Sun, 03 Aug 2025 00:00:00 +0000</pubDate>
-<description>上善若水，人淡如菊。这里是王巍 (onevcat) 的博客，用来记录一些技术和想法，主要专注于 Swift 和 iOS 开发。</description>
+<description>onevcat 一个半月高强度使用 Claude Code 之后的真实记录：哪些环节真的省事，哪些地方它比人更慢、也更危险。</description>
 </item>
 <item>
 <title>AI 究竟能不能替代程序员?</title>

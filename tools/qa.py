@@ -146,6 +146,21 @@ PRIVACY_SOFT = [
 ]
 
 
+def check_md_leak():
+    """markdown 链接残渣：](http / 独立成段的 [ / ]( —— 微信或爬虫抓正文常留这些。"""
+    bad = []
+    pats = [(r"\]\(https?:", "markdown 链接残渣 ](http"),
+            (r"(?m)^\s*\[\s*$", "孤立的一行 ["),
+            (r"(?m)^\s*\]\([^)]*\)?\s*$", "孤立的一行 ](...)")]
+    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
+        slug = os.path.basename(os.path.dirname(p))
+        text = re.sub(r"<[^>]+>", " ", body_of(open(p, encoding="utf-8").read()))
+        for pat, name in pats:
+            if re.search(pat, text):
+                bad.append((slug, name))
+    return bad
+
+
 def check_privacy():
     """P0：前公司名/证件/联系方式/内网/密钥；P1：求职痕迹、薪资。"""
     hard, soft = [], []
@@ -177,6 +192,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    leak = check_md_leak()
+    if leak:
+        print("\n正文里的 markdown 残渣（P0）")
+        for slug, name in leak[:8]:
+            print("  [P0] %s · %s" % (slug, name))
+        total["P0"] += len(leak)
+
     hard, soft = check_privacy()
     if hard:
         print("\n脱敏：必须处理的内容（P0）")
