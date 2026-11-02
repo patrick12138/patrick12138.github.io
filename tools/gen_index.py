@@ -88,6 +88,10 @@ body = ('<div class="wrap">' + meta_line +
         '<button data-f="own">个人</button>'
         '</div>'
         '<input id="q" class="sinput" type="search" placeholder="搜索标题或摘要…" autocomplete="off">'
+        '<button class="sclr" id="qClear" aria-label="清空搜索" hidden>'
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+        '<path d="M6 6l12 12M18 6L6 18"/></svg></button>'
         '<button class="sbtn" id="searchBtn" aria-label="搜索">'
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
@@ -155,7 +159,11 @@ JS = """<script>
     if(on){ input.focus(); } else { input.value=''; state.q=''; apply(); }
   });
 
+  if(qClear)qClear.addEventListener('click',function(){
+    input.value=''; state.q=''; qClear.hidden=true; input.focus(); apply();
+  });
   if(input)input.addEventListener('input',function(){
+    if(qClear) qClear.hidden = !input.value;
     state.q=input.value.trim().toLowerCase(); apply();
   });
 
