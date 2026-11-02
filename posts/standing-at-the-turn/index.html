@@ -122,6 +122,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -139,16 +142,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -166,7 +161,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
 </style>
 </head>
@@ -181,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>当我们站在变革的开端</h1><div class="meta">March 6, 2026 · @jiayuan_jy · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/jiayuan_jy/status/2029851505583607961" target="_blank" rel="noopener">https://x.com/jiayuan_jy/status/2029851505583607961</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">01. 加速的 2026</a></li><li class="lvl2"><a href="#h2">02. 当复制变得免费</a></li><li class="lvl2"><a href="#h3">03. 当动力变得廉价</a></li><li class="lvl2"><a href="#h4">04. 当门槛坍塌</a></li><li class="lvl2"><a href="#h5">05. 商品化的规律</a></li><li class="lvl2"><a href="#h6">06. 我们现在在哪里</a></li><li class="lvl2"><a href="#h7">07. 可能发生什么</a></li><li class="lvl2"><a href="#h8">08. 这是创业最坏的时代</a></li><li class="lvl2"><a href="#h9">09. 在地狱模式里生存</a></li><li class="lvl2"><a href="#h10">10. 不破不立</a></li><li class="lvl2"><a href="#h11">参考文献</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><img alt="图像" src="../../assets/posts/standing-at-the-turn/0a135b7572cf.webp"></p>
+<div class="wrap"><article class="article"><h1>当我们站在变革的开端</h1><div class="meta">March 6, 2026 · @jiayuan_jy · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/jiayuan_jy/status/2029851505583607961" target="_blank" rel="noopener">https://x.com/jiayuan_jy/status/2029851505583607961</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">01. 加速的 2026</a></li><li class="lvl2"><a href="#h2">02. 当复制变得免费</a></li><li class="lvl2"><a href="#h3">03. 当动力变得廉价</a></li><li class="lvl2"><a href="#h4">04. 当门槛坍塌</a></li><li class="lvl2"><a href="#h5">05. 商品化的规律</a></li><li class="lvl2"><a href="#h6">06. 我们现在在哪里</a></li><li class="lvl2"><a href="#h7">07. 可能发生什么</a></li><li class="lvl2"><a href="#h8">08. 这是创业最坏的时代</a></li><li class="lvl2"><a href="#h9">09. 在地狱模式里生存</a></li><li class="lvl2"><a href="#h10">10. 不破不立</a></li><li class="lvl2"><a href="#h11">参考文献</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><img alt="图像" src="../../assets/posts/standing-at-the-turn/0a135b7572cf.webp"></p>
 <h2 id="h1">01. 加速的 2026</h2>
 <p>2026 年 2 月，Andrej Karpathy（前 Tesla AI 总监、OpenAI 创始成员）在 X 上描述了一个非常具体的转折点。</p>
 <p>11 月，他的编程工作还是 80% 手写代码、20% 让 agent 处理；到了 12 月，比例完全倒置——80% 用自然语言指挥 agent，20% 自己做编辑和收尾。</p>
@@ -350,7 +344,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>CBO. (2013). "Total Factor Productivity Growth in Historical Perspective." Working Paper 2013-01.</p>
 <p>AWS. (2006-2018). S3 定价历史数据.</p>
 <p>Y Combinator 创立历史 (2005). <a href="https://paulgraham.com/ycstart.html1">https://paulgraham.com/ycstart.html1</a></p></div>
-<a class="back" href="../../">← 返回首页</a></article></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -369,12 +363,24 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 })();
 </script>
 <script></script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -388,11 +394,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });

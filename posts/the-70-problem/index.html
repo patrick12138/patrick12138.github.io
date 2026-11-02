@@ -122,6 +122,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -139,16 +142,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -166,7 +161,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
 </style>
 </head>
@@ -181,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>The 70% problem: Hard truths about AI-assisted coding</h1><div class="meta">December 5, 2024 · Addy Osmani · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://addyo.substack.com/p/the-70-problem-hard-truths-about" target="_blank" rel="noopener">https://addyo.substack.com/p/the-70-problem-hard-truths-about</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">How developers are actually using AI</a></li><li class="lvl3"><a href="#h2">The Bootstrappers: Zero to MVP</a></li><li class="lvl3"><a href="#h3">The Iterators: daily development</a></li><li class="lvl2"><a href="#h4">The hidden cost of &quot;AI Speed&quot;</a></li><li class="lvl2"><a href="#h5">The knowledge paradox</a></li><li class="lvl2"><a href="#h6">The 70% problem: AI&#x27;s learning curve paradox</a></li><li class="lvl3"><a href="#h7">The two steps back pattern</a></li><li class="lvl3"><a href="#h8">The learning paradox continued</a></li><li class="lvl3"><a href="#h9">The knowledge gap</a></li><li class="lvl3"><a href="#h10">Implications for the future</a></li><li class="lvl2"><a href="#h11">What actually works: practical patterns</a></li><li class="lvl3"><a href="#h12">1. The &quot;AI first draft&quot; pattern</a></li><li class="lvl3"><a href="#h13">2. The &quot;Constant conversation&quot; pattern</a></li><li class="lvl3"><a href="#h14">3. The &quot;Trust but verify&quot; pattern</a></li><li class="lvl2"><a href="#h15">Looking forward: The real promise of AI?</a></li><li class="lvl2"><a href="#h16">What does this mean for you?</a></li><li class="lvl2"><a href="#h17">The rise of agentic software engineering</a></li><li class="lvl3"><a href="#h18">From responders to collaborators</a></li><li class="lvl3"><a href="#h19">The Multimodal future</a></li><li class="lvl3"><a href="#h20">Autonomous but guided</a></li><li class="lvl3"><a href="#h21">The English-first development environment</a></li><li class="lvl2"><a href="#h22">The return of software as craft?</a></li><li class="lvl3"><a href="#h23">The Demo-quality trap</a></li><li class="lvl3"><a href="#h24">The lost art of polish</a></li><li class="lvl3"><a href="#h25">The renaissance of personal software</a></li><li class="lvl2"><a href="#h26">The bottom line</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>After spending the last few years embedded in AI-assisted development, I've noticed a fascinating pattern. While engineers report being dramatically more productive with AI, the actual software we use daily doesn’t seem like it’s getting noticeably better. What's going on here?</p>
+<div class="wrap"><article class="article"><h1>The 70% problem: Hard truths about AI-assisted coding</h1><div class="meta">December 5, 2024 · Addy Osmani · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://addyo.substack.com/p/the-70-problem-hard-truths-about" target="_blank" rel="noopener">https://addyo.substack.com/p/the-70-problem-hard-truths-about</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">How developers are actually using AI</a></li><li class="lvl3"><a href="#h2">The Bootstrappers: Zero to MVP</a></li><li class="lvl3"><a href="#h3">The Iterators: daily development</a></li><li class="lvl2"><a href="#h4">The hidden cost of &quot;AI Speed&quot;</a></li><li class="lvl2"><a href="#h5">The knowledge paradox</a></li><li class="lvl2"><a href="#h6">The 70% problem: AI&#x27;s learning curve paradox</a></li><li class="lvl3"><a href="#h7">The two steps back pattern</a></li><li class="lvl3"><a href="#h8">The learning paradox continued</a></li><li class="lvl3"><a href="#h9">The knowledge gap</a></li><li class="lvl3"><a href="#h10">Implications for the future</a></li><li class="lvl2"><a href="#h11">What actually works: practical patterns</a></li><li class="lvl3"><a href="#h12">1. The &quot;AI first draft&quot; pattern</a></li><li class="lvl3"><a href="#h13">2. The &quot;Constant conversation&quot; pattern</a></li><li class="lvl3"><a href="#h14">3. The &quot;Trust but verify&quot; pattern</a></li><li class="lvl2"><a href="#h15">Looking forward: The real promise of AI?</a></li><li class="lvl2"><a href="#h16">What does this mean for you?</a></li><li class="lvl2"><a href="#h17">The rise of agentic software engineering</a></li><li class="lvl3"><a href="#h18">From responders to collaborators</a></li><li class="lvl3"><a href="#h19">The Multimodal future</a></li><li class="lvl3"><a href="#h20">Autonomous but guided</a></li><li class="lvl3"><a href="#h21">The English-first development environment</a></li><li class="lvl2"><a href="#h22">The return of software as craft?</a></li><li class="lvl3"><a href="#h23">The Demo-quality trap</a></li><li class="lvl3"><a href="#h24">The lost art of polish</a></li><li class="lvl3"><a href="#h25">The renaissance of personal software</a></li><li class="lvl2"><a href="#h26">The bottom line</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>After spending the last few years embedded in AI-assisted development, I've noticed a fascinating pattern. While engineers report being dramatically more productive with AI, the actual software we use daily doesn’t seem like it’s getting noticeably better. What's going on here?</p>
 <p>I think I know why, and the answer reveals some fundamental truths about software development that we need to reckon with. Let me share what I've learned.</p>
 <p><img alt="" src="../../assets/posts/the-70-problem/b043caa58e35.webp"></p>
 <h2 id="h1">How developers are actually using AI</h2>
@@ -429,7 +423,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>What AI does do is let us iterate and experiment faster, potentially leading to better solutions through more rapid exploration. But only if we maintain our engineering discipline and use AI as a tool, not a replacement for good software practices. Remember: The goal isn't to write more code faster. It's to build better software. Used wisely, AI can help us do that. But it's still up to us to know what "better" means and how to achieve it.</p>
 <p>What's your experience been with AI-assisted development? I'd love to hear your stories and insights in the comments.</p>
 <p><img alt="" src="../../assets/posts/the-70-problem/9256320747ae.webp"></p></div>
-<a class="back" href="../../">← 返回首页</a></article></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -448,12 +442,24 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 })();
 </script>
 <script></script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -467,11 +473,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });

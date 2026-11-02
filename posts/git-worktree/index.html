@@ -122,6 +122,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -139,16 +142,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -166,26 +161,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
-
-/* 目录按钮：小圆形图标 */
-.toc-tab{width:34px;height:34px;border-radius:50%;padding:0;right:14px;
-  align-items:center;justify-content:center;
-  writing-mode:horizontal-tb;letter-spacing:0;border-right:1px solid var(--border)}
-.toc-fab{width:42px;height:42px;border-radius:50%;padding:0;
-  align-items:center;justify-content:center;letter-spacing:0;font-size:0;
-  box-shadow:0 4px 16px rgba(0,0,0,.22)}
-.toc-tab svg,.toc-fab svg{display:block}
-
-.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
-.toc-tab,.toc-fab{position:fixed}
-
-/* 目录：更紧凑 + 头部用图标 */
-.toc-head span:first-child{display:none}
-.toc-head{gap:5px;margin-bottom:8px}
-.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
-.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
@@ -199,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · chenmijiang · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Git Worktree 完全指南</a></li><li class="lvl2"><a href="#h2">1. 概述</a></li><li class="lvl3"><a href="#h3">1.1 什么是 Git Worktree</a></li><li class="lvl3"><a href="#h4">1.2 Worktree 的工作原理</a></li><li class="lvl3"><a href="#h5">1.3 与 clone / stash 的区别</a></li><li class="lvl2"><a href="#h6">2. 基本概念</a></li><li class="lvl3"><a href="#h7">2.1 主 worktree 与附加 worktree</a></li><li class="lvl3"><a href="#h8">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</a></li><li class="lvl3"><a href="#h9">2.3 Detached HEAD worktree</a></li><li class="lvl2"><a href="#h10">3. 安装与前置条件</a></li><li class="lvl2"><a href="#h11">4. 基本用法</a></li><li class="lvl3"><a href="#h12">4.1 查看 worktree 列表</a></li><li class="lvl3"><a href="#h13">4.2 创建新的 worktree</a></li><li class="lvl3"><a href="#h14">4.3 切换分支（在特定 worktree 内）</a></li><li class="lvl3"><a href="#h15">4.4 删除 worktree</a></li><li class="lvl3"><a href="#h16">4.5 移动 worktree（move）</a></li><li class="lvl3"><a href="#h17">4.6 锁定 worktree（lock/unlock）</a></li><li class="lvl3"><a href="#h18">4.7 修复 worktree（repair）</a></li><li class="lvl3"><a href="#h19">4.8 清理遗留元数据（prune）</a></li><li class="lvl2"><a href="#h20">5. 日常开发场景</a></li><li class="lvl3"><a href="#h21">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</a></li><li class="lvl3"><a href="#h22">5.2 场景 2：并行跑测试/构建</a></li><li class="lvl3"><a href="#h23">5.3 场景 3：Review PR 或复现 CI 失败</a></li><li class="lvl3"><a href="#h24">5.4 场景 4：用 detached worktree debug 和修复老版本</a></li><li class="lvl3"><a href="#h25">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</a></li><li class="lvl2"><a href="#h26">6. 常用命令速查</a></li><li class="lvl3"><a href="#h27">6.1 常见错误与定位</a></li><li class="lvl2"><a href="#h28">7. 最佳实践与注意事项</a></li><li class="lvl3"><a href="#h29">7.1 Worktree 目录放哪里</a></li><li class="lvl3"><a href="#h30">7.2 给 worktree 起”能排序”的名字</a></li><li class="lvl3"><a href="#h31">7.3 不要在多个 worktree 共享同一个构建输出目录</a></li><li class="lvl3"><a href="#h32">7.4 删除 worktree 前先处理分支生命周期</a></li><li class="lvl3"><a href="#h33">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</a></li><li class="lvl3"><a href="#h34">7.6 子模块与 worktree</a></li><li class="lvl2"><a href="#h35">8. Git Worktree vs 相关命令</a></li><li class="lvl3"><a href="#h36">8.1 Worktree vs Stash</a></li><li class="lvl3"><a href="#h37">8.2 Worktree vs Clone</a></li><li class="lvl2"><a href="#h38">9. 常见问题（FAQ）</a></li><li class="lvl2"><a href="#h39">10. 总结</a></li><li class="lvl3"><a href="#h40">10.1 速查表</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><h2 id="h1">Git Worktree 完全指南</h2>
+<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · chenmijiang · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Git Worktree 完全指南</a></li><li class="lvl2"><a href="#h2">1. 概述</a></li><li class="lvl3"><a href="#h3">1.1 什么是 Git Worktree</a></li><li class="lvl3"><a href="#h4">1.2 Worktree 的工作原理</a></li><li class="lvl3"><a href="#h5">1.3 与 clone / stash 的区别</a></li><li class="lvl2"><a href="#h6">2. 基本概念</a></li><li class="lvl3"><a href="#h7">2.1 主 worktree 与附加 worktree</a></li><li class="lvl3"><a href="#h8">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</a></li><li class="lvl3"><a href="#h9">2.3 Detached HEAD worktree</a></li><li class="lvl2"><a href="#h10">3. 安装与前置条件</a></li><li class="lvl2"><a href="#h11">4. 基本用法</a></li><li class="lvl3"><a href="#h12">4.1 查看 worktree 列表</a></li><li class="lvl3"><a href="#h13">4.2 创建新的 worktree</a></li><li class="lvl3"><a href="#h14">4.3 切换分支（在特定 worktree 内）</a></li><li class="lvl3"><a href="#h15">4.4 删除 worktree</a></li><li class="lvl3"><a href="#h16">4.5 移动 worktree（move）</a></li><li class="lvl3"><a href="#h17">4.6 锁定 worktree（lock/unlock）</a></li><li class="lvl3"><a href="#h18">4.7 修复 worktree（repair）</a></li><li class="lvl3"><a href="#h19">4.8 清理遗留元数据（prune）</a></li><li class="lvl2"><a href="#h20">5. 日常开发场景</a></li><li class="lvl3"><a href="#h21">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</a></li><li class="lvl3"><a href="#h22">5.2 场景 2：并行跑测试/构建</a></li><li class="lvl3"><a href="#h23">5.3 场景 3：Review PR 或复现 CI 失败</a></li><li class="lvl3"><a href="#h24">5.4 场景 4：用 detached worktree debug 和修复老版本</a></li><li class="lvl3"><a href="#h25">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</a></li><li class="lvl2"><a href="#h26">6. 常用命令速查</a></li><li class="lvl3"><a href="#h27">6.1 常见错误与定位</a></li><li class="lvl2"><a href="#h28">7. 最佳实践与注意事项</a></li><li class="lvl3"><a href="#h29">7.1 Worktree 目录放哪里</a></li><li class="lvl3"><a href="#h30">7.2 给 worktree 起”能排序”的名字</a></li><li class="lvl3"><a href="#h31">7.3 不要在多个 worktree 共享同一个构建输出目录</a></li><li class="lvl3"><a href="#h32">7.4 删除 worktree 前先处理分支生命周期</a></li><li class="lvl3"><a href="#h33">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</a></li><li class="lvl3"><a href="#h34">7.6 子模块与 worktree</a></li><li class="lvl2"><a href="#h35">8. Git Worktree vs 相关命令</a></li><li class="lvl3"><a href="#h36">8.1 Worktree vs Stash</a></li><li class="lvl3"><a href="#h37">8.2 Worktree vs Clone</a></li><li class="lvl2"><a href="#h38">9. 常见问题（FAQ）</a></li><li class="lvl2"><a href="#h39">10. 总结</a></li><li class="lvl3"><a href="#h40">10.1 速查表</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><h2 id="h1">Git Worktree 完全指南</h2>
 <h2 id="h2">1. 概述</h2>
 <h3 id="h3">1.1 什么是 Git Worktree</h3>
 <p><code>git worktree</code> 用来管理本地同一个仓库（repository）下的多个工作区（working tree）。它允许你在不同目录中同时检出多个分支或提交，从而并行开发/测试。</p>
@@ -787,7 +763,7 @@ git worktree remove --force ../repo-feature-x
 <td>清掉失效 worktree 元数据</td>
 </tr>
 </tbody>
-</table></div><a class="back" href="../../">← 返回首页</a></article></div>
+</table></div><a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -805,12 +781,24 @@ git worktree remove --force ../repo-feature-x
   });
 })();
 </script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -824,11 +812,6 @@ git worktree remove --force ../repo-feature-x
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });

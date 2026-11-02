@@ -177,6 +177,17 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-head{gap:5px;margin-bottom:8px}
 .toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
 .toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
+
+/* 返回顶部 */
+.to-top{position:fixed;right:18px;bottom:18px;z-index:50;display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 12px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer;opacity:0;transform:translateY(8px);
+  pointer-events:none;transition:opacity .22s ease,transform .22s ease,color .15s,border-color .15s}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+.to-top:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.to-top svg{flex-shrink:0}
+@media (max-width:600px){.to-top{right:14px;bottom:14px;padding:8px 11px}}
 </style>
 </head>
 <body>
@@ -224,6 +235,30 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     var empty=document.getElementById('emptyHint');
     if(empty)empty.style.display=shown?'none':'block';
   });
+})();
+</script>
+<button class="to-top" id="toTop" aria-label="返回顶部">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  顶部
+</button>
+<script>
+(function(){
+  var b=document.getElementById('toTop'); if(!b) return;
+  function upd(){ b.classList.toggle('show', window.pageYOffset > 600); }
+  window.addEventListener('scroll',upd,{passive:true});
+  // 某些 WebView 里程序化滚动不派发 scroll 事件，用 IntersectionObserver 兜一层
+  if ('IntersectionObserver' in window) {
+    var sentinel=document.createElement('div');
+    sentinel.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;pointer-events:none;visibility:hidden';
+    document.body.appendChild(sentinel);
+    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(sentinel);
+  }
+  b.addEventListener('click',function(){
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+  upd();
 })();
 </script>
 </body>

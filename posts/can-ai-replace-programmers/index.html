@@ -112,6 +112,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -129,16 +132,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -156,26 +151,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
-
-/* 目录按钮：小圆形图标 */
-.toc-tab{width:34px;height:34px;border-radius:50%;padding:0;right:14px;
-  align-items:center;justify-content:center;
-  writing-mode:horizontal-tb;letter-spacing:0;border-right:1px solid var(--border)}
-.toc-fab{width:42px;height:42px;border-radius:50%;padding:0;
-  align-items:center;justify-content:center;letter-spacing:0;font-size:0;
-  box-shadow:0 4px 16px rgba(0,0,0,.22)}
-.toc-tab svg,.toc-fab svg{display:block}
-
-.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
-.toc-tab,.toc-fab{position:fixed}
-
-/* 目录：更紧凑 + 头部用图标 */
-.toc-head span:first-child{display:none}
-.toc-head{gap:5px;margin-bottom:8px}
-.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
-.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
@@ -261,88 +237,22 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>最后，运维升级为 DevOps，测试左移，大家只是变得更加「程序员」了而已。</p>
 <p>这有点像 CNC 机器，它的出现只会让更多人成为木匠，而那些好的木匠成为很好的木匠，而不是消灭木匠。</p>
 <p>那么，站在管理者和从业者角度，究竟应该在 AI 工具运用上怎么办？我们下次继续…</p></div>
-<a class="back" href="../../">← 返回首页</a></article></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button>
 <button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button>
+<script></script>
 <script>
 (function(){
-  var toc=document.getElementById('toc'); if(!toc) return;
-  var list=document.getElementById('tocList');
-  var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
-  var fab=document.getElementById('tocFab');
-  var links=[].slice.call(list.querySelectorAll('a'));
-  if(!links.length) return;
-
-  var key='tocCollapsed';
-  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
-  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
-
-  var mobile=window.matchMedia('(max-width:1180px)');
-  head.addEventListener('click',function(){
-    if(mobile.matches){ toc.classList.remove('is-open'); return; }
-    toc.classList.toggle('is-collapsed');
-    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
-    syncChev();
-  });
-  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
-
-  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
-  function smoothTo(el){
-    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
-    if(target<0) target=0;
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
     var before=window.pageYOffset;
-    try{ window.scrollTo({top:target,behavior:'smooth'}); }
-    catch(e){ window.scrollTo(0,target); }
-    setTimeout(function(){
-      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
-    },400);
-  }
-
-  links.forEach(function(a){
-    a.addEventListener('click',function(e){
-      var id=a.getAttribute('href').slice(1);
-      var el=document.getElementById(id); if(!el) return;
-      e.preventDefault();
-      smoothTo(el);
-      mark(id);
-      toc.classList.remove('is-open');
-      history.replaceState(null,'','#'+id);
-    });
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
   });
-
-  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
-  function mark(id){
-    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
-  }
-  var ticking=false;
-  function onScroll(){
-    if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){
-      ticking=false;
-      var best=null, bestTop=-1e9;
-      for(var i=0;i<targets.length;i++){
-        var t=targets[i]; if(!t) continue;
-        var top=t.getBoundingClientRect().top;
-        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
-      }
-      if(!best && targets[0]) best=targets[0];
-      if(best) mark(best.id);
-    });
-  }
-  window.addEventListener('scroll',onScroll,{passive:true});
-  syncChev();
-  if(location.hash) mark(location.hash.slice(1));
-  onScroll();
 })();
 </script>
 </body>

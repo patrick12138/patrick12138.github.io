@@ -17,6 +17,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CSS = """
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -34,16 +37,8 @@ CSS = """
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -61,7 +56,6 @@ CSS = """
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
 """
 
@@ -70,7 +64,6 @@ JS = """
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -84,11 +77,6 @@ JS = """
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
@@ -144,13 +132,25 @@ JS = """
 })();
 """
 
+BACKTOP_JS = """
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+"""
+
 HEAD = ('<nav class="toc" id="toc" aria-label="文章目录">'
         '<button class="toc-head" id="tocHead" aria-expanded="true">'
         '<span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" '
         'stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'
         '<path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">\u00d7</span></button>'
         '<ol class="toc-list" id="tocList">%s</ol></nav>'
-        '<button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button>'
+
         '<button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button>')
 
 HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>目录</button>', re.S)
@@ -158,6 +158,8 @@ HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>
 
 def strip_toc(doc):
     doc = HEAD_RE.sub("", doc)
+    doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
+    doc = re.sub(r"\n<script>\n\(function\(\)\{\n  var b=document\.getElementById\('backTop'\).*?\}\)\(\);\n</script>", "", doc, flags=re.S)
     doc = re.sub(r'\n/\* ─── 目录（toc） ─── \*/.*?(?=</style>)', "", doc, flags=re.S)
     doc = re.sub(r'\n\(function\(\)\{\n  var toc=document\.getElementById\(\'toc\'\).*?\}\)\(\);\n', "", doc, flags=re.S)
     return doc
@@ -203,10 +205,18 @@ def process(path):
     doc = strip_toc(doc)
     doc, li = build_toc(doc)
     if not li:
+        doc = doc.replace("</style>", CSS + "</style>", 1)
+        doc = re.sub(r'(<a class="back"[^>]*>.*?</a>)',
+                     r'\1<a class="back-top" href="#" id="backTop">↑ 回到顶部</a>', doc, count=1, flags=re.S)
+        doc = doc.replace("</body>", "<script>" + BACKTOP_JS + "</script>\n</body>", 1)
         open(path, "w", encoding="utf-8").write(doc)
         return False
     # CSS
     doc = doc.replace("</style>", CSS + "</style>", 1)
+    # 「↑ 回到顶部」放在「← 返回首页」旁边
+    doc = re.sub(r'(<a class="back"[^>]*>.*?</a>)',
+                 r'\1<a class="back-top" href="#" id="backTop">↑ 回到顶部</a>', doc, count=1, flags=re.S)
+    doc = doc.replace("</body>", "<script>" + BACKTOP_JS + "</script>\n</body>", 1)
     # 目录标记：放在 body 之前（正文起点前）
     doc = doc.replace('<div class="body">', HEAD % li + '<div class="body">', 1)
     # JS

@@ -122,6 +122,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -139,16 +142,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -166,7 +161,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
 </style>
 </head>
@@ -181,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Why I Don’t Vibe Code</h1><div class="meta">March 5, 2026 · Jacob Harris · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://jacobharr.is/personal/i-dont-vibe-code" target="_blank" rel="noopener">https://jacobharr.is/personal/i-dont-vibe-code</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">I’m a Cheapskate</a></li><li class="lvl2"><a href="#h2">I’m Old</a></li><li class="lvl2"><a href="#h3">I Love Mess</a></li><li class="lvl2"><a href="#h4">Friction is a Gift</a></li><li class="lvl2"><a href="#h5">I Care A Lot</a></li><li class="lvl2"><a href="#h6">A Few Other Silly Reasons</a></li><li class="lvl2"><a href="#h7">Now What?</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>There has been a lot of discussion online lately about vibe coding and and how Large Language Models (LLMs) will revolutionize the field of software development. Every new model will launch us into realms of pure productivity, shipping software at the speed of thought and removing all the friction and overhead of product development. Or something like that.</p>
+<div class="wrap"><article class="article"><h1>Why I Don’t Vibe Code</h1><div class="meta">March 5, 2026 · Jacob Harris · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://jacobharr.is/personal/i-dont-vibe-code" target="_blank" rel="noopener">https://jacobharr.is/personal/i-dont-vibe-code</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">I’m a Cheapskate</a></li><li class="lvl2"><a href="#h2">I’m Old</a></li><li class="lvl2"><a href="#h3">I Love Mess</a></li><li class="lvl2"><a href="#h4">Friction is a Gift</a></li><li class="lvl2"><a href="#h5">I Care A Lot</a></li><li class="lvl2"><a href="#h6">A Few Other Silly Reasons</a></li><li class="lvl2"><a href="#h7">Now What?</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>There has been a lot of discussion online lately about vibe coding and and how Large Language Models (LLMs) will revolutionize the field of software development. Every new model will launch us into realms of pure productivity, shipping software at the speed of thought and removing all the friction and overhead of product development. Or something like that.</p>
 <p>Maybe. I’ll have to take your word for it. I don’t vibe code.</p>
 <p>If it’s working for you, great! I’m not really here to argue the merits or flaws of LLMs at depth here in this piece, but it’s just never clicked for me personally. This page is a “brief” accounting of various reasons why.</p>
 <h2 id="h1">I’m a Cheapskate</h2>
@@ -225,7 +219,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>Weirdly, nobody seems more miserable than LLM boosters. I might be more swayed if developers were using their newfound productivity gains to finally live that <a href="https://en.wikipedia.org/wiki/The_4-Hour_Workweek">4-hour workweek</a> that nerds were pretending to idolize 10 years ago. But perversely, it seems like many in Silicon Valley are outsourcing work to the AI agents and then using <a href="https://www.youtube.com/watch?v=l-Z0iyBNxpk">their newfound spare time to do even more work</a>. Instead of using their time for relaxation or art or joy, they’re embracing <a href="https://www.forbes.com/sites/bryanrobinson/2025/08/04/the-9-9-6-work-schedule-could-be-coming-to-your-workplace-soon/">9-9-6</a> work schedule and a hyper-quantified workplace that would make even <a href="https://en.wikipedia.org/wiki/Scientific_management">Frederick Taylor</a> blanch in horror. It’s possible that the LLM revolution will finally come for me and my job, but I’d rather not work myself into the grave first.</p>
 <h2 id="h7">Now What?</h2>
 <p>I don’t pretend to know the future. Maybe the technology will advance to such a point I will regret my lack of experience and familiarity. Or, maybe it’ll stagnate and the whole financial house of cards will come tumbling down. If that happens, I hope we can rebuild software development into the humane practice of building a better world, one line of code at a time.</p></div>
-<a class="back" href="../../">← 返回首页</a></article></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -244,12 +238,24 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 })();
 </script>
 <script></script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -263,11 +269,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });

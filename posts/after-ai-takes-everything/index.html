@@ -122,6 +122,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -139,16 +142,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -166,7 +161,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
 </style>
 </head>
@@ -181,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>当 AI 拿走一切之后</h1><div class="meta">June 12, 2026 · Airing · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://ursb.me/posts/after-ai-takes-everything/" target="_blank" rel="noopener">https://ursb.me/posts/after-ai-takes-everything/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、珍妮机</a></li><li class="lvl2"><a href="#h2">二、瓶颈移到了人这里</a></li><li class="lvl2"><a href="#h3">三、消失的壁垒</a></li><li class="lvl2"><a href="#h4">四、三样拿不走的东西</a></li><li class="lvl2"><a href="#h5">五、在场，或主体性</a></li><li class="lvl2"><a href="#h6">六、价值感的锚点</a></li><li class="lvl2"><a href="#h7">七、风起于青蘋之末</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>最近一个月我陆续收到了三封咨询来信，来信的是三位素未谋面的软件研发，或是基础架构的前端或是数据部分的运维，但这三封信其实困惑其实是同一个问题。</p>
+<div class="wrap"><article class="article"><h1>当 AI 拿走一切之后</h1><div class="meta">June 12, 2026 · Airing · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://ursb.me/posts/after-ai-takes-everything/" target="_blank" rel="noopener">https://ursb.me/posts/after-ai-takes-everything/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、珍妮机</a></li><li class="lvl2"><a href="#h2">二、瓶颈移到了人这里</a></li><li class="lvl2"><a href="#h3">三、消失的壁垒</a></li><li class="lvl2"><a href="#h4">四、三样拿不走的东西</a></li><li class="lvl2"><a href="#h5">五、在场，或主体性</a></li><li class="lvl2"><a href="#h6">六、价值感的锚点</a></li><li class="lvl2"><a href="#h7">七、风起于青蘋之末</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>最近一个月我陆续收到了三封咨询来信，来信的是三位素未谋面的软件研发，或是基础架构的前端或是数据部分的运维，但这三封信其实困惑其实是同一个问题。</p>
 <p>第一封信问我：“你觉得我们以后，全部都会交给 AI 做吗？如果是，code review 这些，还需要人吗？”</p>
 <p>我的回答是：很快。年底或明年，最迟后年。</p>
 <p>第二封信问得更直接：“未来我们的工作，是不是就是在建 AI，然后让它代替自己？”</p>
@@ -342,7 +336,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>谢谢那三位来信的朋友。这篇文章里的大部分思考，不是我一个人想出来的，是在和你们的来回通信中推演出来的——而这件事本身，恰好就是本文想说的全部。</p>
 <p>愿你在机器的轰鸣里，始终听得见自己的声音。</p>
 <p>于 2026 年 6 月 12 日深夜。</p></div>
-<a class="back" href="../../">← 返回首页</a></article></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -361,12 +355,24 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 })();
 </script>
 <script></script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -380,11 +386,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });

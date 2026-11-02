@@ -113,6 +113,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -130,16 +133,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -157,26 +152,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
-
-/* 目录按钮：小圆形图标 */
-.toc-tab{width:34px;height:34px;border-radius:50%;padding:0;right:14px;
-  align-items:center;justify-content:center;
-  writing-mode:horizontal-tb;letter-spacing:0;border-right:1px solid var(--border)}
-.toc-fab{width:42px;height:42px;border-radius:50%;padding:0;
-  align-items:center;justify-content:center;letter-spacing:0;font-size:0;
-  box-shadow:0 4px 16px rgba(0,0,0,.22)}
-.toc-tab svg,.toc-fab svg{display:block}
-
-.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
-.toc-tab,.toc-fab{position:fixed}
-
-/* 目录：更紧凑 + 头部用图标 */
-.toc-head span:first-child{display:none}
-.toc-head{gap:5px;margin-bottom:8px}
-.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
-.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
@@ -190,7 +166,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>一个半月高强度 Claude Code 使用后感受</h1><div class="meta">August 3, 2025 · 王巍（onevcat） · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://onevcat.com/2025/08/claude-code/" target="_blank" rel="noopener">https://onevcat.com/2025/08/claude-code/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Vibe Coding 的迭代速度</a></li><li class="lvl2"><a href="#h2">从传统 Editor AI 的转换</a></li><li class="lvl2"><a href="#h3">认识 CC 的边界和长处</a></li><li class="lvl2"><a href="#h4">思考先行还是实践先行</a></li><li class="lvl2"><a href="#h5">小步迭代还是放飞自我</a></li><li class="lvl2"><a href="#h6">任务规模和上下文制约</a></li><li class="lvl3"><a href="#h7">任务拆解是关键</a></li><li class="lvl3"><a href="#h8">使用 Subagent</a></li><li class="lvl3"><a href="#h9">在合适的时机手动 compact</a></li><li class="lvl2"><a href="#h10">善用命令和周边工具</a></li><li class="lvl3"><a href="#h11">Command 和 Hooks</a></li><li class="lvl3"><a href="#h12">MCP</a></li><li class="lvl3"><a href="#h13">编译、分析和测试</a></li><li class="lvl3"><a href="#h14">Code 之外，大有可为</a></li><li class="lvl2"><a href="#h15">体感降智和更多限制</a></li><li class="lvl3"><a href="#h16">Opus 远强于 Sonnet</a></li><li class="lvl3"><a href="#h17">时间玄学</a></li><li class="lvl3"><a href="#h18">降智疑云</a></li><li class="lvl3"><a href="#h19">限制的阴霾</a></li><li class="lvl3"><a href="#h20">一些应对策略</a></li><li class="lvl2"><a href="#h21">总结和未来展望</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><p><img alt="" src="../../assets/posts/claude-code-review/efd52301c1eb.webp"></p>
+<div class="wrap"><article class="article"><h1>一个半月高强度 Claude Code 使用后感受</h1><div class="meta">August 3, 2025 · 王巍（onevcat） · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://onevcat.com/2025/08/claude-code/" target="_blank" rel="noopener">https://onevcat.com/2025/08/claude-code/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Vibe Coding 的迭代速度</a></li><li class="lvl2"><a href="#h2">从传统 Editor AI 的转换</a></li><li class="lvl2"><a href="#h3">认识 CC 的边界和长处</a></li><li class="lvl2"><a href="#h4">思考先行还是实践先行</a></li><li class="lvl2"><a href="#h5">小步迭代还是放飞自我</a></li><li class="lvl2"><a href="#h6">任务规模和上下文制约</a></li><li class="lvl3"><a href="#h7">任务拆解是关键</a></li><li class="lvl3"><a href="#h8">使用 Subagent</a></li><li class="lvl3"><a href="#h9">在合适的时机手动 compact</a></li><li class="lvl2"><a href="#h10">善用命令和周边工具</a></li><li class="lvl3"><a href="#h11">Command 和 Hooks</a></li><li class="lvl3"><a href="#h12">MCP</a></li><li class="lvl3"><a href="#h13">编译、分析和测试</a></li><li class="lvl3"><a href="#h14">Code 之外，大有可为</a></li><li class="lvl2"><a href="#h15">体感降智和更多限制</a></li><li class="lvl3"><a href="#h16">Opus 远强于 Sonnet</a></li><li class="lvl3"><a href="#h17">时间玄学</a></li><li class="lvl3"><a href="#h18">降智疑云</a></li><li class="lvl3"><a href="#h19">限制的阴霾</a></li><li class="lvl3"><a href="#h20">一些应对策略</a></li><li class="lvl2"><a href="#h21">总结和未来展望</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><img alt="" src="../../assets/posts/claude-code-review/efd52301c1eb.webp"></p>
 <p>六月中旬某个闷热的夜晚，在初浅尝试使用 API Key 帮我迅速完成了一个任务后，我毫不犹豫地点下了 Claude Max 的订阅按钮。作为一个“买断制”时代的遗老，每月一两百美金的订阅对当时的我来说还是太超前了。但是在一个半月之后回头望去，看着那些按照 API 计价的被我烧掉的价值 3000 多美金的 token，我似乎捡到了一个超大便宜？不过最近 Anthropic <a href="https://x.com/AnthropicAI/status/1949898502688903593">宣布了新的 weekly 限制</a> ，想来大概针对的就是我这种“重度”用户吧。所以近几天来我也在研究有没有其他替代方案，可以让我从这种限制中解脱出来。不过尝试了一圈下来（包括 CC 接其他 API，也包括像 Codex/Gemini/Qwen/Crush/Amp/AugmentCode 等等），似乎一时半会儿在这个领域 Claude Code (后文用 CC 指代) 还是没有竞争对手。既然还得续费，那不如阶段性地做一个总结，来记录下这一个半月使用 CC 的一些感受吧。</p>
 <h2 id="h1">Vibe Coding 的迭代速度</h2>
 <p>说到 vibe coding，最让我震撼的其实不是模型有多智能或者是能完成什么尖端任务，而是由它带来的产品迭代速度的提升。有个有意思的现象：Claude Code 本身就是 Anthropic 内部 dogfooding 的产物：从六月中旬我开始使用到现在，短短一个半月时间里，我们见证了很多崭新的功能：自定义命令让我们避免重复输入一样的 prompt，Hooks 功能可以在各种事件触发时自动执行命令，Subagent 则解决了上下文窗口的限制问题。这种更新频率，放在传统软件开发时代简直是天方夜谭。</p>
@@ -351,7 +327,7 @@ AI：好的，让我们拆解一下需要完成的任务：
 <h2 id="h21">总结和未来展望</h2>
 <p>一个半月的 CC 使用经历，有惊喜，有担忧，有对未来的憧憬，也有对现实的无奈。但总的来说，我感受到的是自己切实地站在在历史的进程之中。Vibe coding 不仅仅是一种新的编程方式，更是一种全新的思维模式。它要求我们重新思考什么是编程、什么是创造、什么是价值。在这个 AI 与人类共舞的时代，愿我们都能找到属于自己的节奏。</p>
 <p>最后，回到文章开头的那句话：在 vibe coding 时代，千万别让工具把自己逼死。技术是为人服务的，不是相反；工作是让人有机会追寻和思考自我的，而不是让自己迷失。保持这份清醒，可能比掌握任何具体的技巧都更重要。</p></div>
-<a class="back" href="../../">← 返回首页</a></article></div>
+<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -369,12 +345,24 @@ AI：好的，让我们拆解一下需要完成的任务：
   });
 })();
 </script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -388,11 +376,6 @@ AI：好的，让我们拆解一下需要完成的任务：
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });

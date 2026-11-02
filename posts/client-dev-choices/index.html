@@ -122,6 +122,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 }
 
 /* ─── 目录（toc） ─── */
+.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
+  padding:26px 0 60px;margin-left:18px;transition:color .15s}
+.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 .toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
   font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
@@ -139,16 +142,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
 .toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
 .toc.is-collapsed .toc-list{display:none}
-.toc.is-collapsed .toc-head{display:none}
 .toc.is-collapsed .chev{transform:rotate(-90deg)}
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 折叠后的竖排小标签 */
-.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
-  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
-  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
-.toc-tab:hover{color:var(--accent)}
-.toc.is-collapsed ~ .toc-tab{display:block}
 /* 手机：浮动按钮 + 底部面板 */
 .toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
@@ -166,26 +161,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important;font-size:.86rem}
   .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-  .toc-tab{display:none !important}
 }
-
-/* 目录按钮：小圆形图标 */
-.toc-tab{width:34px;height:34px;border-radius:50%;padding:0;right:14px;
-  align-items:center;justify-content:center;
-  writing-mode:horizontal-tb;letter-spacing:0;border-right:1px solid var(--border)}
-.toc-fab{width:42px;height:42px;border-radius:50%;padding:0;
-  align-items:center;justify-content:center;letter-spacing:0;font-size:0;
-  box-shadow:0 4px 16px rgba(0,0,0,.22)}
-.toc-tab svg,.toc-fab svg{display:block}
-
-.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
-.toc-tab,.toc-fab{position:fixed}
-
-/* 目录：更紧凑 + 头部用图标 */
-.toc-head span:first-child{display:none}
-.toc-head{gap:5px;margin-bottom:8px}
-.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
-.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
@@ -199,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>你不知道的客户端开发：选型、原生、多端与借力</h1><div class="meta">October 23, 2026 · Tw93 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://tw93.fun/2026-10-22/desktop.html" target="_blank" rel="noopener">https://tw93.fun/2026-10-22/desktop.html</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">端的开发一般是这三条路</a></li><li class="lvl2"><a href="#h2">Windows 上也想着不将就</a></li><li class="lvl2"><a href="#h3">能复用的是设计、文案和规则</a></li><li class="lvl2"><a href="#h4">签名比 Mac 麻烦不少</a></li><li class="lvl2"><a href="#h5">所有事情还是在 Mac 上做</a></li><li class="lvl2"><a href="#h6">借其他语言的生态补短板</a></li><li class="lvl2"><a href="#h7">解决问题比选技术栈更重要</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><p><img alt="《你不知道的客户端开发：选型、原生、多端与借力》文章封面" src="../../assets/posts/client-dev-choices/930dfdf2eedc.png" /></p>
+<div class="wrap"><article class="article"><h1>你不知道的客户端开发：选型、原生、多端与借力</h1><div class="meta">October 23, 2026 · Tw93 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://tw93.fun/2026-10-22/desktop.html" target="_blank" rel="noopener">https://tw93.fun/2026-10-22/desktop.html</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">端的开发一般是这三条路</a></li><li class="lvl2"><a href="#h2">Windows 上也想着不将就</a></li><li class="lvl2"><a href="#h3">能复用的是设计、文案和规则</a></li><li class="lvl2"><a href="#h4">签名比 Mac 麻烦不少</a></li><li class="lvl2"><a href="#h5">所有事情还是在 Mac 上做</a></li><li class="lvl2"><a href="#h6">借其他语言的生态补短板</a></li><li class="lvl2"><a href="#h7">解决问题比选技术栈更重要</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><img alt="《你不知道的客户端开发：选型、原生、多端与借力》文章封面" src="../../assets/posts/client-dev-choices/930dfdf2eedc.png" /></p>
 <p>发现不少小伙伴很好奇我是怎么用 Mac 来开发 Windows 软件的，以及 Windows 软件现在一般用什么技术栈来实现，刚好有空，来和大伙随便聊聊关于多客户端下技术选择的思考以及我的一些想法。前几天在推上连着发了三篇，这里整理成一篇放到博客里。</p>
 <h2 id="h1">端的开发一般是这三条路</h2>
 <p>做过前端客户端的小伙伴应该都知道，这些年端的开发一般是这三条路。</p>
@@ -259,7 +235,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>只不过到了现在的 AI 时代，原本很有意思的编码解决难题的场景变少了，直接上来一个 Opus 5.5 全部一把梭就帮你解决了，不过假如你了解这些各种语言的特性，你可以在它跑偏的时候，提醒一下它去试试那个语言的那个特性或者那个库，说不定可以帮助你做产品少走不少弯路。</p>
 <p>哈哈，我现在就想着好好珍惜还能够在某些方面指导 AI 干活，说不定再过半年，这个活也不需要工程师干了，AI 可以完全帮你做了，那会更有趣还是更无趣呢？</p>
 <p>我这种 AI 乐观派会认为编码这个事情应该就没意思了，不过还会有更多有趣未知的新东西值得我们去探索，那会更有意思些！</p>
-<p>欢迎交流，有在做 Windows 开发的小伙伴也可以一起聊聊你们的最佳实践。</p></div><a class="back" href="../../">← 返回首页</a></article></div>
+<p>欢迎交流，有在做 Windows 开发的小伙伴也可以一起聊聊你们的最佳实践。</p></div><a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -277,12 +253,24 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   });
 })();
 </script>
+<script></script>
+<script></script>
+<script>
+(function(){
+  var b=document.getElementById('backTop'); if(!b) return;
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  });
+})();
+</script>
 <script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
   var list=document.getElementById('tocList');
   var head=document.getElementById('tocHead');
-  var tab=document.getElementById('tocTab');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
   if(!links.length) return;
@@ -296,11 +284,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     if(mobile.matches){ toc.classList.remove('is-open'); return; }
     toc.classList.toggle('is-collapsed');
     try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
-    syncChev();
-  });
-  if(tab) tab.addEventListener('click',function(){
-    toc.classList.remove('is-collapsed');
-    try{ localStorage.setItem(key,'0'); }catch(e){}
     syncChev();
   });
   if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
