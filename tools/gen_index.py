@@ -12,7 +12,7 @@ STYLE = ('<meta property="og:type" content="website">'
          '<meta property="og:description" content="写点东西，也搬运点好东西。">'
          '<meta property="og:url" content="https://patrick12138.github.io/">'
          '<link rel="alternate" type="application/rss+xml" title="patrick" href="feed.xml">'
-         '<link rel="stylesheet" href="assets/base.css">'
+         '<link rel="icon" href="favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="assets/base.css">'
          '<link rel="stylesheet" href="assets/home.css">')   # ?v= 由 tools/build.py 统一写
 
 def trim_desc(s, limit=92):

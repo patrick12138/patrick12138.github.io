@@ -278,6 +278,19 @@ def inject_brand(doc):
     return doc[:m.start()] + block + doc[m.end():]
 
 
+ICON_TAGS = ('<link rel="icon" href="../../favicon.svg" type="image/svg+xml">'
+             '<meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)">'
+             '<meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)">')
+
+
+def ensure_icon(doc):
+    """文章页补 favicon / theme-color（幂等）：老页面不用整篇重建也能带上。"""
+    if "favicon.svg" in doc:
+        return doc
+    return doc.replace('<link rel="stylesheet" href="../../assets/base.css',
+                       ICON_TAGS + '<link rel="stylesheet" href="../../assets/base.css', 1)
+
+
 def wrap_tables(doc):
     """把表格包进可横滑的容器。
 
@@ -322,6 +335,7 @@ def process(path):
     doc = inject_brand(doc)
     doc = inject_top_btn(doc)
     doc = wrap_tables(doc)
+    doc = ensure_icon(doc)
     doc, toc_parts = build_toc(doc)
     li, bars = toc_parts if toc_parts else ("", "")
     if not toc_parts:
