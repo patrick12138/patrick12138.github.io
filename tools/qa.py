@@ -70,6 +70,19 @@ def check_kinds():
     return bad
 
 
+def check_dupes():
+    """结构性重复注入（目录/浮动按钮/站名下拉）会让元素互相重叠，必须只有一份。"""
+    bad = []
+    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
+        s = open(p, encoding="utf-8").read()
+        for name, pat in (("目录 nav.toc", r'<nav class="toc"'), ("目录按钮", r'class="toc-fab"'),
+                          ("站名下拉", r'id="brandSet"'), ("回到顶部", r'id="backTop"')):
+            n = len(re.findall(pat, s))
+            if n > 1:
+                bad.append((os.path.basename(os.path.dirname(p)), name, n))
+    return bad
+
+
 def main():
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
     total = {k: 0 for k in ("P0", "P1", "P2")}
@@ -84,6 +97,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    dupe_bad = check_dupes()
+    if dupe_bad:
+        print("\n重复注入（会互相重叠）")
+        for slug, name, n in dupe_bad:
+            print("  [P0] %s：%s 出现 %d 次" % (slug, name, n))
+        total["P0"] += len(dupe_bad)
+
     kind_bad = check_kinds()
     if kind_bad:
         print("\n分类不一致（首页 data-kind ≠ 文章页 meta）")

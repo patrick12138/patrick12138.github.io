@@ -204,6 +204,11 @@ HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>
 
 def strip_toc(doc):
     """把自己注入过的东西全部清干净（含重复注入的多份），保证可重复执行。"""
+    # 目录结构：从 <nav class="toc" 一直剥到它的 </nav>，不依赖内部细节，
+    # 否则旧版本注入的变体会漏网，越跑越多（曾出现 13 份重叠）
+    doc = re.sub(r'<nav class="toc"[^>]*>.*?</nav>\s*', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = HEAD_RE.sub("", doc)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
     # 别的会话注入过的英文版浮动按钮
