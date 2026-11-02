@@ -11,13 +11,11 @@ MONTHS = {m: i for i, m in enumerate(
     ["January","February","March","April","May","June","July",
      "August","September","October","November","December"], 1)}
 
-
 def parse_date(s):
     m = re.search(r"([A-Z][a-z]+)\s+(\d+),\s+(\d{4})", s or "")
     if not m:
         return (0, 0, 0), ""
     return (int(m.group(3)), MONTHS.get(m.group(1), 0), int(m.group(2))), s
-
 
 items = []
 for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
@@ -51,12 +49,17 @@ body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
         '<button class="on" data-f="all">全部</button>'
         '<button data-f="repost">搬运</button>'
         '<button data-f="own">个人</button>'
+
         '</div><button class="sbtn" id="searchBtn" aria-label="搜索">'
+
+        '</div><input id="q" class="sinput" type="search" placeholder="搜索标题或摘要…" autocomplete="off">'
+        '<button class="sbtn" id="searchBtn" aria-label="搜索">'
+
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
         '</button></div>'
-        '<div class="sbox" id="searchBox"><input id="q" type="search" placeholder="搜索标题…" autocomplete="off"></div>'
-        '<ul class="posts" id="posts">%s</ul></div>' % "".join(rows))
+        '<ul class="posts" id="posts">%s</ul>'
+        '<div id="sentinel" aria-hidden="true"></div></div>' % "".join(rows))
 # 样式统一写在 assets/home.css（页面已改为外链，这里不再往 <style> 里塞）
 body += ('<div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);'
          'padding:0 0 60px">这个分类下还没有文章。</p></div>')
@@ -65,11 +68,13 @@ JS = """<script>
 (function(){
   var tabs=document.getElementById('tabs');
   var btn=document.getElementById('searchBtn');
-  var box=document.getElementById('searchBox');
+  var tools=document.querySelector('.tools');
   var input=document.getElementById('q');
   var empty=document.getElementById('emptyHint');
+  var sentinel=document.getElementById('sentinel');
   var state={f:'all',q:''};
-  // ?tab=repost|own|all 直达分类（文章页站名下拉会带过来）
+  var BATCH=20, shown=BATCH, matched=[];
+
   try{
     var tf=(new URLSearchParams(location.search)).get('tab');
     if(tf && ['all','repost','own'].indexOf(tf)>=0){
@@ -78,16 +83,22 @@ JS = """<script>
     }
   }catch(e){}
 
-  function apply(){
-    var shown=0;
+  function scan(){
+    matched=[];
     [].forEach.call(document.querySelectorAll('#posts li'),function(li){
       var okKind=(state.f==='all'||li.dataset.kind===state.f);
       var okQ=(!state.q||li.textContent.toLowerCase().indexOf(state.q)>=0);
-      var show=okKind&&okQ;
-      li.style.display=show?'':'none';
-      if(show)shown++;
+      if(okKind&&okQ){ matched.push(li); } else { li.style.display='none'; }
     });
-    if(empty)empty.style.display=shown?'none':'block';
+  }
+  function paint(){
+    matched.forEach(function(li,i){ li.style.display = i<shown ? '' : 'none'; });
+    if(empty) empty.style.display = matched.length ? 'none' : 'block';
+    if(sentinel) sentinel.style.display = (shown < matched.length) ? 'block' : 'none';
+  }
+  function apply(reset){
+    if(reset!==false) shown=BATCH;
+    scan(); paint();
   }
 
   if(tabs)tabs.addEventListener('click',function(e){
@@ -97,7 +108,7 @@ JS = """<script>
   });
 
   if(btn)btn.addEventListener('click',function(){
-    var on=box.classList.toggle('on');
+    var on=tools.classList.toggle('searching');
     btn.classList.toggle('on',on);
     if(on){ input.focus(); } else { input.value=''; state.q=''; apply(); }
   });
@@ -105,7 +116,30 @@ JS = """<script>
   if(input)input.addEventListener('input',function(){
     state.q=input.value.trim().toLowerCase(); apply();
   });
-  apply();   // 初始渲染（带 ?tab= 时直接落到对应分类）
+
+  // 下滑加载下一批
+  function loadMore(){
+    if(shown>=matched.length) return;
+    shown=Math.min(shown+BATCH, matched.length);
+    paint();
+  }
+  // 双保险：观察器 + 滚动兜底（部分 WebView 的 IO 不触发）
+  if(sentinel && 'IntersectionObserver' in window){
+    try{
+      new IntersectionObserver(function(es){
+        if(es.some(function(x){return x.isIntersecting;})) loadMore();
+      },{rootMargin:'600px 0px', threshold:0}).observe(sentinel);
+    }catch(e){}
+  }
+  window.addEventListener('scroll',function(){
+    var nearBottom = window.innerHeight + window.pageYOffset > document.body.scrollHeight - 800;
+    if(nearBottom) loadMore();
+  },{passive:true});
+  // 首屏内容不足一屏时也补一批
+  setTimeout(function(){ if(shown>=matched.length) return;
+    if(document.body.scrollHeight <= window.innerHeight + 200) loadMore(); }, 300);
+
+  apply();
 })();
 </script>"""
 
