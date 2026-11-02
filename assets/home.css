@@ -90,7 +90,7 @@ a{color:inherit}
   text-decoration:none;padding:26px 0 60px;transition:color .15s}
 .back:hover{color:var(--accent)}
 
-footer{border-top:1px solid var(--border);padding:34px 0 60px}
+footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
 .foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
 .foot-in a:hover{color:var(--accent)}

@@ -103,7 +103,7 @@ a{color:inherit}
   text-decoration:none;padding:26px 0 60px;transition:color .15s}
 .back:hover{color:var(--accent)}
 
-footer{border-top:1px solid var(--border);padding:34px 0 60px}
+footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
 .foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
 .foot-in a:hover{color:var(--accent)}
@@ -129,7 +129,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   padding:12px 10px 14px 12px;
   background:color-mix(in srgb,var(--bg) 82%,transparent);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid var(--border);border-radius:4px;
   display:flex;flex-direction:column;transition:opacity .2s ease}
 .toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
   font-size:.68rem;letter-spacing:.08em;margin-bottom:10px;cursor:pointer;
