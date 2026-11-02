@@ -11,7 +11,7 @@
 <meta property="og:description" content="2026 年 10 月实测：Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算。">
 <meta property="og:url" content="https://patrick12138.github.io/posts/ai-token-pricing/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=f07b3ae0"><link rel="stylesheet" href="../../assets/post.css?v=f61a09a4">
+<link rel="stylesheet" href="../../assets/base.css?v=844ce7b3"><link rel="stylesheet" href="../../assets/post.css?v=3b308d42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -24,11 +24,11 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>AI 订阅额度与 token 比价（2026-10）</h1><div class="meta">2026年10月26日 · 个人 · <span class="stats">1,678 字 · 约 5 分钟</span></div><aside class="source"><span class="src-label">来源</span>2026-10-26 会话内实测调研（官方定价页 + 第三方网关门禁实测 + 社区个人实测）。</aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句话结论</a></li><li class="lvl2"><a href="#h2">一、官方定价与近两个月的变动</a></li><li class="lvl2"><a href="#h3">二、实测：一周额度值多少 API 美元</a></li><li class="lvl2"><a href="#h4">三、换算锚点：1 亿 token 值多少钱</a></li><li class="lvl2"><a href="#h5">四、各套餐能跑多少（含缓存的总 token，每月）</a></li><li class="lvl2"><a href="#h6">五、口径陷阱（比数字本身更重要）</a></li><li class="lvl2"><a href="#h7">六、判断</a></li><li class="lvl2"><a href="#h8">七、数据源与时效</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l2" data-h="h8"></i></span></button><div class="body"><p>相关：Codex 与 AI 编程工作流、Agent Harness 版图与个人选型、AI 商品化与价值迁移</p>
+<div class="wrap"><article class="article"><h1>AI 订阅额度与 token 比价（2026-10）</h1><div class="meta">2026年10月26日 · 个人 · <span class="stats">162 字 · 约 1 分钟</span></div><aside class="source"><span class="src-label">来源</span>2026-10-26 会话内实测调研（官方定价页 + 第三方网关门禁实测 + 社区个人实测）。</aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句话结论</a></li><li class="lvl2"><a href="#h2">一、官方定价与近两个月的变动</a></li><li class="lvl2"><a href="#h3">二、实测：一周额度值多少 API 美元</a></li><li class="lvl2"><a href="#h4">三、换算锚点：1 亿 token 值多少钱</a></li><li class="lvl2"><a href="#h5">四、各套餐能跑多少（含缓存的总 token，每月）</a></li><li class="lvl2"><a href="#h6">五、口径陷阱（比数字本身更重要）</a></li><li class="lvl2"><a href="#h7">六、判断</a></li><li class="lvl2"><a href="#h8">七、数据源与时效</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l2" data-h="h8"></i></span></button><div class="body"><p>相关：Codex 与 AI 编程工作流、Agent Harness 版图与个人选型、AI 商品化与价值迁移</p>
 <h2 id="h1">一句话结论</h2>
 <p>2026 年 10 月，<strong>Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍</strong>；官方倍率（5x / 20x）与实测基本对不上，<strong>Max 20x 只比 Max 5x 多 30–100%，价格却是 2 倍</strong>。Copilot 不属于同一赛道，它是按 API 价约 1.0–1.8 折转售。</p>
 <h2 id="h2">一、官方定价与近两个月的变动</h2>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>厂商</th>
@@ -117,7 +117,7 @@
 <td>池化</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>必知的六条时间线：</p>
 <ul>
 <li><strong>2026-06-01 Copilot 改按 token 扣 credit</strong>，1 credit = $0.01。此前是按「高级请求次数」计。</li>
@@ -129,7 +129,7 @@
 </ul>
 <h2 id="h3">二、实测：一周额度值多少 API 美元</h2>
 <p>口径说明：按官方 API 价把「用满一周额度」的流量折算成美元。这是「同样流量走 API 要付多少钱」，不是额度本身的计量单位。</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>套餐</th>
@@ -218,7 +218,7 @@
 <td>2×</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>三个反直觉事实：</p>
 <ol>
 <li><strong>「20x」是 5 小时窗口的倍率，不是周额度的</strong>。实测 Max 20x 的 5 小时窗口约是 Pro 的 15×，但周额度只有 Pro 的 <strong>9.7×</strong>。周额度才是长期天花板。</li>
@@ -227,7 +227,7 @@
 </ol>
 <h2 id="h4">三、换算锚点：1 亿 token 值多少钱</h2>
 <p>同一亿 token，缓存命中率 85% 和 0% 差 9 倍。这是所有「我用了 X 亿 token」说法互相矛盾的根源。</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>模型</th>
@@ -304,10 +304,10 @@
 <td>$83</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="h5">四、各套餐能跑多少（含缓存的总 token，每月）</h2>
 <p>Claude 侧：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>套餐</th>
@@ -340,9 +340,9 @@
 <td>32 亿</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Codex 侧：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>套餐</th>
@@ -382,9 +382,9 @@
 <td>—</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Copilot CLI：<strong>6,000 credits = $60</strong>（1 credit = $0.01，无隐藏倍率）。</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>模型</th>
@@ -425,9 +425,9 @@
 <td>21.7 亿</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>换成「非缓存 token」（模型真正读写的部分），把上表除以约 6.7（85% 缓存占比）：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>套餐</th>
@@ -462,7 +462,7 @@
 <td>—</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="h6">五、口径陷阱（比数字本身更重要）</h2>
 <ol>
 <li><strong>缓存命中率是最大变量</strong>。Claude 订阅里缓存读取几乎不占额度，Codex 里缓存读取按 1/10 价照扣。同一份额度，缓存命中高的人能跑出几倍的 token 总数。所以比套餐看「非缓存 token」或「API 等价美元」，不要看 token 总数。</li>
@@ -483,7 +483,7 @@
 </ul>
 <h2 id="h8">七、数据源与时效</h2>
 <p>这些数字<strong>每周都在变</strong>，用之前先复核：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>来源</th>
@@ -548,7 +548,7 @@
 <td>单账号截图（CC Switch、sub2api 等工具）</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>社区原始帖：linux.do <code>t/3042220</code>（Max 5x 一周 $1,174、2.77B token、94% 已用）、linux.do <code>t/3026151</code>（CC Switch 记 5x $1,100 / 20x $1,500）、linux.do <code>t/2990101</code>（Pro 周额度 $250 口径）、V2EX <code>t/1251766</code>（旧 20x 34,000 credits → 新 5x 5,500 credits）。</p>
 <p><strong>已作废的数字</strong>：2026-05-25 前后流传的「5x 约 $500/周、20x 约 $1,000/周」是 2026-03 前的口径，之后两次加量已把它废掉，别再引用。</p></div>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../how-i-work-with-agents/"><span class="pager-k">← 上一篇</span><span class="pager-t">How I work with Agents</span></a><a class="pager-next" href="../super-agent-design/"><span class="pager-k">下一篇 →</span><span class="pager-t">Super-agent 设计探索：迈向更自主的 Agent 系统</span></a></nav>
@@ -556,7 +556,7 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=ecd33de5"></script>
+<script src="../../assets/site.js?v=e764082e"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

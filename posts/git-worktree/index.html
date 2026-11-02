@@ -11,8 +11,8 @@
 <meta property="og:description" content="{{DESC}}">
 <meta property="og:url" content="https://patrick12138.github.io/posts/{{SLUG}}/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=f07b3ae0">
-<link rel="stylesheet" href="../../assets/post.css?v=f61a09a4">
+<link rel="stylesheet" href="../../assets/base.css?v=844ce7b3">
+<link rel="stylesheet" href="../../assets/post.css?v=3b308d42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -26,7 +26,7 @@
   </nav>
 </div></div>
 <div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1>
-<div class="meta">2026年7月21日 · chenmijiang · 搬运 · <span class="stats">3,625 字 · 约 11 分钟</span></div>
+<div class="meta">2026年7月21日 · chenmijiang · 搬运 · <span class="stats">587 字 · 约 2 分钟</span></div>
 <aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html">https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html</a></aside>
 
 <nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">1. 概述</a></li><li class="lvl3"><a href="#h2">1.1 什么是 Git Worktree</a></li><li class="lvl3"><a href="#h3">1.2 Worktree 的工作原理</a></li><li class="lvl3"><a href="#h4">1.3 与 clone / stash 的区别</a></li><li class="lvl2"><a href="#h5">2. 基本概念</a></li><li class="lvl3"><a href="#h6">2.1 主 worktree 与附加 worktree</a></li><li class="lvl3"><a href="#h7">2.2 分支锁定（为什么不能在两个 worktree 同时检出同一分支）</a></li><li class="lvl3"><a href="#h8">2.3 Detached HEAD worktree</a></li><li class="lvl2"><a href="#h9">3. 安装与前置条件</a></li><li class="lvl2"><a href="#h10">4. 基本用法</a></li><li class="lvl3"><a href="#h11">4.1 查看 worktree 列表</a></li><li class="lvl3"><a href="#h12">4.2 创建新的 worktree</a></li><li class="lvl4"><a href="#h13">4.2.1 不指定分支时的默认行为</a></li><li class="lvl4"><a href="#h14">4.2.2 基于已有分支创建</a></li><li class="lvl4"><a href="#h15">4.2.3 创建新分支并创建 worktree（最常用）</a></li><li class="lvl4"><a href="#h16">4.2.4 使用 detached HEAD 创建</a></li><li class="lvl3"><a href="#h17">4.3 切换分支（在特定 worktree 内）</a></li><li class="lvl3"><a href="#h18">4.4 删除 worktree</a></li><li class="lvl3"><a href="#h19">4.5 移动 worktree（move）</a></li><li class="lvl3"><a href="#h20">4.6 锁定 worktree（lock/unlock）</a></li><li class="lvl3"><a href="#h21">4.7 修复 worktree（repair）</a></li><li class="lvl3"><a href="#h22">4.8 清理遗留元数据（prune）</a></li><li class="lvl2"><a href="#h23">5. 日常开发场景</a></li><li class="lvl3"><a href="#h24">5.1 场景 1：一边开发新功能，一边在 main 修紧急问题</a></li><li class="lvl3"><a href="#h25">5.2 场景 2：并行跑测试/构建</a></li><li class="lvl3"><a href="#h26">5.3 场景 3：Review PR 或复现 CI 失败</a></li><li class="lvl3"><a href="#h27">5.4 场景 4：用 detached worktree debug 和修复老版本</a></li><li class="lvl4"><a href="#h28">5.4.1 场景 A：验证老版本（临时查看，无需保存改动）</a></li><li class="lvl4"><a href="#h29">5.4.2 场景 B：修复老版本（需要保存改动）</a></li><li class="lvl3"><a href="#h30">5.5 场景 5：配合 rebase / cherry-pick 做对比验证</a></li><li class="lvl2"><a href="#h31">6. 常用命令速查</a></li><li class="lvl3"><a href="#h32">6.1 常见错误与定位</a></li><li class="lvl2"><a href="#h33">7. 最佳实践与注意事项</a></li><li class="lvl3"><a href="#h34">7.1 Worktree 目录放哪里</a></li><li class="lvl3"><a href="#h35">7.2 给 worktree 起”能排序”的名字</a></li><li class="lvl3"><a href="#h36">7.3 不要在多个 worktree 共享同一个构建输出目录</a></li><li class="lvl3"><a href="#h37">7.4 删除 worktree 前先处理分支生命周期</a></li><li class="lvl3"><a href="#h38">7.5 处理”目录已不存在，但 Git 还认为存在”的情况</a></li><li class="lvl3"><a href="#h39">7.6 子模块与 worktree</a></li><li class="lvl2"><a href="#h40">8. Git Worktree vs 相关命令</a></li><li class="lvl3"><a href="#h41">8.1 Worktree vs Stash</a></li><li class="lvl3"><a href="#h42">8.2 Worktree vs Clone</a></li><li class="lvl2"><a href="#h43">9. 常见问题（FAQ）</a></li><li class="lvl2"><a href="#h44">10. 总结</a></li><li class="lvl3"><a href="#h45">10.1 速查表</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l3" data-h="h2"></i><i class="b l3" data-h="h3"></i><i class="b l3" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l3" data-h="h6"></i><i class="b l3" data-h="h7"></i><i class="b l3" data-h="h8"></i><i class="b l2" data-h="h9"></i><i class="b l2" data-h="h10"></i><i class="b l3" data-h="h11"></i><i class="b l3" data-h="h12"></i><i class="b l4" data-h="h13"></i><i class="b l4" data-h="h14"></i><i class="b l4" data-h="h15"></i><i class="b l4" data-h="h16"></i><i class="b l3" data-h="h17"></i><i class="b l3" data-h="h18"></i><i class="b l3" data-h="h19"></i><i class="b l3" data-h="h20"></i><i class="b l3" data-h="h21"></i><i class="b l3" data-h="h22"></i><i class="b l2" data-h="h23"></i><i class="b l3" data-h="h24"></i><i class="b l3" data-h="h25"></i><i class="b l3" data-h="h26"></i><i class="b l3" data-h="h27"></i><i class="b l4" data-h="h28"></i><i class="b l4" data-h="h29"></i><i class="b l3" data-h="h30"></i><i class="b l2" data-h="h31"></i><i class="b l3" data-h="h32"></i><i class="b l2" data-h="h33"></i><i class="b l3" data-h="h34"></i><i class="b l3" data-h="h35"></i><i class="b l3" data-h="h36"></i><i class="b l3" data-h="h37"></i><i class="b l3" data-h="h38"></i><i class="b l3" data-h="h39"></i><i class="b l2" data-h="h40"></i><i class="b l3" data-h="h41"></i><i class="b l3" data-h="h42"></i><i class="b l2" data-h="h43"></i><i class="b l2" data-h="h44"></i><i class="b l3" data-h="h45"></i></span></button><div class="body"><h2 id="h1">1. 概述</h2>
@@ -89,7 +89,7 @@ repo/.git/worktrees/       # worktree 元数据（每个附加 worktree 一份�
 </blockquote>
 <h3 id="h4">1.3 与 clone / stash 的区别</h3>
 <p>很多人第一次遇到并行开发需求时，会用 <code>git stash</code> 或者多次 <code>git clone</code>。它们都能”凑合”，但 <code>git worktree</code> 更适合长期和频繁并行。</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>方案</th>
@@ -118,7 +118,7 @@ repo/.git/worktrees/       # worktree 元数据（每个附加 worktree 一份�
 <td>需要理解 worktree 约束；需要正确清理</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="h5">2. 基本概念</h2>
 <h3 id="h6">2.1 主 worktree 与附加 worktree</h3>
 <ul>
@@ -459,7 +459,7 @@ git worktree list
 </ul>
 <h2 id="h40">8. Git Worktree vs 相关命令</h2>
 <h3 id="h41">8.1 Worktree vs Stash</h3>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>维度</th>
@@ -489,9 +489,9 @@ git worktree list
 <td>中高（恢复时易冲突）</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="h42">8.2 Worktree vs Clone</h3>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>维度</th>
@@ -521,7 +521,7 @@ git worktree list
 <td>需要彻底隔离配置或权限时</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="h43">9. 常见问题（FAQ）</h2>
 <p><strong>Q1：为什么我不能在第二个 worktree 里 checkout main？</strong></p>
 <p>因为 main 已被另一个 worktree 检出，Git 会阻止同一分支被多个 worktree 同时使用。</p>
@@ -576,7 +576,7 @@ git worktree remove --force ../repo-feature-x
 <li>✅ detached worktree 适合临时 debug，但要记得创建分支保存提交</li>
 </ul>
 <h3 id="h45">10.1 速查表</h3>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>目的</th>
@@ -616,13 +616,13 @@ git worktree remove --force ../repo-feature-x
 <td>清掉失效 worktree 元数据</td>
 </tr>
 </tbody>
-</table></div>
+</table></div></div>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../how-to-ask-questions/"><span class="pager-k">← 上一篇</span><span class="pager-t">提问的智慧</span></a><a class="pager-next" href="../best-harness-deepseek-v4-flash/"><span class="pager-k">下一篇 →</span><span class="pager-t">Finding the Best Harness for DeepSeek V4 Flash</span></a></nav>
 <a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=ecd33de5"></script>
+<script src="../../assets/site.js?v=e764082e"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

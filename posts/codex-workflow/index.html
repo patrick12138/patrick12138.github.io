@@ -11,8 +11,8 @@
 <meta property="og:description" content="{{DESC}}">
 <meta property="og:url" content="https://patrick12138.github.io/posts/{{SLUG}}/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=f07b3ae0">
-<link rel="stylesheet" href="../../assets/post.css?v=f61a09a4">
+<link rel="stylesheet" href="../../assets/base.css?v=844ce7b3">
+<link rel="stylesheet" href="../../assets/post.css?v=3b308d42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -26,7 +26,7 @@
   </nav>
 </div></div>
 <div class="wrap"><article class="article"><h1>Codex 与 AI 编程工作流</h1>
-<div class="meta">2026年6月10日 · 个人 · <span class="stats">3,305 字 · 约 9 分钟</span></div>
+<div class="meta">2026年6月10日 · 个人 · <span class="stats">442 字 · 约 1 分钟</span></div>
 <aside class="source"><span class="src-label">来源</span>来自 Codex 官方团队的分享：如何把 Codex 用到极致 · 把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · 我们如何使用 Codex 在 28 天内构建 Android 版 Sora（OpenAI 官方原文） · 工程技术：在智能体优先的世界中利用 Codex · 一个半月高强度 Claude Code 使用后感受 · 好奇心周刊第25期 如何让 AI 写好代码 · The 70% problem Hard truths about AI-assisted coding · Why I Don’t Vibe Code · AI 早报 2026-05-29 · AI 时代的品味与工程思维</aside>
 
 <nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心判断</a></li><li class="lvl2"><a href="#h2">一套可复用流程</a></li><li class="lvl2"><a href="#h3">官方最佳实践六支柱</a></li><li class="lvl2"><a href="#h4">Prompt 四要素</a></li><li class="lvl2"><a href="#h5">复杂任务先计划</a></li><li class="lvl2"><a href="#h6">AGENTS.md 的价值</a></li><li class="lvl2"><a href="#h7">配置、Skills 与 Automations</a></li><li class="lvl2"><a href="#h8">Session 管理</a></li><li class="lvl2"><a href="#h9">智能体优先工程</a></li><li class="lvl2"><a href="#h10">Claude Code 高强度使用经验</a></li><li class="lvl2"><a href="#h11">AI 专家委员会与 Worktree</a></li><li class="lvl2"><a href="#h12">对抗 AI 代码熵增</a></li><li class="lvl2"><a href="#h13">苏格拉底式编程</a></li><li class="lvl2"><a href="#h14">并行 agent 的真实瓶颈</a></li><li class="lvl2"><a href="#h15">不要只用 AI 做旧事</a></li><li class="lvl2"><a href="#h16">验证器比野心重要</a></li><li class="lvl2"><a href="#h17">反面提醒</a></li><li class="lvl2"><a href="#h18">对个人职业发展的用法</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l2" data-h="h8"></i><i class="b l2" data-h="h9"></i><i class="b l2" data-h="h10"></i><i class="b l2" data-h="h11"></i><i class="b l2" data-h="h12"></i><i class="b l2" data-h="h13"></i><i class="b l2" data-h="h14"></i><i class="b l2" data-h="h15"></i><i class="b l2" data-h="h16"></i><i class="b l2" data-h="h17"></i><i class="b l2" data-h="h18"></i></span></button><div class="body"><p>这组资料的共同结论是：AI 编程的上限不在“让模型多写几行代码”，而在 <strong>上下文、计划、验证、审查和人的判断</strong> 能不能跟上。</p>
@@ -48,7 +48,7 @@
 <li>最终合并、发布、责任和风险判断。</li>
 </ul>
 <h2 id="h2">一套可复用流程</h2>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>阶段</th>
@@ -83,7 +83,7 @@
 <td>下次复用同一套规则</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>这和 LLM Wiki 实践指南 是同一个逻辑：先编译上下文，再复用上下文。</p>
 <h2 id="h3">官方最佳实践六支柱</h2>
 <p>OpenAI Codex Best Practices 的落地思路可以压缩成六个支柱：</p>
@@ -98,7 +98,7 @@
 <p>这说明 Codex 的使用重点不是“每次写一个更长的 prompt”，而是把上下文、规则、工具、复用流程和验证方式逐步系统化。</p>
 <h2 id="h4">Prompt 四要素</h2>
 <p>复杂任务的 prompt 至少要说清四件事：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>要素</th>
@@ -123,7 +123,7 @@
 <td>什么证据证明任务完成：测试、lint、截图、复现路径、diff 范围或剩余风险。</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>其中 <code>Done when</code> 很关键。没有完成标准，Codex 容易把“代码写完了”当成“任务完成了”；有完成标准，Codex 才能围绕验证器循环。</p>
 <h2 id="h5">复杂任务先计划</h2>
 <p>复杂任务不要直接让 Codex 开写。更稳的三种方式：</p>
@@ -287,7 +287,7 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=ecd33de5"></script>
+<script src="../../assets/site.js?v=e764082e"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

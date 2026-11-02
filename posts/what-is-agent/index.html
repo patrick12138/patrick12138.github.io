@@ -11,7 +11,7 @@
 <meta property="og:description" content="从零到一实现一个 AI Agent 的中文渐进式教程">
 <meta property="og:url" content="https://patrick12138.github.io/posts/what-is-agent/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=f07b3ae0"><link rel="stylesheet" href="../../assets/post.css?v=f61a09a4">
+<link rel="stylesheet" href="../../assets/base.css?v=844ce7b3"><link rel="stylesheet" href="../../assets/post.css?v=3b308d42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -24,7 +24,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Agent 到底是什么 | Pi Agent 原理与实现</h1><div class="meta">2026年5月26日 · 搬运 · <span class="stats">680 字 · 约 2 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://how-pi-agent-works.vercel.app/concepts/what-is-agent" rel="noopener">https://how-pi-agent-works.vercel.app/concepts/what-is-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 到底是什么</a></li><li class="lvl2"><a href="#h2">最小闭环</a></li><li class="lvl2"><a href="#h3">为什么不是一次请求解决</a></li><li class="lvl2"><a href="#h4">Pi 的定位</a></li><li class="lvl2"><a href="#h5">小练习</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i></span></button><div class="body"><h2 id="h1">Agent 到底是什么</h2>
+<div class="wrap"><article class="article"><h1>Agent 到底是什么 | Pi Agent 原理与实现</h1><div class="meta">2026年5月26日 · 搬运 · <span class="stats">298 字 · 约 1 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://how-pi-agent-works.vercel.app/concepts/what-is-agent" rel="noopener">https://how-pi-agent-works.vercel.app/concepts/what-is-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 到底是什么</a></li><li class="lvl2"><a href="#h2">最小闭环</a></li><li class="lvl2"><a href="#h3">为什么不是一次请求解决</a></li><li class="lvl2"><a href="#h4">Pi 的定位</a></li><li class="lvl2"><a href="#h5">小练习</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i></span></button><div class="body"><h2 id="h1">Agent 到底是什么</h2>
 <p>很多人第一次听到 Agent，会以为它是“更聪明的聊天机器人”。这个说法只对了一小半。</p>
 <p>更工程化的定义是：</p>
 <blockquote>
@@ -34,7 +34,7 @@
 <p><p><img src="../../assets/posts/what-is-agent/diagram-1.svg" alt="流程图 1" loading="lazy"></p></p>
 <h2 id="h2">最小闭环</h2>
 <p>一个最小 Agent 只需要五个概念：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>概念</th>
@@ -69,7 +69,7 @@
 <td>前端只能看到最终答案，看不到中间发生了什么</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="h3">为什么不是一次请求解决</h2>
 <p>假设用户说：“读一下 README，帮我修正文档里的安装命令。”</p>
 <p>单次请求会遇到三个问题：</p>
@@ -83,7 +83,7 @@
 <h2 id="h4">Pi 的定位</h2>
 <p>Pi 官方文档把 Pi 称为一个 minimal terminal coding harness。这个说法很关键：Pi 的野心不是把所有工作流都写死进核心，而是保持核心小，把能力放到工具、扩展、技能、提示模板和包里。</p>
 <p>参考 Pi 仓库可以看到三层很清楚：</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>包</th>
@@ -108,7 +108,7 @@
 <td>会话管理、资源加载、内置工具、扩展、TUI/RPC/print 模式</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>我们后面的教学版项目会保留这三层思想，但把代码缩小到适合学习的规模。</p>
 <h2 id="h5">小练习</h2>
 <p>试着回答：如果一个 Agent 没有工具，只保留消息和模型，它还能算 Agent 吗？</p>
@@ -118,7 +118,7 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=ecd33de5"></script>
+<script src="../../assets/site.js?v=e764082e"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

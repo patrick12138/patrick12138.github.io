@@ -17,10 +17,8 @@
 
 /* 表格：宽度超出时在表格内部横向滚动，不要把整页撑宽 */
 @media (max-width:720px){
-  /* 手机：表格按内容宽度排开、横向滑动，而不是把每列挤成一字一行 */
-  .body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:max-content;min-width:100%;max-width:none}
-  .body th,.body td{padding:8px 12px;white-space:nowrap}
-  .body td{white-space:normal}
+  /* 手机：表格按内容宽度排开、在容器里横滑（容器见 .tablewrap） */
+  .body th,.body td{padding:8px 12px}
   .body th{white-space:nowrap}
 }
 
@@ -239,21 +237,21 @@ html,body{overflow-x:clip}
 @media (hover:none){ .code-copy{opacity:.55} }
 
 /* ─── 横向滚动条（代码块 / 宽表格）：默认不显，滑动或悬停才浮出来 ─── */
-.body pre,.body table{scrollbar-width:thin;scrollbar-color:transparent transparent}
-.body pre:hover,.body table:hover,
-.body pre.is-scrolling,.body table.is-scrolling{
+.body pre,.body .tablewrap{scrollbar-width:thin;scrollbar-color:transparent transparent}
+.body pre:hover,.body .tablewrap:hover,
+.body pre.is-scrolling,.body .tablewrap.is-scrolling{
   scrollbar-color:color-mix(in srgb,var(--accent) 40%,transparent) transparent}
-.body pre::-webkit-scrollbar,.body table::-webkit-scrollbar{width:5px;height:5px}
-.body pre::-webkit-scrollbar-track,.body table::-webkit-scrollbar-track{background:transparent}
-.body pre::-webkit-scrollbar-thumb,.body table::-webkit-scrollbar-thumb{
+.body pre::-webkit-scrollbar,.body .tablewrap::-webkit-scrollbar{width:5px;height:5px}
+.body pre::-webkit-scrollbar-track,.body .tablewrap::-webkit-scrollbar-track{background:transparent}
+.body pre::-webkit-scrollbar-thumb,.body .tablewrap::-webkit-scrollbar-thumb{
   background:transparent;border-radius:5px;transition:background .18s}
-.body pre:hover::-webkit-scrollbar-thumb,.body table:hover::-webkit-scrollbar-thumb,
-.body pre.is-scrolling::-webkit-scrollbar-thumb,.body table.is-scrolling::-webkit-scrollbar-thumb{
+.body pre:hover::-webkit-scrollbar-thumb,.body .tablewrap:hover::-webkit-scrollbar-thumb,
+.body pre.is-scrolling::-webkit-scrollbar-thumb,.body .tablewrap.is-scrolling::-webkit-scrollbar-thumb{
   background:color-mix(in srgb,var(--accent) 40%,transparent)}
-.body pre::-webkit-scrollbar-button,.body table::-webkit-scrollbar-button{display:none;height:0;width:0}
+.body pre::-webkit-scrollbar-button,.body .tablewrap::-webkit-scrollbar-button{display:none;height:0;width:0}
 /* 触屏没有悬停，留一条极淡的提示 */
 @media (hover:none){
-  .body pre::-webkit-scrollbar-thumb,.body table::-webkit-scrollbar-thumb{
+  .body pre::-webkit-scrollbar-thumb,.body .tablewrap::-webkit-scrollbar-thumb{
     background:color-mix(in srgb,var(--accent) 22%,transparent)}
 }
 .body pre{padding-bottom:18px}   /* 给横向滚动条留位置，不压住最后一行代码 */

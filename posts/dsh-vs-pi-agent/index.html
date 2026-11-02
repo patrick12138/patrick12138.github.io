@@ -11,7 +11,7 @@
 <meta property="og:description" content="Compare DeepSeek Harness vs Pi Agent on benchmarks, speed, cost, extensibility, safety, and everyday use to find the right open-source coding agent.">
 <meta property="og:url" content="https://patrick12138.github.io/posts/dsh-vs-pi-agent/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="stylesheet" href="../../assets/base.css?v=f07b3ae0"><link rel="stylesheet" href="../../assets/post.css?v=f61a09a4">
+<link rel="stylesheet" href="../../assets/base.css?v=844ce7b3"><link rel="stylesheet" href="../../assets/post.css?v=3b308d42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -24,7 +24,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>DeepSeek Harness (DSH) vs Pi Agent: Everything You Need to Know</h1><div class="meta">2026年9月8日 · Shrijal · 搬运 · <span class="stats">3,901 字 · 约 17 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://composio.dev/content/deepseek-harness-vd-pi-agent" rel="noopener">https://composio.dev/content/deepseek-harness-vd-pi-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">TL;DR</a></li><li class="lvl3"><a href="#h2">In summary</a></li><li class="lvl2"><a href="#h3">What is DeepSeek Harness?</a></li><li class="lvl2"><a href="#h4">What is Pi?</a></li><li class="lvl2"><a href="#h5">1. Philosophy: Pi vs DeepSeek Harness</a></li><li class="lvl3"><a href="#h6">Pi starts tiny</a></li><li class="lvl3"><a href="#h7">DeepSeek Harness starts from replaceable parts</a></li><li class="lvl2"><a href="#h8">2. Architecture: four tools vs basically the whole runtime</a></li><li class="lvl3"><a href="#h9">Pi Agent</a></li><li class="lvl3"><a href="#h10">DeepSeek Harness</a></li><li class="lvl2"><a href="#h11">3. The benchmark: same model, different harness</a></li><li class="lvl3"><a href="#h12">The task split is also interesting</a></li><li class="lvl3"><a href="#h13">So did DeepSeek Harness really use 10x fewer tokens?</a></li><li class="lvl2"><a href="#h14">4. DeepSeek Harness uses Pi</a></li><li class="lvl3"><a href="#h15">Pi still wins on model flexibility</a></li><li class="lvl2"><a href="#h16">5. Extensibility</a></li><li class="lvl2"><a href="#h17">6. Safety and Security</a></li><li class="lvl2"><a href="#h18">7. The biggest DSH problem right now is maturity</a></li><li class="lvl2"><a href="#h19">8. Daily use</a></li><li class="lvl2"><a href="#h20">Which one should you pick?</a></li><li class="lvl2"><a href="#h21">Conclusion</a></li><li class="lvl2"><a href="#h22">Give your harness access to real-world</a></li><li class="lvl3"><a href="#h23">OpenClaw vs Hermes Agent: The best agent harness in 2026</a></li><li class="lvl3"><a href="#h24">10 Best Cursor Plugins I’d Install in 2026</a></li><li class="lvl3"><a href="#h25">Pi Agent vs Claude Code in 2026: What I Learned After 100 Hours With Both</a></li><li class="lvl3"><a href="#h26">DeepSeek Harness vs Claude Code in 2026: Open Runtime vs the Deepest Closed Harness</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l3" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l3" data-h="h6"></i><i class="b l3" data-h="h7"></i><i class="b l2" data-h="h8"></i><i class="b l3" data-h="h9"></i><i class="b l3" data-h="h10"></i><i class="b l2" data-h="h11"></i><i class="b l3" data-h="h12"></i><i class="b l3" data-h="h13"></i><i class="b l2" data-h="h14"></i><i class="b l3" data-h="h15"></i><i class="b l2" data-h="h16"></i><i class="b l2" data-h="h17"></i><i class="b l2" data-h="h18"></i><i class="b l2" data-h="h19"></i><i class="b l2" data-h="h20"></i><i class="b l2" data-h="h21"></i><i class="b l2" data-h="h22"></i><i class="b l3" data-h="h23"></i><i class="b l3" data-h="h24"></i><i class="b l3" data-h="h25"></i><i class="b l3" data-h="h26"></i></span></button><div class="body"><p>DeepSeek released its own agent harness this August.</p>
+<div class="wrap"><article class="article"><h1>DeepSeek Harness (DSH) vs Pi Agent: Everything You Need to Know</h1><div class="meta">2026年9月8日 · Shrijal · 搬运 · <span class="stats">392 字 · 约 2 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://composio.dev/content/deepseek-harness-vd-pi-agent" rel="noopener">https://composio.dev/content/deepseek-harness-vd-pi-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">TL;DR</a></li><li class="lvl3"><a href="#h2">In summary</a></li><li class="lvl2"><a href="#h3">What is DeepSeek Harness?</a></li><li class="lvl2"><a href="#h4">What is Pi?</a></li><li class="lvl2"><a href="#h5">1. Philosophy: Pi vs DeepSeek Harness</a></li><li class="lvl3"><a href="#h6">Pi starts tiny</a></li><li class="lvl3"><a href="#h7">DeepSeek Harness starts from replaceable parts</a></li><li class="lvl2"><a href="#h8">2. Architecture: four tools vs basically the whole runtime</a></li><li class="lvl3"><a href="#h9">Pi Agent</a></li><li class="lvl3"><a href="#h10">DeepSeek Harness</a></li><li class="lvl2"><a href="#h11">3. The benchmark: same model, different harness</a></li><li class="lvl3"><a href="#h12">The task split is also interesting</a></li><li class="lvl3"><a href="#h13">So did DeepSeek Harness really use 10x fewer tokens?</a></li><li class="lvl2"><a href="#h14">4. DeepSeek Harness uses Pi</a></li><li class="lvl3"><a href="#h15">Pi still wins on model flexibility</a></li><li class="lvl2"><a href="#h16">5. Extensibility</a></li><li class="lvl2"><a href="#h17">6. Safety and Security</a></li><li class="lvl2"><a href="#h18">7. The biggest DSH problem right now is maturity</a></li><li class="lvl2"><a href="#h19">8. Daily use</a></li><li class="lvl2"><a href="#h20">Which one should you pick?</a></li><li class="lvl2"><a href="#h21">Conclusion</a></li><li class="lvl2"><a href="#h22">Give your harness access to real-world</a></li><li class="lvl3"><a href="#h23">OpenClaw vs Hermes Agent: The best agent harness in 2026</a></li><li class="lvl3"><a href="#h24">10 Best Cursor Plugins I’d Install in 2026</a></li><li class="lvl3"><a href="#h25">Pi Agent vs Claude Code in 2026: What I Learned After 100 Hours With Both</a></li><li class="lvl3"><a href="#h26">DeepSeek Harness vs Claude Code in 2026: Open Runtime vs the Deepest Closed Harness</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l3" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l3" data-h="h6"></i><i class="b l3" data-h="h7"></i><i class="b l2" data-h="h8"></i><i class="b l3" data-h="h9"></i><i class="b l3" data-h="h10"></i><i class="b l2" data-h="h11"></i><i class="b l3" data-h="h12"></i><i class="b l3" data-h="h13"></i><i class="b l2" data-h="h14"></i><i class="b l3" data-h="h15"></i><i class="b l2" data-h="h16"></i><i class="b l2" data-h="h17"></i><i class="b l2" data-h="h18"></i><i class="b l2" data-h="h19"></i><i class="b l2" data-h="h20"></i><i class="b l2" data-h="h21"></i><i class="b l2" data-h="h22"></i><i class="b l3" data-h="h23"></i><i class="b l3" data-h="h24"></i><i class="b l3" data-h="h25"></i><i class="b l3" data-h="h26"></i></span></button><div class="body"><p>DeepSeek released its own agent harness this August.</p>
 <p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/c3dba7c9b099.webp"></p>
 <p>It crossed <strong>66k stars in about a day (yes, sir!)</strong> and went over 200k by early September. That is already pretty crazy for something still in developer preview.</p>
 <p>But while researching this post, I found something much more interesting. DeepSeek Harness actually uses Pi's model layer to connect to models outside DeepSeek. Yep.</p>
@@ -37,7 +37,7 @@
 </blockquote>
 <p>This is going to be interesting. Stick to it!</p>
 <h2 id="h1">TL;DR</h2>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>Category</th>
@@ -120,7 +120,7 @@
 <td>Pi</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="h2">In summary</h3>
 <p>Scorecard: Pi 6, DeepSeek Harness 6. Dead tie.</p>
 <p>And the benchmark is basically a tie too. Pi passed 21 of 30 tasks and DeepSeek Harness passed 20. DeepSeek Harness was cheaper on the shared successful tasks and also finished tasks faster.</p>
@@ -200,7 +200,7 @@
 <p>The agent has to work with real apps and real data through tools, and then our verifier checks whether it actually completed the job. Each task had a 900-second cap.</p>
 <p>For this run, we used DeepSeek V4 Pro.</p>
 <p>Here is what happened:</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>Harness</th>
@@ -226,7 +226,7 @@
 <td>$0.028</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Pi won by one task. That is basically a tie in quality. Pi passed <strong>21/30 tasks</strong>, while DeepSeek Harness passed <strong>20/30</strong>.</p>
 <p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/81b3e62bdcfb.webp"></p>
 <p>And that matters because DeepSeek built Harness around its own model. You might expect the first-party harness to have some huge advantage. It did not. Pi actually finished one more task.</p>
@@ -244,7 +244,7 @@
 <p>Most of the tasks ended the same way for Pi and DSH. Pi and DeepSeek Harness agreed on 27 of the 30 outcomes. The entire 21 vs 20 difference came down to three tasks.</p>
 <p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/bda5604967e1.webp"></p>
 <p>Pi passed the CRM migration archive task while DeepSeek Harness failed it. Pi also passed the handover audit, while DeepSeek Harness failed it. DeepSeek Harness got the Sheets-to-Airtable tracker right, while Pi failed it.</p>
-<table>
+<div class="tablewrap"><table>
 <thead>
 <tr>
 <th>Task</th>
@@ -269,7 +269,7 @@
 <td>✅</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The bigger chart is useful because it shows this didn't happen only between Pi and DSH. The same DeepSeek model changed behaviour when we moved it between Claude Code, OpenCode, Hermes, Pi, and DeepSeek Harness.</p>
 <p>For example, Claude Code cleared every check on the renewal screen task, while Pi and DSH cleared only 5 of 11. On Slack action items, Pi, DSH, Claude Code, and Hermes all passed, while OpenCode only cleared 2 of 5 checks.</p>
 <p>So we did not see one harness destroying the others across every kind of work. The same model behaved differently depending on the harness.</p>
@@ -410,7 +410,7 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=ecd33de5"></script>
+<script src="../../assets/site.js?v=e764082e"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

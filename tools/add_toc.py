@@ -278,6 +278,20 @@ def inject_brand(doc):
     return doc[:m.start()] + block + doc[m.end():]
 
 
+def wrap_tables(doc):
+    """把表格包进可横滑的容器。
+
+    table 自己当滚动容器（display:block + overflow-x）时，宽度一旦按内容撑开，
+    它就不再溢出自己，手机上怎么拖都拖不动。所以表格保持 table 语义，
+    外面套一个定宽的滚动层。
+    """
+    if 'class="tablewrap"' in doc:
+        return doc
+    return re.sub(r"<table(\s[^>]*)?>.*?</table>",
+                  lambda m: '<div class="tablewrap">' + m.group(0) + "</div>",
+                  doc, flags=re.S)
+
+
 def process(path):
     doc = open(path, encoding="utf-8").read()
     if 'class="body"' not in doc:
@@ -286,6 +300,7 @@ def process(path):
     doc = normalize_nav(doc)
     doc = inject_brand(doc)
     doc = inject_top_btn(doc)
+    doc = wrap_tables(doc)
     doc, toc_parts = build_toc(doc)
     li, bars = toc_parts if toc_parts else ("", "")
     if not toc_parts:

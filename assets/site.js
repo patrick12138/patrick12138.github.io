@@ -186,7 +186,7 @@
 
 /* 代码块/表格：滑动时短暂显示横向滚动条，停下就收起来 */
 (function () {
-  var boxes = document.querySelectorAll('.body pre, .body table');
+  var boxes = document.querySelectorAll('.body pre, .body .tablewrap');
   for (var i = 0; i < boxes.length; i++) {
     (function (el) {
       var t = null;
