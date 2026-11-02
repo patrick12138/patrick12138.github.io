@@ -134,11 +134,11 @@
 <description>Eric S. Raymond 的经典长文：提问之前该先做什么，怎样描述问题才能让别人愿意回答。</description>
 </item>
 <item>
-<title>AI 时代的品味与工程思维</title>
-<link>https://patrick12138.github.io/posts/taste-and-engineering/</link>
-<guid isPermaLink="true">https://patrick12138.github.io/posts/taste-and-engineering/</guid>
+<title>AI 输出形态与 HTML Artifact</title>
+<link>https://patrick12138.github.io/posts/html-artifact/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/html-artifact/</guid>
 <pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
-<description>这篇文章的核心判断是：AI时代最难被替代的不是“会不会写某种语法”，而是做选择的品味和把结果做稳的工程思维。</description>
+<description>这篇文章的重点是：当agent输出越来越复杂时，Markdown不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码review和交互式调参，HTMLArtifact往往更清楚、更可读、更容易分享。</description>
 </item>
 <item>
 <title>研究方法论与复利思维</title>
@@ -148,11 +148,11 @@
 <description>真正的研究不是&quot;领一张桌子、一个别人选的题、一句含糊的&#x27;做出新东西&#x27;&quot;，而是一组可以刻意练习的堆栈技能。这篇文章拆解为八个可操作模块。</description>
 </item>
 <item>
-<title>AI 输出形态与 HTML Artifact</title>
-<link>https://patrick12138.github.io/posts/html-artifact/</link>
-<guid isPermaLink="true">https://patrick12138.github.io/posts/html-artifact/</guid>
+<title>AI 时代的品味与工程思维</title>
+<link>https://patrick12138.github.io/posts/taste-and-engineering/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/taste-and-engineering/</guid>
 <pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
-<description>这篇文章的重点是：当agent输出越来越复杂时，Markdown不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码review和交互式调参，HTMLArtifact往往更清楚、更可读、更容易分享。</description>
+<description>这篇文章的核心判断是：AI时代最难被替代的不是“会不会写某种语法”，而是做选择的品味和把结果做稳的工程思维。</description>
 </item>
 <item>
 <title>How to Earn a Billion Dollars</title>
@@ -169,18 +169,18 @@
 <description>最近一个月我陆续收到了三封咨询来信，来信的是三位素未谋面的软件研发，或是基础架构的前端或是数据部分的运维，但这三封信其实困惑其实是同一个问题。</description>
 </item>
 <item>
-<title>Codex 与 AI 编程工作流</title>
-<link>https://patrick12138.github.io/posts/codex-workflow/</link>
-<guid isPermaLink="true">https://patrick12138.github.io/posts/codex-workflow/</guid>
-<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
-<description>这组资料的共同结论是：AI编程的上限不在“让模型多写几行代码”，而在上下文、计划、验证、审查和人的判断能不能跟上。</description>
-</item>
-<item>
 <title>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读</title>
 <link>https://patrick12138.github.io/posts/codex-best-practices/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/codex-best-practices/</guid>
 <pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
 <description>OpenAI 的开发者文档发布 Best Practices</description>
+</item>
+<item>
+<title>Codex 与 AI 编程工作流</title>
+<link>https://patrick12138.github.io/posts/codex-workflow/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/codex-workflow/</guid>
+<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+<description>这组资料的共同结论是：AI编程的上限不在“让模型多写几行代码”，而在上下文、计划、验证、审查和人的判断能不能跟上。</description>
 </item>
 <item>
 <title>how to be good at research</title>
@@ -190,18 +190,18 @@
 <description>nobody really teaches you research. you get a desk, a problem someone else picked, and a vague instruction to produce something novel. so mo...</description>
 </item>
 <item>
-<title>AI 辅助编程的 70% 问题</title>
-<link>https://patrick12138.github.io/posts/the-70-percent-problem/</link>
-<guid isPermaLink="true">https://patrick12138.github.io/posts/the-70-percent-problem/</guid>
-<pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate>
-<description>这组资料共同指向一个现实：AI辅助编程很擅长把事情推进到“看起来已经差不多”的70%，但最后30%往往才是真正的软件工程。</description>
-</item>
-<item>
 <title>Agent Infra 与 Runtime</title>
 <link>https://patrick12138.github.io/posts/agent-infra-and-runtime/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/agent-infra-and-runtime/</guid>
 <pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate>
 <description>这篇文章的核心观点是：AgentInfra不是训练基础设施，也不是推理服务本身，而是更靠近应用层的AgentRuntime。它要解决的是agent执行复杂任务时的环境、协作、调度、状态和失败恢复问题。</description>
+</item>
+<item>
+<title>AI 辅助编程的 70% 问题</title>
+<link>https://patrick12138.github.io/posts/the-70-percent-problem/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/the-70-percent-problem/</guid>
+<pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate>
+<description>这组资料共同指向一个现实：AI辅助编程很擅长把事情推进到“看起来已经差不多”的70%，但最后30%往往才是真正的软件工程。</description>
 </item>
 <item>
 <title>Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑</title>

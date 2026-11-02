@@ -56,6 +56,9 @@ def collect():
             "date": parse_date(meta.group(1) if meta else ""),
             "link": "%s/posts/%s/" % (BASE, slug),
         })
+    # 先按 slug 定序，再按日期倒序（稳定排序）——glob 顺序随文件系统而变，
+    # 只按日期排会让同日文章在 Linux CI 和本地之间来回翻转，CI 直接红。
+    items.sort(key=lambda x: x["slug"])
     items.sort(key=lambda x: x["date"], reverse=True)
     return items
 
