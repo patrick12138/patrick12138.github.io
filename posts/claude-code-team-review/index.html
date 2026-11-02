@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="We&#x27;ve said before that Claude writes about 90 percent of Claude Code&#x27;s own code. So how do we review code at the volume…">
 <title>How the Claude Code team does code review · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=a34d6b42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -292,7 +292,7 @@
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
   var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
   var barsBox=document.querySelector('.toc-bars');
-  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
+  if(barsBox && bars.length>30) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
     bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });

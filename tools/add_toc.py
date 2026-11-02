@@ -92,7 +92,7 @@ JS = """
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
   var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
   var barsBox=document.querySelector('.toc-bars');
-  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
+  if(barsBox && bars.length>30) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
     bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="AI 原生开发没有抛弃传统流程，而是让人负责关键判断、让 Agent 执行分析、设计、编码与验证；本文用 BaoCut 远程转录功能完整复盘这套工作方式。">
 <title>我的 AI 原生开发流程：一个真实案例的完整复盘 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=a34d6b42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -254,7 +254,7 @@
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
   var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
   var barsBox=document.querySelector('.toc-bars');
-  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
+  if(barsBox && bars.length>30) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
     bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });

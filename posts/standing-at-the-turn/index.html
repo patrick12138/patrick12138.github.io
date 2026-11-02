@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="01. 加速的 20262026 年 2 月，Andrej Karpathy（前 Tesla AI 总监、OpenAI 创始成员）在 X 上描述了一个非常具体的转折点。11 月，他的编程工作还是 80% 手写代码、20% 让 agent 处理；到了 12 月，比例完全倒置——80...">
 <title>当我们站在变革的开端 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=a34d6b42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -284,7 +284,7 @@
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
   var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
   var barsBox=document.querySelector('.toc-bars');
-  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
+  if(barsBox && bars.length>30) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
     bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });

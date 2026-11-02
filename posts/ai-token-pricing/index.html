@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="2026 年 10 月实测：Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算。">
 <title>AI 订阅额度与 token 比价（2026-10） · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=a34d6b42">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -642,7 +642,7 @@
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
   var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
   var barsBox=document.querySelector('.toc-bars');
-  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
+  if(barsBox && bars.length>30) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
     bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
