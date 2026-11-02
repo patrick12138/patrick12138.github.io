@@ -92,8 +92,32 @@ JS = """<script>
     loadingIdx=true;
     var el=document.createElement('script');
     el.src='search.js';
-    el.onload=function(){ IDX=window.__SEARCH||[]; loadingIdx=false; runSearch(); };
+    el.onload=function(){
+      IDX=window.__SEARCH||[]; loadingIdx=false; runSearch();
+      loadDeep();                       // 浅索引先出结果，深索引随后补上
+    };
     el.onerror=function(){ loadingIdx=false; };
+    document.head.appendChild(el);
+  }
+
+  /* 深索引：正文 1500 字之后的剩余部分（约 600KB），后台静默加载，到了就重跑当前查询 */
+  var deepLoading=false;
+  function loadDeep(){
+    if(deepLoading||window.__SEARCH_DEEP) return;
+    deepLoading=true;
+    var el=document.createElement('script');
+    el.src='search-deep.js';
+    el.onload=function(){
+      var extra={}, list=window.__SEARCH_DEEP||[];
+      for(var i=0;i<list.length;i++) extra[list[i].s]=list[i].b;
+      for(var j=0;j<IDX.length;j++){
+        var p=IDX[j];
+        if(extra[p.s]) p.b=(p.b||'')+' '+extra[p.s];
+      }
+      deepLoading=false;
+      if(state.q) runSearch();
+    };
+    el.onerror=function(){ deepLoading=false; };
     document.head.appendChild(el);
   }
 
