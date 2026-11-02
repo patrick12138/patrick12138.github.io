@@ -29,7 +29,7 @@
   "author": "",
   "date": "October 12, 2026",
   "kind": "own",
-  "title": ""
+  "title": "AI 疲劳与可持续使用"
  },
  {
   "slug": "ai-native-dev-workflow",
@@ -310,5 +310,13 @@
   "date": "May 29, 2026",
   "kind": "repost",
   "title": "Something Big Is Happening"
+ },
+ {
+  "slug": "steam-steel-infinite-minds",
+  "md": "Sources/Inbox/Steam, Steel, and Infinite Minds.md",
+  "author": "Ivan Zhao",
+  "date": "December 23, 2025",
+  "kind": "repost",
+  "title": "Steam, Steel, and Infinite Minds"
  }
 ]

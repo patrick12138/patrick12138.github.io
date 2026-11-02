@@ -362,7 +362,49 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
     with open(os.path.join(page_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write(out)
     print("  → %s/%s/index.html  %.1f KB" % (out_dir, slug, len(out.encode()) / 1024))
+    
+    # 自动同步记录进 tools/sources.json，保证 rebuild.py 随时可用
+    sync_to_sources_json(slug, md_path, author, d, kind, title)
+
     return {"slug": slug, "title": title, "desc": desc, "date": d, "author": author, "kind": kind}
+
+
+def sync_to_sources_json(slug, md_path, author, d, kind, title):
+    import json
+    json_path = os.path.join(ROOT, "tools", "sources.json")
+    if not os.path.exists(json_path):
+        return
+    try:
+        rows = json.load(open(json_path, encoding="utf-8"))
+        vault_prefix = "/var/minis/mounts/Patrick's_Obsidian/"
+        rel_md = md_path
+        if md_path.startswith(vault_prefix):
+            rel_md = md_path[len(vault_prefix):]
+        date_str = "%s %d, %d" % (MONTHS[d.month - 1], d.day, d.year) if d else ""
+        found = False
+        for r in rows:
+            if r.get("slug") == slug:
+                r["md"] = rel_md
+                if author: r["author"] = author
+                if date_str: r["date"] = date_str
+                r["kind"] = kind
+                if title: r["title"] = title
+                found = True
+                break
+        if not found:
+            rows.append({
+                "slug": slug,
+                "md": rel_md,
+                "author": author or "",
+                "date": date_str,
+                "kind": kind,
+                "title": title or ""
+            })
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(rows, f, ensure_ascii=False, indent=1)
+        print("  ✓ 已自动同步至 tools/sources.json (当前共 %d 篇)" % len(rows))
+    except Exception as e:
+        print("  ! 同步 sources.json 失败: %s" % e, file=sys.stderr)
 
 
 def main():

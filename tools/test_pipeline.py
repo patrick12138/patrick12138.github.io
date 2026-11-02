@@ -39,12 +39,14 @@ def md2post_idempotent():
     if not os.path.exists(out):
         print("  · 跳过 md2post（样本页不存在）")
         return
+    old_content = open(out, "rb").read()
     import contextlib, io
     with contextlib.redirect_stdout(io.StringIO()):
         md2post.build(src, "ai-fatigue", kind="own")
         a = md5(out)
         md2post.build(src, "ai-fatigue", kind="own")
         b = md5(out)
+    open(out, "wb").write(old_content)  # 还原现场，避免冲掉 TOC 与 stats
     check("md2post 幂等（同一篇连转两次字节一致）", a == b, "%s != %s" % (a, b))
 
 

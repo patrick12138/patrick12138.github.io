@@ -2,21 +2,20 @@
 
 vault 在 `/var/minis/mounts/Patrick's_Obsidian/`，文章源是 `Sources/`（搬运）和 `Resources/`（他的浓缩笔记）。
 
-## 一篇新文章（三步）
+## 一篇新文章（极简两步）
 
 ```bash
 cd /var/minis/workspace/site
 
-# 1) 转换（自动处理 frontmatter / 图片 / 排版）
+# 1) 转换（自动处理 frontmatter / 图片本地化 / 排版，并自动同步登记到 tools/sources.json）
 python3 tools/md2post.py "/var/minis/mounts/Patrick's_Obsidian/Sources/Inbox/xxx.md" <slug> \
         [--author "作者"] [--date 2026-01-01] [--title "覆盖标题"] [--kind repost|own]
 
-# 2) 把这条记进 tools/sources.json（slug / md 相对路径 / author / date / kind / title）
-#    这样 rebuild.py 才能整站重生成
-
-# 3) 首页 index.html 的 <ul class="posts"> 按日期倒序插一条
-#    <li data-kind="repost|own"><a href="posts/<slug>/"><h2>标题</h2><p class="desc">描述</p><time>Month D, YYYY · 作者 · 搬运</time></a></li>
+# 2) 一键构建与上线（自动注入目录、统计字数、生成首页、打资源戳、排版体检、推送）
+python3 tools/build.py --push "feat: 新文章 xxx"
 ```
+
+注：首页**不需要且不要手动改** `index.html`，`build.py` 会自动调用 `tools/gen_index.py` 重新全自动生成。
 
 `--kind own` 进「个人」tab，`repost` 进「搬运」tab。**笔记和文章放同一个目录、同一个列表**——
 2026-11-02 开过独立的 `/notes/` 板块，用户明确否掉：只要一个列表，不要两个入口。
