@@ -195,7 +195,10 @@ html,body{overflow-x:clip}
 
 /* 平板竖屏（600–1023）：目录面板收窄成抽屉，别拉满整个宽度 */
 @media (min-width:600px) and (max-width:1023px){
-  .toc.is-open{
+  /* 位置/宽度/内边距必须挂在 .toc 基态上，不能挂在 .is-open：
+     这几个属性不进 transition，挂在 .is-open 会让面板在关闭的那一帧从
+     420px 弹回整屏宽（阴影跟着炸开）再淡出，iPad 上看起来就是「闪一下虚影」。 */
+  .toc{
     left:auto;right:24px;
     width:420px;max-width:calc(100vw - 48px);
     padding:18px 20px;
