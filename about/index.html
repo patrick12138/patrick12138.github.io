@@ -18,11 +18,12 @@
 :root,[data-theme="dark"]{
   --bg:#0a0c10;
   --text:#ccd2da;
-  --text-muted:#5a6472;
+  --text-muted:#7d8794;
   --text-faint:#2b313a;
   --accent:#6aa2d8;
   --border:#191d24;
   --heading:#e9edf2;
+  --rule:#1e232b;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
 }
@@ -32,10 +33,11 @@
   --bg:#f3f5f8;
   --text:#26313d;
   --text-muted:#5d6b7a;
-  --text-faint:#b3bcc7;
+  --text-faint:#c2cad4;
   --accent:#2d6496;
   --border:#dfe4ea;
   --heading:#16202b;
+  --rule:#e3e8ee;
 }
 
 /* ─── Theme cross-fade ─── */
@@ -47,14 +49,6 @@ html.theme-switching, html.theme-switching *{
 html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 body{background-color:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh}
 html:not(.intro-complete),html:not(.intro-complete) body{overflow:hidden;position:fixed;width:100%}
-
-/* ─── Film grain (dark only) ─── */
-.grain{
-  position:fixed;inset:0;pointer-events:none;z-index:9999;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:.038;transition:opacity .28s ease;
-}
-[data-theme="light"] .grain{opacity:0}
 
 /* ─── Theme toggle ─── */
 .theme-toggle{
@@ -222,7 +216,6 @@ html.hero-typing.intro-complete .btn.hero-cta{opacity:1;transform:translateY(0);
 </head>
 <body>
 
-<div class="grain" aria-hidden="true"></div>
 
 <main>
 
