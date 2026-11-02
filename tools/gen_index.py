@@ -32,7 +32,7 @@ for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
     desc = re.search(r'<meta name="description" content="([^"]*)"', s)
     desc_txt = html.unescape(desc.group(1)) if desc else ""
     key, date_txt = parse_date(meta_txt)
-    kind = "own" if "个人" in meta_txt else "repost"
+    kind = "own" if ("个人" in meta_txt or "原创" in meta_txt) else "repost"
     items.append({"slug": slug, "title": title, "meta": meta_txt,
                   "date": date_txt, "key": key, "desc": desc_txt, "kind": kind})
 
@@ -50,7 +50,7 @@ body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
         '<div class="tools"><div class="tabs" id="tabs">'
         '<button class="on" data-f="all">全部</button>'
         '<button data-f="repost">搬运</button>'
-        '<button data-f="own">原创</button>'
+        '<button data-f="own">个人</button>'
         '</div><button class="sbtn" id="searchBtn" aria-label="搜索">'
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
