@@ -6,7 +6,8 @@ from datetime import datetime
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(SITE, "index.html")
 
-STYLE = ('<link rel="stylesheet" href="assets/base.css">'
+STYLE = ('<link rel="alternate" type="application/rss+xml" title="patrick" href="feed.xml">'
+         '<link rel="stylesheet" href="assets/base.css">'
          '<link rel="stylesheet" href="assets/home.css">')   # ?v= 由 tools/build.py 统一写
 
 MONTHS = {m: i for i, m in enumerate(

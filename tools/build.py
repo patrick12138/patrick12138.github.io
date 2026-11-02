@@ -103,6 +103,9 @@ def main():
     print("④ 生成首页 …")
     print(sh("python3 tools/gen_index.py").strip().splitlines()[0])
 
+    print("④.5 生成 RSS / sitemap …")
+    print("   " + sh("python3 tools/gen_feed.py").strip())
+
     print("⑤ 回归测试 …")
     t = subprocess.run("python3 tools/test_pipeline.py", shell=True, cwd=ROOT,
                        capture_output=True, text=True)
