@@ -138,14 +138,15 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
 /* 手机：浮动按钮 + 底部面板 */
-.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+.toc-fab{display:none;position:fixed;right:18px;bottom:24px;z-index:40;
+  width:40px;height:40px;padding:0;align-items:center;justify-content:center;border-radius:999px;
   background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
-  border:1px solid var(--border);cursor:pointer}
+  border:1px solid var(--border);cursor:pointer;transition:color .15s,border-color .15s}
+.toc-fab svg{display:block}
 .toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 @media (max-width:1180px){
   .toc{display:none}
-  .toc-fab{display:block}
+  .toc-fab{display:flex}
   .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
     padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
     backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
@@ -186,7 +187,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>研究方法论与复利思维</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>how to be good at research（@itsreallyvivek, 2026-06）</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句结论</a></li><li class="lvl2"><a href="#h2">一、选自己的问题</a></li><li class="lvl2"><a href="#h3">二、升级信息源</a></li><li class="lvl2"><a href="#h4">三、把所有东西写下来</a></li><li class="lvl2"><a href="#h5">四、缩紧循环</a></li><li class="lvl2"><a href="#h6">五、盯着输出看</a></li><li class="lvl2"><a href="#h7">六、有目的地游荡</a></li><li class="lvl2"><a href="#h8">七、找到你的人</a></li><li class="lvl2"><a href="#h9">八、长线游戏</a></li><li class="lvl2"><a href="#h10">与已有知识的关联</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>真正的研究不是"领一张桌子、一个别人选的题、一句含糊的'做出新东西'"，而是一组可以刻意练习的堆栈技能。这篇文章拆解为八个可操作模块。</p>
+<div class="wrap"><article class="article"><h1>研究方法论与复利思维</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>how to be good at research（@itsreallyvivek, 2026-06）</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句结论</a></li><li class="lvl2"><a href="#h2">一、选自己的问题</a></li><li class="lvl2"><a href="#h3">二、升级信息源</a></li><li class="lvl2"><a href="#h4">三、把所有东西写下来</a></li><li class="lvl2"><a href="#h5">四、缩紧循环</a></li><li class="lvl2"><a href="#h6">五、盯着输出看</a></li><li class="lvl2"><a href="#h7">六、有目的地游荡</a></li><li class="lvl2"><a href="#h8">七、找到你的人</a></li><li class="lvl2"><a href="#h9">八、长线游戏</a></li><li class="lvl2"><a href="#h10">与已有知识的关联</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>真正的研究不是"领一张桌子、一个别人选的题、一句含糊的'做出新东西'"，而是一组可以刻意练习的堆栈技能。这篇文章拆解为八个可操作模块。</p>
 <h2 id="h1">一句结论</h2>
 <p>研究速度 = 发现自己错了的速度。所有方法都在加速这个循环：选自己的题、升级信息源、写下来、缩紧循环、盯着输出、有目的地游荡、找到同伴、复利思维。</p>
 <h2 id="h2">一、选自己的问题</h2>
@@ -286,6 +287,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   });
 })();
 </script>
+<script></script>
 <script></script>
 <script></script>
 <script></script>
