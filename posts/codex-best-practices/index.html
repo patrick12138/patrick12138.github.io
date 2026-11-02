@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="OpenAI 的开发者文档发布 Best Practices">
 <title>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=1812ff69">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=53d358bc">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读</h1><div class="meta">2026年6月10日 · 字节笔记本 · 搬运 · <span class="stats">4,396 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
+<div class="wrap"><article class="article"><h1>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读</h1><div class="meta">2026年6月10日 · 字节笔记本 · 搬运 · <span class="stats">4,396 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
 <p>OpenAI 的开发者文档发布一篇 Best Practices 的文章。</p>
 <p><img alt="图片" src="../../assets/posts/codex-best-practices/80c88c3ca4c6.webp"></p>
 <p>这篇文档描述的 Codex 用法，和大多数人实际在用的方式，差距相当大，本文把官方文档的所有内容逐条拆解，补充具体操作案例。</p>
@@ -358,6 +358,22 @@
     if(open){ syncActive(); scrollActiveIntoView(); }
   }
   fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+
+  /* PC（有鼠标、宽屏）：贴边把手悬停即展开，移开延时收起 */
+  var handle=document.getElementById('tocHandle');
+  var canHover = window.matchMedia('(hover:hover) and (min-width:1024px)').matches;
+  if(handle){
+    handle.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+  }
+  if(handle && canHover){
+    var _closeTimer=null;
+    function hoverOpen(){ clearTimeout(_closeTimer); setOpen(true); }
+    function hoverClose(){ clearTimeout(_closeTimer); _closeTimer=setTimeout(function(){ setOpen(false); }, 220); }
+    handle.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseleave', hoverClose);
+    handle.addEventListener('mouseleave', hoverClose);
+  }
   closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });

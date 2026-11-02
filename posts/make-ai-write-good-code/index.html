@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="苏格拉底式编程 + Claude/Gemini/Codex 的专家级协同，100% AI 编程的个人项目经验总结">
 <title>好奇心周刊第25期: 如何让AI写好代码 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=1812ff69">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=53d358bc">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">2026年2月26日 · 胡涂说 · 搬运 · <span class="stats">5,313 字 · 约 14 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
+<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">2026年2月26日 · 胡涂说 · 搬运 · <span class="stats">5,313 字 · 约 14 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
 <p>在 <a href="https://hutusi.com/weeklies/24">上一期周刊</a> 中，我谈了下对AI编程 / Vibe Coding 的一些看法。在这期里，我想就自己在AI编程上投入最多时间、最长跨度的一个项目为例，谈一谈如何让AI写好代码，实现一个完整的软件项目。这是一个从零开始、历经 400 多个 Commit 打磨、100% 由 AI 编程实现的项目——也是我二十年博客生涯中接触过的最优雅、交互体验最佳的博客框架，我对它颇为满意。</p>
 <p><img alt="la-nascita-di-veneree" src="../../assets/posts/make-ai-write-good-code/4c6240325659.webp"></p>
 <blockquote>
@@ -147,6 +147,22 @@
     if(open){ syncActive(); scrollActiveIntoView(); }
   }
   fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+
+  /* PC（有鼠标、宽屏）：贴边把手悬停即展开，移开延时收起 */
+  var handle=document.getElementById('tocHandle');
+  var canHover = window.matchMedia('(hover:hover) and (min-width:1024px)').matches;
+  if(handle){
+    handle.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+  }
+  if(handle && canHover){
+    var _closeTimer=null;
+    function hoverOpen(){ clearTimeout(_closeTimer); setOpen(true); }
+    function hoverClose(){ clearTimeout(_closeTimer); _closeTimer=setTimeout(function(){ setOpen(false); }, 220); }
+    handle.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseleave', hoverClose);
+    handle.addEventListener('mouseleave', hoverClose);
+  }
   closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });

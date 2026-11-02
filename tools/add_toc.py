@@ -32,6 +32,22 @@ JS = """
     if(open){ syncActive(); scrollActiveIntoView(); }
   }
   fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+
+  /* PC（有鼠标、宽屏）：贴边把手悬停即展开，移开延时收起 */
+  var handle=document.getElementById('tocHandle');
+  var canHover = window.matchMedia('(hover:hover) and (min-width:1024px)').matches;
+  if(handle){
+    handle.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+  }
+  if(handle && canHover){
+    var _closeTimer=null;
+    function hoverOpen(){ clearTimeout(_closeTimer); setOpen(true); }
+    function hoverClose(){ clearTimeout(_closeTimer); _closeTimer=setTimeout(function(){ setOpen(false); }, 220); }
+    handle.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseleave', hoverClose);
+    handle.addEventListener('mouseleave', hoverClose);
+  }
   closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
@@ -124,10 +140,17 @@ HEAD = ('<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true">
         '<circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/>'
         '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
         '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>' +
-        '<span class="toc-title">目录</span>'
         '<button class="toc-close" id="tocClose" aria-label="关闭目录">\u00d7</button></div>'
         '<ol class="toc-list" id="tocList">%s</ol></nav>'
         '<button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc">'
+        + '<svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
+        '<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/>'
+        '<line x1="9" y1="18" x2="20" y2="18"/>'
+        '<circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/>'
+        '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
+        '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>' + '</button>'
+        '<button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1">'
         + '<svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
         '<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/>'
@@ -144,6 +167,7 @@ def strip_toc(doc):
     doc = re.sub(r'<nav class="toc"[^>]*>.*?</nav>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="toc-handle"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
     doc = re.sub(r'<button class="to-top"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     # 别的会话注入过的英文版浮动按钮

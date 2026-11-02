@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="这篇文章的核心观点是：AgentInfra不是训练基础设施，也不是推理服务本身，而是更靠近应用层的AgentRuntime。它要解决的是agent执行复杂任务时的环境、协作、调度、状态和失败恢复问题。">
 <title>Agent Infra 与 Runtime · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=1812ff69">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=53d358bc">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Agent Infra 与 Runtime</h1><div class="meta">2026年6月8日 · 个人 · <span class="stats">1,102 字 · 约 3 分钟</span></div><aside class="source"><span class="src-label">来源</span>当我们在谈论 Agent Infra 时我们在谈论什么</aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句话结论</a></li><li class="lvl2"><a href="#h2">典型 Agent 架构</a></li><li class="lvl2"><a href="#h3">当前瓶颈</a></li><li class="lvl3"><a href="#h4">顺序执行限制复杂任务</a></li><li class="lvl3"><a href="#h5">Agent 协作还停留在协议层</a></li><li class="lvl3"><a href="#h6">长程任务会污染环境</a></li><li class="lvl3"><a href="#h7">物理世界最后一公里很脆弱</a></li><li class="lvl2"><a href="#h8">Skill + Env = Box</a></li><li class="lvl2"><a href="#h9">Agents 的 Kubernetes</a></li><li class="lvl2"><a href="#h10">对个人和项目的启发</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>这篇文章的核心观点是：Agent Infra 不是训练基础设施，也不是推理服务本身，而是更靠近应用层的 <strong>Agent Runtime</strong>。它要解决的是 agent 执行复杂任务时的环境、协作、调度、状态和失败恢复问题。</p>
+<div class="wrap"><article class="article"><h1>Agent Infra 与 Runtime</h1><div class="meta">2026年6月8日 · 个人 · <span class="stats">1,102 字 · 约 3 分钟</span></div><aside class="source"><span class="src-label">来源</span>当我们在谈论 Agent Infra 时我们在谈论什么</aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><div class="toc-head"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><button class="toc-close" id="tocClose" aria-label="关闭目录">×</button></div><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一句话结论</a></li><li class="lvl2"><a href="#h2">典型 Agent 架构</a></li><li class="lvl2"><a href="#h3">当前瓶颈</a></li><li class="lvl3"><a href="#h4">顺序执行限制复杂任务</a></li><li class="lvl3"><a href="#h5">Agent 协作还停留在协议层</a></li><li class="lvl3"><a href="#h6">长程任务会污染环境</a></li><li class="lvl3"><a href="#h7">物理世界最后一公里很脆弱</a></li><li class="lvl2"><a href="#h8">Skill + Env = Box</a></li><li class="lvl2"><a href="#h9">Agents 的 Kubernetes</a></li><li class="lvl2"><a href="#h10">对个人和项目的启发</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>这篇文章的核心观点是：Agent Infra 不是训练基础设施，也不是推理服务本身，而是更靠近应用层的 <strong>Agent Runtime</strong>。它要解决的是 agent 执行复杂任务时的环境、协作、调度、状态和失败恢复问题。</p>
 <h2 id="h1">一句话结论</h2>
 <p>真正决定 agent 能不能承担复杂任务的，不只是模型聪不聪明，而是执行是否可控、失败是否廉价、环境是否可替换、协作是否有基础设施兜底。</p>
 <h2 id="h2">典型 Agent 架构</h2>
@@ -161,6 +161,22 @@
     if(open){ syncActive(); scrollActiveIntoView(); }
   }
   fab.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+
+  /* PC（有鼠标、宽屏）：贴边把手悬停即展开，移开延时收起 */
+  var handle=document.getElementById('tocHandle');
+  var canHover = window.matchMedia('(hover:hover) and (min-width:1024px)').matches;
+  if(handle){
+    handle.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!toc.classList.contains('is-open')); });
+  }
+  if(handle && canHover){
+    var _closeTimer=null;
+    function hoverOpen(){ clearTimeout(_closeTimer); setOpen(true); }
+    function hoverClose(){ clearTimeout(_closeTimer); _closeTimer=setTimeout(function(){ setOpen(false); }, 220); }
+    handle.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseenter', hoverOpen);
+    toc.addEventListener('mouseleave', hoverClose);
+    handle.addEventListener('mouseleave', hoverClose);
+  }
   closeBtn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(false); });
   document.addEventListener('click', function(e){ if(!toc.contains(e.target) && e.target!==fab) setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(false); });
