@@ -95,6 +95,13 @@
     var blocks = document.querySelectorAll('.body pre');
     if (!blocks.length) return;
     [].forEach.call(blocks, function (pre) {
+      // 按钮不能放进 pre：pre 是横向滚动容器，绝对定位的子元素会跟着内容滚走，
+      // 一横滑按钮就跑到左边界外面去了。所以外面包一层只负责定位。
+      var wrap = document.createElement('div');
+      wrap.className = 'codewrap';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
       var btn = document.createElement('button');
       btn.className = 'code-copy';
       btn.setAttribute('aria-label', '复制代码');
@@ -117,7 +124,16 @@
           document.body.removeChild(ta); done();
         }
       });
-      pre.appendChild(btn);
+      wrap.appendChild(btn);
+
+      // 会横滑的代码块，右侧留一条通道，按钮不压到代码
+      var mark = function () {
+        // 先摘掉再量：is-wide 会给 pre 加 44px 右内边距，留着量会自我维持
+        wrap.classList.remove('is-wide');
+        if (pre.scrollWidth > pre.clientWidth + 2) wrap.classList.add('is-wide');
+      };
+      mark();
+      window.addEventListener('resize', mark, { passive: true });
     });
   }
 

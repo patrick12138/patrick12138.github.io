@@ -231,11 +231,13 @@ html,body{overflow-x:clip}
 
 /* 代码块：hover 出现复制按钮（触屏常驻淡显） */
 .body pre{position:relative}
-.code-copy{position:absolute;top:8px;right:8px;display:flex;align-items:center;justify-content:center;
+.codewrap{position:relative}
+.codewrap.is-wide>pre{padding-right:44px}   /* 横滑的代码块：右侧让出一条通道 */
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;display:flex;align-items:center;justify-content:center;
   width:26px;height:26px;padding:0;border-radius:6px;
   background:color-mix(in srgb,var(--bg) 88%,transparent);border:1px solid var(--border);
   color:var(--text-muted);cursor:pointer;opacity:0;transition:opacity .15s,color .15s,border-color .15s}
-.body pre:hover .code-copy{opacity:.9}
+.codewrap:hover .code-copy,.codewrap:focus-within .code-copy{opacity:.9}
 .code-copy:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 .code-copy.ok{color:var(--accent);border-color:var(--accent);opacity:1}
 .code-copy svg{display:block}
