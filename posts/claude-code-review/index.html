@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="上善若水，人淡如菊。这里是王巍 (onevcat) 的博客，用来记录一些技术和想法，主要专注于 Swift 和 iOS 开发。">
 <title>一个半月高强度 Claude Code 使用后感受 · patrick</title>
-<link rel="stylesheet" href="../../assets/post.css?v=09864821">
+<link rel="stylesheet" href="../../assets/post.css?v=6b39bfe7">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -235,6 +235,15 @@ AI：好的，让我们拆解一下需要完成的任务：
   var head=document.getElementById('tocHead');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+    },{passive:true});
+  }
   if(!links.length) return;
 
   var key='tocCollapsed';

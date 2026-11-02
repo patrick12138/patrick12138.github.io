@@ -85,6 +85,15 @@ JS = """
   var head=document.getElementById('tocHead');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+    },{passive:true});
+  }
   if(!links.length) return;
 
   var key='tocCollapsed';

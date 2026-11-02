@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="nobody really teaches you research. you get a desk, a problem someone else picked, and a vague instruction to produce something novel. so mo...">
 <title>how to be good at research · patrick</title>
-<link rel="stylesheet" href="../../assets/post.css?v=09864821">
+<link rel="stylesheet" href="../../assets/post.css?v=6b39bfe7">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -107,6 +107,15 @@
   var head=document.getElementById('tocHead');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+    },{passive:true});
+  }
   if(!links.length) return;
 
   var key='tocCollapsed';

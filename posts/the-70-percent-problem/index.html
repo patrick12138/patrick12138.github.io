@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="这组资料共同指向一个现实：AI辅助编程很擅长把事情推进到“看起来已经差不多”的70%，但最后30%往往才是真正的软件工程。">
 <title>AI 辅助编程的 70% 问题 · patrick</title>
-<link rel="stylesheet" href="../../assets/post.css?v=09864821">
+<link rel="stylesheet" href="../../assets/post.css?v=6b39bfe7">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -133,6 +133,15 @@
   var head=document.getElementById('tocHead');
   var fab=document.getElementById('tocFab');
   var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+    },{passive:true});
+  }
   if(!links.length) return;
 
   var key='tocCollapsed';
