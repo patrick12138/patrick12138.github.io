@@ -109,10 +109,10 @@ footer{padding:0 0 34px}
 .to-top{display:flex;position:fixed;right:20px;z-index:50;
   bottom:calc(var(--totop-bottom, 30px) + env(safe-area-inset-bottom, 0px));
   width:36px;height:36px;padding:0;align-items:center;justify-content:center;
-  border:0;background:transparent;color:var(--text-faint);cursor:pointer;
-  opacity:0;transform:translateY(8px);pointer-events:none;text-shadow:0 0 6px var(--bg);
-  transition:opacity .22s ease,transform .22s ease,color .15s}
-.to-top.show{opacity:.85;transform:none;pointer-events:auto}
+  border:0;background:transparent;color:var(--text-muted);cursor:pointer;
+  opacity:0;pointer-events:none;
+  transition:opacity .18s ease,color .15s}
+.to-top.show{opacity:.9;pointer-events:auto}
 .to-top:hover{opacity:1;color:var(--accent)}
 .to-top svg{width:17px;height:17px;display:block}
 @media (max-width:720px){.to-top{right:18px;--totop-bottom:76px}}
@@ -129,4 +129,4 @@ html.lab-on .nav-lab{display:inline}
 }
 
 /* 回到顶部：静置 1.5s 淡出（外观与过渡都在上面那一块，这里只管 idle 态） */
-.to-top.show.is-idle{opacity:0;transform:translateY(8px);pointer-events:none}
+.to-top.show.is-idle{opacity:0;pointer-events:none}   /* 只淡出，不位移 */

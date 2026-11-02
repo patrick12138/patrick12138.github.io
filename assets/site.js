@@ -84,7 +84,11 @@ window.siteUI = window.siteUI || {
         if (btn.classList.contains('show')) btn.classList.add('is-idle');
       }, 1500);
     }
-    function goTop() { window.siteUI.scrollTo(0); }
+    function goTop() {
+      window.siteUI.scrollTo(0);
+      // 程序化滚动在部分 WebView 里不派发 scroll，手动同步一次状态，否则按钮停在“显示”态
+      setTimeout(update, 420);
+    }
     window.addEventListener('scroll', function () { update(); poke(); }, { passive: true });
     window.addEventListener('resize', function () { update(); poke(); }, { passive: true });
     window.addEventListener('mousemove', poke, { passive: true });
