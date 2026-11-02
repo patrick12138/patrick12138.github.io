@@ -93,15 +93,6 @@ a{color:inherit}
 .body a:hover{border-bottom-color:var(--accent)}
 .body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
 
-.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
-.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--text-muted);margin:0 0 10px;font-weight:500}
-.refs ul{list-style:none;margin:0;padding:0}
-.refs li{margin:6px 0}
-.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
-  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
-.refs a:hover{color:var(--accent);border-color:var(--accent)}
-
 .back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
   text-decoration:none;padding:26px 0 60px;transition:color .15s}
 .back:hover{color:var(--accent)}
@@ -120,39 +111,89 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
 }
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+
+/* 目录按钮：小圆形图标 */
+.toc-tab{width:34px;height:34px;border-radius:50%;padding:0;right:14px;
+  align-items:center;justify-content:center;
+  writing-mode:horizontal-tb;letter-spacing:0;border-right:1px solid var(--border)}
+.toc-fab{width:42px;height:42px;border-radius:50%;padding:0;
+  align-items:center;justify-content:center;letter-spacing:0;font-size:0;
+  box-shadow:0 4px 16px rgba(0,0,0,.22)}
+.toc-tab svg,.toc-fab svg{display:block}
+
+.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
+.toc-tab,.toc-fab{position:fixed}
+
+/* 目录：更紧凑 + 头部用图标 */
+.toc-head span:first-child{display:none}
+.toc-head{gap:5px;margin-bottom:8px}
+.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
+.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
 <div class="bar"><div class="bar-in">
   <a class="brand" href="./">patrick</a>
   <nav class="nav">
-    <a href="./" class="on">首页</a><a href="./lab/">Lab</a>
+    <a href="./" class="on">首页</a>
+    <a href="lab/">Lab</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
   </nav>
 </div></div>
-<div class="wrap"><h1 class="page-title">首页</h1><div class="tabs" id="tabs"><button class="on" data-f="all">全部</button><button data-f="repost">搬运</button><button data-f="own">个人</button></div><ul class="posts" id="posts"><li data-kind="own"><a href="posts/ai-token-pricing/"><h2>AI 订阅额度与 token 比价（2026-10）</h2><p class="desc">Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算实测。</p><time>October 26, 2026</time></a></li><li data-kind="repost"><a href="posts/client-dev-choices/"><h2>你不知道的客户端开发：选型、原生、多端与借力</h2><p class="desc">从 Web、跨端、原生这三条路和研发效率、体验、性能的不可能三角讲起，聊 Mole 的 Windows 版为什么还是选了 C# 加 WinUI 3，怎么在不复用 Swift 代码的情况下用脚本和对账表保持两边一致，Windows 的代码签名有多麻烦，怎么用 Parallels 虚拟机和一台 ThinkPad 把编译和…</p><time>October 23, 2026 · Tw93</time></a></li><li data-kind="own"><a href="posts/ai-fatigue/"><h2>AI 疲劳与可持续使用</h2><p class="desc">用 AI 越多越累是真的：审阅和上下文切换的成本被严重低估。怎么安排注意力，比换哪个模型更影响产出。</p><time>October 12, 2026</time></a></li><li data-kind="repost"><a href="posts/warp-self-improving-agents/"><h2>Warp 如何让 Agent 自我进化</h2><p class="desc">Warp 用人类反馈持续改进 Skill，为 Agent 建立了一套低摩擦的自我进化循环。</p><time>August 28, 2026 · 宝玉</time></a></li><li data-kind="repost"><a href="posts/ai-native-dev-workflow/"><h2>我的 AI 原生开发流程：一个真实案例的完整复盘</h2><p class="desc">AI 原生开发没有抛弃传统流程，而是让人负责关键判断、让 Agent 执行分析、设计、编码与验证；用 BaoCut 远程转录功能完整复盘这套工作方式。</p><time>August 24, 2026 · 宝玉</time></a></li><li data-kind="repost"><a href="posts/git-worktree/"><h2>Git Worktree 完全指南</h2><p class="desc">A comprehensive repository of AI-generated technical guides</p><time>July 21, 2026 · chenmijiang</time></a></li><li data-kind="own"><a href="posts/taste-and-engineering/"><h2>AI 时代的品味与工程思维</h2><p class="desc">AI 消灭的是语法层面的痛苦，留下的是判断：什么该交给它、结果算不算能用、维护成本推给了谁。</p><time>June 24, 2026</time></a></li><li data-kind="own"><a href="posts/research-as-compounding/"><h2>研究方法论与复利思维</h2><p class="desc">研究速度 = 发现自己错了的速度。八个能练的模块：选自己的题、升级信息源、写下来、缩紧循环、盯着输出。</p><time>June 24, 2026</time></a></li><li data-kind="own"><a href="posts/html-artifact/"><h2>AI 输出形态与 HTML Artifact</h2><p class="desc">让模型输出 HTML 而不是长文：能点的原型比一段段文字更快对齐预期。</p><time>June 24, 2026</time></a></li><li data-kind="own"><a href="posts/codex-workflow/"><h2>Codex 与 AI 编程工作流</h2><p class="desc">Codex 的官方用法加上我自己的取舍：任务怎么切、上下文怎么给、什么时候该自己写。</p><time>June 10, 2026</time></a></li><li data-kind="own"><a href="posts/the-70-percent-problem/"><h2>AI 辅助编程的 70% 问题</h2><p class="desc">AI 能把项目做到 70%，剩下 30% 是上下文、维护和「看着对但不好用」——专业性正好落在这 30% 里。</p><time>June 8, 2026</time></a></li><li data-kind="own"><a href="posts/agent-infra-and-runtime/"><h2>Agent Infra 与 Runtime</h2><p class="desc">Agent Infra 既不是训练设施也不是推理服务：它管上下文、工具、状态和验证，决定 Agent 能不能长期跑下去。</p><time>June 8, 2026</time></a></li><li data-kind="repost"><a href="posts/harness-engineering/"><h2>工程技术：在智能体优先的世界中利用 Codex</h2><p class="desc">五个月交付一款内部 beta，没有一行代码是人手写的。人负责掌舵、智能体负责执行——以及为此重新设计的工程环境、意图表达和反馈回路。</p><time>May 27, 2026 · Ryan Lopopolo</time></a></li><li data-kind="repost"><a href="posts/what-is-agent/"><h2>Agent 到底是什么 | Pi Agent 原理与实现</h2><p class="desc">从零到一实现一个 AI Agent 的中文渐进式教程</p><time>May 26, 2026</time></a></li><li data-kind="repost"><a href="posts/make-ai-write-good-code/"><h2>好奇心周刊第 25 期：如何让 AI 写好代码</h2><p class="desc">苏格拉底式编程 + Claude / Gemini / Codex 的专家级协同，一个 400 多次 commit、100% 由 AI 写成的项目复盘。</p><time>February 26, 2026 · 胡涂说</time></a></li><li data-kind="repost"><a href="posts/claude-code-review/"><h2>一个半月高强度 Claude Code 使用后感受</h2><p class="desc">订阅 Claude Max 一个半月、烧掉 3000 多美元额度后的真实体感：迭代速度、上下文管理、什么该交给它，什么不该。</p><time>August 3, 2025 · 王巍（onevcat）</time></a></li><li data-kind="repost"><a href="posts/can-ai-replace-programmers/"><h2>AI 究竟能不能替代程序员?</h2><p class="desc">董事会问要不要用 AI 替换研发。答案不是能或不能，而是分哪一层、多大规模、什么时候——先把「效率提升 30%」拆开看。</p><time>June 8, 2025 · Lenciel</time></a></li></ul></div><div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);padding:0 0 60px">还没有原创文章，先在搬运里挑着看。</p></div><script>
-(function(){
-  var tabs=document.getElementById('tabs');
-  if(!tabs)return;
-  tabs.addEventListener('click',function(e){
-    var b=e.target.closest('button'); if(!b)return;
-    var f=b.dataset.f;
-    [].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===b);});
-    var shown=0;
-    [].forEach.call(document.querySelectorAll('#posts li'),function(li){
-      var ok=(f==='all'||li.dataset.kind===f);
-      li.style.display=ok?'':'none'; if(ok)shown++;
-    });
-    var empty=document.getElementById('emptyHint');
-    if(empty)empty.style.display=shown?'none':'block';
-  });
-})();
-</script>
+<div class="wrap"><h1 class="page-title">首页</h1><div class="tabs" id="tabs"><button class="on" data-f="all">全部</button><button data-f="repost">搬运</button><button data-f="own">原创</button></div><ul class="posts" id="posts"><li data-kind="own"><a href="posts/ai-token-pricing/"><h2>AI 订阅额度与 token 比价（2026-10）</h2><p class="desc">Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算实测。</p><time>October 26, 2026 · 原创</time></a></li><li data-kind="repost"><a href="posts/how-i-work-with-agents/"><h2>How I work with Agents</h2><p class="desc">Thorsten Ball on how he works with coding agents — 15 rules, October 2026.</p><time>October 25, 2026 · Thorsten Ball · 搬运</time></a></li><li data-kind="repost"><a href="posts/client-dev-choices/"><h2>你不知道的客户端开发：选型、原生、多端与借力</h2><p class="desc">从 Web、跨端、原生这三条路和研发效率、体验、性能的不可能三角讲起，聊 Mole 的 Windows 版为什么还是选了 C# 加 WinUI 3，怎么在不复用 Swift 代码的情况下用脚本和对账表保持两边一致，Windows 的代码签名有多麻烦，怎么用 Parallels 虚拟机和一台 Thin</p><time>October 23, 2026 · Tw93 · 搬运</time></a></li><li data-kind="own"><a href="posts/ai-fatigue/"><h2>AI 疲劳与可持续使用</h2><p class="desc">这组资料提醒：AI让很多任务变快，但不一定让人的一天变轻松。它把负担从“亲手生产”转移到“持续判断、审查、切换上下文和兜底”。</p><time>October 12, 2026 · 原创</time></a></li><li data-kind="repost"><a href="posts/warp-self-improving-agents/"><h2>Warp 如何让 Agent 自我进化</h2><p class="desc">Warp 用人类反馈持续改进 Skill，为 Agent 建立了一套低摩擦的自我进化循环。</p><time>August 28, 2026 · 宝玉 · 搬运</time></a></li><li data-kind="repost"><a href="posts/ai-native-dev-workflow/"><h2>我的 AI 原生开发流程：一个真实案例的完整复盘</h2><p class="desc">AI 原生开发没有抛弃传统流程，而是让人负责关键判断、让 Agent 执行分析、设计、编码与验证；本文用 BaoCut 远程转录功能完整复盘这套工作方式。</p><time>August 24, 2026 · 宝玉 · 搬运</time></a></li><li data-kind="repost"><a href="posts/git-worktree/"><h2>Git Worktree 完全指南</h2><p class="desc">A comprehensive repository of AI-generated technical guides</p><time>July 21, 2026 · chenmijiang · 搬运</time></a></li><li data-kind="own"><a href="posts/html-artifact/"><h2>AI 输出形态与 HTML Artifact</h2><p class="desc">这篇文章的重点是：当agent输出越来越复杂时，Markdown不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码review和交互式调参，HTMLArtifact往往更清楚、更可读、更容易分享。</p><time>June 24, 2026 · 原创</time></a></li><li data-kind="own"><a href="posts/research-as-compounding/"><h2>研究方法论与复利思维</h2><p class="desc">真正的研究不是&quot;领一张桌子、一个别人选的题、一句含糊的&#x27;做出新东西&#x27;&quot;，而是一组可以刻意练习的堆栈技能。这篇文章拆解为八个可操作模块。</p><time>June 24, 2026 · 原创</time></a></li><li data-kind="own"><a href="posts/taste-and-engineering/"><h2>AI 时代的品味与工程思维</h2><p class="desc">这篇文章的核心判断是：AI时代最难被替代的不是“会不会写某种语法”，而是做选择的品味和把结果做稳的工程思维。</p><time>June 24, 2026 · 原创</time></a></li><li data-kind="own"><a href="posts/codex-workflow/"><h2>Codex 与 AI 编程工作流</h2><p class="desc">这组资料的共同结论是：AI编程的上限不在“让模型多写几行代码”，而在上下文、计划、验证、审查和人的判断能不能跟上。</p><time>June 10, 2026 · 原创</time></a></li><li data-kind="own"><a href="posts/agent-infra-and-runtime/"><h2>Agent Infra 与 Runtime</h2><p class="desc">这篇文章的核心观点是：AgentInfra不是训练基础设施，也不是推理服务本身，而是更靠近应用层的AgentRuntime。它要解决的是agent执行复杂任务时的环境、协作、调度、状态和失败恢复问题。</p><time>June 8, 2026 · 原创</time></a></li><li data-kind="own"><a href="posts/the-70-percent-problem/"><h2>AI 辅助编程的 70% 问题</h2><p class="desc">这组资料共同指向一个现实：AI辅助编程很擅长把事情推进到“看起来已经差不多”的70%，但最后30%往往才是真正的软件工程。</p><time>June 8, 2026 · 原创</time></a></li><li data-kind="repost"><a href="posts/harness-engineering/"><h2>工程技术：在智能体优先的世界中利用 Codex</h2><p class="desc">五个月交付一款内部 beta，没有一行代码是人手写的。人负责掌舵、智能体负责执行。</p><time>May 27, 2026 · Ryan Lopopolo · 搬运</time></a></li><li data-kind="repost"><a href="posts/what-is-agent/"><h2>Agent 到底是什么 | Pi Agent 原理与实现</h2><p class="desc">从零到一实现一个 AI Agent 的中文渐进式教程</p><time>May 26, 2026 · 搬运</time></a></li><li data-kind="repost"><a href="posts/make-ai-write-good-code/"><h2>好奇心周刊第 25 期：如何让 AI 写好代码</h2><p class="desc">苏格拉底式编程 + Claude/Gemini/Codex 的专家级协同，100% AI 编程的个人项目经验总结</p><time>February 26, 2026 · 胡涂说 · 搬运</time></a></li><li data-kind="repost"><a href="posts/claude-code-review/"><h2>一个半月高强度 Claude Code 使用后感受</h2><p class="desc">订阅 Claude Max 一个半月、烧掉 3000 多美元额度后的真实体感。</p><time>August 3, 2025 · 王巍（onevcat） · 搬运</time></a></li><li data-kind="repost"><a href="posts/can-ai-replace-programmers/"><h2>AI 究竟能不能替代程序员？</h2><p class="desc"></p><time>June 8, 2025 · Lenciel · 搬运</time></a></li></ul></div><div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);padding:0 0 60px">这个分类下还没有文章。</p></div>
 <footer><div class="wrap"><div class="foot-in">
-  © 2026 <a href="./about/">patrick</a>
+  © 2026 <a href="about/">patrick</a>
 </div></div></footer>
 <script>
 (function(){
@@ -165,6 +206,23 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
     h.classList.add('theme-switching');h.dataset.theme=n;
     try{localStorage.setItem('theme',n);}catch(e){}
     setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script>
+(function(){
+  var tabs=document.getElementById('tabs'); if(!tabs)return;
+  tabs.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    var f=b.dataset.f;
+    [].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===b);});
+    var shown=0;
+    [].forEach.call(document.querySelectorAll('#posts li'),function(li){
+      var ok=(f==='all'||li.dataset.kind===f);
+      li.style.display=ok?'':'none'; if(ok)shown++;
+    });
+    var empty=document.getElementById('emptyHint');
+    if(empty)empty.style.display=shown?'none':'block';
   });
 })();
 </script>
