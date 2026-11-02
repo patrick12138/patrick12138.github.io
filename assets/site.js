@@ -189,11 +189,16 @@
     tip.innerHTML = '已回到' + (saved.title ? '「' + saved.title + '」' : '上次位置') +
       ' · <a href="#top" data-top>从头读</a>';
     document.body.appendChild(tip);
+    document.body.classList.add('readpos-on');
     requestAnimationFrame(function () { tip.classList.add('on'); });
     tip.querySelector('[data-top]').addEventListener('click', function (e) {
       e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); hide();
     });
-    function hide() { tip.classList.remove('on'); setTimeout(function () { tip.remove(); }, 300); }
+    function hide() {
+      tip.classList.remove('on');
+      document.body.classList.remove('readpos-on');
+      setTimeout(function () { tip.remove(); }, 300);
+    }
     setTimeout(hide, 6000);
   }
   if (document.readyState === 'complete') restore();

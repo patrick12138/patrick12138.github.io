@@ -246,11 +246,15 @@ html,body{overflow-x:clip}
   padding:9px 22px calc(9px + env(safe-area-inset-bottom));
   font-family:var(--mono);font-size:.72rem;color:var(--text-muted);
   text-align:center;opacity:0;transform:translateY(100%);
-  transition:opacity .2s ease,transform .22s ease}
+  transition:opacity .2s ease,transform .22s ease;
+  /* 单行 + 省略号：中文长标题以前会折成两行，「从头读」被拆成「从头」「读」 */
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .readpos-tip.on{opacity:1;transform:none}
-.readpos-tip a{color:var(--accent);text-decoration:none;margin-left:6px;
+.readpos-tip a{color:var(--accent);text-decoration:none;margin-left:6px;white-space:nowrap;
   border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
-@media (min-width:721px){.readpos-tip{padding-right:80px}}   /* 给右下返回顶部按钮让位 */
+/* 提示条出现时把右下浮动按钮收起，别在同一个角落叠两层 */
+body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:translateY(8px)!important;
+  pointer-events:none!important;transition:none!important}
 
 /* 相关阅读：文末、上一篇之前，一条淡标题 + 竖排链接 */
 .related{margin:52px 0 0}
