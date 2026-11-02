@@ -107,6 +107,22 @@ def pull_source_block(body):
     return re.sub(r"\s{2,}", " ", text).strip(), "\n".join(lines[:i] + lines[j:])
 
 
+
+def strip_empty_svg(body):
+    """删掉「空 path + textPath」的装饰 SVG：渲染不出内容，却白占 200px 高度。"""
+    import re as _re
+
+    def repl(m):
+        svg = m.group(0)
+        if _re.search(r'<path[^>]*id="[^"]*"[^>]*>\s*</path>', svg) and '<textPath' in svg:
+            return ""
+        return svg
+
+    body = _re.sub(r"<svg\b[^>]*>.*?</svg>", repl, body, flags=_re.S)
+    body = _re.sub(r"<p[^>]*>\s*</p>", "", body)
+    return body
+
+
 def video_to_link(body):
     """内嵌 <video> 改成外链文字，不做播放器。"""
     import re as _re
@@ -123,6 +139,7 @@ def video_to_link(body):
 
 
 def normalize_md(body):
+    body = strip_empty_svg(body)
     body = video_to_link(body)
     """剪藏 md 的排版修补：反转义、给标题/列表补空行（跳过代码块）。"""
     body = body.replace("\r\n", "\n")
@@ -324,7 +341,7 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
     bits = [fmt_date(d)]
     if author:
         bits.append(htmllib.escape(author))
-    bits.append("搬运" if kind == "repost" else "原创")
+    bits.append("搬运" if kind == "repost" else "个人")
 
     src_block = ""
     if source:

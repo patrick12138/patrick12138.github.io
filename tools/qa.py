@@ -54,7 +54,7 @@ def check(path):
 
 
 def check_kinds():
-    """首页 data-kind 与文章页 meta 的「搬运/原创」必须一致。"""
+    """首页 data-kind 与文章页 meta 的「搬运/个人」必须一致。"""
     idx = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
     kinds = dict(re.findall(r'<li data-kind="(\w+)"><a href="posts/([a-z0-9-]+)/"', idx))
     kinds = {slug: kind for kind, slug in kinds.items()}
@@ -63,8 +63,8 @@ def check_kinds():
         p = os.path.join(ROOT, "posts", slug, "index.html")
         if not os.path.exists(p):
             continue
-        m = re.search(r'<div class="meta">.*?·\s*(搬运|原创)', open(p, encoding="utf-8").read())
-        page_kind = {"搬运": "repost", "原创": "own"}.get(m.group(1) if m else "", "")
+        m = re.search(r'<div class="meta">.*?·\s*(搬运|个人|原创)', open(p, encoding="utf-8").read())
+        page_kind = {"搬运": "repost", "个人": "own", "原创": "own"}.get(m.group(1) if m else "", "")
         if page_kind != kind:
             bad.append((slug, kind, page_kind or "?"))
     return bad
