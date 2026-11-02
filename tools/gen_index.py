@@ -179,7 +179,7 @@ JS = """<script>
   }
   function paint(){
     matched.forEach(function(li,i){ li.style.display = i<shown ? '' : 'none'; });
-    if(empty) empty.style.display = matched.length ? 'none' : 'block';
+    setEmpty(matched.length);
     if(sentinel) sentinel.style.display = (shown < matched.length) ? 'block' : 'none';
   }
   function restoreOrder(){
@@ -192,6 +192,13 @@ JS = """<script>
   function apply(reset){
     if(reset!==false) shown=BATCH;
     restoreOrder(); scan(); paint(); setMeta(matched.length);
+  }
+
+  function setEmpty(n){
+    if(!empty) return;
+    if(n){ empty.style.display='none'; return; }
+    empty.style.display='block';
+    empty.textContent = state.q ? '没有匹配到正文，换个更短的词试试。' : '这个分类下还没有文章。';
   }
 
   function setMeta(n){
@@ -242,7 +249,7 @@ JS = """<script>
         if(hit) matched.push(r.el);
       });
       setMeta(matched.length);
-      if(empty) empty.style.display=matched.length?'none':'block';
+      setEmpty(matched.length);
       return;
     }
     var hits=[];
@@ -269,7 +276,7 @@ JS = """<script>
       list.appendChild(r.el);
       shownN++;
     });
-    if(empty) empty.style.display = shownN ? 'none' : 'block';
+    setEmpty(shownN);
     if(sentinel) sentinel.style.display='none';
     setMeta(shownN);
   }
