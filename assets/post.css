@@ -119,8 +119,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   padding:26px 0 60px;margin-left:18px;transition:color .15s}
 .back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
-.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
-  font-family:var(--sans);font-size:.78rem;line-height:1.55;max-height:calc(100vh - 160px);
+.toc{position:fixed;top:104px;left:calc(50% + 384px);width:220px;z-index:30;
+  font-family:var(--sans);font-size:.78rem;line-height:1.55;max-height:calc(100vh - 176px);
   display:flex;flex-direction:column;transition:opacity .2s ease}
 .toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
   font-size:.68rem;letter-spacing:.08em;margin-bottom:10px;cursor:pointer;
@@ -131,7 +131,13 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 @media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
 .toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:none;
   border-left:1px solid var(--border)}
-.toc-list::-webkit-scrollbar{width:0;height:0;display:none}
+.toc-list{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--text) 24%,transparent) transparent}
+.toc-list:hover{scrollbar-color:color-mix(in srgb,var(--text) 40%,transparent)}
+.toc-list::-webkit-scrollbar{width:4px;height:4px}
+.toc-list::-webkit-scrollbar-track{background:color-mix(in srgb,var(--text) 6%,transparent)}
+.toc-list::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text) 26%,transparent);border-radius:4px}
+.toc-list:hover::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text) 42%,transparent)}
+.toc-list::-webkit-scrollbar-button{display:none;height:0;width:0}
 .toc-list a{display:block;padding:6px 0 6px 12px;margin-left:-1px;color:var(--text-muted);
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
   font-size:.84rem;font-weight:400;line-height:1.5;letter-spacing:0;

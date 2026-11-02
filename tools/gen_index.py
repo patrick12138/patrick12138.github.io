@@ -171,8 +171,6 @@ THEME_JS = """<script>
 TOTOP_JS = """<script>
 (function(){
   var b=document.getElementById('toTop'); if(!b) return;
-  var lt=document.getElementById('toTopLink');
-  if(lt) lt.addEventListener('click',function(e){ e.preventDefault(); goTop(); });
   function goTop(){
     var before=window.pageYOffset;
     try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
@@ -210,7 +208,7 @@ page = """<!DOCTYPE html>
 <button class="to-top" id="toTop" aria-label="返回顶部" title="返回顶部">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
-<div class="to-top-link"><a href="#" id="toTopLink">↑ 回到顶部</a></div>
+
 %s
 %s
 %s
