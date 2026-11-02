@@ -14,7 +14,9 @@ import sys
 import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VAULT = "/var/minis/mounts/Patrick's_Obsidian"
+import config  # noqa: E402
+
+VAULT = config.load()["vault_root"]
 FAILED = []
 
 

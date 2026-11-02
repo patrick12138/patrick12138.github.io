@@ -15,7 +15,9 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKILLS = os.path.join(ROOT, "skills")
-INSTALLED = "/var/minis/skills"
+import config  # noqa: E402
+
+INSTALLED = config.load()["skills_dst"]
 MAX_SKILL_LINES = 100
 
 problems = []

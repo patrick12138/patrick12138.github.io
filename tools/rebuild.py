@@ -24,10 +24,11 @@ def iso(d):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import add_toc  # noqa: E402
+import config  # noqa: E402
 import md2post  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VAULT = "/var/minis/mounts/Patrick's_Obsidian"
+VAULT = config.load()["vault_root"]
 
 
 def main():

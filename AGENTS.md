@@ -35,6 +35,7 @@ tools/                生成器与质检脚本（手写）
                       gen_prevnext 上一篇下一篇 / gen_feed RSS+sitemap / stats 字数 / qa 体检
                       optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
                       unpublish 下线与恢复
+                      config.py 环境配置（vault/skills 目录；PC 用 config.local.json 覆盖，已 gitignore）
 skills/               skill 文档（单一源，build 时同步到 /var/minis/skills）
 ```
 

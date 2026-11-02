@@ -383,7 +383,8 @@ def sync_to_sources_json(slug, md_path, author, d, kind, title_arg=None):
         return
     try:
         rows = json.load(open(json_path, encoding="utf-8"))
-        vault_prefix = "/var/minis/mounts/Patrick's_Obsidian/"
+        import config
+        vault_prefix = config.load()["vault_root"].rstrip("/") + "/"
         rel_md = md_path
         if md_path.startswith(vault_prefix):
             rel_md = md_path[len(vault_prefix):]

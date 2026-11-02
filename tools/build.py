@@ -65,7 +65,9 @@ def stamp_assets():
 
 
 SKILLS_SRC = os.path.join(ROOT, "skills")
-SKILLS_DST = "/var/minis/skills"
+import config  # noqa: E402
+
+SKILLS_DST = config.load()["skills_dst"]
 
 
 def sync_skills():
