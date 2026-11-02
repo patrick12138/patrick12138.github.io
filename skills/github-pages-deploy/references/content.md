@@ -150,6 +150,17 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 - `build.py` 第 ③ 步执行，不用手动跑
 
 
+## 正文边界：三处必须同步
+
+`.body` 之后的东西（相关阅读 `nav.related`、上下篇 `nav.pager`、版权提示 `aside.legal-note`、
+返回首页 `a.back`）都**不算正文**。三处各写了一遍同一组截断标记，改一处要三处一起改：
+
+- `tools/stats.py` 的 `body_html()` —— 算字数/阅读时间
+- `tools/gen_search.py` 的正文提取 —— 搜索索引
+- `tools/gen_legal.py` 的 `ANCHOR_TAIL` —— 版权提示插哪儿
+
+漏掉一处的症状：字数虚高、搜索能搜到「版权/相关阅读」、提示条随 build 前后跳。
+
 ## 搬运页版权信号（tools/gen_legal.py）
 
 全文搬运 + 署名 + 原文链接 **不等于** 授权：署名只解决署名权，复制权/信息网络传播权那一项还在。
