@@ -62,6 +62,13 @@ a{color:inherit}
 .article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
   line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
 .article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
 .body{font-size:1.125rem;line-height:1.95;color:var(--text)}
 .body p{margin:0 0 1.35em}
 .body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
@@ -118,7 +125,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><h1 class="page-title">首页</h1><div class="tabs" id="tabs"><button class="on" data-f="all">全部</button><button data-f="repost">搬运</button><button data-f="own">个人</button></div><ul class="posts" id="posts"><li data-kind="repost"><a href="posts/client-dev-choices/"><h2>你不知道的客户端开发：选型、原生、多端与借力</h2><p class="desc">从 Web、跨端、原生这三条路和研发效率、体验、性能的不可能三角讲起，聊 Mole 的 Windows 版为什么还是选了 C# 加 WinUI 3，怎么在不复用 Swift 代码的情况下用脚本和对账表保持两边一致，Windows 的代码签名有多麻烦，怎么用 Parallels 虚拟机和一台 ThinkPad 把编译和…</p><time>October 23, 2026</time></a></li><li data-kind="repost"><a href="posts/warp-self-improving-agents/"><h2>Warp 如何让 Agent 自我进化</h2><p class="desc">Warp 用人类反馈持续改进 Skill，为 Agent 建立了一套低摩擦的自我进化循环。</p><time>August 28, 2026</time></a></li><li data-kind="repost"><a href="posts/git-worktree/"><h2>Git Worktree 完全指南</h2><p class="desc">A comprehensive repository of AI-generated technical guides</p><time>July 21, 2026</time></a></li><li data-kind="repost"><a href="posts/what-is-agent/"><h2>Agent 到底是什么 | Pi Agent 原理与实现</h2><p class="desc">从零到一实现一个 AI Agent 的中文渐进式教程</p><time>May 26, 2026</time></a></li></ul></div><div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);padding:0 0 60px">还没有原创文章，先在搬运里挑着看。</p></div><script>
+<div class="wrap"><h1 class="page-title">首页</h1><div class="tabs" id="tabs"><button class="on" data-f="all">全部</button><button data-f="repost">搬运</button><button data-f="own">个人</button></div><ul class="posts" id="posts"><li data-kind="own"><a href="posts/ai-token-pricing/"><h2>AI 订阅额度与 token 比价（2026-10）</h2><p class="desc">Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算实测。</p><time>October 26, 2026</time></a></li><li data-kind="repost"><a href="posts/client-dev-choices/"><h2>你不知道的客户端开发：选型、原生、多端与借力</h2><p class="desc">从 Web、跨端、原生这三条路和研发效率、体验、性能的不可能三角讲起，聊 Mole 的 Windows 版为什么还是选了 C# 加 WinUI 3，怎么在不复用 Swift 代码的情况下用脚本和对账表保持两边一致，Windows 的代码签名有多麻烦，怎么用 Parallels 虚拟机和一台 ThinkPad 把编译和…</p><time>October 23, 2026 · Tw93</time></a></li><li data-kind="repost"><a href="posts/warp-self-improving-agents/"><h2>Warp 如何让 Agent 自我进化</h2><p class="desc">Warp 用人类反馈持续改进 Skill，为 Agent 建立了一套低摩擦的自我进化循环。</p><time>August 28, 2026 · 宝玉</time></a></li><li data-kind="repost"><a href="posts/git-worktree/"><h2>Git Worktree 完全指南</h2><p class="desc">A comprehensive repository of AI-generated technical guides</p><time>July 21, 2026 · chenmijiang</time></a></li><li data-kind="repost"><a href="posts/what-is-agent/"><h2>Agent 到底是什么 | Pi Agent 原理与实现</h2><p class="desc">从零到一实现一个 AI Agent 的中文渐进式教程</p><time>May 26, 2026</time></a></li></ul></div><div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);padding:0 0 60px">还没有原创文章，先在搬运里挑着看。</p></div><script>
 (function(){
   var tabs=document.getElementById('tabs');
   if(!tabs)return;

@@ -62,6 +62,13 @@ a{color:inherit}
 .article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
   line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
 .article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
 .body{font-size:1.125rem;line-height:1.95;color:var(--text)}
 .body p{margin:0 0 1.35em}
 .body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
@@ -118,7 +125,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>你不知道的客户端开发：选型、原生、多端与借力</h1><div class="meta">October 23, 2026 · 原文 <a href="https://tw93.fun/2026-10-22/desktop.html" target="_blank" rel="noopener">tw93.fun</a> · 搬运</div><div class="body"><p><img alt="《你不知道的客户端开发：选型、原生、多端与借力》文章封面" src="https://cdn.tw93.fun/cdn-cgi/image/width=2000,quality=80,format=auto,fit=scale-down/blog/pic/client-tech-cover-native4.png" /></p>
+<div class="wrap"><article class="article"><h1>你不知道的客户端开发：选型、原生、多端与借力</h1><div class="meta">October 23, 2026 · Tw93 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://tw93.fun/2026-10-22/desktop.html" target="_blank" rel="noopener">https://tw93.fun/2026-10-22/desktop.html</a></aside><div class="body"><p><img alt="《你不知道的客户端开发：选型、原生、多端与借力》文章封面" src="https://cdn.tw93.fun/cdn-cgi/image/width=2000,quality=80,format=auto,fit=scale-down/blog/pic/client-tech-cover-native4.png" /></p>
 <p>发现不少小伙伴很好奇我是怎么用 Mac 来开发 Windows 软件的，以及 Windows 软件现在一般用什么技术栈来实现，刚好有空，来和大伙随便聊聊关于多客户端下技术选择的思考以及我的一些想法。前几天在推上连着发了三篇，这里整理成一篇放到博客里。</p>
 <h2>端的开发一般是这三条路</h2>
 <p>做过前端客户端的小伙伴应该都知道，这些年端的开发一般是这三条路。</p>

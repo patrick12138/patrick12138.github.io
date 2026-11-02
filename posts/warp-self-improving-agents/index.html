@@ -62,6 +62,13 @@ a{color:inherit}
 .article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
   line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
 .article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
 .body{font-size:1.125rem;line-height:1.95;color:var(--text)}
 .body p{margin:0 0 1.35em}
 .body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
@@ -118,7 +125,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 原文 <a href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">baoyu.io</a> · 搬运</div><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a> ，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong> 。</p>
+<div class="wrap"><article class="article"><h1>Warp 如何让 Agent 自我进化</h1><div class="meta">August 28, 2026 · 宝玉 · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://baoyu.io/blog/2026-08-28/warp-self-improving-agents" target="_blank" rel="noopener">https://baoyu.io/blog/2026-08-28/warp-self-improving-agents</a></aside><div class="body"><p>Claude 新的一篇博文 <a href="https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude">《How Warp builds self-improving agents on Claude》</a> ，看了后还是挺有收获，它解决的是 <strong>Skill 的进化问题</strong> 。</p>
 <p>这个问题我以前也研究过，我写了一个反编译 JS 代码的 Skill（ <a href="https://github.com/JimLiu/decode-">GitHub</a> ），每次 Agent 反编译的时候遇到新的场景解决了就自己更新自己的 Skill，效果还不错，能一直优化，就是 Skill 文件越来越大。</p>
 <p>我还研究过写作的自我进化 Skill，那个就一言难尽，因为它其实没有自己统一的标准，经常负优化，越写越糟糕。</p>
 <h2>Agent 做 Code Review，缺的不是能力，而是记忆</h2>

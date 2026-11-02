@@ -62,6 +62,13 @@ a{color:inherit}
 .article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
   line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
 .article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
 .body{font-size:1.125rem;line-height:1.95;color:var(--text)}
 .body p{margin:0 0 1.35em}
 .body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
@@ -118,7 +125,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · 原文 <a href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">chenmijiang.github.io</a> · 搬运</div><div class="body"><h2>Git Worktree 完全指南</h2>
+<div class="wrap"><article class="article"><h1>Git Worktree 完全指南</h1><div class="meta">July 21, 2026 · chenmijiang · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html" target="_blank" rel="noopener">https://chenmijiang.github.io/ai-notebook/git-worktree-guide.html</a></aside><div class="body"><h2>Git Worktree 完全指南</h2>
 <h2>1. 概述</h2>
 <h3>1.1 什么是 Git Worktree</h3>
 <p><code>git worktree</code> 用来管理本地同一个仓库（repository）下的多个工作区（working tree）。它允许你在不同目录中同时检出多个分支或提交，从而并行开发/测试。</p>

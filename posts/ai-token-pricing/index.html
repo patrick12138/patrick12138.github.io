@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍；Max 20x 只要 1.5–2.2 倍额度，价格却是 2 倍。附官方定价表与一周额度折算实测。">
+<title>AI 订阅额度与 token 比价（2026-10） · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a>
+    <a href="../../about/">关于</a>
+    <a href="../../tga/">工具</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>AI 订阅额度与 token 比价（2026-10）</h1><div class="meta">October 26, 2026 · 原创</div><div class="body"><p>来源：2026-10-26 会话内实测调研（官方定价页 + 第三方网关门禁实测 + 社区个人实测）。</p>
+<p>相关：Codex 与 AI 编程工作流、Agent Harness 版图与个人选型、AI 商品化与价值迁移</p>
+<h2>一句话结论</h2>
+<p>2026 年 10 月，<strong>Claude 每 1 美元月费换到的 API 用量是 Codex 的 2–4 倍</strong>；官方倍率（5x / 20x）与实测基本对不上，<strong>Max 20x 只比 Max 5x 多 30–100%，价格却是 2 倍</strong>。Copilot 不属于同一赛道，它是按 API 价约 1.0–1.8 折转售。</p>
+<h2>一、官方定价与近两个月的变动</h2>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th>档位</th>
+<th>月费（USD）</th>
+<th>5 小时限额</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude</td>
+<td>Free</td>
+<td>0</td>
+<td>有</td>
+</tr>
+<tr>
+<td></td>
+<td>Pro</td>
+<td>20（年付 17，$300 一次性）</td>
+<td>有</td>
+</tr>
+<tr>
+<td></td>
+<td>Max 5x</td>
+<td>100</td>
+<td>有（5× Pro）</td>
+</tr>
+<tr>
+<td></td>
+<td>Max 20x</td>
+<td>200</td>
+<td>有（20× Pro）</td>
+</tr>
+<tr>
+<td></td>
+<td>Team Standard / Premium</td>
+<td>25 / 125</td>
+<td>有</td>
+</tr>
+<tr>
+<td>ChatGPT / Codex</td>
+<td>Free / Go</td>
+<td>0 / 8</td>
+<td>有</td>
+</tr>
+<tr>
+<td></td>
+<td>Plus</td>
+<td>20</td>
+<td>有</td>
+</tr>
+<tr>
+<td></td>
+<td>Pro 100 / 200 / 500</td>
+<td>100 / 200 / 500</td>
+<td><strong>无</strong></td>
+</tr>
+<tr>
+<td>GitHub Copilot</td>
+<td>Free</td>
+<td>0</td>
+<td>—</td>
+</tr>
+<tr>
+<td></td>
+<td>Pro</td>
+<td>10</td>
+<td>1,500 credits</td>
+</tr>
+<tr>
+<td></td>
+<td>Pro+</td>
+<td>39</td>
+<td>7,000 credits</td>
+</tr>
+<tr>
+<td></td>
+<td>Max</td>
+<td>100</td>
+<td>20,000 credits</td>
+</tr>
+<tr>
+<td></td>
+<td>Business</td>
+<td>19 / 人</td>
+<td>池化</td>
+</tr>
+</tbody>
+</table>
+<p>必知的六条时间线：</p>
+<ul>
+<li><strong>2026-06-01 Copilot 改按 token 扣 credit</strong>，1 credit = $0.01。此前是按「高级请求次数」计。</li>
+<li><strong>2026-09-13 Claude Code 暑期活动结束</strong>，周额度的 +50% 加成取消。</li>
+<li><strong>2026-09-22 Opus 5.5 发布</strong>，Anthropic 上调 5 小时额度：Pro 约 +50%、Max 约 +20%（SemiAnalysis 实测）。</li>
+<li><strong>2026-09-29 OpenAI 把 Pro $200 砍半</strong>，Codex 负责人原话是「net out at half the dollar in API spend」；新增 $500 档；Pro 全系取消 5 小时限额，只剩周额度。老用户旧额度保留到 <strong>2026-10-29</strong>。</li>
+<li><strong>2026-10-07 Claude Max 开始附赠月度 API credits</strong>：5x 档 $100/月、20x 档 $200/月，与聊天额度分开。</li>
+<li><strong>2026-10-12~19 那周</strong>：ChatGPT Plus 的 Codex 额度环比掉约 63%（wokey 待复测），无官方公告。</li>
+</ul>
+<h2>二、实测：一周额度值多少 API 美元</h2>
+<p>口径说明：按官方 API 价把「用满一周额度」的流量折算成美元。这是「同样流量走 API 要付多少钱」，不是额度本身的计量单位。</p>
+<table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>月费</th>
+<th>每周 API 等价</th>
+<th>折合月</th>
+<th>倍数（÷ 月费）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Pro</td>
+<td>$20</td>
+<td><strong>$170</strong>（区间 158–182，474 账号）</td>
+<td>~$738</td>
+<td><strong>37×</strong></td>
+</tr>
+<tr>
+<td>Claude Max 5x</td>
+<td>$100</td>
+<td><strong>$1,100–1,250</strong></td>
+<td>~$4,800–5,400</td>
+<td><strong>44–54×</strong></td>
+</tr>
+<tr>
+<td>Claude Max 20x</td>
+<td>$200</td>
+<td><strong>$1,500–1,643</strong>（17 账号）</td>
+<td>~$6,500–7,100</td>
+<td><strong>36×</strong></td>
+</tr>
+<tr>
+<td>Claude Team Standard</td>
+<td>$25</td>
+<td>$185</td>
+<td>~$802</td>
+<td>32×</td>
+</tr>
+<tr>
+<td>Claude Team Premium</td>
+<td>$125</td>
+<td>$861</td>
+<td>~$3,700</td>
+<td>30×</td>
+</tr>
+<tr>
+<td>ChatGPT Plus（Codex）</td>
+<td>$20</td>
+<td><strong>$58–102</strong></td>
+<td>~$250–440</td>
+<td>13–22×</td>
+</tr>
+<tr>
+<td>ChatGPT Pro 100</td>
+<td>$100</td>
+<td><strong>$220–326</strong></td>
+<td>~$950–1,400</td>
+<td>14×</td>
+</tr>
+<tr>
+<td>ChatGPT Pro 200</td>
+<td>$200</td>
+<td><strong>$670–1,084</strong></td>
+<td>$2,900–5,900</td>
+<td>15–24×</td>
+</tr>
+<tr>
+<td>ChatGPT Pro 500</td>
+<td>$500</td>
+<td>~$1,600（无社区实测）</td>
+<td>~$6,900</td>
+<td>~14×</td>
+</tr>
+<tr>
+<td>Copilot Pro+</td>
+<td>$39</td>
+<td>$70（7,000 credits）</td>
+<td>$70</td>
+<td><strong>1.8×</strong></td>
+</tr>
+<tr>
+<td>Copilot Max</td>
+<td>$100</td>
+<td>$200（20,000 credits）</td>
+<td>$200</td>
+<td>2×</td>
+</tr>
+</tbody>
+</table>
+<p>三个反直觉事实：</p>
+<ol>
+<li><strong>「20x」是 5 小时窗口的倍率，不是周额度的</strong>。实测 Max 20x 的 5 小时窗口约是 Pro 的 15×，但周额度只有 Pro 的 <strong>9.7×</strong>。周额度才是长期天花板。</li>
+<li><strong>20x 相对 5x 只有 1.5–2.2×</strong>（社区倍数表），另一组 CC Switch 记录是 $1,100 → $1,500（+36%）。两倍价格换不到两倍额度。</li>
+<li><strong>Codex 侧实测离散度约 2 倍</strong>，因为 OpenAI 的额度表就是按 API 美元标价的（1 credit = $0.04 API 价值，与公开价严格一一对应），模型构成一变，美元数就跟着变。所以 Codex 只有 credits 是稳定口径。</li>
+</ol>
+<h2>三、换算锚点：1 亿 token 值多少钱</h2>
+<p>同一亿 token，缓存命中率 85% 和 0% 差 9 倍。这是所有「我用了 X 亿 token」说法互相矛盾的根源。</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输入 / 缓存 / 输出（每 MTok）</th>
+<th>纯对话（无缓存，70/30）</th>
+<th>Agent（85% 缓存命中）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Opus 5.5</td>
+<td>$4 / $0.20 / $20</td>
+<td>$880</td>
+<td><strong>$94</strong></td>
+</tr>
+<tr>
+<td>Claude Sonnet 5.5</td>
+<td>$2 / $0.10 / $10</td>
+<td>$440</td>
+<td>$47</td>
+</tr>
+<tr>
+<td>Claude Fable 5.1</td>
+<td>$10 / $0.25 / $50</td>
+<td>$2,200</td>
+<td>$213</td>
+</tr>
+<tr>
+<td>GPT-6 Astra</td>
+<td>$10 / $1.00 / $50</td>
+<td>$2,200</td>
+<td><strong>$276</strong></td>
+</tr>
+<tr>
+<td>GPT-6.1 Sol</td>
+<td>$2 / $0.10 / $10</td>
+<td>$440</td>
+<td>$47</td>
+</tr>
+<tr>
+<td>GPT-6 Sol</td>
+<td>$2 / $0.20 / $10</td>
+<td>$440</td>
+<td>$55</td>
+</tr>
+<tr>
+<td>GPT-5.6 Terra</td>
+<td>$2 / $0.20 / $12</td>
+<td>$555</td>
+<td>$57</td>
+</tr>
+<tr>
+<td>GPT-5.3-Codex</td>
+<td>$1.75 / $0.175 / $14</td>
+<td>$542</td>
+<td>$53</td>
+</tr>
+<tr>
+<td>GPT-6 Luna</td>
+<td>$0.10 / $0.01 / $0.50</td>
+<td>$44</td>
+<td>$2.8</td>
+</tr>
+<tr>
+<td>Grok 4.7</td>
+<td>$2 / $0.50 / $6</td>
+<td>$320</td>
+<td>$77</td>
+</tr>
+<tr>
+<td>Kimi K3</td>
+<td>$3 / $0.30 / $15</td>
+<td>$660</td>
+<td>$83</td>
+</tr>
+</tbody>
+</table>
+<h2>四、各套餐能跑多少（含缓存的总 token，每月）</h2>
+<p>Claude 侧：</p>
+<table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>月费</th>
+<th>只用 Opus 5.5</th>
+<th>只用 Sonnet 5.5</th>
+<th>只用 Fable 5.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pro</td>
+<td>$20</td>
+<td><strong>7.8 亿</strong></td>
+<td>15.7 亿</td>
+<td>3.4 亿</td>
+</tr>
+<tr>
+<td>Max 5x</td>
+<td>$100</td>
+<td><strong>55 亿</strong></td>
+<td>110 亿</td>
+<td>24 亿</td>
+</tr>
+<tr>
+<td>Max 20x</td>
+<td>$200</td>
+<td><strong>73 亿</strong></td>
+<td>146 亿</td>
+<td>32 亿</td>
+</tr>
+</tbody>
+</table>
+<p>Codex 侧：</p>
+<table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>月费</th>
+<th>只用 GPT-6 Astra</th>
+<th>只用 GPT-6.1 Sol</th>
+<th>只用 GPT-6 Luna</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plus</td>
+<td>$20</td>
+<td><strong>1.2 亿</strong></td>
+<td>7.3 亿</td>
+<td>125 亿</td>
+</tr>
+<tr>
+<td>Pro 100</td>
+<td>$100</td>
+<td>5.2 亿</td>
+<td>30 亿</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Pro 200</td>
+<td>$200</td>
+<td><strong>17 亿</strong></td>
+<td>100 亿</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Pro 500</td>
+<td>$500</td>
+<td>25 亿</td>
+<td>146 亿</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Copilot CLI：<strong>6,000 credits = $60</strong>（1 credit = $0.01，无隐藏倍率）。</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>$60 能跑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPT-6 Astra</td>
+<td>0.22 亿</td>
+</tr>
+<tr>
+<td>Claude Opus 5.5</td>
+<td>0.64 亿</td>
+</tr>
+<tr>
+<td>Claude Fable 5.1</td>
+<td>0.28 亿</td>
+</tr>
+<tr>
+<td>Grok 4.7</td>
+<td>0.78 亿</td>
+</tr>
+<tr>
+<td>GPT-6 Sol / 5.6 Terra / 5.3-Codex</td>
+<td>1.06–1.14 亿</td>
+</tr>
+<tr>
+<td>GPT-6.1 Sol / Sonnet 5.5 / Gemini 4 Argon</td>
+<td>1.28 亿</td>
+</tr>
+<tr>
+<td>Gemini 3.8 Flash</td>
+<td>2.9 亿</td>
+</tr>
+<tr>
+<td>GPT-6 Luna / Haiku 5.5</td>
+<td>21.7 亿</td>
+</tr>
+</tbody>
+</table>
+<p>换成「非缓存 token」（模型真正读写的部分），把上表除以约 6.7（85% 缓存占比）：</p>
+<table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>非缓存 token / 月</th>
+<th>交叉验证</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Pro</td>
+<td><strong>1.1 亿</strong></td>
+<td>wokey 实测 2,570 万/周 × 4.3 ✓</td>
+</tr>
+<tr>
+<td>Claude Max 5x</td>
+<td>8.2 亿</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Claude Max 20x</td>
+<td><strong>11 亿</strong></td>
+<td>wokey 实测 2.23 亿/周 × 4.3 ✓</td>
+</tr>
+<tr>
+<td>ChatGPT Plus（Astra 口径）</td>
+<td>0.18 亿</td>
+<td>wokey 实测 584 万/周 ✓</td>
+</tr>
+<tr>
+<td>Copilot 6,000 credits（Opus 5.5）</td>
+<td>0.10 亿</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2>五、口径陷阱（比数字本身更重要）</h2>
+<ol>
+<li><strong>缓存命中率是最大变量</strong>。Claude 订阅里缓存读取几乎不占额度，Codex 里缓存读取按 1/10 价照扣。同一份额度，缓存命中高的人能跑出几倍的 token 总数。所以比套餐看「非缓存 token」或「API 等价美元」，不要看 token 总数。</li>
+<li><strong>输出占比</strong>。写代码输出约占 5%，写文档能到 30%，而输出是输入的 5 倍价——同样的钱，能买的 token 直接腰斩。</li>
+<li><strong>推理档位比模型选择更费</strong>。同一个 Astra，high 和 min 的额度消耗差 3–5 倍，但 token 数只差 2 倍（思考 token 按输出价计费）。</li>
+<li><strong>长上下文翻倍</strong>。多数模型有 &gt;272K 的 long context 档，价格 ×2。Copilot 官方文档自己建议默认别切大窗口。</li>
+<li><strong>厂商在做 A/B 灰测</strong>。SemiAnalysis 发现 3 个同款账号里 1 个额度低约 20%，厂商承认是「extremely tiny」的测试。任何单账号实测都可能是被灰测的那一个。</li>
+<li><strong>窗口结构不同</strong>。Claude 是「5 小时 + 周」双层，Codex Pro 只有周额度（可以一次性打光），Copilot 是纯按量。同样「用满」，节奏完全不同。</li>
+<li><strong>官方倍率 ≠ 实测倍率</strong>。Anthropic 只公布 5 小时窗口倍率，OpenAI 已经不再公布任何相对倍率。</li>
+</ol>
+<h2>六、判断</h2>
+<ul>
+<li><strong>$100 的 Claude Max 5x 是全场最优买入点</strong>（44–54×）。Pro 和 20x 都只有 36–37×。20x 的 $100 溢价买的是峰值爆发能力，不是总量。</li>
+<li><strong>Claude Pro $20 是性价比之王</strong>：一年 $240 换约 $8,900 的 API 用量，一个月 7.8 亿 Opus token，够一个人全职 vibe coding。</li>
+<li><strong>OpenAI 的订阅已不值得当「额度池」买</strong>。9/29 之后官方自己说要让订阅价值与 API 价值收敛，翻译过来就是补贴退坡。Codex 现在值钱的是 Ultrafast（$500 档，额度按 8× 扣）和 GPT-6.1 Sol（$2/$10，与 Sonnet 5.5 同价），不是额度。</li>
+<li><strong>Copilot 是另一套东西</strong>：按 API 价约 1.0–1.8 折转售，20 多个模型任选、IDE 深度集成。它值钱在「一个订阅通吃」和合规，不在额度。纯比额度效率，它是几个选项里最差的。</li>
+<li><strong>Codex Plus 用 Astra 一个月只有 1.2 亿 token</strong>，agent 场景两三天就没了——OpenAI 这么定价就是在逼你用 Sol。</li>
+</ul>
+<h2>七、数据源与时效</h2>
+<p>这些数字<strong>每周都在变</strong>，用之前先复核：</p>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>更新频率</th>
+<th>覆盖</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://codexquota.today/zh">codexquota.today</a></td>
+<td>每日</td>
+<td>Codex 各档周额度、分模型估值（方法最透明）</td>
+</tr>
+<tr>
+<td><a href="https://wokey.ai/claude-usage-limits">wokey.ai/claude-usage-limits</a></td>
+<td>每周一</td>
+<td>Claude Pro / Team / Max 20x，474/52/216/17 个账号</td>
+</tr>
+<tr>
+<td><a href="https://wokey.ai/codex-usage-limits">wokey.ai/codex-usage-limits</a></td>
+<td>每周一</td>
+<td>Codex Plus（Pro 档仍在采样）</td>
+</tr>
+<tr>
+<td><a href="https://newsletter.semianalysis.com/p/anthropic-subscriptions-offer-5x">SemiAnalysis: Anthropic Subscriptions Offer 5x+ More Value Than OpenAI</a></td>
+<td>2026-10-06</td>
+<td>受控实验，单模型单负载上限</td>
+</tr>
+<tr>
+<td><a href="https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing">GitHub Docs: Copilot models and pricing</a></td>
+<td>官方</td>
+<td>Copilot 全模型 per-token 价</td>
+</tr>
+<tr>
+<td><a href="https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-individuals">GitHub Docs: usage-based billing for individuals</a></td>
+<td>官方</td>
+<td>各档 credits 额度</td>
+</tr>
+<tr>
+<td><a href="https://learn.chatgpt.com/docs/pricing">OpenAI: ChatGPT pricing</a></td>
+<td>官方</td>
+<td>Codex 额度规则、credit 费率、消息区间</td>
+</tr>
+<tr>
+<td><a href="https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers">OpenAI: About ChatGPT Pro tiers</a></td>
+<td>官方</td>
+<td>Pro 100/200/500 与 ultrafast</td>
+</tr>
+<tr>
+<td><a href="https://claude.com/pricing">Claude: Pricing</a> / <a href="https://support.claude.com">Plans 帮助中心</a></td>
+<td>官方</td>
+<td>各档与 API credits</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/pricing">Anthropic API 价格</a></td>
+<td>官方</td>
+<td>全模型 per-MTok</td>
+</tr>
+<tr>
+<td>linux.do / V2EX / CocoLoop 用户实测</td>
+<td>不定期</td>
+<td>单账号截图（CC Switch、sub2api 等工具）</td>
+</tr>
+</tbody>
+</table>
+<p>社区原始帖：linux.do <code>t/3042220</code>（Max 5x 一周 $1,174、2.77B token、94% 已用）、linux.do <code>t/3026151</code>（CC Switch 记 5x $1,100 / 20x $1,500）、linux.do <code>t/2990101</code>（Pro 周额度 $250 口径）、V2EX <code>t/1251766</code>（旧 20x 34,000 credits → 新 5x 5,500 credits）。</p>
+<p><strong>已作废的数字</strong>：2026-05-25 前后流传的「5x 约 $500/周、20x 约 $1,000/周」是 2026-03 前的口径，之后两次加量已把它废掉，别再引用。</p></div><a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a> · 静态页面，没有后端
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>
