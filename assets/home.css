@@ -103,6 +103,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .body{font-size:1.06rem;line-height:1.9}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
+  /* 移动端：搜索按钮靠右 */
+  .tools .sbtn{margin-left:auto}
 }
 
 /* ─── 目录（toc） ─── */
