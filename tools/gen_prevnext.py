@@ -43,12 +43,12 @@ def main():
         parts = []
         if older:
             parts.append('<a class="pager-prev" href="../%s/"><span class="pager-k">← 上一篇</span>'
-                         '<span class="pager-t">%s</span></a>' % (older, html.escape(titles[older])))
+                         '<span class="pager-t" title="%s">%s</span></a>' % (older, html.escape(titles[older]), html.escape(titles[older])))
         else:
             parts.append('<span class="pager-empty"></span>')
         if newer:
             parts.append('<a class="pager-next" href="../%s/"><span class="pager-k">下一篇 →</span>'
-                         '<span class="pager-t">%s</span></a>' % (newer, html.escape(titles[newer])))
+                         '<span class="pager-t" title="%s">%s</span></a>' % (newer, html.escape(titles[newer]), html.escape(titles[newer])))
         nav = '<nav class="pager" aria-label="文章导航">%s</nav>\n' % "".join(parts)
 
         if '<a class="back"' in s:

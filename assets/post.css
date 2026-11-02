@@ -210,11 +210,12 @@ html,body{overflow-x:clip}
 /* 上一篇 / 下一篇：全局按发布时间，不受首页分类影响 */
 .pager{display:flex;gap:24px;align-items:flex-start;justify-content:space-between;
   margin:56px 0 0;padding-top:24px;border-top:1px solid var(--border)}
-.pager a{display:flex;flex-direction:column;gap:5px;max-width:48%;text-decoration:none;
+.pager a{display:flex;flex-direction:column;gap:5px;max-width:48%;min-width:0;text-decoration:none;
   transition:color .15s}
 .pager-next{margin-left:auto;text-align:right}
 .pager-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--text-faint)}
 .pager-t{font-size:.92rem;line-height:1.45;color:var(--text-muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;  /* 太长就省略，不换行 */
   transition:color .15s}
 .pager a:hover .pager-t,.pager a:hover .pager-k{color:var(--accent)}
 .pager-empty{flex:1}
