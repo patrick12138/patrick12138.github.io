@@ -31,7 +31,7 @@ assets/home.css       首页特有
 assets/post.css       文章页特有（目录、来源块、站名下拉）
 assets/site.js        主题切换 / 回到顶部 / Lab 暗门
 tools/                生成器与质检脚本（手写）
-                      build.py 一键构建 / md2post 转文章 / add_toc 目录与页脚 / gen_index 首页
+                      build.py 一键构建 / md2post 转文章 / mdclean 剪藏 md 清洗管线（md2post 调用） / add_toc 目录与页脚 / gen_index 首页
                       gen_prevnext 上一篇下一篇 / gen_feed RSS+sitemap / stats 字数 / qa 体检
                       optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
                       unpublish 下线与恢复
