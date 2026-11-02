@@ -146,6 +146,32 @@ PRIVACY_SOFT = [
 ]
 
 
+def check_tables():
+    """表格的可读性：列太多、单元格太长、没有表头，都属于该改内容而不是改样式。"""
+    bad = []
+    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
+        slug = os.path.basename(os.path.dirname(p))
+        doc = open(p, encoding="utf-8").read()
+        for ti, tbl in enumerate(re.findall(r"<table.*?</table>", doc, flags=re.S), 1):
+            rows = re.findall(r"<tr[^>]*>(.*?)</tr>", tbl, flags=re.S)
+            cells = [re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, flags=re.S) for r in rows]
+            cells = [c for c in cells if c]
+            if not cells:
+                continue
+            ncol = max(len(c) for c in cells)
+            if ncol > 6:
+                bad.append((slug, "表格%d 有 %d 列，手机横滑会很累" % (ti, ncol), "P1"))
+            if "<th" not in tbl:
+                bad.append((slug, "表格%d 没有表头" % ti, "P2"))
+            for c in cells:
+                for cell in c:
+                    txt = re.sub(r"<[^>]+>", "", cell).strip()
+                    if len(txt) > 90:
+                        bad.append((slug, "表格%d 有 %d 字的单元格" % (ti, len(txt)), "P1"))
+                        break
+    return bad
+
+
 def check_md_leak():
     """markdown 链接残渣：](http / 独立成段的 [ / ]( —— 微信或爬虫抓正文常留这些。"""
     bad = []
@@ -192,6 +218,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    tbad = check_tables()
+    if tbad:
+        print("\n表格可读性")
+        for slug, msg, lvl in tbad[:6]:
+            print("  [%s] %s · %s" % (lvl, slug, msg))
+            total[lvl] += 1
+
     leak = check_md_leak()
     if leak:
         print("\n正文里的 markdown 残渣（P0）")
