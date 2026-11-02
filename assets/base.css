@@ -74,7 +74,7 @@ a{color:inherit}
 .body th:last-child,.body td:last-child{padding-right:0}
 .body th{border-bottom:1px solid var(--border);padding-bottom:9px;
   font-family:var(--mono);font-size:.76em;font-weight:600;letter-spacing:.02em;
-  color:var(--text-muted);white-space:nowrap}
+  color:var(--text-muted);overflow-wrap:anywhere}
 .body tbody tr:last-child td{border-bottom:0}
 .body tbody tr:hover td{background:color-mix(in srgb,var(--text) 3%,transparent)}
 /* 数字列右对齐（构建时自动判断，见 add_toc.py） */

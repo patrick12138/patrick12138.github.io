@@ -20,6 +20,7 @@
   /* 手机：表格按内容宽度排开、在容器里横滑（容器见 .tablewrap） */
   .body .tablewrap>table{min-width:max-content}
   .body th,.body td{padding:9px 12px}
+  .body th{white-space:nowrap}   /* 手机按内容排开，表头不折行才不会把列压窄 */
 }
 
 .refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
