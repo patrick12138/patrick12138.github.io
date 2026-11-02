@@ -16,68 +16,6 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-CSS = """
-/* ─── 目录（toc） ─── */
-/* 站名下拉：回到首页的分类 */
-.brandset{position:relative;display:inline-flex}
-.brand-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;padding:0;
-  cursor:pointer;font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
-  color:var(--heading);transition:color .15s}
-.brand-btn:hover{color:var(--accent)}
-.brand-btn .caret{opacity:.5;transition:transform .18s ease}
-.brandset.open .brand-btn .caret{transform:rotate(180deg)}
-.brand-menu{display:none;position:absolute;top:calc(100% + 10px);left:-10px;z-index:60;min-width:124px;
-  background:color-mix(in srgb,var(--bg) 96%,var(--text) 4%);border:1px solid var(--border);
-  padding:6px 0;box-shadow:0 14px 30px rgba(0,0,0,.22)}
-.brandset.open .brand-menu{display:block}
-.brand-menu a{display:block;padding:7px 16px;font-family:var(--mono);font-size:.76rem;
-  color:var(--text-muted);text-decoration:none;transition:color .15s,background .15s}
-.brand-menu a:hover{color:var(--accent);background:color-mix(in srgb,var(--text) 5%,transparent)}
-.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
-  padding:26px 0 60px;margin-left:18px;transition:color .15s}
-.back-top:hover{color:var(--accent)}
-.body h2,.body h3{scroll-margin-top:84px}
-.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
-  font-family:var(--sans);font-size:.78rem;line-height:1.55;max-height:calc(100vh - 160px);
-  display:flex;flex-direction:column;transition:opacity .2s ease}
-.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
-  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
-  background:none;border:none;padding:0;font-family:var(--mono)}
-.toc-head:hover{color:var(--accent)}
-.toc-ico{display:block}
-.toc-title{display:none}
-@media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
-.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
-  border-left:1px solid var(--border)}
-.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
-  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
-.toc-list a:hover{color:var(--heading)}
-.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
-.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
-.toc.is-collapsed .toc-list{display:none}
-
-.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
-/* 手机：浮动按钮 + 底部面板 */
-.toc-fab{display:none;position:fixed;right:18px;bottom:24px;z-index:40;
-  width:40px;height:40px;padding:0;align-items:center;justify-content:center;border-radius:999px;
-  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
-  border:1px solid var(--border);cursor:pointer;transition:color .15s,border-color .15s}
-.toc-fab svg{display:block}
-.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
-@media (max-width:1180px){
-  .toc{display:none}
-  .toc-fab{display:flex}
-  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
-    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
-    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
-  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
-  .toc.is-open .toc-close{display:inline}
-  .toc.is-open ~ .toc-fab{display:none}
-  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
-  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
-}
-"""
-
 JS = """
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
@@ -242,7 +180,6 @@ def strip_toc(doc):
                      '<a class="brand" href="%s">patrick</a>' % mm.group(1), doc, count=1, flags=re.S)
     # 清掉之前反复 strip 留下的空 script
     doc = re.sub(r"\n?<script></script>", "", doc)
-    doc = re.sub(r'\n/\* ─── 目录（toc） ─── \*/.*?(?=</style>)', "", doc, flags=re.S)
     return doc
 
 
@@ -366,12 +303,9 @@ def process(path):
     doc = inject_top_btn(doc)
     doc, li = build_toc(doc)
     if not li:
-        doc = doc.replace("</style>", CSS + "</style>", 1)
         doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
         open(path, "w", encoding="utf-8").write(doc)
         return False
-    # CSS
-    doc = doc.replace("</style>", CSS + "</style>", 1)
     doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
     # 目录标记：放在 body 之前（正文起点前）
     doc = doc.replace('<div class="body">', HEAD % li + '<div class="body">', 1)

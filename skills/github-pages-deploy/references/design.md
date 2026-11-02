@@ -215,3 +215,14 @@ el.style.color = '#fff';
   .toc.is-open{left:auto;right:24px;width:420px;max-width:calc(100vw - 48px);padding:18px 20px}
 }
 ```
+
+**面板里必须保留分级**：`.toc.is-open .toc-list a{padding:9px 0 9px 12px}` 的优先级高于
+`.toc-list li.lvl3 a{padding-left:22px}`，会一次性把二级标题拍平到和一级同一行。
+所以面板内要单独补：
+
+```css
+.toc.is-open .toc-list li.lvl2>a{padding-left:14px;font-size:.92rem}
+.toc.is-open .toc-list li.lvl3>a{padding-left:34px;font-size:.84rem;opacity:.82}
+```
+
+改完全站验证：412px 和 820px 各开一次面板，2.1 / 2.2 这类三级标题必须缩进且字号更小。

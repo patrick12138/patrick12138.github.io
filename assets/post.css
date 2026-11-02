@@ -100,6 +100,9 @@
   .toc.is-open ~ .toc-fab{display:none}
   .toc.is-open .toc-list{display:block !important}
   .toc.is-open .toc-list a{padding:9px 0 9px 12px;font-size:.92rem}
+  /* 面板里也要分级：lvl3 缩进 + 稍小字号，别和一级挤在同一行 */
+  .toc.is-open .toc-list li.lvl2>a{padding-left:14px;font-size:.92rem}
+  .toc.is-open .toc-list li.lvl3>a{padding-left:34px;font-size:.84rem;opacity:.82;line-height:1.5}
 }
 
 /* ─── 站名下拉：回到首页分类 ─── */
