@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="You&#x27;re using AI to be more productive. So why are you more exhausted than ever? The paradox every engineer needs to confront.">
+<title>AI fatigue is real and nobody talks about it · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>AI fatigue is real and nobody talks about it</h1><div class="meta">February 8, 2026 · Siddhant Khare · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://siddhantkhare.com/writing/ai-fatigue-is-real" target="_blank" rel="noopener">https://siddhantkhare.com/writing/ai-fatigue-is-real</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">The paradox nobody warned us about</a></li><li class="lvl2"><a href="#h2">You became a reviewer and you didn&#x27;t sign up for it</a></li><li class="lvl2"><a href="#h3">The nondeterminism problem</a></li><li class="lvl2"><a href="#h4">The FOMO treadmill</a></li><li class="lvl2"><a href="#h5">The &quot;just one more prompt&quot; trap</a></li><li class="lvl2"><a href="#h6">Perfectionism meets probabilistic output</a></li><li class="lvl2"><a href="#h7">The thinking atrophy</a></li><li class="lvl2"><a href="#h8">The comparison trap</a></li><li class="lvl2"><a href="#h9">What actually helped</a></li><li class="lvl2"><a href="#h10">The sustainability question</a></li><li class="lvl2"><a href="#h11">The real skill</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>I shipped more code last quarter than any quarter in my career. I also felt more drained than any quarter in my career. These two facts are not unrelated.</p>
+<p>I build AI agent infrastructure for a living. I'm one of the core maintainers of <a href="https://openfga.dev/">OpenFGA</a> (CNCF Incubating), I built <a href="https://github.com/Siddhant-K-code/agentic-authz">agentic-authz</a> for agent authorization, I built <a href="https://distill.siddhantkhare.com/">Distill</a> for context deduplication, I shipped MCP servers. I'm not someone who dabbles with AI on the side. I'm deep in it. I build the tools that other engineers use to make AI agents work in production.</p>
+<p>And yet, I hit a wall. The kind of exhaustion that no amount of tooling or workflow optimization could fix.</p>
+<p>If you're an engineer who uses AI daily - for design reviews, code generation, debugging, documentation, architecture decisions - and you've noticed that you're somehow more tired than before AI existed, this post is for you. You're not imagining it. You're not weak. You're experiencing something real that the industry is aggressively pretending doesn't exist. And if someone who builds agent infrastructure full-time can burn out on AI, it can happen to anyone.</p>
+<p>I want to talk about it honestly. Not the "AI is amazing and here's my workflow" version. The real version. The one where you stare at your screen at 11pm, surrounded by AI-generated code you still need to review, wondering why the tool that was supposed to save you time has consumed your entire day.</p>
+<p><img alt="An overwhelmed engineer surrounded by code, errors, and notifications" src="../../assets/posts/ai-fatigue-is-real/24fa40b451c2.webp"></p>
+<h2 id="h1">The paradox nobody warned us about</h2>
+<p>Here's the thing that broke my brain for a while: AI genuinely makes individual tasks faster. That's not a lie. What used to take me 3 hours now takes 45 minutes. Drafting a design doc, scaffolding a new service, writing test cases, researching an unfamiliar API. All faster.</p>
+<p>But my days got harder. Not easier. Harder.</p>
+<p>The reason is simple once you see it, but it took me months to figure out. When each task takes less time, you don't do fewer tasks. You do more tasks. Your capacity appears to expand, so the work expands to fill it. And then some. Your manager sees you shipping faster, so the expectations adjust. You see yourself shipping faster, so your own expectations adjust. The baseline moves.</p>
+<p>Before AI, I might spend a full day on one design problem. I'd sketch on paper, think in the shower, go for a walk, come back with clarity. The pace was slow but the cognitive load was manageable. One problem. One day. Deep focus.</p>
+<p>Now? I might touch six different problems in a day. Each one "only takes an hour with AI." But context-switching between six problems is brutally expensive for the human brain. The AI doesn't get tired between problems. I do.</p>
+<p>This is the paradox: <strong>AI reduces the cost of production but increases the cost of coordination, review, and decision-making. And those costs fall entirely on the human.</strong></p>
+<h2 id="h2">You became a reviewer and you didn't sign up for it</h2>
+<p><img alt="AI dropping code onto a conveyor belt faster than a human can review" src="../../assets/posts/ai-fatigue-is-real/7d8ad396f75f.webp"></p>
+<p>Before AI, my job was: think about a problem, write code, test it, ship it. I was the creator. The maker. That's what drew most of us to engineering in the first place - the act of building.</p>
+<p>After AI, my job increasingly became: prompt, wait, read output, evaluate output, decide if output is correct, decide if output is safe, decide if output matches the architecture, fix the parts that don't, re-prompt, repeat. I became a reviewer. A judge. A quality inspector on an assembly line that never stops.</p>
+<p>This is a fundamentally different kind of work. Creating is energizing. Reviewing is draining. There's research on this - the psychological difference between generative tasks and evaluative tasks. Generative work gives you flow states. Evaluative work gives you decision fatigue.</p>
+<p>I noticed it first during a week where I was using AI heavily for a new microservice. By Wednesday, I couldn't make simple decisions anymore. What should this function be named? I didn't care. Where should this config live? I didn't care. My brain was full. Not from writing code - from judging code. Hundreds of small judgments, all day, every day.</p>
+<p>The cruel irony is that AI-generated code requires more careful review than human-written code. When a colleague writes code, I know their patterns, their strengths, their blind spots. I can skim the parts I trust and focus on the parts I don't. With AI, every line is suspect. The code looks confident. It compiles. It might even pass tests. But it could be subtly wrong in ways that only surface in production, under load, at 3am.</p>
+<p>So you read every line. And reading code you didn't write, that was generated by a system that doesn't understand your codebase's history or your team's conventions, is exhausting work.</p>
+<p>This is also why I think agent security and authorization matter so much. If we can't review everything AI produces - and we can't, not at scale - then we need systems that constrain what agents can do in the first place. Least-privilege access, scoped tokens, audit trails. The less you have to worry about "did the AI do something dangerous," the more cognitive budget you have for the work that actually matters. This isn't just a security problem. It's a human sustainability problem.</p>
+<h2 id="h3">The nondeterminism problem</h2>
+<p>Engineers are trained on determinism. Same input, same output. That's the contract. That's what makes debugging possible. That's what makes reasoning about systems possible.</p>
+<p>AI broke that contract.</p>
+<p><img alt="Same prompt, same AI, different results - clean code or spaghetti" src="../../assets/posts/ai-fatigue-is-real/0d40ee8fb5d7.webp"></p>
+<p>I had a prompt that worked perfectly on Monday. Generated clean, well-structured code for an API endpoint. I used the same prompt on Tuesday for a similar endpoint. The output was structurally different, used a different error handling pattern, and introduced a dependency I didn't ask for.</p>
+<p>Why? No reason. Or rather, no reason I can access. There's no stack trace for "the model decided to go a different direction today." There's no log that says "temperature sampling chose path B instead of path A." It just... happened differently.</p>
+<p>For someone whose entire career is built on "if it broke, I can find out why," this is deeply unsettling. Not in a dramatic way. In a slow, grinding, background-anxiety way. You can never fully trust the output. You can never fully relax. Every interaction requires vigilance.</p>
+<p>I tried to fight this. I version-controlled my prompts. I built elaborate system messages. I created templates. Some of it helped. None of it solved the fundamental problem: <strong>you are collaborating with a probabilistic system, and your brain is wired for deterministic ones.</strong> That mismatch is a constant, low-grade source of stress.</p>
+<p>This frustration is actually what led me to build <a href="https://distill.siddhantkhare.com/">Distill</a> - deterministic context deduplication for LLMs. No LLM calls, no embeddings, no probabilistic heuristics. Pure algorithms that clean your context in ~12ms. I wanted at least one part of the AI pipeline to be something I could reason about, debug, and trust. If the model's output is going to be nondeterministic, the least I can do is make sure the input is clean and predictable.</p>
+<p>The engineers I've talked to who handle this best are the ones who've made peace with it. They treat AI output like a first draft from a smart but unreliable intern. They expect to rewrite 30% of it. They budget time for that rewriting. They don't get frustrated when the output is wrong because they never expected it to be right. They expected it to be useful. There's a difference.</p>
+<h2 id="h4">The FOMO treadmill</h2>
+<p>Take a breath and try to keep up with just the last few months. Claude Code ships sub-agents, then skills, then an Agent SDK, then Claude Cowork. OpenAI launches Codex CLI, then GPT-5.3-Codex - a model that literally helped code itself. New coding agents announce background mode with hundreds of concurrent autonomous sessions. Google drops Gemini CLI. GitHub adds an MCP Registry. Acquisitions happen weekly. Amazon Q Developer gets agentic upgrades. CrewAI, AutoGen, LangGraph, MetaGPT - pick your agent framework, there's a new one every week. Google announces A2A (Agent-to-Agent protocol) to compete with Anthropic's MCP. OpenAI ships its own Swarm framework. Kimi K2.5 drops with agent swarm architecture orchestrating 100 parallel agents. "Vibe coding" becomes a thing. OpenClaw launches a skills marketplace and within one week, researchers find 400+ malicious agent skills uploaded to ClawHub. And somewhere in the middle of all this, someone on LinkedIn posts "if you're not using AI agents with sub-agent orchestration in 2026, you're already obsolete."</p>
+<p>That's not a year. That's a few months. And I'm leaving stuff out.</p>
+<p>I fell into this trap hard. I was spending weekends evaluating new tools. Reading every changelog. Watching every demo. Trying to stay at the frontier because I was terrified of falling behind.</p>
+<p>Here's what that actually looked like: I'd spend Saturday afternoon setting up a new AI coding tool. By Sunday I'd have a basic workflow. By the following Wednesday, someone would post about a different tool that was "way better." I'd feel a pang of anxiety. By the next weekend, I'd be setting up the new thing. The old thing would sit unused. One coding assistant to the next to the next and back to the first one. Each migration cost me a weekend and gave me maybe a 5% improvement that I couldn't even measure properly.</p>
+<p>Multiply this by every category - coding assistants, chat interfaces, agent frameworks, multi-agent orchestration platforms, MCP servers, context management tools, prompt libraries, swarm architectures, skills marketplaces - and you get a person who is perpetually learning new tools and never getting deep with any of them. The Hacker News front page alone is enough to give you whiplash. One day it's "Show HN: Autonomous Research Swarm" and the next it's "Ask HN: How will AI swarms coordinate?" Nobody knows. Everyone's building anyway.</p>
+<p>The worst part is the knowledge decay. I spent two weeks building a sophisticated prompt engineering workflow in early 2025. Carefully crafted system prompts, few-shot examples, chain-of-thought templates. It worked well. Three months later, the model updated, the prompting best practices shifted, and half my templates produced worse results than a simple one-liner. Those two weeks were gone. Not invested. Spent. The same thing happened with my MCP server setup - I built five custom servers (Dev.to publisher, Apple Notes integration, Python and TypeScript sandboxes, more), then the protocol evolved, then the MCP Registry launched on GitHub and suddenly there were thousands of pre-built ones. Some of my custom work became redundant overnight.</p>
+<p>The agent framework churn is even worse. I watched teams go from LangChain to CrewAI to AutoGen to custom orchestration in the span of a year. Each migration meant rewriting integrations, relearning APIs, rebuilding workflows. The people who waited and did nothing often ended up in a better position than the people who adopted early and had to migrate twice.</p>
+<p>I've since adopted a different approach. Instead of chasing every new tool, I go deep on the infrastructure layer underneath them. Tools come and go. The problems they solve don't. Context efficiency, agent authorization, audit trails, runtime security - these are durable problems regardless of which framework is trending this month. That's why I built <a href="https://github.com/Siddhant-K-code/agentic-authz">agentic-authz</a> on OpenFGA instead of tying it to any specific agent framework. That's why Distill works at the context level, not the prompt level. Build on the layer that doesn't churn.</p>
+<p>I still track the landscape closely - you have to when you're building infrastructure for it. But I track it to understand where the ecosystem is going, not to adopt every new thing. There's a difference between being informed and being reactive.</p>
+<h2 id="h5">The "just one more prompt" trap</h2>
+<p>This one is insidious. You're trying to get AI to generate something specific. The first output is 70% right. So you refine your prompt. The second output is 75% right but broke something the first one had correct. Third attempt: 80% right but now the structure is different. Fourth attempt: you've been at this for 45 minutes and you could have written the thing from scratch in 20.</p>
+<p>I call this the prompt spiral. It's the AI equivalent of yak shaving. You started with a clear goal. Thirty minutes later you're debugging your prompt instead of debugging your code. You're optimizing your instructions to a language model instead of solving the actual problem.</p>
+<p>The prompt spiral is especially dangerous because it feels productive. You're iterating. You're getting closer. Each attempt is slightly better. But the marginal returns are diminishing fast, and you've lost sight of the fact that the goal was never "get the AI to produce perfect output." The goal was to ship the feature.</p>
+<p>I now have a hard rule: three attempts. If the AI doesn't get me to 70% usable in three prompts, I write it myself. No exceptions. This single rule has saved me more time than any prompting technique I've ever learned.</p>
+<h2 id="h6">Perfectionism meets probabilistic output</h2>
+<p>Engineers tend toward perfectionism. We like clean code. We like tests that pass. We like systems that behave predictably. This is a feature, not a bug - it's what makes us good at building reliable software.</p>
+<p>AI output is never perfect. It's always "pretty good." 70-80% there. The variable names are slightly off. The error handling is incomplete. The edge cases are ignored. The abstraction is wrong for your codebase. It works, but it's not right.</p>
+<p>For a perfectionist, this is torture. Because "almost right" is worse than "completely wrong." Completely wrong, you throw away and start over. Almost right, you spend an hour tweaking. And tweaking AI output is uniquely frustrating because you're fixing someone else's design decisions - decisions that were made by a system that doesn't share your taste, your context, or your standards.</p>
+<p>I had to learn to let go. Not of quality - I still care about quality. But of the expectation that AI would produce quality. I now treat every AI output as a rough draft. A starting point. Raw material. I mentally label it "draft" the moment it appears, and that framing change alone reduced my frustration by half.</p>
+<p>The engineers who struggle most with AI are often the best engineers. The ones with the highest standards. The ones who notice every imperfection. AI rewards a different skill: the ability to extract value from imperfect output quickly, without getting emotionally invested in making it perfect.</p>
+<h2 id="h7">The thinking atrophy</h2>
+<p><img alt="A brain on a couch watching AI, its thinking muscles covered in cobwebs" src="../../assets/posts/ai-fatigue-is-real/ad320d729fcb.webp"></p>
+<p>This is the one that scares me most.</p>
+<p>I noticed it during a design review meeting. Someone asked me to reason through a concurrency problem on the whiteboard. No laptop. No AI. Just me and a marker. And I struggled. Not because I didn't know the concepts - I did. But because I hadn't exercised that muscle in months. I'd been outsourcing my first-draft thinking to AI for so long that my ability to think from scratch had degraded.</p>
+<p>It's like GPS and navigation. Before GPS, you built mental maps. You knew your city. You could reason about routes. After years of GPS, you can't navigate without it. The skill atrophied because you stopped using it.</p>
+<p>The same thing is happening with AI and engineering thinking. When you always ask AI first, you stop building the neural pathways that come from struggling with a problem yourself. The struggle is where learning happens. The confusion is where understanding forms. Skip that, and you get faster output but shallower understanding.</p>
+<p>I now deliberately spend the first hour of my day without AI. I think on paper. I sketch architectures by hand. I reason through problems the slow way. It feels inefficient. It is inefficient. But it keeps my thinking sharp, and that sharpness pays dividends for the rest of the day when I do use AI - because I can evaluate its output better when my own reasoning is warmed up.</p>
+<h2 id="h8">The comparison trap</h2>
+<p>Social media is full of people who seem to have AI figured out. They post their workflows. Their productivity numbers. Their "I built this entire app in 2 hours with AI" threads. And you look at your own experience - the failed prompts, the wasted time, the code you had to rewrite - and you think: what's wrong with me?</p>
+<p>Nothing is wrong with you. Those threads are highlight reels. Nobody posts "I spent 3 hours trying to get Claude to understand my database schema and eventually gave up and wrote the migration by hand." Nobody posts "AI-generated code caused a production incident because it silently swallowed an error." Nobody posts "I'm tired."</p>
+<p>The comparison trap is amplified by the fact that AI skill is hard to measure. With traditional engineering, you can look at someone's code and roughly gauge their ability. With AI, the output depends on the model, the prompt, the context, the temperature, the phase of the moon. Someone's impressive demo might not reproduce on your machine with your codebase.</p>
+<p>I became much more selective about AI content on social media. I still follow the space closely - I have to, it's my job. But I shifted from consuming everyone's hot takes to focusing on people who are actually building and shipping, not just demoing. The ratio of signal to anxiety matters. If a feed is making you feel behind instead of informed, it's not serving you.</p>
+<h2 id="h9">What actually helped</h2>
+<p>I'll be specific about what changed my relationship with AI from adversarial to sustainable.</p>
+<p><strong>Time-boxing AI sessions.</strong> I don't use AI in an open-ended way anymore. I set a timer. 30 minutes for this task with AI. When the timer goes off, I ship what I have or switch to writing it myself. This prevents the prompt spiral and the perfectionism trap simultaneously.</p>
+<p><strong>Separating AI time from thinking time.</strong> Morning is for thinking. Afternoon is for AI-assisted execution. This isn't rigid - sometimes I break the rule. But having a default structure means my brain gets both exercise and assistance in the right proportions.</p>
+<p><strong>Accepting 70% from AI.</strong> I stopped trying to get perfect output. 70% usable is the bar. I'll fix the rest myself. This acceptance was the single biggest reducer of AI-related frustration in my workflow.</p>
+<p><strong>Being strategic about the hype cycle.</strong> I track the AI landscape because I build infrastructure for it. But I stopped adopting every new tool the week it launches. I use one primary coding assistant and know it deeply. I evaluate new tools when they've proven themselves over months, not days. Staying informed and staying reactive are different things.</p>
+<p><strong>Logging where AI helps and where it doesn't.</strong> I kept a simple log for two weeks: task, used AI (yes/no), time spent, satisfaction with result. The data was revealing. AI saved me significant time on boilerplate, documentation, and test generation. It cost me time on architecture decisions, complex debugging, and anything requiring deep context about my codebase. Now I know when to reach for it and when not to.</p>
+<p><strong>Not reviewing everything AI produces.</strong> This was hard to accept. But if you're using AI to generate large amounts of code, you physically cannot review every line with the same rigor. I focus my review energy on the parts that matter most - security boundaries, data handling, error paths - and rely on automated tests and static analysis for the rest. Some roughness in non-critical code is acceptable.</p>
+<h2 id="h10">The sustainability question</h2>
+<p>The tech industry has a burnout problem that predates AI. AI is making it worse, not better. Not because AI is bad, but because AI removes the natural speed limits that used to protect us.</p>
+<p>Before AI, there was a ceiling on how much you could produce in a day. That ceiling was set by typing speed, thinking speed, the time it takes to look things up. It was frustrating sometimes, but it was also a governor. You couldn't work yourself to death because the work itself imposed limits.</p>
+<p>AI removed the governor. Now the only limit is your cognitive endurance. And most people don't know their cognitive limits until they've blown past them.</p>
+<p>I burned out in late 2025. Not dramatically - I didn't quit or have a breakdown. I just stopped caring. Code reviews became rubber stamps. Design decisions became "whatever AI suggests." I was going through the motions, producing more than ever, feeling less than ever. It took me a month to realize what had happened and another month to recover.</p>
+<p>The recovery wasn't about using less AI. It was about using AI differently. With boundaries. With intention. With the understanding that I am not a machine and I don't need to keep pace with one. Working at <a href="https://ona.com/">Ona</a> helped me see this clearly - when you're building AI agent infrastructure for enterprise customers, you see the human cost of unsustainable AI workflows at scale. The problems aren't just personal. They're systemic. And they need to be solved at the tooling level, not just the individual level.</p>
+<p>Ironically, the burnout period is when some of my best work happened. When I stopped trying to use every AI tool and started thinking about what was actually broken, I saw the problems clearly for the first time. Context windows filling up with garbage - that became Distill. Agents with all-or-nothing API key access - that became agentic-authz. The inability to audit what an agent actually did - that's becoming AgentTrace. The fatigue forced me to stop consuming and start building. Not building more features faster, but building the right things deliberately.</p>
+<h2 id="h11">The real skill</h2>
+<p>Here's what I think the real skill of the AI era is. It's not prompt engineering. It's not knowing which model to use. It's not having the perfect workflow.</p>
+<p>It's knowing when to stop.</p>
+<p><img alt="A hand pulling the STOP switch - good enough, ship it, go outside, rest" src="../../assets/posts/ai-fatigue-is-real/98277ce9c23f.webp"></p>
+<p>Knowing when the AI output is good enough. Knowing when to write it yourself. Knowing when to close the laptop. Knowing when the marginal improvement isn't worth the cognitive cost. Knowing that your brain is a finite resource and that protecting it is not laziness - it's engineering.</p>
+<p>We optimize our systems for sustainability. We add circuit breakers. We implement backpressure. We design for graceful degradation. We should do the same for ourselves.</p>
+<p>AI is the most powerful tool I've ever used. It's also the most draining. Both things are true. The engineers who thrive in this era won't be the ones who use AI the most. They'll be the ones who use it the most wisely.</p>
+<p>If you're tired, it's not because you're doing it wrong. It's because this is genuinely hard. The tool is new, the patterns are still forming, and the industry is pretending that more output equals more value. It doesn't. Sustainable output does.</p>
+<p>I'm still building in this space every day. Agent authorization, context engineering, audit trails, runtime security - the infrastructure that makes AI agents actually work in production. I wrote everything I've learned into the <a href="https://agents.siddhantkhare.com/">Agentic Engineering Guide</a> - from auth patterns to audit trails, the hard problems nobody talks about. I'm more committed to AI than ever. But I'm committed on my terms, at my pace, building things that matter instead of chasing things that trend.</p>
+<p><a href="https://siddhantkhar5.gumroad.com/l/agentic-engineering-guide">Get the Agentic Engineering Guide →</a></p>
+<p>Take care of your brain. It's the only one you've got, and no AI can replace it.</p>
+<p>If this resonated, I'd love to hear your experience. What does AI fatigue look like for you? Find me on <a href="https://twitter.com/siddhant_K_code">X</a> or <a href="https://linkedin.com/in/siddhantkhare24">LinkedIn</a>, or join the <a href="https://news.ycombinator.com/item?id=46934404">discussion on Hacker News</a>.</p>
+<hr>
+<p><em>I write about AI agent infrastructure, security, context engineering, and the human side of building with AI. You can find all my writing on my <a href="https://siddhantkhare.com/writing">writing page</a>.</em></p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

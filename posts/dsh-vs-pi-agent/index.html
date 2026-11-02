@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Compare DeepSeek Harness vs Pi Agent on benchmarks, speed, cost, extensibility, safety, and everyday use to find the right open-source coding agent.">
+<title>DeepSeek Harness (DSH) vs Pi Agent: Everything You Need to Know · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>DeepSeek Harness (DSH) vs Pi Agent: Everything You Need to Know</h1><div class="meta">September 8, 2026 · Shrijal · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://composio.dev/content/deepseek-harness-vd-pi-agent" target="_blank" rel="noopener">https://composio.dev/content/deepseek-harness-vd-pi-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">TL;DR</a></li><li class="lvl3"><a href="#h2">In summary</a></li><li class="lvl2"><a href="#h3">What is DeepSeek Harness?</a></li><li class="lvl2"><a href="#h4">What is Pi?</a></li><li class="lvl2"><a href="#h5">1. Philosophy: Pi vs DeepSeek Harness</a></li><li class="lvl3"><a href="#h6">Pi starts tiny</a></li><li class="lvl3"><a href="#h7">DeepSeek Harness starts from replaceable parts</a></li><li class="lvl2"><a href="#h8">2. Architecture: four tools vs basically the whole runtime</a></li><li class="lvl3"><a href="#h9">Pi Agent</a></li><li class="lvl3"><a href="#h10">DeepSeek Harness</a></li><li class="lvl2"><a href="#h11">3. The benchmark: same model, different harness</a></li><li class="lvl3"><a href="#h12">The task split is also interesting</a></li><li class="lvl3"><a href="#h13">So did DeepSeek Harness really use 10x fewer tokens?</a></li><li class="lvl2"><a href="#h14">4. DeepSeek Harness uses Pi</a></li><li class="lvl3"><a href="#h15">Pi still wins on model flexibility</a></li><li class="lvl2"><a href="#h16">5. Extensibility</a></li><li class="lvl2"><a href="#h17">6. Safety and Security</a></li><li class="lvl2"><a href="#h18">7. The biggest DSH problem right now is maturity</a></li><li class="lvl2"><a href="#h19">8. Daily use</a></li><li class="lvl2"><a href="#h20">Which one should you pick?</a></li><li class="lvl2"><a href="#h21">Conclusion</a></li><li class="lvl2"><a href="#h22">Give your harness access to real-world</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>DeepSeek released its own agent harness this August.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/c3dba7c9b099.webp"></p>
+<p>It crossed <strong>66k stars in about a day (yes, sir!)</strong> and went over 200k by early September. That is already pretty crazy for something still in developer preview.</p>
+<p>But while researching this post, I found something much more interesting. DeepSeek Harness actually uses Pi's model layer to connect to models outside DeepSeek. Yep.</p>
+<p>DeepSeek's new agent runtime uses Pi under the hood for part of its model support. And <a href="https://github.com/tianyicui">Tianyi Cui</a>, who leads the Harness project, has publicly said Pi is a favourite daily driver for many people at DeepSeek. Lol.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/c37148b02e56.webp"></p>
+<p>That makes this comparison way more fun because they agree on quite a lot. Both think the harness matters, both are open source, both let you change a lot of the runtime, and both try to avoid locking you into one model.</p>
+<p>But they take the idea in very different directions. Pi gives you a tiny coding agent with four tools and lets you build from there. DeepSeek Harness gives you a full agent runtime where you can even swap the agent loop itself.</p>
+<blockquote>
+<p>ℹ️ This is another post in our Pi series. We have already covered <a href="https://composio.dev/content/pi-agent-vs-claude-code">Pi vs Claude Code</a>, <a href="https://composio.dev/content/pi-vs-opencode">Pi vs OpenCode</a>, <a href="https://composio.dev/content/pi-vs-omp">Pi vs OMP</a>, and <a href="https://composio.dev/content/pi-agent-vs-codex">Pi vs Codex</a>. This time, we are running DeepSeek V4 Pro inside both Pi and DeepSeek's own harness.</p>
+</blockquote>
+<p>This is going to be interesting. Stick to it!</p>
+<h2 id="h1">TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Pi</th>
+<th>DeepSeek Harness</th>
+<th>Winner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Real tool use in our eval</td>
+<td>21/30 passed</td>
+<td>20/30 passed</td>
+<td>Pi</td>
+</tr>
+<tr>
+<td>Cost per shared success</td>
+<td>$0.031</td>
+<td>$0.028</td>
+<td>DeepSeek Harness</td>
+</tr>
+<tr>
+<td>Median time per task</td>
+<td>362.9s</td>
+<td>252.1s</td>
+<td>DeepSeek Harness</td>
+</tr>
+<tr>
+<td>Avg runtime tokens in our run</td>
+<td>924,990</td>
+<td>88,562, with a catch</td>
+<td>DeepSeek Harness</td>
+</tr>
+<tr>
+<td>Simplicity</td>
+<td>Four main tools and a tiny prompt</td>
+<td>Much larger runtime with 53 built in tools</td>
+<td>Pi</td>
+</tr>
+<tr>
+<td>Deep runtime control</td>
+<td>Powerful TypeScript extensions around a small core</td>
+<td>Even the agent loop can be replaced</td>
+<td>DeepSeek Harness</td>
+</tr>
+<tr>
+<td>Model support</td>
+<td>25+ providers and very easy switching</td>
+<td>Broad support, partly through Pi's model layer</td>
+<td>Pi</td>
+</tr>
+<tr>
+<td>Local models</td>
+<td>Ollama, vLLM, and custom providers are well supported</td>
+<td>Possible, but needs more setup</td>
+<td>Pi</td>
+</tr>
+<tr>
+<td>Sandbox</td>
+<td>None in the core</td>
+<td>Three built in sandbox modes</td>
+<td>DeepSeek Harness</td>
+</tr>
+<tr>
+<td>Session inspection</td>
+<td>Very readable session tree</td>
+<td>Full append only trajectory and replay</td>
+<td>DeepSeek Harness</td>
+</tr>
+<tr>
+<td>Daily use</td>
+<td>Very small and easy to run</td>
+<td>Web UI and more setup</td>
+<td>Pi</td>
+</tr>
+<tr>
+<td>Maturity</td>
+<td>Mature enough for normal daily work</td>
+<td>Still a developer preview</td>
+<td>Pi</td>
+</tr>
+</tbody>
+</table>
+<h3 id="h2">In summary</h3>
+<p>Scorecard: Pi 6, DeepSeek Harness 6. Dead tie.</p>
+<p>And the benchmark is basically a tie too. Pi passed 21 of 30 tasks and DeepSeek Harness passed 20. DeepSeek Harness was cheaper on the shared successful tasks and also finished tasks faster.</p>
+<p>But there is an important catch. DeepSeek Harness ran through DeepSeek's own endpoint. Pi ran through OpenRouter. So I would trust the pass rate and cost comparison more than a clean 10x token claim.</p>
+<p>Still, the overall result is pretty clear. Pi is the better choice if you want a coding agent you can install, understand, modify, and use every day.</p>
+<h2 id="h3">What is DeepSeek Harness?</h2>
+<blockquote>
+<p>ℹ️ DeepSeek's open source agent runtime where almost every part of the agent can be replaced as a plugin.</p>
+</blockquote>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/60bb6e98d739.webp"></p>
+<p><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a>, or <code>dsh</code>, is DeepSeek's official agent harness. DeepSeek released it on August 13, 2026, alongside DeepSeek V4 Pro.</p>
+<p>And the basic idea is simple:</p>
+<p><strong>Agent = Model + Harness</strong></p>
+<p>The model does the thinking. The harness handles everything around it. It gives the model tools, builds the prompt, runs shell commands, manages files, stores sessions, handles context, runs the loop, and decides how all these pieces connect.</p>
+<p>That part is normal. Claude Code, Codex, Pi, OpenCode, and basically every coding agent already has some version of this.</p>
+<p>DeepSeek did something different with how it built the runtime. It uses a plugin system called Cordis, and almost everything runs as a plugin. The model adapter is a plugin, the tools are plugins, the sandbox is a plugin, the session system uses plugins, and even the main agent loop can be replaced.</p>
+<p>Cordis also gives plugins a proper lifecycle. You can mount them from config, reload them, and clean them up when you remove them. So this is much closer to building an agent runtime from replaceable parts than adding a few extensions to a coding CLI.</p>
+<blockquote>
+<p>💁 DeepSeek's own docs basically say there is no special core that you need to patch.</p>
+</blockquote>
+<p>It also ships several different modes. Standard gives you the full agent setup. Code mode, also called PTC, gives the model a generated TypeScript SDK for its tools. So instead of making lots of separate tool calls, the model can write one small program that calls those tools and handles the intermediate data itself.</p>
+<p>Minimal gives it basically a shell plus a file editor. Creator lets the <strong>agent inspect and modify parts of its own runtime.</strong></p>
+<p>Yes, that last one is as weird as it sounds. It is very different from most coding agents.</p>
+<p>It also comes with 53 built-in tools, MCP support, subagents, LSP, web search, scheduling, sandboxing, and a local browser UI. So despite the plugin-first design, this is not a tiny framework with nothing included.</p>
+<h2 id="h4">What is Pi?</h2>
+<blockquote>
+<p>ℹ️ A minimal terminal coding agent that gives the model a few tools and expects you to build whatever else you want.</p>
+</blockquote>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/65faa07bfe81.webp"></p>
+<p>You probably know Pi by now if you have read the other posts in this series. Mario Zechner built it after getting tired of how much stuff Claude Code kept adding.</p>
+<p>Pi goes almost the opposite way. The model gets <code>read</code>, <code>write</code>, <code>edit</code>, and <code>bash</code>. The system prompt stays under roughly 1,000 tokens. That's most of the product.</p>
+<p>Need grep? Use bash. Need Git? Use bash. Need another tool? Write a TypeScript extension. Need a whole new workflow? Ask Pi to build the extension for you.</p>
+<p>The project now lives under <a href="https://github.com/earendil-works/pi">Earendil</a>, has around 100k GitHub stars, and is still open source and MIT licensed.</p>
+<p>The interesting part is that Pi is not small because nobody has built more features yet. It is small because that is the actual design. Every extra tool schema and every extra instruction costs tokens on future model calls, so Pi tries to keep the default harness small.</p>
+<p>DeepSeek Harness "kinda" agrees with some of this, but there's a whole lot to it.</p>
+<p>Related: <a href="https://composio.dev/content/pi-agent-vs-claude-code">Pi vs Claude Code</a>, <a href="https://composio.dev/content/pi-vs-opencode">Pi vs OpenCode</a>, <a href="https://composio.dev/content/pi-vs-omp">Pi vs OMP</a>, <a href="https://composio.dev/content/pi-agent-vs-codex">Pi vs Codex</a></p>
+<h2 id="h5">1. Philosophy: Pi vs DeepSeek Harness</h2>
+<p>This is probably the most interesting part of the comparison because, at first, they look very similar. Both are open source, both are written mostly in TypeScript, both have the concept of extensions, and both want the model layer to stay flexible.</p>
+<p>And DeepSeek Harness literally uses Pi's model layer for its broad provider support.</p>
+<p>But they disagree on what the starting point should look like.</p>
+<h3 id="h6">Pi starts tiny</h3>
+<p>Pi has a small core agent loop. That loop stays pretty simple, and extensions can change almost everything around it.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/2884aaa4c0da.webp"></p>
+<p>The idea is that the model already knows how to code. So give it file access, shell access, editing, and enough freedom to work. Then stop adding stuff unless the user actually needs it.</p>
+<h3 id="h7">DeepSeek Harness starts from replaceable parts</h3>
+<p>It splits the runtime into parts and lets you swap those parts through Cordis. Pi gives you a small core and says, build around this. DeepSeek Harness also lets you replace its parts.</p>
+<p>Even the loop works differently from an extension-point perspective. DeepSeek Harness fires events through each turn, such as <code>turn/start</code>, <code>system-prompt/assemble</code>, <code>tools/pre-execute</code>, and <code>turn/end</code>. A plugin can hook into these points, change messages, add behaviour, or stop a tool before it runs.</p>
+<p>That is a lot deeper than adding another command or tool.</p>
+<p>That sounds like a small difference. It is actually the whole comparison.</p>
+<blockquote>
+<p>💁 Pi is easier to understand. DeepSeek Harness gives you deeper control (<strong>Deep</strong> Seek gives you <strong>deep</strong> er control, what a nice rhyme to the name itself 🫡).</p>
+</blockquote>
+<p>There is another interesting part here. DeepSeek used its own Minimal mode for its public V4 coding benchmarks. Minimal mode is basically shell, a file editor, and a tiny system prompt.</p>
+<p>So even DeepSeek's own benchmark setup gets pretty close to the same minimal idea Pi has been pushing from the start.</p>
+<h2 id="h8">2. Architecture: four tools vs basically the whole runtime</h2>
+<p>Under the hood, both still do the normal agent thing. You send a task, the model responds, it calls tools, the harness runs them, the results go back to the model, and this repeats until the model finishes.</p>
+<p>The difference is everything around that loop.</p>
+<h3 id="h9">Pi Agent</h3>
+<p>Pi runs as one small process. It has the model layer, the agent loop, the terminal UI, session handling, and the extension system.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/ffa897f6f415.webp"></p>
+<p>Its session format is also pretty neat. Messages form a tree (<code>/tree</code> slash command), so you can jump back to an old point and continue in another direction without throwing away the old path. And because the core is small, you can actually open the source and follow what is happening.</p>
+<p>It is one of Pi's best features, at least for me.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/12d6968237d7.webp"></p>
+<p>Pi extensions are also just TypeScript files. You can put them inside <code>~/.pi/agent/extensions/</code> and use them to add tools, block calls, change context, replace compaction behaviour, or add your own TUI stuff.</p>
+<p>That is a simple way to extend a coding agent because you don't need to understand a big plugin runtime first.</p>
+<h3 id="h10">DeepSeek Harness</h3>
+<p>DeepSeek Harness is much bigger, and it does much more. It has a full plugin graph, sandboxing, subagents, MCP, scheduling, compaction, a browser UI, an append-only session log, replay, and much more.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/bdc2ddf75105.webp"></p>
+<p>The session system is probably my favourite part. Every model-visible event gets logged. So if the model saw something, it should be recorded. You can inspect the trajectory later and see what happened, or replay and fork sessions from the stored events.</p>
+<p>There is a technical reason for doing this too. DeepSeek Harness does not go back and rewrite old session history. It keeps appending new events instead.</p>
+<p>That makes it easier to keep the beginning of the model context stable, which helps DeepSeek's prefix caching.</p>
+<p>That is very useful if you are building agent infrastructure.</p>
+<p>I would use Pi to understand my own coding session. I would take DeepSeek Harness if I were building a system that runs thousands of agent sessions and I needed to inspect exactly what happened.</p>
+<h2 id="h11">3. The benchmark: same model, different harness</h2>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/61cd5c76b19d.webp"></p>
+<p>This is the part I was most curious about. We ran 30 hard agent tool-use tasks across the harnesses.</p>
+<p>The agent has to work with real apps and real data through tools, and then our verifier checks whether it actually completed the job. Each task had a 900-second cap.</p>
+<p>For this run, we used DeepSeek V4 Pro.</p>
+<p>Here is what happened:</p>
+<table>
+<thead>
+<tr>
+<th>Harness</th>
+<th>Tasks passed</th>
+<th>Median time</th>
+<th>Avg runtime tokens</th>
+<th>Cost per shared success</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi</td>
+<td>21/30</td>
+<td>362.9s</td>
+<td>924,990</td>
+<td>$0.031</td>
+</tr>
+<tr>
+<td>DeepSeek Harness</td>
+<td>20/30</td>
+<td>252.1s</td>
+<td>88,562</td>
+<td>$0.028</td>
+</tr>
+</tbody>
+</table>
+<p>Pi won by one task. That is basically a tie in quality. Pi passed <strong>21/30 tasks</strong>, while DeepSeek Harness passed <strong>20/30</strong>.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/81b3e62bdcfb.webp"></p>
+<p>And that matters because DeepSeek built Harness around its own model. You might expect the first-party harness to have some huge advantage. It did not. Pi actually finished one more task.</p>
+<p>But pass rate is only one part of the story.</p>
+<p>DeepSeek Harness also came out slightly cheaper. It cost around <strong>$0.028 per shared success</strong>, compared to <strong>$0.031 for Pi</strong>. OpenCode was very close at $0.032, while Claude Code came out much higher at $0.074.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/1c1651f4eaa4.webp"></p>
+<p>The difference gets more interesting when you look at speed.</p>
+<p>DeepSeek Harness had a median time of <strong>252.1 seconds per task</strong>, while Pi took <strong>362.9 seconds</strong>. Claude Code was the fastest at 181.8 seconds, but it also cost much more per successful task.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/8a03680e5a70.webp"></p>
+<p>So DSH did not beat Pi on task success, but it was faster and slightly cheaper in this run.</p>
+<p>Then look at the runtime token column. That number is wild.</p>
+<p>DeepSeek Harness recorded about <strong>88k runtime tokens per task</strong>. Pi recorded about <strong>925k</strong>.</p>
+<p>Again, there is a provider routing catch here, and I will get into it in a second. But DSH clearly ran DeepSeek V4 Pro very efficiently on its native route.</p>
+<h3 id="h12">The task split is also interesting</h3>
+<p>Most of the tasks ended the same way for Pi and DSH. Pi and DeepSeek Harness agreed on 27 of the 30 outcomes. The entire 21 vs 20 difference came down to three tasks.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/bda5604967e1.webp"></p>
+<p>Pi passed the CRM migration archive task while DeepSeek Harness failed it. Pi also passed the handover audit, while DeepSeek Harness failed it. DeepSeek Harness got the Sheets-to-Airtable tracker right, while Pi failed it.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Pi</th>
+<th>DeepSeek Harness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRM migration archive</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Handover audit</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Sheets to Airtable tracker</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p>The bigger chart is useful because it shows this didn't happen only between Pi and DSH. The same DeepSeek model changed behaviour when we moved it between Claude Code, OpenCode, Hermes, Pi, and DeepSeek Harness.</p>
+<p>For example, Claude Code cleared every check on the renewal screen task, while Pi and DSH cleared only 5 of 11. On Slack action items, Pi, DSH, Claude Code, and Hermes all passed, while OpenCode only cleared 2 of 5 checks.</p>
+<p>So we did not see one harness destroying the others across every kind of work. The same model behaved differently depending on the harness.</p>
+<p>And I think that is the important result. The harness changed efficiency a lot. It changed speed. It changed cost. And on some tasks, it changed whether the model actually finished the job.</p>
+<blockquote>
+<p>💁 Same model. Almost the same pass rate. Very different runtime behaviour.</p>
+</blockquote>
+<h3 id="h13">So did DeepSeek Harness really use 10x fewer tokens?</h3>
+<p>The raw table makes it look like Pi is eating up tokens, but that is not really the full story.</p>
+<p>DeepSeek Harness used DeepSeek's official endpoint, while Pi used OpenRouter. That changes how caching and token usage get reported.</p>
+<p>Pi also has a much smaller base prompt. One separate comparison measured around <strong>4.5k uncached input for Pi</strong> against <strong>47.6k for DSH</strong> on the first turn. Pi keeps the prefix tiny, while DSH keeps a much larger prefix stable and gets strong cache reuse from it.</p>
+<blockquote>
+<p>💁 They are solving the same token problem in different ways.</p>
+</blockquote>
+<p>And once you look at actual cost per success, the gap is tiny: <strong>$0.028 for DSH vs $0.031 for Pi</strong>.</p>
+<p>So DSH was very efficient in our run, but I would not treat the 88k vs 925k token number as a clean 10x win.</p>
+<h2 id="h14">4. DeepSeek Harness uses Pi</h2>
+<p>This still makes me laugh. 🥴</p>
+<p>For DeepSeek models, DSH has its own model adapter. Makes sense. That adapter understands things like DeepSeek reasoning levels and cache usage.</p>
+<p>But when it needs other model support, it can use an adapter built on Pi's <code>pi-ai</code> layer.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/94921fc75e24.webp"></p>
+<p>So DSH can connect to Anthropic, OpenAI, Gemini, Bedrock, Vertex, Azure, Codex, and other providers through the model work Pi already did.</p>
+<p>That says a lot about Pi. It looks like a tiny terminal coding agent from the outside, but its model layer has become super useful infrastructure on its own.</p>
+<p>DeepSeek could have written another provider abstraction. It reused Pi's.</p>
+<blockquote>
+<p>💁 I would probably do the same thing. Why not?</p>
+</blockquote>
+<h3 id="h15">Pi still wins on model flexibility</h3>
+<p>Pi has had much more time to build this part out. It works with 25-plus providers, local models, OpenRouter, Ollama, vLLM, cloud providers, and custom compatible endpoints. You can also switch models during a session.</p>
+<p>DeepSeek Harness can work with many of the same providers, but the whole product still feels very "DeepSeek first." And that is fine.</p>
+<p>If you mainly use V4 Pro or V4 Flash, DSH has a real advantage because its native DeepSeek adapter understands the provider directly.</p>
+<p>If you change models often, run local models, or use different cloud providers, Pi is easier.</p>
+<h2 id="h16">5. Extensibility</h2>
+<p>Pi is one of the most hackable coding agents I have used. Its extensions run in TypeScript inside the same process. They can change tools, add UI, inject context, block tool calls, store custom state, and so much more...</p>
+<p>And because the codebase is small, Pi can often write its own extension when you ask it to. That is still very cool.</p>
+<p>A basic Pi extension can just live in <code>~/.pi/agent/extensions/</code>. You do not need to learn a separate framework before adding one tool or one hook.</p>
+<p>Related: <a href="https://composio.dev/content/top-pi-extensions">Best Pi extension</a></p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/87f8c35e2f6a.webp"></p>
+<p>But DeepSeek Harness goes further. With DSH, the loop itself can be a plugin. So can the sandbox, model handling, context management, and a lot of the runtime around them.</p>
+<p>A Cordis plugin can join the runtime's dependency graph, expose a service, listen to agent events, and clean up when it's removed. That is more work for a simple extension, but it gives you much deeper control.</p>
+<p>The agent can even inspect its own plugin tree and, in Creator mode, experiment with runtime changes. That is more control. It is also more to understand, and tbh, I don't know most of it.</p>
+<p>Related: <a href="https://composio.dev/content/best-deepseek-harness-plugins">Best DeepSeek Harness Plugin</a></p>
+<p>If you are researching agent loops, building your own agent product, testing new context systems, or replacing parts of the runtime itself, DSH gives you way more room.</p>
+<blockquote>
+<p>💁 Pi is a lot easier to extend. DSH is the deeper thing to change.</p>
+</blockquote>
+<h2 id="h17">6. Safety and Security</h2>
+<p>Pi is chill about permissions. The agent gets your user permissions and can run commands. It has no built-in approval system to protect you from every shell command.</p>
+<p>You can add safety through extensions or run Pi inside a container or VM, but the core itself doesn't do much here.</p>
+<p>DeepSeek Harness includes real sandbox modes. It can run read-only, allow writes inside the workspace, or give it full access.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/706387f79d17.webp"></p>
+<p>This isn't just a UI permission setting. On Linux, DSH can use <code>bwrap</code> and Landlock. On macOS, it uses Seatbelt. Windows uses a restricted token model.</p>
+<p>The sandbox also tries to fail closed. If DSH expects a sandbox and cannot create one, it should not silently continue with full access.</p>
+<p>That is a real DSH win.</p>
+<p>There are two catches, though.</p>
+<p>The sandbox controls tool execution, but plugins themselves run inside the harness process. So if you install a random third-party plugin, you are still trusting that code with serious access to your machine.</p>
+<p>And DeepSeek itself says the sandbox has not been security audited yet.</p>
+<p>So I would still be careful with unattended runs, but DSH gives you much stronger safety defaults than Pi.</p>
+<h2 id="h18">7. The biggest DSH problem right now is maturity</h2>
+<p>This is where the comparison stops being close for me.</p>
+<p>Pi has been around for more than a year. People use it every day. OpenClaw runs on it. And the core is stable enough that people build real workflows around it.</p>
+<p>DeepSeek Harness launched in August. It is still a developer preview and warns that <strong>compatibility-breaking changes will happen</strong>.</p>
+<p>And those changes are actually happening. The project pushed several alpha versions within days, and community reports have already found plugin breaks and many more issues.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/4122273f34a7.webp"></p>
+<p>One governance thing is also worth knowing. GitHub Issues are disabled right now, and DeepSeek is not accepting outside pull requests yet. Feedback mainly goes through Discussions and Discord.</p>
+<p>That does not make the project bad, especially this early. But if I am deciding which open-source agent to build on today, that matters.</p>
+<p>This is normal for a project this new, but it changes who I would recommend it to.</p>
+<p>I would happily use DSH to experiment with agent architecture today. I would not build an important production workflow around a runtime that is still telling me its interfaces can break.</p>
+<h2 id="h19">8. Daily use</h2>
+<p>This one is pretty simple.</p>
+<p>Pi is a pretty regular agent that opens in the terminal. You pick a model and start working. The whole thing feels small because <strong>it is small</strong>.</p>
+<p>DeepSeek Harness starts a local web app by default. You run it and open the UI in your browser. The official command is basically one <code>npx</code> call, so installation itself is not hard.</p>
+<p>But once you start changing profiles, plugins, providers, Cordis config, sandbox settings, and runtime parts, there is much more to learn.</p>
+<p>Pi can get you to a useful coding task in a few minutes. DSH needs more setup and its docs make much more sense once you already understand agent infrastructure.</p>
+<p>That is also why I do not really see DSH replacing Pi for normal users right now. It solves a bigger problem, and bigger does not automatically mean better. 🤷♂️</p>
+<h2 id="h20">Which one should you pick?</h2>
+<p>Pick Pi if:</p>
+<ul>
+<li>You mainly want a coding agent</li>
+<li>You want something small enough to understand</li>
+<li>You use many different model providers</li>
+<li>You run local models</li>
+<li>You care about keeping the fixed prompt tiny</li>
+<li>You want a clean TypeScript extension system</li>
+<li>You want something mature enough to use every day</li>
+<li>You would rather add the few features you need than start with 50 tools</li>
+</ul>
+<p>Pick DeepSeek Harness if:</p>
+<ul>
+<li>You are building agent infrastructure</li>
+<li>You want to replace the agent loop itself</li>
+<li>You need strong session traces and replay</li>
+<li>You want a built-in sandbox</li>
+<li>You want MCP, subagents, LSP, and more tooling out of the box</li>
+<li>You mainly use DeepSeek models and want the native integration</li>
+</ul>
+<p>And you can obviously run both. They are free and open source. They even share some code.</p>
+<h2 id="h21">Conclusion</h2>
+<p>The scorecard says 6 to 6. Our benchmark says Pi 21, DeepSeek Harness 20. That is as close as it gets.</p>
+<p><img alt="" src="../../assets/posts/dsh-vs-pi-agent/8a1a551e9caf.webp"></p>
+<p>But I do not think these two are actually fighting for the same user yet.</p>
+<p>Pi feels like a coding agent made by someone who wanted the tool to stay out of his way. DeepSeek Harness feels like something built by people who want to inspect and change every part of how an agent works. Both are right. It depends on your preference. 💁</p>
+<p>For normal coding, I would pick Pi today. It is smaller, easier to understand, and works with basically anything. It actually passed one more task in our run.</p>
+<p>For agent infrastructure work, DSH is way more interesting. Being able to swap the loop, sandbox, model layer, and other runtime parts without rebuilding the whole agent is genuinely useful.</p>
+<p>And DSH is still very new. It shipped all of this in a developer preview. If DeepSeek can make the runtime stable without losing the parts that make it interesting, I think it will be worth watching.</p>
+<p>For now, I wouldn't treat it like a daily driver yet. DeepSeek itself tells you it is a developer preview.</p>
+<p>So yeah. If I just want to code, I am still picking Pi. ✌️</p>
+<p>Get started</p>
+<h2 id="h22">Give your harness access to real-world</h2>
+<p>Let Pi and Dsh act across 1,500+ apps—including GitHub, Slack, Linear, and Gmail—without managing auth yourself.</p>
+<p><a href="https://agents.composio.dev/?cta_placement=content-sidebar-agent-setup">Are you an AI agent? See setup options</a>### OpenClaw vs Hermes Agent: The best agent harness in 2026</p>
+<p>Sep 15, 2026</p>
+<p>I compared OpenClaw 2.0 and the latest Hermes agent release in 2026 to see which is better for memory, multi-agent workflows, security, integrations, and deployment.</p>
+<p>Shrijal</p>
+<p>HarnessAI Agents</p>
+<p><a href="https://composio.dev/content/openclaw-vs-hermes-agent">View original</a>### 10 Best Cursor Plugins I’d Install in 2026</p>
+<p>Sep 9, 2026</p>
+<p>Discover the 10 best Cursor plugins for 2026, from Context7 and pstack to Composio, for better coding, debugging, memory, and app integrations.</p>
+<p>Harsh</p>
+<p>HarnessAI Agents</p>
+<p><a href="https://composio.dev/content/best-cursor-plugins">View original</a>### Pi Agent vs Claude Code in 2026: What I Learned After 100 Hours With Both</p>
+<p>Sep 4, 2026</p>
+<p>I tested Pi Agent and Claude Code. See how they compare on cost, real-world performance, features, safety, and everyday coding workflows.</p>
+<p>Shrijal</p>
+<p>AI AgentsClaudeHarness</p>
+<p><a href="https://composio.dev/content/pi-agent-vs-claude-code">View original</a>### DeepSeek Harness vs Claude Code in 2026: Open Runtime vs the Deepest Closed Harness</p>
+<p>Sep 1, 2026</p>
+<p>DeepSeek Harness vs Claude Code compared on benchmarks, cost, speed, extensibility, models, sandboxing, and ecosystem to help you choose.</p>
+<p>Varshisth</p>
+<p>HarnessAI AgentsClaude</p>
+<p><a href="https://composio.dev/content/deepseek-harness-vs-claude-code">View original</a></p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

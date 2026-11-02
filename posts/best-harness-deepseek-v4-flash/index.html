@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="We tested eight agent harnesses with DeepSeek V4 Flash on Composio’s Golden Eval, comparing pass rate, cost, token use, and completion time.">
+<title>Finding the Best Harness for DeepSeek V4 Flash · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>Finding the Best Harness for DeepSeek V4 Flash</h1><div class="meta">August 11, 2026 · Sunil Kumar Dash · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://composio.dev/content/best-agent-harness-deepseek-v4-flash" target="_blank" rel="noopener">https://composio.dev/content/best-agent-harness-deepseek-v4-flash</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl3"><a href="#h1">How did we grade the success?</a></li><li class="lvl3"><a href="#h2">The Outcome</a></li><li class="lvl2"><a href="#h3">Harness benefits are real</a></li><li class="lvl2"><a href="#h4">Your agents cando more</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><strong>Agent harness</strong> is the buzzword of the moment. Just a few months ago, the term was barely part of the conversation around AI agents. But as coding and general-purpose agents found <a href="https://simonwillison.net/2026/May/27/product-market-fit/">product-market fit</a> —and began burning vastly more tokens—every frontier AI lab, along with a wave of newer entrants, started shipping a harness of its own. Take Hermes, Pi, OMP, Prime Agent, and the list goes on. And rightly so. Harnesses are the last mile to actual economic value.</p>
+<p>The Prime Agent <a href="https://x.com/PrimeIntellect/status/2085087000764568010">scored 95.50%</a> on ARC-AGI 3 with Opus 5. It did much better than the models' corresponding proprietary harnesses.</p>
+<p><img alt="Prime agent on ARC-AGI 3" src="../../assets/posts/best-harness-deepseek-v4-flash/b3312adc94be.webp"></p>
+<p>And DeepSeek v4 flash is the most interesting model out there. It scored 52 on <a href="https://artificialanalysis.ai/models/deepseek-v4-flash">Artificial Analysis</a> versus the SOTA 63 by Opus 5 Max while costing 50-90x less.</p>
+<p>This makes it almost perfect for agentic tasks, which require a good balance between cost and intelligence.</p>
+<p>We know that harnesses can improve outcomes. But every harness functions in its own way; the efficiency and cost vary across the harnesses.</p>
+<p>So, we tested DeepSeek v4 Flash with 8 different harnesses on long-running workflows involving multiple SaaS apps.</p>
+<p>The test consisted of 30 hard workflows, used the same hosted Composio MCP tools, and had a maximum of 900 seconds to finish each task.</p>
+<p>The workflows required agents to navigate multiple SaaS apps—including Airtable, Gmail, Google Calendar, Google Sheets, GitHub, Slack, and PostHog—and produce an answer that could be independently verified.</p>
+<p>A few workflow examples:</p>
+<ul>
+<li><strong>Synchronise a Google Sheets roster with Google Calendar</strong><br>
+    Read 40 sessions from a spreadsheet, find the corresponding Calendar events using an exact session ID, update incorrect events in place, create missing ones, and leave unrelated events and the source spreadsheet untouched.</li>
+<li><strong>Reconcile GitHub issues with Linear</strong><br>
+    Find every open GitHub issue containing the evaluation tag and a Linear issue ID. Verify that each ID exists in Linear, check whether it is in a completed state, and return an exact mapping—without modifying either system.</li>
+<li><strong>Sync support tickets across Gmail, Sheets, and Slack</strong><br>
+    Find qualifying support tickets in Gmail, record them verbatim in a Google Sheets ledger, reply to each recorded ticket with its associated account, and post the final tally in the correct Slack thread. Decoy and excluded tickets must remain untouched.</li>
+</ul>
+<h3 id="h1">How did we grade the success?</h3>
+<p>Each harness received its own isolated fixture, identified by a unique run tag. The fixture contained the real target data along with decoys: similarly named files, nearly identical keys, unrelated records, and other traps designed to catch overly broad actions.</p>
+<p>Once the agent finished, a programmatic verifier inspected the actual state of the connected apps. We didn’t use another LLM to determine whether the answer looked right.</p>
+<p>The verifier checked that:</p>
+<ul>
+<li>The correct records were found</li>
+<li>Calculations and reported values were exact</li>
+<li>Every requested action was completed</li>
+<li>Decoys and unrelated data remained untouched</li>
+<li>The final response followed the required format</li>
+<li>The required provider tools were actually used</li>
+</ul>
+<p>A run counted as successful only when every required check passed. We kept the partial execution data for debugging, but the leaderboard was binary: only pass or fail.</p>
+<p>For example, one agent correctly updated every requested cell in Google Sheets but reported the wrong row numbers in its final response. It passed 11 of 12 checks, yet the overall workflow failed. In another task, an agent used the correct PostHog tools and returned valid JSON, but counted 133 events when the verifier independently found 148. That run failed too.</p>
+<p>This may sound strict, but it reflects how agents are used in production. A workflow that updates the right records but reports the wrong result—or completes the task while modifying unrelated data—is counted as a failure.</p>
+<h3 id="h2">The Outcome</h3>
+<p>Across 240 runs, the harnesses completed 129 successfully—an overall pass rate of 53.8%. Only six of the 30 workflows were completed successfully by every harness.</p>
+<table>
+<thead>
+<tr>
+<th>Harness</th>
+<th>Pass rate</th>
+<th>Median time</th>
+<th>Cost per success</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi Agent</td>
+<td>66.7%</td>
+<td>132.2s</td>
+<td>$0.028</td>
+</tr>
+<tr>
+<td>Prime Agent</td>
+<td>62.5%*</td>
+<td>242.1s</td>
+<td>$0.131</td>
+</tr>
+<tr>
+<td>OMP</td>
+<td>56.7%</td>
+<td>272.4s</td>
+<td>$0.103</td>
+</tr>
+<tr>
+<td>Claude Code</td>
+<td>53.3%</td>
+<td>122.7s</td>
+<td>$0.195</td>
+</tr>
+<tr>
+<td>Codex</td>
+<td>53.3%</td>
+<td>245.0s</td>
+<td>$0.081</td>
+</tr>
+<tr>
+<td>DeepAgents</td>
+<td>53.3%</td>
+<td>187.1s</td>
+<td>$0.045</td>
+</tr>
+<tr>
+<td>Hermes Agent</td>
+<td>50.0%</td>
+<td>175.5s</td>
+<td>$0.056+</td>
+</tr>
+<tr>
+<td>OpenCode</td>
+<td>46.7%</td>
+<td>129.7s</td>
+<td>$0.073</td>
+</tr>
+</tbody>
+</table>
+<h4>Pass rate</h4>
+<p><img alt="pass rate for Deepseek v4 flash" src="../../assets/posts/best-harness-deepseek-v4-flash/c3b7138468a1.webp"></p>
+<p>Pi had the highest reported pass rate. It completed 20 of 30 tasks, which gave it a score of 66.7%.</p>
+<p>Prime Agent reported a pass rate of 62.5%. It completed 15 of its 24 valid runs. We excluded 6 Prime Agent runs that our grader could not score. On 2 of them, the verifier timed out against Prime's giant sessions (up to 3.5M tokens and 33 tool calls), and 4 never recorded. Prime ran the heaviest sessions of all 8 harnesses, which is worth noting.</p>
+<p>OMP came second. It completed 17 of 30 tasks, which gave it a score of 56.7%.</p>
+<p>Claude Code, Codex, and DeepAgents each completed 16 tasks and scored 53.3%. Hermes completed 15 tasks and scored 50%. OpenCode completed 14 tasks and scored 46.7%.<br>
+No harness had the best result for every measure.</p>
+<p>OMP had the highest comparable pass rate, Claude Code had the shortest time, and DeepAgents had the lowest cost for each successful task.</p>
+<h4>Average token consumption per task</h4>
+<p><img alt="" src="../../assets/posts/best-harness-deepseek-v4-flash/59065b7fd2c3.webp"></p>
+<p>Prime Agent used the most runtime tokens. It used an average of 1.4 million tokens per task. It’s extremely token-hungry.</p>
+<p>OMP and Claude Code each used about 742,000 tokens. OpenCode, DeepAgents, and Codex used between 665,000 and 692,000 tokens. Pi used about 559,000 tokens, and Hermes used about 192,000 tokens.</p>
+<p>These values show the average runtime tokens for one task. They include the context that the harness processed during the agent loop. They are separate from the input and output tokens that we used to calculate cost.</p>
+<p>Each harness can count runtime tokens differently. So, use these values as an approximate comparison.</p>
+<h4>Median Completion Time</h4>
+<p><img alt="Median task completion for Deepseek v4 flash" src="../../assets/posts/best-harness-deepseek-v4-flash/fb3343d28658.webp"></p>
+<p>Claude Code had the shortest median completion time at 122.7 seconds. OpenCode took 129.7 seconds, and Pi took 132.2 seconds. Hermes took 175.5 seconds, while DeepAgents took 187.1 seconds. Prime Agent and Codex each took about four minutes. OMP took the most time at 272.4 seconds.</p>
+<p>Token use did not closely match completion time. Claude Code and OMP both used about 742,000 tokens per task, but Claude Code finished in less than half the time. Hermes used only about 192,000 tokens, but it still took longer than Claude Code.</p>
+<p>This happens because completion time includes tool calls, network requests, retries, and harness processing. A harness can process many tokens through a few large calls. It can also process fewer tokens through several sequential calls and wait for each result.</p>
+<p>A shorter completion time did not always produce a higher pass rate. Claude Code was the fastest comparable harness, but OMP completed one more task. OpenCode was almost as fast as Claude Code, but it had the lowest pass rate.</p>
+<h4>Cost per successful task</h4>
+<p>The chart below shows cost per successful task, so it’s calculated as</p>
+<p><code>Cost per success = total cost / successful tasks</code></p>
+<p><img alt="Cost per successful task for Deepseek v4 flash" src="../../assets/posts/best-harness-deepseek-v4-flash/5a37c77afc01.webp"></p>
+<p>Claude Code had the highest cost at $0.195 per successful task. Its total token use was similar to Codex and OMP, but almost all its input tokens used the fresh-input rate. Only 1.5% of its tokens came from the cache, compared with about 70% for Codex and 57% for OMP. Fresh input cost five times more than cached input, so this made a large difference.</p>
+<p>Claude Code spent $3.12 across 30 tasks and passed 16. This gave it an average cost of $0.104 per task and $0.195 per successful task.</p>
+<p>This also shows why token count alone does not explain cost. The mix of fresh input, cached input, and output tokens matters. The pass rate matters too.</p>
+<p>Pi had the lowest reported cost. It cost $0.028 for each successful task. However, Pi used a different reasoning setting, and it used two model providers. This limits a direct comparison.</p>
+<p>DeepAgents cost $0.045 for each successful task. Hermes cost $0.056+, OpenCode cost $0.073, and Codex cost $0.081. OMP cost $0.103, Prime Agent cost $0.131, and Claude Code cost $0.195.</p>
+<p>Claude Code and DeepAgents had the same pass rate of 53.3%. However, a successful Claude Code run cost more than four times as much as a successful DeepAgents run.</p>
+<p>We estimated these costs from recorded token use and provider prices. They are API cost estimates.</p>
+<p>Note: Hermes timed out on two tasks and did not save the final usage data, so its actual cost was higher than the reported value.</p>
+<h2 id="h3">Harness benefits are real</h2>
+<p>Harnesses can matter as much as the models they run. They can significantly change cost, speed, and reliability. So it’s no surprise that every major AI lab is building its own, while strong open-source contenders have emerged in such a short time.</p>
+<p>Related: <a href="https://composio.dev/content/best-ai-agent-harnesses">Best harness for Kimi K3</a></p>
+<p>But the right harness depends on the tasks you want to solve. Before long, companies will evaluate harnesses on their own internal workflows, just as they evaluate models today. They will look at harness economics: token use, completion time, total cost, and cost per successful outcome. The right model–harness pair for a given task can make a significant difference across all four.</p>
+<p>As I said at the start, harnesses are the last mile between model intelligence and real economic value.</p>
+<p>Get started</p>
+<h2 id="h4">Your agents cando more</h2>
+<p>Connect your agents to 1,500+ apps. Start for free, no credit card needed.</p>
+<p><a href="https://agents.composio.dev/?cta_placement=content-sidebar-agent-setup">Are you an AI agent? See setup options</a>### Agent Connectors: What They Are and the 5 Best Platforms in 2026</p>
+<p>Jul 3, 2026</p>
+<p>Learn what agent connectors are, when to use MCP servers vs. managed platforms, and compare the 5 best agent connector platforms of 2026 — Composio, Nango, Merge, Arcade, and Pipedream</p>
+<p>Harsh</p>
+<p>LLMMCPAI Agents</p>
+<p><a href="https://composio.dev/content/agent-connectors">View original</a>### AI agent for Gmail</p>
+<p>Oct 16, 2026</p>
+<p>Build a production ready Gmail AI agent that drafts, reads, and manages email securely in under an hour with managed auth and safety controls.</p>
+<p>Sujay Choubey</p>
+<p>AI AgentsAI Use Case</p>
+<p><a href="https://composio.dev/content/ai-agent-for-gmail">View original</a>### LangChain vs CrewAI</p>
+<p>Oct 16, 2026</p>
+<p>LangChain vs CrewAI: Choose LangChain for stateful pipelines with LangGraph or CrewAI for rapid multi-agent prototypes with Composio.</p>
+<p>Sujay Choubey</p>
+<p>AI Use CaseAI Agents</p>
+<p><a href="https://composio.dev/content/langchain-vs-crewai">View original</a>### AI agent for Outlook</p>
+<p>Oct 16, 2026</p>
+<p>Build a production grade AI agent for Outlook in 10 minutes using managed auth, action level permissions, and sandboxed execution.</p>
+<p>Sujay Choubey</p>
+<p>AI AgentsAI Use Case</p>
+<p><a href="https://composio.dev/content/ai-agent-for-outlook">View original</a></p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Accessing artifacts in the sidebar and Claude-powered artifacts are supported on free, Pro, Max, Team, and Enterprise pl…">
+<title>What are artifacts and how do I use them? · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>What are artifacts and how do I use them?</h1><div class="meta">March 25, 2026 · Anthropic · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://support.claude.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them" target="_blank" rel="noopener">https://support.claude.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them</a></aside><div class="body"><p>Accessing artifacts in the sidebar and Claude-powered artifacts are supported on free, Pro, Max, Team, and Enterprise plans.</p>
+<p>Artifacts allow you to turn ideas into shareable apps, tools, or content—build tools, visualizations, and experiences by simply describing what you need. Claude can share substantial, standalone content with you in a dedicated window separate from the main conversation. This makes it easy to work with significant pieces of content that you may want to modify, build upon, or reference later.</p>
+<hr>
+<p>Claude creates an artifact when the content it's sharing meets these criteria:</p>
+<ul>
+<li>It is significant and self-contained, typically over 15 lines.</li>
+<li>It is something you're likely to want to edit, iterate on, or reuse outside the conversation.</li>
+<li>It represents a complex piece of content that stands on its own without requiring extra conversation context.</li>
+<li>It is content you're likely to want to refer back to or use later.</li>
+</ul>
+<p>Common examples of artifact content include:</p>
+<ul>
+<li>Documents (Markdown or plain text)</li>
+<li>Code snippets</li>
+<li>Single-page HTML websites</li>
+<li>SVG images</li>
+<li>Diagrams and flowcharts</li>
+<li>Interactive React components</li>
+</ul>
+<hr>
+<p>To adjust your artifacts preferences:</p>
+<ol>
+<li>Click your initials or name in the lower left corner.</li>
+<li>Navigate to <strong><a href="https://claude.ai/settings/capabilities">Settings &gt; Capabilities</a></strong>.</li>
+<li>Find <strong>Artifacts</strong> and toggle it on or off.</li>
+</ol>
+<p><strong>Note:</strong> Team and Enterprise administrators may manage some artifact settings at the organization level.</p>
+<hr>
+<p>You can access all your artifacts through the dedicated artifacts space in your Claude sidebar. This space allows you to:</p>
+<ul>
+<li>View all your creations in one organized location</li>
+<li>Browse Anthropic-created artifacts for inspiration</li>
+<li>Create new artifacts from scratch or by customizing existing ones</li>
+<li>Manage and organize your artifact collection</li>
+</ul>
+<hr>
+<p>When Claude creates an artifact, you'll see the content displayed in a dedicated window to the right of the main chat.</p>
+<ul>
+<li>Ask Claude to modify or update the artifact content</li>
+<li>Changes appear directly in the artifact window</li>
+<li>Switch between different versions using the version selector</li>
+<li>Your edits won't change Claude's memory of the original content</li>
+<li>Edit prior chat messages to create a different version of the conversation, with its own set of artifacts—this lets you explore different directions without losing previous work</li>
+</ul>
+<p>In the lower right corner of the artifact window, you can:</p>
+<ul>
+<li>View the underlying code of any artifact</li>
+<li>Copy content to your clipboard</li>
+<li>
+<p>Download files to use outside the conversation</p>
+</li>
+<li>
+<p>Open and work with several artifacts in one conversation</p>
+</li>
+<li>Use the chat controls (slider icon in upper right) to switch between them</li>
+<li>Select which artifact you want Claude to reference for updates</li>
+</ul>
+<p>If an artifact generates an error, look for the “Try fixing with Claude” button near the error message. Click the button to automatically copy the error details into a new message, then send it to Claude to diagnose the issue and suggest a fix.</p>
+<p><strong>Note:</strong> While Claude will attempt to fix the error, success isn't guaranteed. Some errors may require additional troubleshooting.</p>
+<hr>
+<p>You can build artifacts that embed AI capabilities, turning them into AI-powered apps. Users of your artifacts can access Claude's intelligence through a text-based API—answering questions, generating creative content, providing personalized coaching, playing games, solving problems, and adapting responses based on input.</p>
+<ol>
+<li>Describe what you want to Claude.</li>
+<li>Claude writes the code.</li>
+<li>The app runs on Anthropic's infrastructure.</li>
+<li>Users authenticate with their Claude account and interact with their own instance of the artifact.</li>
+</ol>
+<p>When you share AI-powered artifacts, others can use them immediately—no API keys required, and no costs to you. Whether your artifact helps 10 people or 10,000, sharing is free. Usage counts against each user's own Claude subscription limits, not yours.</p>
+<p>For Team and Enterprise plans, when you share AI-powered artifacts within your organization, team members can use them without incurring additional costs to the creator.</p>
+<hr>
+<p>MCP integration for artifacts is available on Pro, Max, Team, and Enterprise plans on Claude web and desktop.</p>
+<p>Artifacts can connect to external services through the Model Context Protocol (MCP), enabling interactive applications that read from and write to tools like Asana, Google Calendar, and Slack. In addition to Anthropic's official MCP integrations, artifacts can connect to any <strong><a href="https://support.claude.com/en/articles/11175166-getting-started-with-custom-connectors-using-remote-mcp">custom MCP servers</a></strong> you've configured.</p>
+<p>When an artifact needs to access an MCP tool, you'll be prompted to approve access on first interaction. Your preferences persist for subsequent uses of that artifact.</p>
+<p><strong>Important:</strong> Each user must authenticate MCP servers independently, even when using shared or published artifacts. Organization admins can enable or disable artifact MCP access at the organization level but cannot manage which specific MCP servers artifacts can use.</p>
+<hr>
+<p>Persistent storage for artifacts is available on Pro, Max, Team, and Enterprise plans on Claude web and desktop.</p>
+<p>Artifacts can store data across sessions, enabling stateful applications like journals, trackers, and collaborative tools. Storage can be configured as either personal or shared:</p>
+<ul>
+<li><strong>Personal storage:</strong> Each user maintains their own private data. For example, in a journal artifact, your entries remain visible only to you.</li>
+<li><strong>Shared storage:</strong> All users see and interact with the same data. For example, in a game leaderboard, everyone sees the same scores and rankings.</li>
+</ul>
+<p>When you interact with an artifact that uses shared storage for the first time, you'll see a confirmation dialog explaining that your data will be visible to other users of that artifact.</p>
+<p><strong>Note:</strong> Persistent storage is only available for published artifacts. During development and testing, storage operations will not succeed until the artifact is published.</p>
+<p><strong>Storage specifications:</strong></p>
+<ul>
+<li>20 MB storage limit per artifact</li>
+<li>Text-only input—no images, files, or binary data</li>
+<li>Personal and shared storage are isolated</li>
+<li>Unpublishing an artifact permanently deletes all associated storage data</li>
+</ul>
+<p><strong>Privacy consideration:</strong> Artifact creators determine which data uses personal versus shared storage when building the artifact. Before entering sensitive information, consider whether the artifact uses shared storage.</p>
+<hr>
+<p>To share your artifacts publicly, embed them on websites, or discover artifacts created by others, see <strong><a href="https://support.claude.com/en/articles/9547008-publishing-and-sharing-artifacts">Publishing and sharing artifacts</a></strong>.</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+</body>
+</html>

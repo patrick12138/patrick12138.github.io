@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="June 2026">
+<title>How to Earn a Billion Dollars · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>How to Earn a Billion Dollars</h1><div class="meta">June 14, 2026 · Paul Graham · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://paulgraham.com/earn.html" target="_blank" rel="noopener">https://paulgraham.com/earn.html</a></aside><div class="body"><p>June 2026  </p>
+<p><em>(This is based on a talk I gave at the Oxford Union.)</em>  </p>
+<p>Since this is apparently the future prime ministers' club, I'm going to tell you about something it would be good if more politicians understood: I'm going to tell you how people become billionaires. I hope this will be useful to you even if you don't plan to go into politics. Those of you who don't become prime minister can become billionaires instead.  </p>
+<p>The reason I know about this topic is that 21 years ago Jessica and I started something called Y Combinator. If you haven't heard of Y Combinator, it's a cross between an investment firm and a school for startup founders. Since we started it in 2005 we've funded about 6500 companies.  </p>
+<p>Starting a successful startup is the most <a href="https://paulgraham.com/richnow.html">common</a> way to become a billionaire, so in effect I've spent the last 21 years training people to become billionaires. So far about 30 of them have, but there are many more in the pipeline.  </p>
+<p>So you can imagine how astonished I was last month when an American politician said that it was <a href="https://x.com/MarcoFoster_/status/2052427151371047016">impossible</a> to earn a billion dollars. I felt like a skating coach hearing someone say that it's impossible to do a triple axel. Of course it's possible. It's <em>hard</em>, but it's possible.  </p>
+<p>She wasn't saying, of course, that it's impossible to become a billionaire. Obviously that's possible. Nor was she talking about the distinction between income and capital gains. She wasn't making a point about accounting. What she meant was that it's impossible to get that rich without doing something bad — without cheating in some way.  </p>
+<p>A couple days later I was talking to the founder of a startup I'd funded. I began by asking, as I usually do when I meet a founder, what her growth rate was. 93% last month, she said. I pointed out that this meant her net worth was also growing at 93% a month. She was getting richer at a stupendously rapid rate. And yet she hadn't been doing anything bad. The reason her startup was growing so fast was simply that users loved what she'd built. So she could feel from her own experience how wrong that politician was. She wasn't exploiting anyone. Exactly the opposite in fact. The reason her startup was growing so fast was that she and her cofounder had been working their asses off to make their users happy, and as a result the users had been telling their friends. And that gets you exponential growth.  </p>
+<p>Later that day I was talking about her case online, and someone replied that having a few million and growing at 93% a month was radically different from being a billionaire.  </p>
+<p>I suspect many people would agree with this statement. But it turns out not merely to be false, but false in a very illuminating way.  </p>
+<p>So I would like you all to do me a favor please. I would like you to take out your phones and calculate a number. I know this may seem contrived, but I promise it will be useful for you. I'm going to have you do the most common kind of calculation I do as an investor, and the experience will bring home to you what startups are all about.  </p>
+<p>If we interpret his statement in the most conservative way and assume that a few means 2, her company has to grow 500x for her to become a billionaire. So we are going to calculate how many months of 93% growth it takes for something to grow 500x.  </p>
+<p>To do this we want to calculate the log base 1.93 of 500. The easiest way to do that is to go to Google search, which lets you do calculations right in the search box. So go to Google search and type log(500, 1.93). If you typed that right, the answer you get is about 9.45.  </p>
+<p>That is how many months of 93% growth it takes to become a billionaire, starting from 2 million. A couple million and 93% growth are not, in fact, radically different from a billion. They're nine and a half months apart.  </p>
+<p>Now you see why, when I meet a founder, the first thing I ask about is their growth rate.  </p>
+<p>But I don't want anyone to accuse me of using unrealistic numbers, so let's take a more conservative growth rate. Let's see what happens at 15% a month. That's not rare at all. I constantly encounter startups growing at 15% a month.  </p>
+<p>If your revenues grow at 15% a month, how much more will you be making 5 years from now? To calculate that, we need to find 1.15 to the 60th power (since 5 years is 60 months). So go to Google again and this time type 1.15^60. The answer should be about 4384. Meaning in 5 years your startup will be making 4384 times as much. If you're currently making ten thousand a month, in five years you'll be making about 44 million a month, or 526 million a year. And at that point, if you own as much of the company as founders typically do, you will be a billionaire.  </p>
+<p>In the real world, growth rates tend to slow down a bit. A very successful startup will probably be growing faster than 15% a month in year 1 and slower than 15% a month in year 4. But you end up in about the same place. If you start a startup in your early twenties, it's definitely possible to be a billionare by the time you're thirty. Hard, but possible.  </p>
+<p>I wanted you to feel this by doing the calculation yourselves, because now you understand one of the reasons people start startups. Exponential growth is like magic. It generates outcomes that seem impossible. And that's why some politicians distrust it. They don't understand the math of exponential growth, so when they see people becoming what seems to them impossibly rich, they assume they must have cheated.  </p>
+<p>But now you at least understand, from having done the math yourselves, that you don't have to cheat to become a billionaire. You've seen for yourselves that there are only two numbers in the calculation, the growth rate and how long it continues. If it's impossible to make a billion dollars without cheating, which of those two numbers is impossible? It's certainly not impossible to grow at 15% a month without cheating. Startups do that all the time. And how long you can continue to grow at that rate depends on the size of the market. Obviously for you to grow 4000x, there has to be at least 4000x more demand. But that's all you need. And how could you possibly cheat to increase the market size?  </p>
+<p>If you're only planning to become prime minister, you can stop paying attention now. We've proved that it is in fact possible to earn a billion dollars, because it only depends on two numbers, one of which startups routinely hit without cheating, and another that cheating couldn't possibly affect.  </p>
+<p>But if you actually want to become a billionaire, we should go into more detail. Especially about that first number, the growth rate. To grow at a consistent rate every month, you have to make something so good that people tell their friends about it. And in fact that's the other reason I always begin by asking founders their growth rate. It shows whether they've built the right thing.  </p>
+<p>So how, exactly, do you make something people like so much that they tell their friends about it? The problem with market economies, and also the great thing about market economies, is that it's hard to make something customers want that they don't already have. As soon as a new, satisfiable need is discovered, people rush to satisfy it. So you're going to have to discover a need that no one else knows about yet.  </p>
+<p>How do you do that? <em>By feeling the need yourself.</em>  </p>
+<p>You're young, and usually young founders should make something that they themselves want. You don't have enough experience yet to know what other people need. But at the same time your own needs are uniquely valuable, because your needs predict future demand. You're the age when people start using new things. Whatever you and your friends start using now, everyone is going to be using in ten years. Since your intuitions about other people's needs are usually a crap signal, and your own needs are an especially valuable one, you should usually listen to the second signal; you should make something you and your friends want.  </p>
+<p>Making something you and your friends want doesn't mean you have to build a consumer product. Maybe you and your friends are molecular biologists, and there's something cool that could be done now to DNA that everyone else has overlooked. Maybe you and your friends are into drones. The idea doesn't have to have a wide appeal. It literally just has to appeal to you and your friends.  </p>
+<p>Don't worry about the second number, the market size. Since you predict future demand, the market will grow. And it's always possible to expand into adjacent markets. All you need is a beachhead in the territory of unsatisfied need that you can expand from.  </p>
+<p>How do you get an idea like that? The answer is one of the most counterintuitive things about startups — which is saying something, because there are a lot of counterintuitive things about startups. But the way to get the very best startup ideas is not to look for startup ideas. If you're consciously looking for startup ideas, it will make you too conservative. You'll lop off the outliers. Because the very best startup ideas tend to sound so lame, at first, that you'd reject them if you were consciously looking for startup ideas. That's what has prevented them from being discovered.  </p>
+<p>Imagine what a bad idea Apple or Facebook or Airbnb seemed at first. How many people are going to want their own computers? How is a company going to make money from undergrads stalking one another online? Who's going to pay to sleep on an airbed on someone's floor? We know how these ideas turned out, so it's easy to rewrite history, but I remember very well how bad Facebook and Airbnb sounded at first. We <em>funded</em> Airbnb, and we thought the idea was bad. The reason we funded them was just that we liked the <a href="https://paulgraham.com/airbnbs.html">founders</a>.  </p>
+<p>So how do you find startup ideas without looking for them? By working on projects with your friends. That's where the very best startups come from. Initially they're not even meant to be companies. They're just something people built because they thought it would be cool. That's how Apple and Google and Facebook all started. None of them were meant to be companies at first.  </p>
+<p>The reason this works is what I told you earlier: you predict future demand. So if you just build random stuff you think would be cool, the things you build will actually be far from random.  </p>
+<p>This is one of those cases where your unconscious mind knows more than your conscious mind does. Anything that genuinely seems to you like it would be a cool thing to build has a high probability of leading to a good startup idea, no matter how preposterous it sounds. Whatever you build couldn't possibly sound more preposterous than a startup we funded in 2006 called Justin.TV. It consisted of one guy, Justin Kan, walking around with a camera on the side of his head, live streaming everything that happened to him. But this company ended up doing quite well. In fact you've probably heard of it, but under its new name, Twitch.  </p>
+<p>The key to starting a successful startup is to understand some group of users so well that you can make exactly what they want. If you're young you can, and should, use the hack of making something for yourself. You understand yourself. But this is just an instance of the more general rule. Only by understanding users very deeply can you make something they love so much that they tell their friends about it, and only that can get you the exponential growth you need to make a startup really successful.  </p>
+<p>There are other ways to get rich than by starting startups. Some of those do require you to exploit people. But startups are the most common way to become really rich, and if you want to start a successful startup, the key is not exploitation but empathy. What do users really want? What could you do for them that would make their lives dramatically better? That kind of empathy is what we look for in founders, and what we cultivate in the ones we accept.  </p>
+<p>How people become rich in your society is one of the most important things to understand about it. You can't let your beliefs about this be determined by ideology, or movies, or historical examples that are centuries old. You must look at the world around you and see how it's actually done. If you want to do it yourself, obviously you'll be forced to understand how it's done. So I don't worry too much about you. The ones I worry about are the future prime ministers. You need to remember this talk. So for you I'm going to summarize the key ideas.  </p>
+<p>There are two numbers that determine how big a startup gets, and thus how rich its founders become: the growth rate and how long it continues. You get the first by making something users like so much they tell their friends. You get the second by being in a big market. If you grow exponentially into a big market, your startup will become valuable, and you, as a shareholder, will become rich. You not only don't have to cheat to make this happen, it will happen automatically if you just keep making customers happy.  </p>
+<p><strong>Thanks</strong> to Trevor Blackwell, Jared Friedman, Jessica Livingston, and Garry Tan for reading drafts of this, and to Arwa Elrayess and the Oxford Union for hosting me.</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A field guide and why we need to rethink our expectations">
+<title>The 70% problem: Hard truths about AI-assisted coding · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>The 70% problem: Hard truths about AI-assisted coding</h1><div class="meta">December 5, 2024 · Addy Osmani · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://addyo.substack.com/p/the-70-problem-hard-truths-about" target="_blank" rel="noopener">https://addyo.substack.com/p/the-70-problem-hard-truths-about</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">How developers are actually using AI</a></li><li class="lvl3"><a href="#h2">The Bootstrappers: Zero to MVP</a></li><li class="lvl3"><a href="#h3">The Iterators: daily development</a></li><li class="lvl2"><a href="#h4">The hidden cost of &quot;AI Speed&quot;</a></li><li class="lvl2"><a href="#h5">The knowledge paradox</a></li><li class="lvl2"><a href="#h6">The 70% problem: AI&#x27;s learning curve paradox</a></li><li class="lvl3"><a href="#h7">The two steps back pattern</a></li><li class="lvl3"><a href="#h8">The learning paradox continued</a></li><li class="lvl3"><a href="#h9">The knowledge gap</a></li><li class="lvl3"><a href="#h10">Implications for the future</a></li><li class="lvl2"><a href="#h11">What actually works: practical patterns</a></li><li class="lvl3"><a href="#h12">1. The &quot;AI first draft&quot; pattern</a></li><li class="lvl3"><a href="#h13">2. The &quot;Constant conversation&quot; pattern</a></li><li class="lvl3"><a href="#h14">3. The &quot;Trust but verify&quot; pattern</a></li><li class="lvl2"><a href="#h15">Looking forward: The real promise of AI?</a></li><li class="lvl2"><a href="#h16">What does this mean for you?</a></li><li class="lvl2"><a href="#h17">The rise of agentic software engineering</a></li><li class="lvl3"><a href="#h18">From responders to collaborators</a></li><li class="lvl3"><a href="#h19">The Multimodal future</a></li><li class="lvl3"><a href="#h20">Autonomous but guided</a></li><li class="lvl3"><a href="#h21">The English-first development environment</a></li><li class="lvl2"><a href="#h22">The return of software as craft?</a></li><li class="lvl3"><a href="#h23">The Demo-quality trap</a></li><li class="lvl3"><a href="#h24">The lost art of polish</a></li><li class="lvl3"><a href="#h25">The renaissance of personal software</a></li><li class="lvl2"><a href="#h26">The bottom line</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p>After spending the last few years embedded in AI-assisted development, I've noticed a fascinating pattern. While engineers report being dramatically more productive with AI, the actual software we use daily doesn’t seem like it’s getting noticeably better. What's going on here?</p>
+<p>I think I know why, and the answer reveals some fundamental truths about software development that we need to reckon with. Let me share what I've learned.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/b043caa58e35.webp"></p>
+<h2 id="h1">How developers are actually using AI</h2>
+<p>I've observed two distinct patterns in how teams are leveraging AI for development. Let's call them the "bootstrappers" and the "iterators." Both are helping engineers (and even non-technical users) reduce the gap from idea to execution (or MVP).</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/2f95243f3944.webp"></p>
+<h3 id="h2">The Bootstrappers: Zero to MVP</h3>
+<p>Tools like Bolt, v0, and screenshot-to-code AI are revolutionizing how we bootstrap new projects. These teams typically:</p>
+<ul>
+<li>Start with a design or rough concept</li>
+<li>Use AI to generate a complete initial codebase</li>
+<li>Get a working prototype in hours or days instead of weeks</li>
+<li>Focus on rapid validation and iteration</li>
+</ul>
+<p>The results can be impressive. I recently watched a solo developer use Bolt to turn a Figma design into a working web app in next to no time. It wasn't production-ready, but it was good enough to get very initial user feedback.</p>
+<h3 id="h3">The Iterators: daily development</h3>
+<p>The second camp uses tools like Cursor, Cline, Copilot, and WindSurf for their daily development workflow. This is less flashy but potentially more transformative. These developers are:</p>
+<ul>
+<li>Using AI for code completion and suggestions</li>
+<li>Leveraging AI for complex refactoring tasks</li>
+<li>Generating tests and documentation</li>
+<li>Using AI as a "pair programmer" for problem-solving</li>
+</ul>
+<p>But here's the catch: while both approaches can dramatically accelerate development, they come with hidden costs that aren't immediately obvious.</p>
+<h2 id="h4">The hidden cost of "AI Speed"</h2>
+<p>When you watch a senior engineer work with AI tools like Cursor or Copilot, it looks like magic. They can scaffold entire features in minutes, complete with tests and documentation. But watch carefully, and you'll notice something crucial: They're not just accepting what the AI suggests. They're constantly:</p>
+<ul>
+<li>Refactoring the generated code into smaller, focused modules</li>
+<li>Adding edge case handling the AI missed</li>
+<li>Strengthening type definitions and interfaces</li>
+<li>Questioning architectural decisions</li>
+<li>Adding comprehensive error handling</li>
+</ul>
+<p>In other words, they're applying years of hard-won engineering wisdom to shape and constrain the AI's output. The AI is accelerating their implementation, but their expertise is what keeps the code maintainable.</p>
+<p>Junior engineers often miss these crucial steps. They accept the AI's output more readily, leading to what I call "house of cards code" – it looks complete but collapses under real-world pressure.</p>
+<h2 id="h5">The knowledge paradox</h2>
+<p>Here's the most counterintuitive thing I've discovered: AI tools help experienced developers more than beginners. This seems backward – shouldn't AI democratize coding?</p>
+<p>The reality is that AI is like having a very eager junior developer on your team. They can write code quickly, but they need constant supervision and correction. The more you know, the better you can guide them.</p>
+<p><strong>This creates what I call the "knowledge paradox":</strong></p>
+<ul>
+<li>Seniors use AI to accelerate what they already know how to do</li>
+<li>Juniors try to use AI to learn what to do</li>
+<li>The results differ dramatically</li>
+</ul>
+<p><strong>I've watched senior engineers use AI to:</strong></p>
+<ul>
+<li>Rapidly prototype ideas they already understand</li>
+<li>Generate basic implementations they can then refine</li>
+<li>Explore alternative approaches to known problems</li>
+<li>Automate routine coding tasks</li>
+</ul>
+<p><strong>Meanwhile, juniors often:</strong></p>
+<ul>
+<li>Accept incorrect or outdated solutions</li>
+<li>Miss critical security and performance considerations</li>
+<li>Struggle to debug AI-generated code</li>
+<li>Build fragile systems they don't fully understand</li>
+</ul>
+<h2 id="h6">The 70% problem: AI's learning curve paradox</h2>
+<p>A <a href="https://x.com/petergyang/status/1863058206752379255">tweet</a> that recently caught my eye perfectly captures what I've been observing in the field: Non-engineers using AI for coding find themselves hitting a frustrating wall. They can get 70% of the way there surprisingly quickly, but that final 30% becomes an exercise in diminishing returns.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/0ec0bdb4f356.webp"></p>
+<p>This "70% problem" reveals something crucial about the current state of AI-assisted development. The initial progress feels magical - you can describe what you want, and AI tools like v0 or Bolt will generate a working prototype that looks impressive. But then reality sets in.</p>
+<h3 id="h7">The two steps back pattern</h3>
+<p>What typically happens next follows a predictable pattern:</p>
+<ul>
+<li>You try to fix a small bug</li>
+<li>The AI suggests a change that seems reasonable</li>
+<li>This fix breaks something else</li>
+<li>You ask AI to fix the new issue</li>
+<li>This creates two more problems</li>
+<li>Rinse and repeat</li>
+</ul>
+<p>This cycle is particularly painful for non-engineers because they lack the mental models to understand what's actually going wrong. When an experienced developer encounters a bug, they can reason about potential causes and solutions based on years of pattern recognition. Without this background, you're essentially playing whack-a-mole with code you don't fully understand.</p>
+<h3 id="h8">The learning paradox continued</h3>
+<p>There's a deeper issue here: The very thing that makes AI coding tools accessible to non-engineers - their ability to handle complexity on your behalf - can actually impede learning. When code just "appears" without you understanding the underlying principles:</p>
+<ul>
+<li>You don't develop debugging skills</li>
+<li>You miss learning fundamental patterns</li>
+<li>You can't reason about architectural decisions</li>
+<li>You struggle to maintain and evolve the code</li>
+</ul>
+<p>This creates a dependency where you need to keep going back to AI to fix issues, rather than developing the expertise to handle them yourself.</p>
+<h3 id="h9">The knowledge gap</h3>
+<p>The most successful non-engineers I've seen using AI coding tools take a hybrid approach:</p>
+<ol>
+<li>Use AI for rapid prototyping</li>
+<li>Take time to understand how the generated code works</li>
+<li>Learn basic programming concepts alongside AI usage</li>
+<li>Build up a foundation of knowledge gradually</li>
+<li>Use AI as a learning tool, not just a code generator</li>
+</ol>
+<p>But this requires patience and dedication - exactly the opposite of what many people hope to achieve by using AI tools in the first place.</p>
+<h3 id="h10">Implications for the future</h3>
+<p>This "70% problem" suggests that current AI coding tools are best viewed as:</p>
+<ul>
+<li>Prototyping accelerators for experienced developers</li>
+<li>Learning aids for those committed to understanding development</li>
+<li>MVP generators for validating ideas quickly</li>
+</ul>
+<p>But they're not yet the coding democratization solution many hoped for. The final 30% - the part that makes software production-ready, maintainable, and robust - still requires real engineering knowledge.</p>
+<p>The good news? This gap will likely narrow as tools improve. But for now, the most pragmatic approach is to use AI to accelerate learning, not replace it entirely.</p>
+<h2 id="h11">What actually works: practical patterns</h2>
+<p>After observing dozens of teams, here's what I've seen work consistently:</p>
+<h3 id="h12">1. The "AI first draft" pattern</h3>
+<ul>
+<li>Let AI generate a basic implementation</li>
+<li>Manually review and refactor for modularity</li>
+<li>Add comprehensive error handling</li>
+<li>Write thorough tests</li>
+<li>Document key decisions</li>
+</ul>
+<h3 id="h13">2. The "Constant conversation" pattern</h3>
+<ul>
+<li>Start new AI chats for each distinct task</li>
+<li>Keep context focused and minimal</li>
+<li>Review and commit changes frequently</li>
+<li>Maintain tight feedback loops</li>
+</ul>
+<h3 id="h14">3. The "Trust but verify" pattern</h3>
+<ul>
+<li>Use AI for initial code generation</li>
+<li>Manual review of all critical paths</li>
+<li>Automated testing of edge cases</li>
+<li>Regular security audits</li>
+</ul>
+<h2 id="h15">Looking forward: The real promise of AI?</h2>
+<p>Despite these challenges, I'm optimistic about AI's role in software development. The key is understanding what it's really good for:</p>
+<ol>
+<li><strong>Accelerating the known</strong><br>
+    AI excels at helping us implement patterns we already understand. It's like having an infinitely patient pair programmer who can type really fast.</li>
+<li><strong>Exploring the possible</strong><br>
+    AI is great for quickly prototyping ideas and exploring different approaches. It's like having a sandbox where we can rapidly test concepts.</li>
+<li><strong>Automating the routine</strong><br>
+    AI dramatically reduces the time spent on boilerplate and routine coding tasks, letting us focus on the interesting problems.</li>
+</ol>
+<h2 id="h16">What does this mean for you?</h2>
+<p>If you're just starting with AI-assisted development, here's my advice:</p>
+<ol>
+<li><strong>Start small</strong><ul>
+<li>Use AI for isolated, well-defined tasks<ul>
+<li>Review every line of generated code</li>
+<li>Build up to larger features gradually</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Stay modular</strong><ul>
+<li>Break everything into small, focused files<ul>
+<li>Maintain clear interfaces between components</li>
+<li>Document your module boundaries</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Trust your experience</strong><ul>
+<li>Use AI to accelerate, not replace, your judgment<ul>
+<li>Question generated code that feels wrong</li>
+<li>Maintain your engineering standards</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="h17">The rise of agentic software engineering</h2>
+<p>The landscape of AI-assisted development is shifting dramatically as we head into 2025. While the current tools have already changed how we prototype and iterate, I believe we're on the cusp of an even more significant transformation: the rise of agentic software engineering.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/c7fdd458ea49.webp"></p>
+<p>What do I mean by "agentic"? Instead of just responding to prompts, these systems can plan, execute, and iterate on solutions with increasing autonomy.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/dc2e55bb6186.png"></p>
+<p><em>If you’re interested in learning more about agents, including my take on Cursor/Cline/v0/Bolt, you may be interested in my <a href="https://www.youtube.com/watch?v=SpKtpW9TGF0">recent JSNation talk</a> above.</em></p>
+<p>We're already seeing early signs of this evolution:</p>
+<h3 id="h18">From responders to collaborators</h3>
+<p>Current tools mostly wait for our commands. But look at newer features like Anthropic's computer use in Claude, or Cline's ability to automatically launch browsers and run tests. These aren't just glorified autocomplete - they're actually understanding tasks and taking initiative to solve problems.</p>
+<p>Think about debugging: Instead of just suggesting fixes, these agents can:</p>
+<ul>
+<li>Proactively identify potential issues</li>
+<li>Launch and run test suites</li>
+<li>Inspect UI elements and capture screenshots</li>
+<li>Propose and implement fixes</li>
+<li>Validate the solutions work (this could be a big deal)</li>
+</ul>
+<h3 id="h19">The Multimodal future</h3>
+<p>The next generation of tools may do more than just work with code - they could seamlessly integrate:</p>
+<ul>
+<li>Visual understanding (UI screenshots, mockups, diagrams)</li>
+<li>Verbal language conversations</li>
+<li>Environment interaction (browsers, terminals, APIs)</li>
+</ul>
+<p>This multimodal capability means they can understand and work with software the way humans do - holistically, not just at the code level.</p>
+<h3 id="h20">Autonomous but guided</h3>
+<p>The key insight I've gained from working with these tools is that the future isn't about AI replacing developers - it's about AI becoming an increasingly capable collaborator that can take initiative while still respecting human guidance and expertise.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/33a28de19e4c.webp"></p>
+<p>The most effective teams in 2025 may be those that learn to:</p>
+<ul>
+<li>Set clear boundaries and guidelines for their AI agents</li>
+<li>Establish strong architectural patterns that agents can work within</li>
+<li>Create effective feedback loops between human and AI capabilities</li>
+<li>Maintain human oversight while leveraging AI autonomy</li>
+</ul>
+<h3 id="h21">The English-first development environment</h3>
+<p>As Andrej Karpathy noted:</p>
+<p>"English is becoming the hottest new programming language."</p>
+<p>This is a fundamental shift in how we'll interact with development tools. The ability to think clearly and communicate precisely in natural language is becoming as important as traditional coding skills.</p>
+<p>This shift towards agentic development will require us to evolve our skills:</p>
+<ul>
+<li>Stronger system design and architectural thinking</li>
+<li>Better requirement specification and communication</li>
+<li>More focus on quality assurance and validation</li>
+<li>Enhanced collaboration between human and AI capabilities</li>
+</ul>
+<h2 id="h22">The return of software as craft?</h2>
+<p>While AI has made it easier than ever to build software quickly, we're at risk of losing something crucial - the <a href="https://x.com/garrytan/status/1863604594515091786">art</a> of creating truly polished, consumer-quality experiences.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/1fc8166c3b0b.webp"></p>
+<h3 id="h23">The Demo-quality trap</h3>
+<p>It's becoming a pattern: Teams use AI to rapidly build impressive demos. The happy path works beautifully. Investors and social networks are wowed. But when real users start clicking around? That's when things fall apart.</p>
+<p>I've seen this firsthand:</p>
+<ul>
+<li>Error messages that make no sense to normal users</li>
+<li>Edge cases that crash the application</li>
+<li>Confusing UI states that never got cleaned up</li>
+<li>Accessibility completely overlooked</li>
+<li>Performance issues on slower devices</li>
+</ul>
+<p>These aren't just P2 bugs - they're the difference between software people tolerate and software people love.</p>
+<h3 id="h24">The lost art of polish</h3>
+<p>Creating truly self-serve software - the kind where users never need to contact support - requires a different mindset:</p>
+<ul>
+<li>Obsessing over error messages</li>
+<li>Testing on slow connections</li>
+<li>Handling every edge case gracefully</li>
+<li>Making features discoverable</li>
+<li>Testing with real, often non-technical users</li>
+</ul>
+<p>This kind of attention to detail (perhaps) can't be AI-generated. It comes from empathy, experience, and caring deeply about craft.</p>
+<h3 id="h25">The renaissance of personal software</h3>
+<p>I believe we're going to see a renaissance of personal software development. As the market gets flooded with AI-generated MVPs, the products that will stand out are those built by developers who:</p>
+<ul>
+<li>Take pride in their craft</li>
+<li>Care about the little details</li>
+<li>Focus on the full user experience</li>
+<li>Build for the edge cases</li>
+<li>Create truly self-serve experiences</li>
+</ul>
+<p>The irony? AI tools might actually enable this renaissance. By handling the routine coding tasks, they free up developers to focus on what matters most - creating software that truly serves and delights users.</p>
+<h2 id="h26">The bottom line</h2>
+<p>AI isn't making our software dramatically better because software quality was (perhaps) never primarily limited by coding speed. The hard parts of software development – understanding requirements, designing maintainable systems, handling edge cases, ensuring security and performance – still require human judgment.</p>
+<p>What AI does do is let us iterate and experiment faster, potentially leading to better solutions through more rapid exploration. But only if we maintain our engineering discipline and use AI as a tool, not a replacement for good software practices. Remember: The goal isn't to write more code faster. It's to build better software. Used wisely, AI can help us do that. But it's still up to us to know what "better" means and how to achieve it.</p>
+<p>What's your experience been with AI-assisted development? I'd love to hear your stories and insights in the comments.</p>
+<p><img alt="" src="../../assets/posts/the-70-problem/9256320747ae.webp"></p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

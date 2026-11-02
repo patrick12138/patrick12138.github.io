@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="nobody really teaches you research. you get a desk, a problem someone else picked, and a vague instruction to produce something novel. so mo...">
+<title>how to be good at research · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);margin:0 0 10px;font-weight:500}
+.refs ul{list-style:none;margin:0;padding:0}
+.refs li{margin:6px 0}
+.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
+.refs a:hover{color:var(--accent);border-color:var(--accent)}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+
+/* ─── 目录（toc） ─── */
+.body h2,.body h3{scroll-margin-top:84px}
+.toc{position:fixed;top:104px;left:calc(50% + 392px);width:196px;z-index:30;
+  font-family:var(--mono);font-size:.74rem;line-height:1.55;max-height:calc(100vh - 160px);
+  display:flex;flex-direction:column;transition:opacity .2s ease}
+.toc-head{display:flex;align-items:center;gap:6px;color:var(--text-muted);
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--mono)}
+.toc-head:hover{color:var(--accent)}
+.toc-head .chev{transition:transform .2s ease;opacity:.6}
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+  border-left:1px solid var(--border)}
+.toc-list a{display:block;padding:5px 0 5px 12px;margin-left:-1px;color:var(--text-muted);
+  text-decoration:none;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-list a:hover{color:var(--heading)}
+.toc-list li.lvl3 a{padding-left:24px;font-size:.7rem;opacity:.85}
+.toc-list a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc.is-collapsed .toc-list{display:none}
+.toc.is-collapsed .toc-head{display:none}
+.toc.is-collapsed .chev{transform:rotate(-90deg)}
+.toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
+/* 折叠后的竖排小标签 */
+.toc-tab{position:fixed;right:0;top:45%;z-index:31;display:none;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;writing-mode:vertical-rl;
+  padding:12px 6px;background:color-mix(in srgb,var(--bg) 90%,var(--text) 6%);
+  border:1px solid var(--border);border-right:none;color:var(--text-muted);cursor:pointer}
+.toc-tab:hover{color:var(--accent)}
+.toc.is-collapsed ~ .toc-tab{display:block}
+/* 手机：浮动按钮 + 底部面板 */
+.toc-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:40;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:9px 14px;
+  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
+  border:1px solid var(--border);cursor:pointer}
+.toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (max-width:1180px){
+  .toc{display:none}
+  .toc-fab{display:block}
+  .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:70px;max-height:60vh;
+    padding:16px 18px;background:color-mix(in srgb,var(--bg) 94%,transparent);
+    backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+  .toc.is-open .toc-head{font-size:.72rem;margin-bottom:8px;width:100%}
+  .toc.is-open .toc-close{display:inline}
+  .toc.is-open ~ .toc-fab{display:none}
+  .toc.is-open .toc-list{display:block !important;font-size:.86rem}
+  .toc.is-open .toc-list a{padding:7px 0 7px 12px}
+  .toc-tab{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>how to be good at research</h1><div class="meta">June 10, 2026 · @itsreallyvivek · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/itsreallyvivek/status/2064686372737454155" target="_blank" rel="noopener">https://x.com/itsreallyvivek/status/2064686372737454155</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">pick your own problems</a></li><li class="lvl2"><a href="#h2">upgrade your inputs</a></li><li class="lvl2"><a href="#h3">write everything down</a></li><li class="lvl2"><a href="#h4">tighten the loop</a></li><li class="lvl2"><a href="#h5">stare at the outputs</a></li><li class="lvl2"><a href="#h6">wander on purpose</a></li><li class="lvl2"><a href="#h7">find your people</a></li><li class="lvl2"><a href="#h8">the long game</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录">目录</button><button class="toc-fab" id="tocFab" aria-label="文章目录">目录</button><div class="body"><p><img alt="图像" src="../../assets/posts/how-to-be-good-at-research/698bde88e297.webp"></p>
+<p>nobody really teaches you research. you get a desk, a problem someone else picked, and a vague instruction to produce something novel. so most people reverse-engineer the job from what they can see, which is papers, threads, and announcements, and what they end up learning is how to look like a researcher rather than how to be one. the actual skill is a stack of smaller skills, and almost every one of them can be deliberately trained.</p>
+<h2 id="h1">pick your own problems</h2>
+<p>richard hamming had a habit at bell labs that made him unpopular at lunch. he'd ask whoever sat near him what the important problems in their field were, then ask why they weren't working on them. people changed tables. the question stings because most of us have no good answer. we don't choose problems, we absorb them, from an advisor, from whatever a big lab announced last quarter, from the paper everyone is quote-tweeting this week.</p>
+<p>the trouble with an absorbed problem is that you hold the conclusion without the reasoning. you know some famous lab cares about a direction, but not why, not what they expect to find, not what would make them drop it. when they pivot, you find out a year later. and on a problem that's already fashionable, you're racing a thousand people who started earlier and have more compute than you.</p>
+<p>john schulman's guide to ml research splits the work into two modes. in one, you read the literature and hunt for things to improve. in the other, you choose an outcome you genuinely want to exist and reason backwards to the experiments. he argues for the second, and the quiet reason is that it manufactures originality. a goal you actually care about will drag you into territory no survey paper covers.</p>
+<p>taste, meanwhile, gets discussed like a gift. it behaves more like a muscle. predict the result of every experiment before you run it. cover a paper's results section and guess the numbers from the method alone. mark down which of this month's releases will matter in two years and check your hit rate later. a forecast plus a correction, repeated a few hundred times, is how every good model gets trained, including the one in your head.</p>
+<h2 id="h2">upgrade your inputs</h2>
+<p>shared reading lists produce shared ideas. if your information diet is the trending page of arxiv plus whatever survives the group chat filter, you will reliably reach the same conclusions as everyone else, at the same time, which makes those conclusions worth approximately nothing.</p>
+<p>old material is criminally underpriced. this field reruns its own past on a delay: mixture of experts dates to 1991, lstms to 1997, backprop went mainstream in 1986. rich sutton needed about a thousand words in 2019 to write the bitter lesson, and it predicts the shape of the field better than surveys ten times its length. claude shannon gave a talk on creative thinking in 1952 where his opening move was to shrink a problem until it's nearly trivial, crack the small version, then reintroduce the difficulty one piece at a time. that single trick will carry you through more walls than any modern productivity advice.</p>
+<p>range matters as much as depth. interpretability borrows shamelessly from neuroscience. eval design is mechanism design wearing a lab coat. a working sense of how gpus actually move memory tells you which architecture papers are doomed before the benchmarks do. and honest statistics might be the rarest skill in ml, where a lot of published rigor is vibes with error bars.</p>
+<p>one more thing. read the paper itself, not the thread summarizing it. the appendix is where the bodies are buried, and the limitations section is usually the most honest paragraph in the document.</p>
+<h2 id="h3">write everything down</h2>
+<p>paul graham points out that an idea can feel fully formed right up until you try to put it into words. the page finds gaps your head papers over: the assumption you never tested, the step that doesn't actually follow, the two claims that quietly contradict each other.</p>
+<p>feynman's rule was that the first person you must avoid fooling is yourself, because you're the easiest target. writing is the cheapest defense ever invented. darwin went further and made it procedural. any fact that cut against his theory got written down on the spot, because he'd caught his own memory deleting inconvenient evidence faster than the convenient kind. your memory does the same thing to your failed runs. keep a log: hypothesis, setup, expectation, result, updated belief. rereading last month's entries is humbling in a way no reviewer can match.</p>
+<p>then put some of it in public. olah and carter's research debt essay makes the case that fields choke on undigested ideas, and that a clear explanation is a genuine contribution rather than a service job. a lot of people working in interpretability today found the field through readable posts, not conference papers. a body of public writing also doubles as the strongest credential you can hold, because it's an unfakeable sample of how you think.</p>
+<h2 id="h4">tighten the loop</h2>
+<p>the stories about alec radford rarely involve a single stroke of genius. they involve volume. more runs per day, more wrong ideas discarded per week, a model of reality that updated faster than anyone else's. that's the actual game. research speed is mostly the speed at which you discover you're wrong.</p>
+<p>which makes tooling a first-class research activity. launching a run should be one command. plotting it should be one more. every experiment should be reproducible from its config, and comparing two runs should take seconds, not an afternoon of archaeology. karpathy's recipe for training neural networks has a step that pays for itself a hundred times over: overfit a single batch before training at scale. thirty seconds, half your bugs, gone. shrink everything until it's cheap, get it right, then spend the compute.</p>
+<p>and retire the idea that engineering is the junior partner here. at the frontier the two jobs have fused. the researcher who can build the harness, the eval, and the data pipeline is the one whose hypotheses actually get tested. everyone else is waiting in a queue.</p>
+<h2 id="h5">stare at the outputs</h2>
+<p>a descending loss curve is not analysis, it's reassurance. your experiments throw off far more information than you consume: transcripts, failure cases, the strange tail of the distribution. most of it dies unread in a logs folder.</p>
+<p>karpathy's recipe starts before any training code gets written, with hours spent on the raw data by hand. most ml bugs live in the data, and they fail silently. nothing crashes. you simply get a mediocre model and a wrong theory about why.</p>
+<p>andrew ng has taught the same unglamorous move for over a decade because nothing beats it. pull a hundred failures, read all of them, sort them into piles, attack the biggest pile. it works on models and it works on evals, where a benchmark you've never read transcripts from is a benchmark you don't actually understand. one transcript of genuinely strange behavior will teach you more than the next decimal of accuracy ever will.</p>
+<h2 id="h6">wander on purpose</h2>
+<p>your first subfield is an accident of timing, so treat it like one. spend real time in interpretability, in evals, in rl, in systems, before deciding where you live. somewhere in this field is a corner where your specific weirdness is an unfair advantage, and the only way to locate it is to pay tuition in several places. nobody waives the tuition.</p>
+<p>run the disposable version of every idea first and let most of them die young. tune your baselines until it hurts, because the graveyard of ml is full of gains that evaporated against a properly tuned baseline, and a reviewer is the worst possible person to learn that from. ablate until you know which component carries the result. it's usually one, and it's usually not the one in the title.</p>
+<p>breadth is also insurance. subfields saturate, all of them, usually right after they peak on twitter. the people who keep producing through those transitions are the ones who already know their way around the neighboring territory.</p>
+<h2 id="h7">find your people</h2>
+<p>hamming noticed a pattern in who ended up doing important work. colleagues with closed office doors got more done in any given year, and colleagues with open doors did the work that mattered, because the interruptions carried information about what the world actually needed. your open door is probably an inbox. keep it that way.</p>
+<p>generosity compounds in research like nothing else. replicate a result and publish what you find. release the tool you built for yourself. explain something hard in plain language. the returns arrive sideways, months later, as the collaboration or the reference or the role you couldn't have applied for. float your half-formed ideas in public too, because being wrong on the timeline is far cheaper than being wrong in print. and the collaborator who tells you an idea is bad before you sink three months into it is worth more than compute. that relationship can't be bought, only earned.</p>
+<h2 id="h8">the long game</h2>
+<p>pasteur said luck favors the prepared mind, and hamming built a whole career philosophy on top of it: knowledge and productivity compound like interest. the daily edges look trivial in isolation. what you read, what you record, how fast your loop runs, who you argue with. give them a few years and they produce careers that look like luck from the outside. start compounding earlier than feels necessary. future you already knows this was the cheap part.</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+<script></script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var tab=document.getElementById('tocTab');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(tab) tab.addEventListener('click',function(){
+    toc.classList.remove('is-collapsed');
+    try{ localStorage.setItem(key,'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>
