@@ -45,6 +45,7 @@ a{color:inherit}
 .tabs button.on{color:var(--accent)}
 .tabs button:hover{color:var(--heading)}
 
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
 .posts{list-style:none;margin:0;padding:0 0 80px}
 .posts li{border-bottom:1px solid var(--rule)}
 .posts a{display:block;text-decoration:none;padding:30px 0 26px}
@@ -117,8 +118,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   <a class="brand" href="../../">patrick</a>
   <nav class="nav">
     <a href="../../" class="">首页</a>
-    <a href="../../about/">关于</a>
-    <a href="../../tga/">工具</a>
+    <a href="../../lab/">Lab</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -138,7 +138,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>但效果并不理想，一方面它依赖于人主动去做，成本较高；另一方面团队成员在 Code Review 时人工在 PR 写的高质量评论完全没用上。</p>
 <h2>两个 Skill，加上人类反馈</h2>
 <p>所以他们搞了个解决方案，一个基础 Skill 负责做代码审查，一个改进 Skill 负责定期收集人类工程师在代码审查时的评论，尤其是对 Agent 审查结果的评论，根据人类工程师的评论去更新代码审查的 Skill。</p>
-<p><img alt="Warp 的 Skill 自我改进循环" src="https://s.baoyu.io/imgs/2026-08-28/warp-self-improving-agents/illustration-01-feedback-loop-20260828.png" /></p>
+<p><img alt="Warp 的 Skill 自我改进循环" src="../../assets/posts/warp-self-improving-agents/be30a0c320d2.png" /></p>
 <p>换句话说，它不是依赖于模型自己去改进自己，而是 <strong>Agent 根据人类对模型结果的标注（人类对代码审查的评论），去改进技能</strong> 。</p>
 <p>只不过它把这个事做的摩擦力极低，不需要人手工去收集整理评论，不需要填写调查问卷，人只要自然地去代码下写评论，后面的事情都是 Agent 自动完成。</p>
 <blockquote>
@@ -159,14 +159,14 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <p>即使样本量相对较小，只要反馈来自掌握领域知识的人，而且足够详细，你也能得到非常好的信号——这些知识是智能体通过其他方式根本无法获得的。话虽如此，优质信号的语料越多，效果越好。</p>
 <h3>6. 做好改进 Skill 的 Skill，可以用来改进其他 Skill</h3>
 <p>把改进 Skill（也就是前面提到的一个代码审查 Skill、一个改进 Skill）做好，收益不只限于眼前这套 Agent 循环，因为改进 Skill 在不同用例之间具有很高的复用性。除了领域专用知识这一部分，它其实是一套相当通用、可复用的机制。代码审查 Agent 的改进 Skill，也可以应用到其他 Skill 的改进上。</p>
-<p><img alt="让 Skill 持续进化的六条原则" src="https://s.baoyu.io/imgs/2026-08-28/warp-self-improving-agents/illustration-02-six-principles-20260828.png" /></p>
+<p><img alt="让 Skill 持续进化的六条原则" src="../../assets/posts/warp-self-improving-agents/f0f5c1d11813.png" /></p>
 <h2>如果反馈本身是错的呢？</h2>
 <p>可能有人会担心：如果反馈本身是错的呢？</p>
 <p>Warp 的做法是永远不让 Agent 盲目接受反馈。给它足够的上下文来做基本的合理性检查，限制谁的反馈有权影响技能更新（不是所有人的意见都同等重要），最后始终保留人在循环中审核改动。</p>
 <p>对于那些有明确标准答案的领域，比如代码是否通过了测试、部署是否成功，可以先建一个验证基准，让 Agent 自己对着基准跑。没有标准答案的领域，比如代码风格、文档质量，就靠领域专家的判断，不要开放给所有人随意反馈。</p>
 <hr /></div><a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
-  © 2026 <a href="../../about/">patrick</a> · 静态页面，没有后端
+  © 2026 <a href="../../about/">patrick</a>
 </div></div></footer>
 <script>
 (function(){

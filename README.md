@@ -10,6 +10,7 @@ Small static pages I actually use, hosted on GitHub Pages. No framework, no back
 | --- | --- |
 | `/` | Blog index — original posts and reposts, newest first |
 | `/posts/<slug>/` | Individual posts |
+| `/lab/` | Lab — small things I build for myself |
 | `/tga/` | The Game Awards GOTY nominee checklist, 2014–2025 (68 entries) |
 | `/about/` | Terminal-style personal page, English / 中文 toggle |
 
@@ -18,8 +19,10 @@ Small static pages I actually use, hosted on GitHub Pages. No framework, no back
 ```text
 index.html          Blog index
 posts/*/index.html  Posts (self-contained)
+lab/index.html      Lab index
 tga/index.html      TGA checklist (self-contained)
 about/index.html    About page (self-contained)
+assets/posts/*/     Images downloaded from original posts
 .nojekyll           Serve files as-is, skip Jekyll
 ```
 

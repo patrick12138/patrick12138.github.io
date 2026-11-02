@@ -10,6 +10,7 @@
 | --- | --- |
 | `/` | 博客首页 —— 原创与搬运，按时间倒序 |
 | `/posts/<slug>/` | 单篇文章 |
+| `/lab/` | Lab —— 自己做来玩的小东西 |
 | `/tga/` | TGA 年度游戏提名清单，2014–2025（68 席） |
 | `/about/` | 终端风格的个人页，中英文可切 |
 
@@ -18,8 +19,10 @@
 ```text
 index.html          博客首页
 posts/*/index.html  文章（单文件自包含）
+lab/index.html      Lab 索引
 tga/index.html      TGA 清单（单文件自包含）
 about/index.html    关于页（单文件自包含）
+assets/posts/*/     从原文下载的图片
 .nojekyll           原样输出，跳过 Jekyll
 ```
 
