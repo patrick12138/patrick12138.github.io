@@ -188,21 +188,6 @@ THEME_ICONS = """<button class="theme-toggle" id="themeToggle" aria-label="Toggl
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>"""
 
-TOTOP_JS = """<script>
-(function(){
-  var b=document.getElementById('toTop'); if(!b) return;
-  function goTop(){
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
-  }
-  function upd(){ b.classList.toggle('show', window.pageYOffset > 600); }
-  window.addEventListener('scroll',upd,{passive:true});
-  b.addEventListener('click',goTop);
-  upd();
-})();
-</script>"""
-
 page = """<!DOCTYPE html>
 <html lang="zh-CN" data-theme="dark">
 <head>
@@ -225,15 +210,14 @@ page = """<!DOCTYPE html>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="about/">patrick</a>
 </div></div></footer>
-<button class="to-top" id="toTop" aria-label="返回顶部" title="返回顶部">
+<button class="to-top" id="toTop" data-threshold="600" aria-label="返回顶部" title="返回顶部">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script src="assets/site.js"></script>
 %s
-%s
 </body>
-</html>""" % (STYLE, THEME_ICONS, body, JS, TOTOP_JS)
+</html>""" % (STYLE, THEME_ICONS, body, JS)
 
 open(OUT, "w", encoding="utf-8").write(page)
 print("index built:", len(items), "posts")

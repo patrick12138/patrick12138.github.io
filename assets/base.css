@@ -16,20 +16,6 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);lin
 a{color:inherit}
 .wrap{max-width:720px;margin:0 auto;padding:0 28px}
 
-:root,[data-theme="dark"]{
-  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
-  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
-  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
-}
-[data-theme="light"]{
-  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
-  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
-}
-html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
-a{color:inherit}
-.wrap{max-width:720px;margin:0 auto;padding:0 28px}
 .bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
   background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
 .bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}

@@ -62,7 +62,9 @@
 
 ## 页面写法
 
-- **单文件自包含**：CSS/JS/数据内联在一个 `index.html`，不引 CDN 之外的相对资源。
+- **博客页共享外链样式**：首页 / Lab 索引 / 所有文章共用 `assets/base.css` + `home.css` / `post.css` + `assets/site.js`，
+  页面本身只写结构，不要复制样式进页面。
+- **工具页（tga / backlog / about）单文件自包含**：CSS/JS/数据内联在一个 `index.html`，不引 CDN 之外的相对资源。
   静态数据用 `<script type="application/json">` 内嵌，前端 `JSON.parse`。
 - 状态存 `localStorage`，key 带版本号（`xxx_v2`），改结构做迁移。
 - 必须响应式：手机单列 + PC 两列/三列。

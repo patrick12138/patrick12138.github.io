@@ -8,7 +8,6 @@
 可重复执行：已经加过的页面会先剥掉旧的 toc 标记再重算。
 """
 import glob
-import hashlib
 import html as htmllib
 import os
 import re
@@ -120,18 +119,6 @@ BRAND_JS = """
 })();
 """
 
-BACKTOP_JS = """
-(function(){
-  var b=document.getElementById('backTop'); if(!b) return;
-  b.addEventListener('click',function(e){
-    e.preventDefault();
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
-  });
-})();
-"""
-
 HEAD = ('<nav class="toc" id="toc" aria-label="文章目录">'
         '<button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true">'
         '<svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
@@ -153,7 +140,6 @@ HEAD = ('<nav class="toc" id="toc" aria-label="文章目录">'
         '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
         '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button>')
 
-HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>目录</button>', re.S)
 
 
 def strip_toc(doc):
@@ -163,7 +149,6 @@ def strip_toc(doc):
     doc = re.sub(r'<nav class="toc"[^>]*>.*?</nav>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
-    doc = HEAD_RE.sub("", doc)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
     doc = re.sub(r'<button class="to-top"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     # 别的会话注入过的英文版浮动按钮
@@ -216,30 +201,10 @@ def build_toc(doc):
     return doc, li
 
 
-TOP_BTN = ('<button class="to-top" id="toTop" aria-label="返回顶部" title="返回顶部">'
+TOP_BTN = ('<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部">'
            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
            '<path d="M12 19V5M5 12l7-7 7 7"/></svg></button>')
-
-TOP_JS = """
-(function(){
-  var b=document.getElementById('toTop'); if(!b) return;
-  function go(){ var y=window.pageYOffset;
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
-  }
-  function upd(){
-    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    var maxScroll = docH - window.innerHeight;
-    var threshold = maxScroll > 0 ? (maxScroll / 2) : 600;
-    b.classList.toggle('show', window.pageYOffset > threshold);
-  }
-  window.addEventListener('scroll',upd,{passive:true});
-  window.addEventListener('resize',upd,{passive:true});
-  b.addEventListener('click',go);
-  upd();
-})();
-"""
 
 BRAND_RE = re.compile(r'<a class="brand" href="([^"]*)">patrick</a>')
 
@@ -265,7 +230,7 @@ def inject_top_btn(doc):
     if 'id="toTop"' in doc:
         return doc
     if '<a class="back"' in doc:
-        doc = doc.replace('</body>', TOP_BTN + '<script>' + TOP_JS + '</script>\n</body>', 1)
+        doc = doc.replace('</body>', TOP_BTN + '\n</body>', 1)
     return doc
 
 

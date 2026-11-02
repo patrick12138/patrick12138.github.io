@@ -8,9 +8,13 @@
 
 顺序固定，不要改：
   1. (可选) rebuild.py     从 vault 的 md 重新生成所有文章
-  2. gen_index.py          扫描 posts/ 生成首页
-  3. stamp_assets()        给 home.css / post.css / site.js 写内容哈希
-  4. qa.py                 排版体检，P0 不为 0 就中止（不会 push）
+  2. add_toc.py            注入目录 / 站名下拉 / 回到顶部按钮 / 对齐导航
+  3. stats.py              给文章页补字数与阅读时间
+  4. gen_index.py          扫描 posts/ 生成首页
+  5. test_pipeline.py      回归测试（幂等 + 注入唯一），失败即中止
+  6. stamp_assets()        给 base/home/post.css 与 site.js 写内容哈希
+  7. qa.py                 排版体检，P0 不为 0 就中止（不会 push）
+  8. (可选) commit + push
 """
 import hashlib
 import os
@@ -99,13 +103,21 @@ def main():
     print("④ 生成首页 …")
     print(sh("python3 tools/gen_index.py").strip().splitlines()[0])
 
-    print("⑤ 重算资源版本号 …")
+    print("⑤ 回归测试 …")
+    t = subprocess.run("python3 tools/test_pipeline.py", shell=True, cwd=ROOT,
+                       capture_output=True, text=True)
+    print("\n".join(t.stdout.strip().splitlines()[-3:]))
+    if t.returncode != 0:
+        print("\n✗ 回归测试未通过，已中止，不会 push。")
+        raise SystemExit(1)
+
+    print("⑥ 重算资源版本号 …")
     vs, n = stamp_assets()
     for k, v in vs.items():
         print("   %-18s %s" % (k, v))
     print("   更新了 %d 个页面" % n)
 
-    print("⑥ 排版体检 …")
+    print("⑦ 排版体检 …")
     p = subprocess.run("python3 tools/qa.py", shell=True, cwd=ROOT,
                        capture_output=True, text=True)
     tail = "\n".join(p.stdout.strip().splitlines()[-6:])
@@ -118,7 +130,7 @@ def main():
 
     if do_push:
         msg = args[args.index("--push") + 1] if len(args) > args.index("--push") + 1 else "chore: rebuild site"
-        print("⑦ 推送 …")
+        print("⑧ 推送 …")
         sh('git add -A && git commit -m "%s" || true' % msg, check=False)
         sh('git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/patrick12138/patrick12138.github.io.git"')
         r = subprocess.run("git pull --rebase origin main && git push origin main",
