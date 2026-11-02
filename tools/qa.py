@@ -53,6 +53,23 @@ def check(path):
     return hits
 
 
+def check_kinds():
+    """首页 data-kind 与文章页 meta 的「搬运/原创」必须一致。"""
+    idx = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
+    kinds = dict(re.findall(r'<li data-kind="(\w+)"><a href="posts/([a-z0-9-]+)/"', idx))
+    kinds = {slug: kind for kind, slug in kinds.items()}
+    bad = []
+    for slug, kind in kinds.items():
+        p = os.path.join(ROOT, "posts", slug, "index.html")
+        if not os.path.exists(p):
+            continue
+        m = re.search(r'<div class="meta">.*?·\s*(搬运|原创)', open(p, encoding="utf-8").read())
+        page_kind = {"搬运": "repost", "原创": "own"}.get(m.group(1) if m else "", "")
+        if page_kind != kind:
+            bad.append((slug, kind, page_kind or "?"))
+    return bad
+
+
 def main():
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
     total = {k: 0 for k in ("P0", "P1", "P2")}
@@ -67,6 +84,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    kind_bad = check_kinds()
+    if kind_bad:
+        print("\n分类不一致（首页 data-kind ≠ 文章页 meta）")
+        for slug, a, b in kind_bad:
+            print("  [P1] %s：首页 %s / 页面 %s" % (slug, a, b))
+        total["P1"] += len(kind_bad)
+
     print("\n汇总：P0=%d  P1=%d  P2=%d（共 %d 篇）"
           % (total["P0"], total["P1"], total["P2"], len(paths)))
     if total["P0"]:

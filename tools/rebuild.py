@@ -47,7 +47,11 @@ def main():
                       back_href="../../", title_arg=r.get("title") or None)
         done += 1
     print("重建 %d 篇，跳过 %d 篇 %s" % (done, len(skipped), skipped or ""))
-    add_toc.main()
+    saved, sys.argv = sys.argv, sys.argv[:1]   # add_toc 会读 argv，别把 slug 当成文件路径
+    try:
+        add_toc.main()
+    finally:
+        sys.argv = saved
 
 
 if __name__ == "__main__":
