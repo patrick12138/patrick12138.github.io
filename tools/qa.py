@@ -119,6 +119,18 @@ def check_page_shell():
     return bad
 
 
+def check_descriptions():
+    """首页摘要质量：太短、或是把正文/站点口号当摘要的，都算不合格。"""
+    idx = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
+    items = re.findall(r'<h2>(.*?)</h2><p class="desc">(.*?)</p>', idx, re.S)
+    bad = []
+    for title, desc in items:
+        d = desc.strip()
+        if len(d) < 20 or re.search(r"记录时间|^June \d{4}|blog$|^作者：", d):
+            bad.append((re.sub(r"<[^>]+>", "", title)[:24], d[:36]))
+    return bad
+
+
 def main():
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
     total = {k: 0 for k in ("P0", "P1", "P2")}
@@ -133,6 +145,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    desc_bad = check_descriptions()
+    if desc_bad:
+        print("\n首页摘要不合格（太短 / 把正文或口号当摘要）")
+        for t, d in desc_bad:
+            print("  [P1] %s → %s" % (t, d))
+        total["P1"] += len(desc_bad)
+
     shell_bad = check_page_shell()
     if shell_bad:
         print("\n这些页面既没有内联 <style> 也没引 base.css（会丢外壳样式）")

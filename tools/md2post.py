@@ -295,7 +295,7 @@ def fmt_date(d):
 
 # ─── 生成 ──────────────────────────────────────────────────
 def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
-          images=True, title_arg=None):
+          images=True, title_arg=None, desc_arg=None):
     raw = open(md_path, encoding="utf-8").read().replace("\ufeff", "")   # 去 BOM，否则首个 H1 识别不到
     meta, body = split_front(raw)
 
@@ -304,7 +304,7 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
         m = re.search(r"(?m)^#\s+(.+)$", body)
         title = m.group(1).strip() if m else os.path.splitext(os.path.basename(md_path))[0]
     source = str(meta.get("source") or "").strip()
-    desc = re.sub(r"^\s*-\s*", "", str(meta.get("description") or "")).strip()
+    desc = re.sub(r"^\s*-\s*", "", str(desc_arg or meta.get("description") or "")).strip()
     author = author_arg or clean_author(meta.get("author")) or ""
 
     body = strip_title_heading(body, title)
@@ -421,6 +421,7 @@ def main():
     ap.add_argument("--date")
     ap.add_argument("--author")
     ap.add_argument("--title", help="覆盖标题（爬下来的页面标题往往很脏）")
+    ap.add_argument("--desc", help="覆盖摘要（首页列表用）")
     ap.add_argument("--kind", default="repost", choices=["repost", "own"])
     ap.add_argument("--no-images", action="store_true")
     a = ap.parse_args()

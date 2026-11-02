@@ -61,7 +61,8 @@
   "author": "Lenciel",
   "date": "June 8, 2025",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "董事会问该不该用 AI 换研发。答案不是能不能，而是分哪一层、什么规模、什么时候。"
  },
  {
   "slug": "claude-code-review",
@@ -125,7 +126,8 @@
   "author": "Ryan Lopopolo",
   "date": "May 27, 2026",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "五个月交付内部 beta，没有一行代码是人手写的：人定意图、Codex 执行，以及为此重建的工程环境与反馈回路。"
  },
  {
   "slug": "how-i-work-with-agents",
@@ -157,7 +159,8 @@
   "author": "Paul Graham",
   "date": "June 14, 2026",
   "kind": "repost",
-  "title": ""
+  "title": "",
+  "desc": "Paul Graham 谈通往十亿美元的三条路——不是暴富技巧，而是把「规模」当成产品设计的一部分。"
  },
  {
   "slug": "html-artifact",
@@ -325,7 +328,8 @@
   "author": "",
   "date": "October 22, 2026",
   "kind": "own",
-  "title": ""
+  "title": "",
+  "desc": "把 DeepSeek Harness 接到自建模型上：Profile 配置怎么写、哪些字段必填、连不上时按什么顺序排查。"
  },
  {
   "slug": "ai-industry-watch",
