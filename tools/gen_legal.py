@@ -15,6 +15,7 @@
 import glob
 import os
 import re
+import postbody
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,10 +30,8 @@ NOINDEX = True
 META = re.compile(r'<div class="meta">(.*?)</div>', re.S)
 SRC_URL = re.compile(r'<a class="src-url" href="([^"]+)"')
 ANCHOR_HEAD = re.compile(r'(<meta property="og:url"[^>]*>)')
-# 锚点：正文结束后遇到的第一个「尾巴容器」。不能只锚 <a class="back">：
-# 相关阅读（④.25）和上一篇/下一篇（④.2）都在 ②.5 之后才插，且也插在 back 前面——
-# 只锚 back 会让提示条每次 build 在它们前后之间来回跳（位置不幂等）。
-ANCHOR_TAIL = re.compile(r'(<nav class="related"|<nav class="pager"|<a class="back")')
+# 插入点：正文结束处（第一个尾巴容器之前）。统一由 tools/postbody.py 判定，
+# 不再自己写一份截断标记——相关阅读/上下篇都在本脚本之后才插。
 
 NOTE = (
     '<aside class="legal-note" data-legal="1">'
@@ -67,8 +66,9 @@ def apply_one(path, dry=False):
             head += '<meta name="robots" content="noindex,follow" data-legal="1">'
         if head:
             doc = ANCHOR_HEAD.sub(lambda m: m.group(1) + head, doc, count=1)
-        if ANCHOR_TAIL.search(doc):
-            doc = ANCHOR_TAIL.sub(lambda m: NOTE + m.group(1), doc, count=1)
+        pos = postbody.tail_start(doc)
+        if pos > 0:
+            doc = doc[:pos] + NOTE + doc[pos:]
         else:
             print("  ! 找不到正文尾巴锚点，跳过版权提示：%s" % os.path.relpath(path, ROOT))
 

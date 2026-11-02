@@ -150,16 +150,27 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 - `build.py` 第 ③ 步执行，不用手动跑
 
 
-## 正文边界：三处必须同步
+## 正文边界（tools/postbody.py）
 
-`.body` 之后的东西（相关阅读 `nav.related`、上下篇 `nav.pager`、版权提示 `aside.legal-note`、
-返回首页 `a.back`）都**不算正文**。三处各写了一遍同一组截断标记，改一处要三处一起改：
+`.body` 之后挂着四个尾巴容器，都**不算正文**：`nav.related`（相关阅读）、`nav.pager`（上下篇）、
+`aside.legal-note`（版权提示）、`a.back`（返回首页）。
 
-- `tools/stats.py` 的 `body_html()` —— 算字数/阅读时间
-- `tools/gen_search.py` 的正文提取 —— 搜索索引
-- `tools/gen_legal.py` 的 `ANCHOR_TAIL` —— 版权提示插哪儿
+它们由不同步骤**后插**（②.5 / ④.2 / ④.25），所以任何「截到第一个 `</div>`」或「截到 `<a class=back>`」
+的写法都会随注入顺序漂移。历史上因此出过三次事故：字数虚高、搜索能搜到「版权/相关阅读」、
+版权提示每次 build 前后跳。
 
-漏掉一处的症状：字数虚高、搜索能搜到「版权/相关阅读」、提示条随 build 前后跳。
+现在只有一处实现，谁要正文都从这里取：
+
+```python
+import postbody
+postbody.body_html(doc)    # 正文 HTML 片段
+postbody.body_text(doc)    # 正文纯文本（去标签、压空白）
+postbody.body_span(doc)    # (start, end)，需要原地替换时用
+postbody.tail_start(doc)   # 尾巴区起点，往这之前插新块
+postbody.table_rows(tbl)   # 表格 → 行×单元格，wrap 与 qa 共用
+```
+
+**加一个新的文末区块时**：把它加进 `postbody.TAIL_MARKERS`，别在各自的脚本里再写截断标记。
 
 ## 搬运页版权信号（tools/gen_legal.py）
 
@@ -265,3 +276,20 @@ python3 tools/gen_related.py      # 插到 <nav class="pager"> 之前，幂等
 - 相似度用 **tf-idf 余弦**：不 IDF 加权的话「Codex」这种高频词会把所有文章连成一坨
 - 每篇最多 3 条，分数低于 0.06 就不显示（宁缺毋滥）
 - 调参在这几个常量：`MAX_RELATED`、`MIN_SCORE`、`DF_CAP`
+
+## 日期解析（tools/dates.py）
+
+站点上的日期有四种写法（ISO / `October 30, 2025` / `2026年10月31日` / `7月21日`），以前
+`gen_index`、`gen_feed`、`rebuild`、`md2post` 各写一份，能力还不一样（有的不认「7月21日」）。
+
+现在只此一份：
+
+```python
+import dates
+dates.to_date("7月21日")        # date，当年
+dates.to_iso("October 30, 2025")  # "2025-10-30"，认不出来原样返回
+dates.to_cn(d)                 # "2026年10月31日"
+dates.short_cn(d)              # "10月31日"，非当年补年份
+```
+
+加新格式只改 `dates.py` 的正则表。

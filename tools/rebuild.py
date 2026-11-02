@@ -8,6 +8,7 @@
 import json
 import os
 import re
+import dates
 import sys
 from datetime import datetime
 
@@ -17,10 +18,9 @@ MONTHS = {m: i + 1 for i, m in enumerate(
 
 
 def iso(d):
-    m = re.match(r"([A-Z][a-z]+)\s+(\d+),\s*(\d{4})", (d or "").strip())
-    if not m:
-        return d
-    return "%04d-%02d-%02d" % (int(m.group(3)), MONTHS[m.group(1)], int(m.group(2)))
+    """英文长日期 → ISO；认不出来原样返回。解析逻辑在 tools/dates.py。"""
+    return dates.to_iso(d)
+
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import add_toc  # noqa: E402

@@ -11,6 +11,7 @@ import html
 import math
 import os
 import re
+import postbody
 from collections import Counter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,9 +44,7 @@ def collect(path):
         r"<h1[^>]*>(.*?)</h1>", doc, re.S) else slug
     desc = html.unescape((re.search(r'<meta name="description" content="([^"]*)"', doc) or [None, ""])[1])
     heads = " ".join(strip_tags(h) for h in re.findall(r"<h[234][^>]*>(.*?)</h[234]>", doc, re.S))
-    bi = doc.find('<div class="body"')
-    be = doc.find('<nav class="pager"', bi)
-    body = strip_tags(doc[bi:be if be > bi else bi + 20000])[:1200] if bi > 0 else ""
+    body = postbody.text_of(doc)[:1200]
     c = Counter()
     c.update({t: 3 for t in tokens(title)})
     c.update({t: 2 for t in tokens(heads)})

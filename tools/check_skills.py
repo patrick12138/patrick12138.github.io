@@ -81,6 +81,22 @@ def check_flags(docs):
                     problems.append("%s 不支持文档里写的 %s" % ("tools/%s.py" % script, flag))
 
 
+def check_build_doc():
+    """build.py 里调用的每个 tools/X.py 都必须在它自己的 docstring 列出。
+
+    构建顺序的权威只有 build.py 的 docstring 一处；别的会话加了步骤却忘了写文档时，
+    这条会拦下来，避免“单一权威”自己悄悄过期。
+    """
+    bp = os.path.join(ROOT, "tools", "build.py")
+    src = read(bp)
+    m = re.match(r'"""([\s\S]*?)"""', src.split("\n", 1)[1] if src.startswith("#!") else src)
+    doc = m.group(1) if m else ""
+    used = sorted(set(re.findall(r"tools/([a-z_]+\.py)", src)))
+    missing = [f for f in used if f not in doc]
+    for f in missing:
+        problems.append("build.py 调用了 tools/%s，但它的 docstring 步骤表里没写" % f)
+
+
 def check_skill_size(docs):
     sk = os.path.join(SKILLS, "github-pages-deploy", "SKILL.md")
     n = len(read(sk).splitlines())
@@ -119,6 +135,7 @@ def main():
     check_tools_documented(docs)
     check_references_exist(docs)
     check_flags(docs)
+    check_build_doc()
     check_skill_size(docs)
     check_installed_sync()
 

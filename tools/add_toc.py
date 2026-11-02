@@ -11,6 +11,7 @@ import glob
 import html as htmllib
 import os
 import re
+import postbody
 import sys
 
 from post_snippets import BRAND_JS, JS
@@ -56,10 +57,10 @@ def strip_toc(doc):
 
 def build_toc(doc):
     """给正文 h2/h3 加 id，返回 (新文档, 目录 html)。"""
-    m = re.search(r'<div class="body">(.*?)<a class="back"', doc, re.S)
-    if not m:
+    start, end = postbody.body_span(doc)
+    if end <= start:
         return doc, ""
-    body = m.group(1)
+    body = doc[start:end]
     items = []
     n = 0
 
@@ -87,7 +88,7 @@ def build_toc(doc):
         '<i class="b %s" data-h="%s"></i>' % ({"h2": "l2", "h3": "l3"}.get(tag, "l4"), hid)
         for tag, hid, _ in items
     )
-    doc = doc[:m.start(1)] + body2 + doc[m.end(1):]
+    doc = doc[:start] + body2 + doc[end:]
     return doc, (li, bars)
 
 
@@ -149,9 +150,7 @@ NUM_RE = re.compile(r"^[\s\d.,%/×x~+\-—–$¥€£元个条次天小时月年
 
 def _wrap(table_html):
     """包一层滚动容器；顺手给「数字列」打上 n2/n3 之类的类，让它们右对齐。"""
-    rows = re.findall(r"<tr[^>]*>(.*?)</tr>", table_html, flags=re.S)
-    cells = [re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, flags=re.S) for r in rows]
-    cells = [c for c in cells if c]
+    cells = postbody.table_rows(table_html)
     num = []
     if cells:
         ncol = max(len(c) for c in cells)

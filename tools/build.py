@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-"""一键构建：从 vault 重建 → 目录 → 字数 → 首页 → 上下篇 → 相关阅读 → 搜索索引 → RSS → 回归测试
-→ 资源版本号 → skill 同步与一致性 → 排版体检 →（可选）推送。
+"""一键构建：vault → 目录 → 版权信号 → 字数 → 首页 → 上下篇 → 相关阅读 → 搜索索引 → RSS
+→ 回归测试 → 资源版本号 → skill 同步与一致性 → 排版体检 →（可选）推送。
 
-顺序（改这里就是改全站流程，文档一律指向本文件，不要再各写一份）：
-  ① rebuild.py        可选，--rebuild 时从 vault 的 md 重生成全部文章（会改正文，慎用）
-  ② add_toc.py        注入目录/站名下拉/回到顶部，剥旧标记（幂等）
-  ③ stats.py          字数与阅读时间
-  ④ gen_index.py      生成首页
-  ④.2 gen_prevnext.py 上一篇 / 下一篇
-  ④.25 gen_related.py 相关阅读（tf-idf 共词）
-  ④.3 gen_search.py   生成 search.js（首页搜索只在点开时才加载）
-  ④.5 gen_feed.py     feed.xml / sitemap.xml / robots.txt
-  ⑤ test_pipeline.py  回归测试（幂等 + 注入唯一），失败即中止
-  ⑥ stamp_assets.py   资源 ?v= 哈希
-  ⑥.5 sync_skills()   仓库 skills/ → /var/minis/skills
-  ⑥.8 check_skills.py skill 与代码一致性（脚本登记 / 引用 / 参数 / 副本）
-  ⑦ qa.py             排版与内容体检，P0 不为 0 就中止（不会 push）
+顺序（唯一权威就是这里；改流程必须同时改这份清单，check_skills 会校验）：
+  ①   rebuild.py        可选，--rebuild 时从 vault 的 md 重生成全部文章（会改正文，慎用）
+  ②   add_toc.py        注入目录/站名下拉/回到顶部，剥旧标记（幂等）
+  ②.5 gen_legal.py      搬运页版权信号：canonical + noindex + 文末版权提示（原创页自动剥净）
+  ③   stats.py          字数与阅读时间（正文边界走 postbody）
+  ④   gen_index.py      生成首页
+  ④.2 gen_prevnext.py   上一篇 / 下一篇
+  ④.25 gen_related.py   相关阅读（tf-idf 共词）
+  ④.3 gen_search.py     生成 search.js（首页搜索点开时才加载）
+  ④.5 gen_feed.py       feed.xml / sitemap.xml / robots.txt
+  ⑤   test_pipeline.py  回归测试（幂等 + 注入唯一），失败即中止
+  ⑥   stamp_assets.py   资源 ?v= 哈希（base/home/post.css + site.js）
+  ⑥.5 sync_skills()     仓库 skills/ → /var/minis/skills
+  ⑥.8 check_skills.py   skill 与代码一致性（脚本登记 / 引用 / 参数 / 副本 / 本文档步骤表）
+  ⑦   qa.py             排版与内容体检，P0 不为 0 就中止（不会 push）
 """
 import hashlib
 import os

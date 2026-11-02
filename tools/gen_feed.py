@@ -8,6 +8,7 @@ import glob
 import html
 import os
 import re
+import dates
 from datetime import datetime, timezone
 from email.utils import format_datetime
 
@@ -26,17 +27,9 @@ MONTHS = {m: i for i, m in enumerate(
 
 
 def parse_date(text):
-    """三套格式都要认：2026年7月21日 / July 21, 2026 / 7月21日（当年省略年份）。"""
-    m = CN.search(text)
-    if m:
-        return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), tzinfo=timezone.utc)
-    m = EN.search(text)
-    if m:
-        return datetime(int(m.group(3)), MONTHS.get(m.group(1), 1), int(m.group(2)), tzinfo=timezone.utc)
-    m = SHORT.search(text)
-    if m:
-        return datetime(NOW.year, int(m.group(1)), int(m.group(2)), tzinfo=timezone.utc)
-    return NOW
+    """认不出来就用当前时间（feed 必须有 pubDate）。解析逻辑在 tools/dates.py。"""
+    d = dates.to_date(text)
+    return datetime(d.year, d.month, d.day, tzinfo=timezone.utc) if d else NOW
 
 
 def collect():

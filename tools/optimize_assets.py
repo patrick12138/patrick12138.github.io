@@ -5,13 +5,16 @@ webp 分支是就地重编码（quality 逐代下降），**非幂等**，属一
 用法：python3 tools/optimize_assets.py [--max-kb 400] [--dry]
 """
 import glob
+import config
 import os
 import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAX_KB = 400
-MAX_W = 1400
+MAX_W = config.IMG["max_w"]
+QUALITY = config.IMG["quality"]
+METHOD = config.IMG["method"]
 
 
 def convert(path, max_kb, dry):
@@ -38,7 +41,7 @@ def convert(path, max_kb, dry):
             return (path, path, before, None)
         import io
         buf = io.BytesIO()
-        im.save(buf, "WEBP", quality=82, method=5)
+        im.save(buf, "WEBP", quality=QUALITY, method=METHOD)
         if buf.tell() >= before:
             return None    # 没省就放弃，保留原件
         with open(path, "wb") as f:
@@ -65,7 +68,7 @@ def convert(path, max_kb, dry):
     before = os.path.getsize(path)
     if dry:
         return (path, out, before, None)
-    im.save(out, "WEBP", quality=82, method=5)
+    im.save(out, "WEBP", quality=QUALITY, method=METHOD)
     os.remove(path)
     return (path, out, before, os.path.getsize(out))
 

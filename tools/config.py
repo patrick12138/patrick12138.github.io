@@ -13,6 +13,9 @@ DEFAULTS = {
     "skills_dst": "/var/minis/skills",
 }
 
+# 图片入库参数：md2post（新图）与 optimize_assets（存量）共用，别再各写一份
+IMG = {"max_w": 1400, "quality": 82, "method": 5}
+
 
 def load():
     cfg = dict(DEFAULTS)

@@ -18,6 +18,7 @@ import hashlib
 import html as htmllib
 import os
 import re
+import dates
 import sys
 import urllib.parse
 import urllib.request
@@ -39,8 +40,10 @@ MONTHS = ["January", "February", "March", "April", "May", "June",
 
 
 # ─── 图片 ──────────────────────────────────────────────────
-def optimize_image(path, max_w=1400, quality=82):
-    """位图转 webp 并压到合理体积（svg/gif 原样保留）。"""
+def optimize_image(path, max_w=None, quality=None):
+    """位图转 webp 并压到合理体积（svg/gif 原样保留）。参数默认值来自 tools/config.py 的 IMG。"""
+    max_w = max_w or config.IMG["max_w"]
+    quality = quality or config.IMG["quality"]
     if os.path.splitext(path)[1].lower() in (".svg", ".gif"):
         return path
     try:
@@ -54,7 +57,7 @@ def optimize_image(path, max_w=1400, quality=82):
             im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
         im = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
         new_path = os.path.splitext(path)[0] + ".webp"
-        im.save(new_path, "WEBP", quality=quality, method=5)
+        im.save(new_path, "WEBP", quality=quality, method=config.IMG["method"])
         if os.path.abspath(new_path) != os.path.abspath(path):
             os.remove(path)
         return new_path
@@ -112,13 +115,8 @@ def localize_images(body, slug):
 
 # ─── 时间 ──────────────────────────────────────────────────
 def to_date(v):
-    if isinstance(v, (datetime, date)):
-        return v.date() if isinstance(v, datetime) else v
-    if isinstance(v, str):
-        m = re.match(r"(\d{4})-(\d{2})-(\d{2})", v.strip())
-        if m:
-            return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
-    return None
+    """任意写法 → date；认不出来 None。解析逻辑在 tools/dates.py。"""
+    return dates.to_date(v)
 
 
 def fmt_date(d):

@@ -3,6 +3,7 @@
 import os, re, glob, html
 from datetime import datetime
 from home_snippets import JS, THEME_ICONS
+import dates
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(SITE, "index.html")
@@ -48,15 +49,10 @@ def cn_date(meta):
 
 
 def parse_date(s):
-    """支持中文 2026年10月15日 与英文 October 15, 2026 两种写法。"""
-    s = s or ""
-    m = re.search(r"(\d{4})年(\d{1,2})月(\d{1,2})日", s)
-    if m:
-        return (int(m.group(1)), int(m.group(2)), int(m.group(3))), s
-    m = re.search(r"([A-Z][a-z]+)\s+(\d+),\s+(\d{4})", s)
-    if m:
-        return (int(m.group(3)), MONTHS.get(m.group(1), 0), int(m.group(2))), s
-    return (0, 0, 0), s
+    """排序键 (年, 月, 日)；认不出来给 (0,0,0) 排到最后。解析逻辑在 tools/dates.py。"""
+    d = dates.to_date(s)
+    return ((d.year, d.month, d.day) if d else (0, 0, 0)), (s or "")
+
 
 items = []
 for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):

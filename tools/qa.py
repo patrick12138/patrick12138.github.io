@@ -9,6 +9,7 @@
 import glob
 import os
 import re
+import postbody
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,9 +34,7 @@ CHECKS = [
 
 
 def body_of(s):
-    i = s.find('<div class="body"')
-    j = s.find('<a class="back"')
-    return s[i:j] if i >= 0 and j > i else ""
+    return postbody.body_html(s)
 
 
 def check(path):
@@ -155,9 +154,7 @@ def check_tables():
         slug = os.path.basename(os.path.dirname(p))
         doc = open(p, encoding="utf-8").read()
         for ti, tbl in enumerate(re.findall(r"<table.*?</table>", doc, flags=re.S), 1):
-            rows = re.findall(r"<tr[^>]*>(.*?)</tr>", tbl, flags=re.S)
-            cells = [re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, flags=re.S) for r in rows]
-            cells = [c for c in cells if c]
+            cells = postbody.table_rows(tbl)
             if not cells:
                 continue
             ncol = max(len(c) for c in cells)
