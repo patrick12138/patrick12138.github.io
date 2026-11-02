@@ -1,0 +1,13 @@
+# 全仓库统一 LF。
+# 原因：tools/build.py 的 stamp_assets() 用 open(path,'rb').read() 算 sha1 写 ?v=。
+# Windows 上 core.autocrlf=true 会把 checkout 出来的 CSS/JS 变成 CRLF，
+# 哈希随之改变 → 本地 build 写出的 ?v= 与 Linux CI 算出的不一致，CI「生成物必须已提交」必红。
+* text=auto eol=lf
+
+*.webp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff2 binary
