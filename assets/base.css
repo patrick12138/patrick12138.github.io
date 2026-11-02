@@ -2,13 +2,13 @@
 /* 断点约定：≤720px 移动端 / >720px 桌面 / >1180px 显示右侧目录 */
 *{box-sizing:border-box}
 :root,[data-theme="dark"]{
-  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#3d4450;
+  --bg:#0a0c10;--text:#dfe5ec;--text-muted:#98a2b0;--text-faint:#3d4450;
   --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
 }
 [data-theme="light"]{
-  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#a8b2be;
+  --bg:#f3f5f8;--text:#1e2935;--text-muted:#526070;--text-faint:#a8b2be;
   --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
 }
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
