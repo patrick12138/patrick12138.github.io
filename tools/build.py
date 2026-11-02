@@ -24,6 +24,8 @@ import subprocess
 import sys
 import glob
 
+PY = sys.executable   # 子进程统一用当前解释器，Windows 没有 python3 命令
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.join(ROOT, "tools")
 ASSETS = ("assets/base.css", "assets/home.css", "assets/post.css", "assets/site.js")
@@ -95,31 +97,31 @@ def main():
 
     if do_rebuild:
         print("① 从 vault 重建文章 …")
-        print(sh("python3 tools/rebuild.py").strip().splitlines()[-1])
+        print(sh('"%s" tools/rebuild.py' % PY).strip().splitlines()[-1])
 
     print("② 注入目录 …")
-    print(sh("python3 tools/add_toc.py").strip().splitlines()[-1])
+    print(sh('"%s" tools/add_toc.py' % PY).strip().splitlines()[-1])
 
     print("③ 字数与阅读时间 …")
-    print(sh("python3 tools/stats.py").strip().splitlines()[-1])
+    print(sh('"%s" tools/stats.py' % PY).strip().splitlines()[-1])
 
     print("④ 生成首页 …")
-    print(sh("python3 tools/gen_index.py").strip().splitlines()[0])
+    print(sh('"%s" tools/gen_index.py' % PY).strip().splitlines()[0])
 
     print("④.2 上一篇 / 下一篇 …")
-    print("   " + sh("python3 tools/gen_prevnext.py").strip())
+    print("   " + sh('"%s" tools/gen_prevnext.py' % PY).strip())
 
     print("④.25 相关阅读 …")
-    print("   " + sh("python3 tools/gen_related.py").strip())
+    print("   " + sh('"%s" tools/gen_related.py' % PY).strip())
 
     print("④.3 搜索索引 …")
-    print("   " + sh("python3 tools/gen_search.py").strip())
+    print("   " + sh('"%s" tools/gen_search.py' % PY).strip())
 
     print("④.5 生成 RSS / sitemap …")
-    print("   " + sh("python3 tools/gen_feed.py").strip())
+    print("   " + sh('"%s" tools/gen_feed.py' % PY).strip())
 
     print("⑤ 回归测试 …")
-    t = subprocess.run("python3 tools/test_pipeline.py", shell=True, cwd=ROOT,
+    t = subprocess.run('"%s" tools/test_pipeline.py' % PY, shell=True, cwd=ROOT,
                        capture_output=True, text=True)
     print("\n".join(t.stdout.strip().splitlines()[-3:]))
     if t.returncode != 0:
@@ -136,7 +138,7 @@ def main():
     print("   " + sync_skills())
 
     print("⑥.8 skill 一致性 …")
-    k = subprocess.run("python3 tools/check_skills.py", shell=True, cwd=ROOT,
+    k = subprocess.run('"%s" tools/check_skills.py' % PY, shell=True, cwd=ROOT,
                        capture_output=True, text=True)
     print("\n".join("   " + l for l in k.stdout.strip().splitlines()))
     if k.returncode != 0:
@@ -144,7 +146,7 @@ def main():
         raise SystemExit(1)
 
     print("⑦ 排版体检 …")
-    p = subprocess.run("python3 tools/qa.py", shell=True, cwd=ROOT,
+    p = subprocess.run('"%s" tools/qa.py' % PY, shell=True, cwd=ROOT,
                        capture_output=True, text=True)
     tail = "\n".join(p.stdout.strip().splitlines()[-6:])
     print(tail)

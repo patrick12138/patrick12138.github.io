@@ -21,6 +21,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCES = os.path.join(ROOT, "tools", "sources.json")
+PY = sys.executable   # Windows 没有 python3 命令，子进程统一用当前解释器
+DEVNULL = ">%s" % os.devnull
 
 
 def sh(cmd, check=False):
@@ -64,23 +66,25 @@ def unpublish(slug, dry=False):
     if entry:
         rows = [r for r in rows if r["slug"] != slug]
         json.dump(rows, open(SOURCES, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    sh("python3 tools/gen_index.py >/dev/null")
-    sh("python3 tools/gen_prevnext.py >/dev/null")
-    sh("python3 tools/gen_related.py && python3 tools/gen_search.py && python3 tools/gen_feed.py >/dev/null")
-    print("✓ 已下线。接下来：python3 tools/build.py 体检 → commit → push")
-    print("  恢复：python3 tools/unpublish.py %s --restore" % slug)
+    sh('"%s" tools/gen_index.py %s' % (PY, DEVNULL))
+    sh('"%s" tools/gen_prevnext.py %s' % (PY, DEVNULL))
+    sh('"%s" tools/gen_related.py && "%s" tools/gen_search.py && "%s" tools/gen_feed.py %s'
+       % (PY, PY, PY, DEVNULL))
+    print("✓ 已下线。接下来：tools/build.py 体检 → commit → push")
+    print("  恢复：tools/unpublish.py %s --restore" % slug)
 
 
 def restore(slug, dry=False):
     rows = json.load(open(SOURCES, encoding="utf-8"))
     if any(r["slug"] == slug for r in rows):
         raise SystemExit("sources.json 里已经有 %s，无需恢复" % slug)
-    # 找最近一次包含它的提交
-    commit = sh("git log --diff-filter=D --format=%%H -- posts/%s/index.html | head -1" % slug)
+    # 找最近一次包含它的提交（Windows cmd 无 head，取首行用纯 Python）
+    commit = sh("git log --diff-filter=D --format=%%H -- posts/%s/index.html" % slug).strip().splitlines()[:1]
     if not commit:
-        commit = sh("git log --format=%%H -- posts/%s/index.html | head -1" % slug)
+        commit = sh("git log --format=%%H -- posts/%s/index.html" % slug).strip().splitlines()[:1]
     if not commit:
         raise SystemExit("git 历史里找不到 posts/%s/" % slug)
+    commit = commit[0].strip()
     print("· 从 %s 恢复 posts/%s/" % (commit[:8], slug))
     if dry:
         return
