@@ -168,6 +168,23 @@ THEME_JS = """<script>
 })();
 </script>"""
 
+TOTOP_JS = """<script>
+(function(){
+  var b=document.getElementById('toTop'); if(!b) return;
+  var lt=document.getElementById('toTopLink');
+  if(lt) lt.addEventListener('click',function(e){ e.preventDefault(); goTop(); });
+  function goTop(){
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
+    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
+  }
+  function upd(){ b.classList.toggle('show', window.pageYOffset > 600); }
+  window.addEventListener('scroll',upd,{passive:true});
+  b.addEventListener('click',goTop);
+  upd();
+})();
+</script>"""
+
 page = """<!DOCTYPE html>
 <html lang="zh-CN" data-theme="dark">
 <head>
@@ -196,8 +213,9 @@ page = """<!DOCTYPE html>
 <div class="to-top-link"><a href="#" id="toTopLink">↑ 回到顶部</a></div>
 %s
 %s
+%s
 </body>
-</html>""" % (STYLE, THEME_ICONS, body, THEME_JS, JS)
+</html>""" % (STYLE, THEME_ICONS, body, THEME_JS, JS, TOTOP_JS)
 
 open(OUT, "w", encoding="utf-8").write(page)
 print("index built:", len(items), "posts")
