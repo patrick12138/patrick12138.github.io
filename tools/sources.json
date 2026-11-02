@@ -350,5 +350,13 @@
   "date": "October 31, 2026",
   "kind": "repost",
   "title": ""
+ },
+ {
+  "slug": "twenty-years-of-rss",
+  "md": "Sources/Clippings/RSS二十年.md",
+  "author": "kyth",
+  "date": "March 17, 2020",
+  "kind": "repost",
+  "title": "RSS 的二十年"
  }
 ]
