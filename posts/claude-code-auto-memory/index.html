@@ -11,7 +11,7 @@
 <meta property="og:description" content="从维护 CC Switch 积累的 358 个记忆文件出发，拆解 Claude Code 自动记忆的加载、索引精简与内容取舍机制，以及它在长期项目里真正靠得住和靠不住的地方。">
 <meta property="og:url" content="https://patrick12138.github.io/posts/claude-code-auto-memory/"><link rel="canonical" href="https://x.com/Jason_Young1231/status/2101235834787905671" data-legal="1"><meta name="robots" content="noindex,follow" data-legal="1">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=88c9bdc7"><link rel="stylesheet" href="../../assets/post.css?v=043f49ff">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=71223eb6"><link rel="stylesheet" href="../../assets/post.css?v=043f49ff">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -172,7 +172,7 @@
 <hr>
 <p>本文基于 CC Switch 本机记忆目录与会话记录，调研截至 2026 年 9 月 19 日。机制核验针对 Claude Code 2.1.276，基本使用方式已对照官方文档复核。样本覆盖单个长期维护的项目，文中的数量、维护频率与取舍倾向不代表所有用户。未公开或需要特殊开关的记忆子系统不在本文讨论范围内。</p>
 <p>作者 Jason Young，Building CC Switch（150K★）— open-source tooling for AI coding tools across Claude Code, Codex, Pi, GrokBuild, OpenClaw, Hermes and more: ccswitch.io</p></div>
-<aside class="legal-note" data-legal="1"><span class="legal-label">版权</span>本文版权归原作者与译者所有，本页为全文搬运，仅作检索与离线阅读之用。若作者不希望被转载，请通过 <a class="legal-link" href="https://t.me/patrick12138" rel="noopener">Telegram @patrick12138</a> 告知，我会立即删除。</aside>
+<aside class="legal-note" data-legal="1"><span class="legal-k">版权</span>本文版权归原作者与译者所有，此处为全文搬运，仅供检索与离线阅读<span class="legal-sep">/</span><a class="legal-link" href="https://t.me/patrick12138" rel="noopener">不希望被转载？联系我删除</a></aside>
 <nav class="related" aria-label="相关阅读"><span class="related-k">相关阅读</span><ul><li><a href="../warp-self-improving-agents/">Warp 如何让 Agent 自我进化</a></li><li><a href="../why-ai-makes-workers-tired/">AI 越来越强，为什么打工人反而越来越累、越来越内耗了？</a></li><li><a href="../obsidian-claude-code/">Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑</a></li></ul></nav>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../llm-wiki-guide/"><span class="pager-k">← 上一篇</span><span class="pager-t" title="LLM Wiki 实践指南">LLM Wiki 实践指南</span></a><a class="pager-next" href="../ai-industry-watch/"><span class="pager-k">下一篇 →</span><span class="pager-t" title="AI 行业观察">AI 行业观察</span></a></nav>
 <a class="back" href="../../">← 返回首页</a></article></div>

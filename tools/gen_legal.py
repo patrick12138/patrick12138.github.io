@@ -19,9 +19,9 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 与 about 页的联系方式保持一致（https://patrick12138.github.io/about/）
+# 与 about 页的联系方式保持一致（https://patrick12138.github.io/about/）。
+# 这里只放一个超链接，不再写 Telegram 全称：技术上看，读者只需要知道「点这里能找到我」。
 CONTACT = "https://t.me/patrick12138"
-CONTACT_LABEL = "Telegram @patrick12138"
 
 # 搬运页要不要退出搜索引擎收录。改 False 就只留 canonical，保留搜索流量。
 NOINDEX = True
@@ -36,11 +36,11 @@ ANCHOR_TAIL = re.compile(r'(<nav class="related"|<nav class="pager"|<a class="ba
 
 NOTE = (
     '<aside class="legal-note" data-legal="1">'
-    '<span class="legal-label">版权</span>'
-    "本文版权归原作者与译者所有，本页为全文搬运，仅作检索与离线阅读之用。"
-    '若作者不希望被转载，请通过 <a class="legal-link" href="%s" rel="noopener">%s</a> '
-    "告知，我会立即删除。"
-    "</aside>\n" % (CONTACT, CONTACT_LABEL)
+    '<span class="legal-k">版权</span>'
+    "本文版权归原作者与译者所有，此处为全文搬运，仅供检索与离线阅读"
+    '<span class="legal-sep">/</span>'
+    '<a class="legal-link" href="%s" rel="noopener">不希望被转载？联系我删除</a>'
+    "</aside>\n" % CONTACT
 )
 
 

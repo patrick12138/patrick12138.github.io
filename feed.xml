@@ -5,15 +5,8 @@
 <link>https://patrick12138.github.io/</link>
 <description>写点东西，也搬运点好东西。</description>
 <language>zh-CN</language>
-<lastBuildDate>Mon, 02 Nov 2026 00:00:00 +0000</lastBuildDate>
+<lastBuildDate>Sat, 31 Oct 2026 00:00:00 +0000</lastBuildDate>
 <atom:link href="https://patrick12138.github.io/feed.xml" rel="self" type="application/rss+xml" />
-<item>
-<title>东北工业废墟上的精神考古与体制突围——解析《我的朋友安德烈》</title>
-<link>https://patrick12138.github.io/posts/my-friend-andrei/</link>
-<guid isPermaLink="true">https://patrick12138.github.io/posts/my-friend-andrei/</guid>
-<pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
-<description>从铁西区的生铁味到全景监狱式的教室：双雪涛原著与董子健电影《我的朋友安德烈》里的教育、父辈与幸存者愧疚。</description>
-</item>
 <item>
 <title>Super-agent 设计探索：迈向更自主的 Agent 系统</title>
 <link>https://patrick12138.github.io/posts/super-agent-design/</link>
@@ -260,6 +253,20 @@
 <description>Claude 的 artifacts 是什么、能拿来做什么，以及它和普通对话输出在可编辑、可分享上的区别。</description>
 </item>
 <item>
+<title>东北工业废墟上的精神考古与体制突围——解析《我的朋友安德烈》</title>
+<link>https://patrick12138.github.io/posts/my-friend-andrei/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/my-friend-andrei/</guid>
+<pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+<description>从铁西区的生铁味到全景监狱式的教室：双雪涛原著与董子健电影《我的朋友安德烈》里的教育、父辈与幸存者愧疚。</description>
+</item>
+<item>
+<title>全球 SaaS 演化与中国企业出海的结构性重构</title>
+<link>https://patrick12138.github.io/posts/saas-china-going-global/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/saas-china-going-global/</guid>
+<pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate>
+<description>第一性原理推演：LTV/CAC 刚性、定制化死亡螺旋、Theory X/Y 分岔，以及中国 SaaS 为什么只剩出海一条路。</description>
+</item>
+<item>
 <title>当我们站在变革的开端</title>
 <link>https://patrick12138.github.io/posts/standing-at-the-turn/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/standing-at-the-turn/</guid>
@@ -274,11 +281,25 @@
 <description>A “brief” accounting of various reasons why vibe coding has just never clicked for me personally as a developer.</description>
 </item>
 <item>
+<title>《The Fall-Off》：J. Cole 终章叙事的宏大构建与艺术考古</title>
+<link>https://patrick12138.github.io/posts/j-cole-the-fall-off/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/j-cole-the-fall-off/</guid>
+<pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+<description>双碟结构的 29 岁与 39 岁镜像对照、2024 Rap War 的阴影、&quot;What If&quot; 的历史假性修补，与一场完美落地。</description>
+</item>
+<item>
 <title>好奇心周刊第25期: 如何让AI写好代码</title>
 <link>https://patrick12138.github.io/posts/make-ai-write-good-code/</link>
 <guid isPermaLink="true">https://patrick12138.github.io/posts/make-ai-write-good-code/</guid>
 <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate>
 <description>苏格拉底式编程 + Claude/Gemini/Codex 的专家级协同，100% AI 编程的个人项目经验总结</description>
+</item>
+<item>
+<title>异乡的镜像与破碎的依恋：《春光乍泄》的心理学解构</title>
+<link>https://patrick12138.github.io/posts/happy-together-attachment/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/happy-together-attachment/</guid>
+<pubDate>Fri, 13 Feb 2026 00:00:00 +0000</pubDate>
+<description>MBTI 与依恋理论双镜下的黎耀辉与何宝荣：认知功能错位、焦虑-回避陷阱，以及为什么没有&quot;从头来过&quot;。</description>
 </item>
 <item>
 <title>AI fatigue is real and nobody talks about it</title>

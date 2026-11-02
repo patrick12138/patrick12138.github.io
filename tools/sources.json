@@ -373,7 +373,31 @@
   "slug": "my-friend-andrei",
   "md": "Resources/我的朋友安德烈：废墟上的精神考古与体制突围.md",
   "author": "",
-  "date": "November 2, 2026",
+  "date": "March 15, 2026",
+  "kind": "own",
+  "title": ""
+ },
+ {
+  "slug": "saas-china-going-global",
+  "md": "Resources/全球SaaS演化与中国企业出海的结构性重构.md",
+  "author": "",
+  "date": "March 8, 2026",
+  "kind": "own",
+  "title": ""
+ },
+ {
+  "slug": "j-cole-the-fall-off",
+  "md": "Resources/The Fall-Off：J. Cole 终章叙事的宏大构建与艺术考古.md",
+  "author": "",
+  "date": "March 4, 2026",
+  "kind": "own",
+  "title": ""
+ },
+ {
+  "slug": "happy-together-attachment",
+  "md": "Resources/春光乍泄：异乡的镜像与破碎的依恋.md",
+  "author": "",
+  "date": "February 13, 2026",
   "kind": "own",
   "title": ""
  }
