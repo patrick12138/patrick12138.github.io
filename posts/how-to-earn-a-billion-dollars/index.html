@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="bar"><div class="bar-in">
-  <a class="brand" href="../../">patrick</a>
+  <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost">搬运</a><a role="menuitem" href="../../?tab=own">个人</a></div></div>
   <nav class="nav">
     <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -77,6 +77,20 @@
     try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
     setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
   });
+})();
+</script>
+<script>
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
 })();
 </script>
 </body>

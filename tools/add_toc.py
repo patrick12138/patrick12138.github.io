@@ -17,6 +17,21 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CSS = """
 /* ─── 目录（toc） ─── */
+/* 站名下拉：回到首页的分类 */
+.brandset{position:relative;display:inline-flex}
+.brand-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;padding:0;
+  cursor:pointer;font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  color:var(--heading);transition:color .15s}
+.brand-btn:hover{color:var(--accent)}
+.brand-btn .caret{opacity:.5;transition:transform .18s ease}
+.brandset.open .brand-btn .caret{transform:rotate(180deg)}
+.brand-menu{display:none;position:absolute;top:calc(100% + 10px);left:-10px;z-index:60;min-width:124px;
+  background:color-mix(in srgb,var(--bg) 96%,var(--text) 4%);border:1px solid var(--border);
+  padding:6px 0;box-shadow:0 14px 30px rgba(0,0,0,.22)}
+.brandset.open .brand-menu{display:block}
+.brand-menu a{display:block;padding:7px 16px;font-family:var(--mono);font-size:.76rem;
+  color:var(--text-muted);text-decoration:none;transition:color .15s,background .15s}
+.brand-menu a:hover{color:var(--accent);background:color-mix(in srgb,var(--text) 5%,transparent)}
 .back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
   padding:26px 0 60px;margin-left:18px;transition:color .15s}
 .back-top:hover{color:var(--accent)}
@@ -135,6 +150,21 @@ JS = """
 })();
 """
 
+BRAND_JS = """
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+"""
+
 BACKTOP_JS = """
 (function(){
   var b=document.getElementById('backTop'); if(!b) return;
@@ -216,17 +246,43 @@ def build_toc(doc):
     return doc, li
 
 
+BRAND_RE = re.compile(r'<a class="brand" href="([^"]*)">patrick</a>')
+
+
+def inject_brand(doc):
+    """把导航里的 patrick 换成可下拉的站名，菜单直接跳到首页的分类。"""
+    if 'id="brandSet"' in doc:
+        return doc
+    m = BRAND_RE.search(doc)
+    if not m:
+        return doc
+    base = m.group(1)
+    menu = "".join(
+        '<a role="menuitem" href="%s?tab=%s">%s</a>' % (base, f, label)
+        for f, label in (("all", "全部文章"), ("repost", "搬运"), ("own", "个人"))
+    )
+    block = ('<div class="brandset" id="brandSet">'
+             '<button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick'
+             '<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+             'stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+             '<path d="M6 9l6 6 6-6"/></svg></button>'
+             '<div class="brand-menu" role="menu">%s</div></div>' % menu)
+    return doc[:m.start()] + block + doc[m.end():]
+
+
 def process(path):
     doc = open(path, encoding="utf-8").read()
     if 'class="body"' not in doc:
         return False
     doc = strip_toc(doc)
+    doc = inject_brand(doc)
     doc, li = build_toc(doc)
     if not li:
         doc = doc.replace("</style>", CSS + "</style>", 1)
         doc = re.sub(r'(<a class="back"[^>]*>.*?</a>)',
                      r'\1<a class="back-top" href="#" id="backTop">↑ 回到顶部</a>', doc, count=1, flags=re.S)
         doc = doc.replace("</body>", "<script>" + BACKTOP_JS + "</script>\n</body>", 1)
+        doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
         open(path, "w", encoding="utf-8").write(doc)
         return False
     # CSS
@@ -235,6 +291,7 @@ def process(path):
     doc = re.sub(r'(<a class="back"[^>]*>.*?</a>)',
                  r'\1<a class="back-top" href="#" id="backTop">↑ 回到顶部</a>', doc, count=1, flags=re.S)
     doc = doc.replace("</body>", "<script>" + BACKTOP_JS + "</script>\n</body>", 1)
+    doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
     # 目录标记：放在 body 之前（正文起点前）
     doc = doc.replace('<div class="body">', HEAD % li + '<div class="body">', 1)
     # JS
