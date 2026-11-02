@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="从维护 CC Switch 积累的 358 个记忆文件出发，拆解 Claude Code 自动记忆的加载、索引精简与内容取舍机制，以及它在长期项目里真正靠得住和靠不住的地方。">
 <title>Claude Code 是如何记住你的项目的？ · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=27449873">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Claude Code 是如何记住你的项目的？</h1><div class="meta">2026年9月19日 · Jason Young · 搬运 · <span class="stats">5,845 字 · 约 15 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/Jason_Young1231/status/2101235834787905671" rel="noopener">https://x.com/Jason_Young1231/status/2101235834787905671</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、为什么有了 CLAUDE.md，还需要自动记忆？</a></li><li class="lvl2"><a href="#h2">二、它是怎么记住的？一份索引，加上一组主题文件</a></li><li class="lvl3"><a href="#h3">一次记忆怎样跨过两个会话</a></li><li class="lvl3"><a href="#h4">索引会不会无限增长？</a></li><li class="lvl3"><a href="#h5">索引满了，谁来精简？</a></li><li class="lvl3"><a href="#h6">Claude 怎么决定哪些记忆可以舍弃？</a></li><li class="lvl2"><a href="#h7">三、在我的日常工作中，它主要帮上了什么忙？</a></li><li class="lvl3"><a href="#h8">让一次纠正成为后续工作的参考</a></li><li class="lvl3"><a href="#h9">保留方案背后的决定</a></li><li class="lvl3"><a href="#h10">接续 issue 和 PR 的审查工作</a></li><li class="lvl2"><a href="#h11">四、为什么记下来了，下一次还是可能出错？</a></li><li class="lvl3"><a href="#h12">文件还在，但没有读到</a></li><li class="lvl3"><a href="#h13">当时正确，现在已经变化</a></li><li class="lvl3"><a href="#h14">正文改对了，索引还在说旧话</a></li><li class="lvl2"><a href="#h15">五、实际使用时，我建议怎么做？</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><p>从 CC Switch 的日常开发维护，看自动记忆的机制、价值与使用方法。</p>
+<div class="wrap"><article class="article"><h1>Claude Code 是如何记住你的项目的？</h1><div class="meta">2026年9月19日 · Jason Young · 搬运 · <span class="stats">5,845 字 · 约 15 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/Jason_Young1231/status/2101235834787905671" rel="noopener">https://x.com/Jason_Young1231/status/2101235834787905671</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、为什么有了 CLAUDE.md，还需要自动记忆？</a></li><li class="lvl2"><a href="#h2">二、它是怎么记住的？一份索引，加上一组主题文件</a></li><li class="lvl3"><a href="#h3">一次记忆怎样跨过两个会话</a></li><li class="lvl3"><a href="#h4">索引会不会无限增长？</a></li><li class="lvl3"><a href="#h5">索引满了，谁来精简？</a></li><li class="lvl3"><a href="#h6">Claude 怎么决定哪些记忆可以舍弃？</a></li><li class="lvl2"><a href="#h7">三、在我的日常工作中，它主要帮上了什么忙？</a></li><li class="lvl3"><a href="#h8">让一次纠正成为后续工作的参考</a></li><li class="lvl3"><a href="#h9">保留方案背后的决定</a></li><li class="lvl3"><a href="#h10">接续 issue 和 PR 的审查工作</a></li><li class="lvl2"><a href="#h11">四、为什么记下来了，下一次还是可能出错？</a></li><li class="lvl3"><a href="#h12">文件还在，但没有读到</a></li><li class="lvl3"><a href="#h13">当时正确，现在已经变化</a></li><li class="lvl3"><a href="#h14">正文改对了，索引还在说旧话</a></li><li class="lvl2"><a href="#h15">五、实际使用时，我建议怎么做？</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l3" data-h="h3"></i><i class="b l3" data-h="h4"></i><i class="b l3" data-h="h5"></i><i class="b l3" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l3" data-h="h8"></i><i class="b l3" data-h="h9"></i><i class="b l3" data-h="h10"></i><i class="b l2" data-h="h11"></i><i class="b l3" data-h="h12"></i><i class="b l3" data-h="h13"></i><i class="b l3" data-h="h14"></i><i class="b l2" data-h="h15"></i></span></button><div class="body"><p>从 CC Switch 的日常开发维护，看自动记忆的机制、价值与使用方法。</p>
 <p>长期使用 AI 开发和维护一个项目，有一个经常遇到的痛点：一些决策在再次遇到类似情况的时候，需要重新向 AI 解释说明，如果没有说明的话，AI 会在同一个地方跌倒两次。</p>
 <p>这个方案之前为什么被否掉了？那段看起来多余的兼容逻辑为什么必须保留？上次审这个 PR 时发现了什么，哪些问题还没有解决？代码只能回答其中一部分，另一部分留在过去的讨论里。</p>
 <p>我在维护 CC Switch 的过程中，发现 Claude Code 的项目级记忆起到了越来越多的帮助：记录纠正、保留决策背景、接续 issue 和 PR 的审查工作。截止此文写作时，记忆目录里已经有 358 个文件。这些记录大部分时候可以让新会话很快接上之前的工作，大幅提升工作效率，也出现过正文已经更新、索引还保留旧结论的情况。本文尝试分析自动记忆的价值和缺陷，以及使用它的一些经验。</p>
@@ -261,8 +261,12 @@
 
   /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
   }
   function syncActive(){
     var best=null, bestTop=-1e9;
@@ -282,9 +286,10 @@
   var ticking=false;
   window.addEventListener('scroll', function(){
     if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
 
   window.addEventListener('scroll', pokeFab, {passive:true});
   if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }

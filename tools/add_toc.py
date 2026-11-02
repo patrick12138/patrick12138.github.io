@@ -90,8 +90,12 @@ JS = """
 
   /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
   }
   function syncActive(){
     var best=null, bestTop=-1e9;
@@ -111,9 +115,10 @@ JS = """
   var ticking=false;
   window.addEventListener('scroll', function(){
     if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
 
   window.addEventListener('scroll', pokeFab, {passive:true});
   if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }
@@ -148,11 +153,8 @@ HEAD = ('<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true">
         '<circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/>'
         '<circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/>'
         '<circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>' + '</button>'
-        '<button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1">'
-        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        'stroke-width="2" stroke-linecap="round" aria-hidden="true">'
-        '<line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/>'
-        '<line x1="6" y1="17" x2="18" y2="17"/></svg></button>')
+        '<button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1">'
+        '<span class="toc-bars">%s</span></button>')
 
 
 def strip_toc(doc):
@@ -211,8 +213,12 @@ def build_toc(doc):
         '<li class="lvl%s"><a href="#%s">%s</a></li>' % ("3" if tag == "h3" else "2", hid, htmllib.escape(t))
         for tag, hid, t in items
     )
+    bars = "".join(
+        '<i class="b %s" data-h="%s"></i>' % ("l3" if tag == "h3" else "l2", hid)
+        for tag, hid, _ in items
+    )
     doc = doc[:m.start(1)] + body2 + doc[m.end(1):]
-    return doc, li
+    return doc, (li, bars)
 
 
 TOP_BTN = ('<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部">'
@@ -280,14 +286,15 @@ def process(path):
     doc = normalize_nav(doc)
     doc = inject_brand(doc)
     doc = inject_top_btn(doc)
-    doc, li = build_toc(doc)
-    if not li:
+    doc, toc_parts = build_toc(doc)
+    li, bars = toc_parts if toc_parts else ("", "")
+    if not toc_parts:
         doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
         open(path, "w", encoding="utf-8").write(doc)
         return False
     doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
     # 目录标记：放在 body 之前（正文起点前）
-    doc = doc.replace('<div class="body">', HEAD % li + '<div class="body">', 1)
+    doc = doc.replace('<div class="body">', HEAD % (li, bars) + '<div class="body">', 1)
     # JS
     doc = doc.replace("</body>", "<script>" + JS + "</script>\n</body>", 1)
     open(path, "w", encoding="utf-8").write(doc)

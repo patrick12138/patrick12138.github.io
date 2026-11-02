@@ -6,7 +6,7 @@
 <meta name="description" content="记录时间：2026-10-22环境：DSH0.2.1-rc.2（本机dsh已装），profile目录%USERPROFILE%\.dsh\profiles\{web,desktop}。">
 <title>DSH 接自建模型与 Profile 配置 · patrick</title>
 <link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
-<link rel="stylesheet" href="../../assets/post.css?v=27449873">
+<link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -22,7 +22,7 @@
 <div class="wrap"><article class="article"><h1>DSH 接自建模型与 Profile 配置</h1>
 <div class="meta">2026年10月22日 · 个人 · <span class="stats">1,107 字 · 约 3 分钟</span></div>
 
-<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、先理解 DSH 的配置模型</a></li><li class="lvl2"><a href="#h2">二、接自建 / 本地 DeepSeek 的完整步骤</a></li><li class="lvl3"><a href="#h3">1. 把模型起成 OpenAI 兼容服务</a></li><li class="lvl3"><a href="#h4">2. 在 profile 的 patch 层声明一条路由</a></li><li class="lvl3"><a href="#h5">3. 切默认模型（不改也行，可在 GUI 里逐会话选）</a></li><li class="lvl3"><a href="#h6">4. 验证</a></li><li class="lvl2"><a href="#h7">三、字段与硬约束</a></li><li class="lvl2"><a href="#h8">四、坑</a></li><li class="lvl2"><a href="#h9">五、和 Pi 的关系（为什么这条路成立）</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><p><strong>记录时间</strong>：2026-10-22<br>
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、先理解 DSH 的配置模型</a></li><li class="lvl2"><a href="#h2">二、接自建 / 本地 DeepSeek 的完整步骤</a></li><li class="lvl3"><a href="#h3">1. 把模型起成 OpenAI 兼容服务</a></li><li class="lvl3"><a href="#h4">2. 在 profile 的 patch 层声明一条路由</a></li><li class="lvl3"><a href="#h5">3. 切默认模型（不改也行，可在 GUI 里逐会话选）</a></li><li class="lvl3"><a href="#h6">4. 验证</a></li><li class="lvl2"><a href="#h7">三、字段与硬约束</a></li><li class="lvl2"><a href="#h8">四、坑</a></li><li class="lvl2"><a href="#h9">五、和 Pi 的关系（为什么这条路成立）</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l3" data-h="h3"></i><i class="b l3" data-h="h4"></i><i class="b l3" data-h="h5"></i><i class="b l3" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l2" data-h="h8"></i><i class="b l2" data-h="h9"></i></span></button><div class="body"><p><strong>记录时间</strong>：2026-10-22<br>
 <strong>环境</strong>：DSH <code>0.2.1-rc.2</code>（本机 <code>dsh</code> 已装），profile 目录 <code>%USERPROFILE%\.dsh\profiles\{web,desktop}</code>。</p>
 <p>一句话结论：<strong>DSH 的官方 DeepSeek 适配器不给你改端点，接自建/本地 DeepSeek 必须走 <code>dsh-llm-pi-ai</code> 的手工 provider 路由（<code>api: openai-completions</code>）。</strong></p>
 <p>相关：Agent Harness 版图与个人选型、Tern 架构与插件实践</p>
@@ -252,8 +252,12 @@ dsh web --patch ./local-ds.yml               # 不写 profile、临时试
 
   /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
   }
   function syncActive(){
     var best=null, bestTop=-1e9;
@@ -273,9 +277,10 @@ dsh web --patch ./local-ds.yml               # 不写 profile、临时试
   var ticking=false;
   window.addEventListener('scroll', function(){
     if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
 
   window.addEventListener('scroll', pokeFab, {passive:true});
   if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }

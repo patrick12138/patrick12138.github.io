@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="从零到一实现一个 AI Agent 的中文渐进式教程">
 <title>Agent 到底是什么 | Pi Agent 原理与实现 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=27449873">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Agent 到底是什么 | Pi Agent 原理与实现</h1><div class="meta">2026年5月26日 · 搬运 · <span class="stats">680 字 · 约 2 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://how-pi-agent-works.vercel.app/concepts/what-is-agent" rel="noopener">https://how-pi-agent-works.vercel.app/concepts/what-is-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 到底是什么</a></li><li class="lvl2"><a href="#h2">最小闭环</a></li><li class="lvl2"><a href="#h3">为什么不是一次请求解决</a></li><li class="lvl2"><a href="#h4">Pi 的定位</a></li><li class="lvl2"><a href="#h5">小练习</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><h2 id="h1">Agent 到底是什么</h2>
+<div class="wrap"><article class="article"><h1>Agent 到底是什么 | Pi Agent 原理与实现</h1><div class="meta">2026年5月26日 · 搬运 · <span class="stats">680 字 · 约 2 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://how-pi-agent-works.vercel.app/concepts/what-is-agent" rel="noopener">https://how-pi-agent-works.vercel.app/concepts/what-is-agent</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Agent 到底是什么</a></li><li class="lvl2"><a href="#h2">最小闭环</a></li><li class="lvl2"><a href="#h3">为什么不是一次请求解决</a></li><li class="lvl2"><a href="#h4">Pi 的定位</a></li><li class="lvl2"><a href="#h5">小练习</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i></span></button><div class="body"><h2 id="h1">Agent 到底是什么</h2>
 <p>很多人第一次听到 Agent，会以为它是“更聪明的聊天机器人”。这个说法只对了一小半。</p>
 <p>更工程化的定义是：</p>
 <blockquote>
@@ -202,8 +202,12 @@
 
   /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
   }
   function syncActive(){
     var best=null, bestTop=-1e9;
@@ -223,9 +227,10 @@
   var ticking=false;
   window.addEventListener('scroll', function(){
     if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
 
   window.addEventListener('scroll', pokeFab, {passive:true});
   if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }

@@ -6,7 +6,7 @@
 <meta name="description" content="DeepSeek Harness 团队的设计长文：Router + Worker 双层架构、事件驱动、存算分离与外部 Watchdog，附初步消融实验与开放问题。">
 <title>Super-agent 设计探索：迈向更自主的 Agent 系统 · patrick</title>
 <link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
-<link rel="stylesheet" href="../../assets/post.css?v=27449873">
+<link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -23,7 +23,7 @@
 <div class="meta">2026年10月31日 · DeepSeek Harness 团队 · 搬运 · <span class="stats">11,216 字 · 约 29 分钟</span></div>
 <aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/zoS7GlReWPhfCjENGxXCdg">https://mp.weixin.qq.com/s/zoS7GlReWPhfCjENGxXCdg</a></aside>
 
-<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">1. Super-agent</a></li><li class="lvl2"><a href="#h2">2. 双层架构</a></li><li class="lvl3"><a href="#h3">2.1 Router 层</a></li><li class="lvl3"><a href="#h4">2.2 Worker 层</a></li><li class="lvl2"><a href="#h5">3. 事件驱动</a></li><li class="lvl3"><a href="#h6">3.1 事件过滤</a></li><li class="lvl3"><a href="#h7">3.2 事件路由</a></li><li class="lvl3"><a href="#h8">3.3 上下文组织</a></li><li class="lvl3"><a href="#h9">3.4 提前行动</a></li><li class="lvl2"><a href="#h10">4. 面向人的交互</a></li><li class="lvl3"><a href="#h11">4.1 全双工交互</a></li><li class="lvl3"><a href="#h12">4.2 多信道交互</a></li><li class="lvl2"><a href="#h13">5. 计算、状态与环境的分离</a></li><li class="lvl3"><a href="#h14">5.1 计算与状态分离</a></li><li class="lvl3"><a href="#h15">5.2 计算与执行环境分离</a></li><li class="lvl2"><a href="#h16">6. Watchdog</a></li><li class="lvl2"><a href="#h17">7. 初步实验</a></li><li class="lvl3"><a href="#h18">7.1 消融实验</a></li><li class="lvl2"><a href="#h19">8. 开放问题</a></li><li class="lvl3"><a href="#h20">8.1 如何扩展双层架构</a></li><li class="lvl3"><a href="#h21">8.2 脱离 Session 之后如何与 Agent 协作</a></li><li class="lvl3"><a href="#h22">8.3 如何划分上下文边界并进行 A2A 协作</a></li><li class="lvl3"><a href="#h23">8.4 如何保障安全与隐私</a></li><li class="lvl2"><a href="#h24">9. 结语</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><p>本文是一篇面向工程实践的架构思路探讨，并非对 DeepSeek Harness 现有产品功能的介绍。</p>
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">1. Super-agent</a></li><li class="lvl2"><a href="#h2">2. 双层架构</a></li><li class="lvl3"><a href="#h3">2.1 Router 层</a></li><li class="lvl3"><a href="#h4">2.2 Worker 层</a></li><li class="lvl2"><a href="#h5">3. 事件驱动</a></li><li class="lvl3"><a href="#h6">3.1 事件过滤</a></li><li class="lvl3"><a href="#h7">3.2 事件路由</a></li><li class="lvl3"><a href="#h8">3.3 上下文组织</a></li><li class="lvl3"><a href="#h9">3.4 提前行动</a></li><li class="lvl2"><a href="#h10">4. 面向人的交互</a></li><li class="lvl3"><a href="#h11">4.1 全双工交互</a></li><li class="lvl3"><a href="#h12">4.2 多信道交互</a></li><li class="lvl2"><a href="#h13">5. 计算、状态与环境的分离</a></li><li class="lvl3"><a href="#h14">5.1 计算与状态分离</a></li><li class="lvl3"><a href="#h15">5.2 计算与执行环境分离</a></li><li class="lvl2"><a href="#h16">6. Watchdog</a></li><li class="lvl2"><a href="#h17">7. 初步实验</a></li><li class="lvl3"><a href="#h18">7.1 消融实验</a></li><li class="lvl2"><a href="#h19">8. 开放问题</a></li><li class="lvl3"><a href="#h20">8.1 如何扩展双层架构</a></li><li class="lvl3"><a href="#h21">8.2 脱离 Session 之后如何与 Agent 协作</a></li><li class="lvl3"><a href="#h22">8.3 如何划分上下文边界并进行 A2A 协作</a></li><li class="lvl3"><a href="#h23">8.4 如何保障安全与隐私</a></li><li class="lvl2"><a href="#h24">9. 结语</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l3" data-h="h3"></i><i class="b l3" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l3" data-h="h6"></i><i class="b l3" data-h="h7"></i><i class="b l3" data-h="h8"></i><i class="b l3" data-h="h9"></i><i class="b l2" data-h="h10"></i><i class="b l3" data-h="h11"></i><i class="b l3" data-h="h12"></i><i class="b l2" data-h="h13"></i><i class="b l3" data-h="h14"></i><i class="b l3" data-h="h15"></i><i class="b l2" data-h="h16"></i><i class="b l2" data-h="h17"></i><i class="b l3" data-h="h18"></i><i class="b l2" data-h="h19"></i><i class="b l3" data-h="h20"></i><i class="b l3" data-h="h21"></i><i class="b l3" data-h="h22"></i><i class="b l3" data-h="h23"></i><i class="b l2" data-h="h24"></i></span></button><div class="body"><p>本文是一篇面向工程实践的架构思路探讨，并非对 DeepSeek Harness 现有产品功能的介绍。</p>
 <h2 id="h1">1. Super-agent</h2>
 <p>过去一年里，以 Coding Agent 为代表的单任务 Agent 已经证明，模型能够使用工具解决复杂问题，且越来越少需要人类持续监控和逐步干预。与此同时，模型的多 Agent 协同能力也在提升，使跨会话的组织与调度变得可行。随着人类在底层执行中的参与减少，人的角色正逐步上移到更高层的决策与验收。</p>
 <p>模型能力的这一提升，也催生了新的应用形态。近期个人助手（Personal Agent）开始集中涌现，它们直接接入日常的消息、日程、邮件与工作平台，持续观察信息流并协助处理事务。这种持续在线、事件驱动的工作模式并不局限于个人场景，个人助手只是其中一类应用；在软件开发等商业场景中，它同样很有价值。</p>
@@ -312,8 +312,12 @@
 
   /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
   }
   function syncActive(){
     var best=null, bestTop=-1e9;
@@ -333,9 +337,10 @@
   var ticking=false;
   window.addEventListener('scroll', function(){
     if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
 
   window.addEventListener('scroll', pokeFab, {passive:true});
   if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }

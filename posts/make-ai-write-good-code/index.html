@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="苏格拉底式编程 + Claude/Gemini/Codex 的专家级协同，100% AI 编程的个人项目经验总结">
 <title>好奇心周刊第25期: 如何让AI写好代码 · patrick</title>
-<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=27449873">
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec"><link rel="stylesheet" href="../../assets/post.css?v=33cdc61d">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -18,7 +18,7 @@
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">2026年2月26日 · 胡涂说 · 搬运 · <span class="stats">5,313 字 · 约 14 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="悬停展开目录" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="17" x2="18" y2="17"/></svg></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
+<div class="wrap"><article class="article"><h1>好奇心周刊第25期: 如何让AI写好代码</h1><div class="meta">2026年2月26日 · 胡涂说 · 搬运 · <span class="stats">5,313 字 · 约 14 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://hutusi.com/weeklies/25" rel="noopener">https://hutusi.com/weeklies/25</a></aside><nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">引言：Amytis, 两个月 400 多个 Commit 的演进</a></li><li class="lvl2"><a href="#h2">我的“AI 专家委员会”： 四大 AI 编程工具的分工与 Git Worktree 工作流</a></li><li class="lvl2"><a href="#h3">对抗“熵增”：规则文件、重构与自动化测试</a></li><li class="lvl2"><a href="#h4">苏格拉底式的编程：从指令到对话</a></li><li class="lvl2"><a href="#h5">结语： 既然 AI 负责写代码，那我们负责什么？</a></li><li class="lvl2"><a href="#h6">参考</a></li><li class="lvl3"><a href="#h7">相关文章</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l3" data-h="h7"></i></span></button><div class="body"><p>本文为好奇心周刊第25期，全部周刊参见： <a href="https://hutusi.com/weeklies/">周刊系列</a>。</p>
 <p>在 <a href="https://hutusi.com/weeklies/24">上一期周刊</a> 中，我谈了下对AI编程 / Vibe Coding 的一些看法。在这期里，我想就自己在AI编程上投入最多时间、最长跨度的一个项目为例，谈一谈如何让AI写好代码，实现一个完整的软件项目。这是一个从零开始、历经 400 多个 Commit 打磨、100% 由 AI 编程实现的项目——也是我二十年博客生涯中接触过的最优雅、交互体验最佳的博客框架，我对它颇为满意。</p>
 <p><img alt="la-nascita-di-veneree" src="../../assets/posts/make-ai-write-good-code/4c6240325659.webp"></p>
 <blockquote>
@@ -205,8 +205,12 @@
 
   /* 当前所在小节高亮 */
   var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var bars=[].slice.call(document.querySelectorAll('.toc-bars .b'));
+  var barsBox=document.querySelector('.toc-bars');
+  if(barsBox && bars.length>22) barsBox.classList.add('compact');   // 标题太多时压缩，避免溢出被裁
   function mark(id){
     links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+    bars.forEach(function(b){ b.classList.toggle('on', b.dataset.h===id); });
   }
   function syncActive(){
     var best=null, bestTop=-1e9;
@@ -226,9 +230,10 @@
   var ticking=false;
   window.addEventListener('scroll', function(){
     if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){ ticking=false; if(toc.classList.contains('is-open')) syncActive(); });
+    requestAnimationFrame(function(){ ticking=false; syncActive(); });
   }, {passive:true});
   if(location.hash){ mark(location.hash.slice(1)); }
+  syncActive();
 
   window.addEventListener('scroll', pokeFab, {passive:true});
   if(window.matchMedia('(max-width:1023px)').matches){ pokeFab(); setTimeout(function(){ if(!toc.classList.contains('is-open')) fab.classList.remove('is-active'); }, 2600); }
