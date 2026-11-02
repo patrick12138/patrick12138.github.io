@@ -101,10 +101,18 @@ JS = """<script>
     scan(); paint();
   }
 
+  function syncUrl(){
+    try{
+      var u=new URL(location.href);
+      if(state.f==='all'){ u.searchParams.delete('tab'); } else { u.searchParams.set('tab', state.f); }
+      history.replaceState(null,'', u.pathname + u.search + u.hash);  // 只用相对路径，minis:// 下也安全
+    }catch(err){}
+  }
+
   if(tabs)tabs.addEventListener('click',function(e){
     var b=e.target.closest('button'); if(!b)return;
     [].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===b);});
-    state.f=b.dataset.f; apply();
+    state.f=b.dataset.f; apply(); syncUrl();
   });
 
   if(btn)btn.addEventListener('click',function(){
