@@ -541,8 +541,7 @@ var I18N = {
   // 主题：先恢复，再挂事件
   try {
     var saved = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    html.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    html.dataset.theme = (saved === 'light' ? 'light' : 'dark');   // 默认暗色
   } catch (e) {}
   html.classList.add('hero-typing');
 

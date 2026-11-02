@@ -87,13 +87,20 @@ JS = """
   var links=[].slice.call(list.querySelectorAll('a'));
   // 滚动条只在滚动时出现，静置时隐藏
   var _st=null;
+  function edge(){
+    // 滚到底就不显示底部渐隐；不需要滚动时也算到底
+    var atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+    toc.classList.toggle('at-bottom', atBottom);
+  }
   if(list){
     list.addEventListener('scroll',function(){
       list.classList.add('is-scrolling');
       clearTimeout(_st);
       _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+      edge();
     },{passive:true});
   }
+  edge();
   if(!links.length) return;
 
   var key='tocCollapsed';

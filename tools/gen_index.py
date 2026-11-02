@@ -156,8 +156,8 @@ THEME_ICONS = """<button class="theme-toggle" id="themeToggle" aria-label="Toggl
 THEME_JS = """<script>
 (function(){
   var h=document.documentElement;
-  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
-      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  // 默认暗色；只有用户手动切过才尊重选择
+  try{var s=localStorage.getItem('theme'); h.dataset.theme=(s==='light'?'light':'dark');}catch(e){}
   var t=document.getElementById('themeToggle');
   if(t)t.addEventListener('click',function(){
     var n=h.dataset.theme==='dark'?'light':'dark';

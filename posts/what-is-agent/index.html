@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="从零到一实现一个 AI Agent 的中文渐进式教程">
 <title>Agent 到底是什么 | Pi Agent 原理与实现 · patrick</title>
-<link rel="stylesheet" href="../../assets/post.css?v=6b39bfe7">
+<link rel="stylesheet" href="../../assets/post.css?v=4c067187">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -111,7 +111,7 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=978883fc"></script>
+<script src="../../assets/site.js?v=a17c47a9"></script>
 <button class="to-top" id="toTop" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button><script>
 (function(){
   var b=document.getElementById('toTop'); if(!b) return;
@@ -165,13 +165,20 @@
   var links=[].slice.call(list.querySelectorAll('a'));
   // 滚动条只在滚动时出现，静置时隐藏
   var _st=null;
+  function edge(){
+    // 滚到底就不显示底部渐隐；不需要滚动时也算到底
+    var atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+    toc.classList.toggle('at-bottom', atBottom);
+  }
   if(list){
     list.addEventListener('scroll',function(){
       list.classList.add('is-scrolling');
       clearTimeout(_st);
       _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+      edge();
     },{passive:true});
   }
+  edge();
   if(!links.length) return;
 
   var key='tocCollapsed';

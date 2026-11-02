@@ -239,3 +239,6 @@ html,body{overflow-x:clip}
   background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 88%,transparent));
   pointer-events:none;border-radius:0 0 4px 4px}
 .toc.is-collapsed::after{display:none}
+
+/* 目录滚到底时取消底部渐隐，最后一项完整显示 */
+.toc.at-bottom::after{display:none}
