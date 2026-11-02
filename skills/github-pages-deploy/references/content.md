@@ -20,6 +20,22 @@ python3 tools/build.py --push "feat: 新文章 xxx"
 
 注：首页**不需要且不要手动改** `index.html`，`build.py` 会自动调用 `tools/gen_index.py` 重新全自动生成。
 
+`build.py --push` 这一条里已经包含：目录注入 → **搬运页版权信号**（`gen_legal`）→ 字数 → 首页 →
+上下篇 → **相关阅读** → **两份搜索索引**（`search.js` + `search-deep.js`）→ RSS/sitemap →
+回归测试 → 资源版本戳 → skill 一致性 → 排版体检（含脱敏）→ 推送。顺序以 `tools/build.py` 的 docstring 为准。
+
+**发布后 30 秒自查**（三次里有一次会撞上 Pages 缓存）：
+
+```bash
+sleep 45
+curl -s -o /dev/null -w '%{http_code}\n' https://patrick12138.github.io/posts/<slug>/
+curl -s https://patrick12138.github.io/ | grep -c '<slug>/'          # 首页要有
+curl -s https://patrick12138.github.io/search.js | grep -c '<slug>'  # 搜索索引要有
+```
+
+md 必须来自 vault（`Sources/Inbox` / `Sources/Clippings`），**不要用 `/tmp` 里的临时文件**——
+`sources.json` 里记的是 md 路径，绝对路径换台机器就失效。
+
 `--kind own` 进「个人」tab，`repost` 进「搬运」tab。**笔记和文章放同一个目录、同一个列表**——
 2026-11-02 开过独立的 `/notes/` 板块，用户明确否掉：只要一个列表，不要两个入口。
 

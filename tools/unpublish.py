@@ -40,6 +40,9 @@ def inbound_links(slug, skip_self=True):
         if skip_self and other == slug:
             continue
         s = open(p, encoding="utf-8").read()
+        # 自动生成的上下篇/相关阅读每次 build 都会重算，不算“正文里的手工链接”
+        s = re.sub(r'<nav class="pager".*?</nav>', '', s, flags=re.S)
+        s = re.sub(r'<nav class="related".*?</nav>', '', s, flags=re.S)
         if "posts/%s/" % slug in s or "../%s/" % slug in s:
             hits.append(other)
     return hits
@@ -85,10 +88,15 @@ def restore(slug, dry=False):
     if not commit:
         raise SystemExit("git 历史里找不到 posts/%s/" % slug)
     commit = commit[0].strip()
-    print("· 从 %s 恢复 posts/%s/" % (commit[:8], slug))
+    print("· 从 %s 恢复 posts/%s/" % (commit[:8] + "^", slug))
     if dry:
         return
-    sh("git checkout %s -- posts/%s" % (commit, slug))
+    # commit 是「删除它的那次提交」，那一版里路径已不存在，必须从父提交取，
+    # 否则 checkout 静默什么都不做（曾以为恢复了，其实没恢复）
+    parent = commit + "^"
+    sh("git checkout %s -- posts/%s" % (parent, slug))
+    if not os.path.isdir(os.path.join(ROOT, "posts", slug)):
+        raise SystemExit("恢复失败：%s 里没有 posts/%s/" % (parent[:8], slug))
     print("✓ 页面已恢复。sources.json 需要手动补回这一条（作者/日期/kind），然后 build.py")
 
 

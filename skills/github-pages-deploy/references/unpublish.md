@@ -13,10 +13,12 @@ git add -A && git commit -m "chore: 下线 <slug>" && git push
 恢复：
 
 ```bash
-python3 tools/unpublish.py <slug> --restore   # 从 git 历史取回页面目录
-# 然后手动把这一条补回 tools/sources.json（slug / md / author / date / kind）
-python3 tools/build.py
+python3 tools/unpublish.py <slug> --restore   # 从 git 历史取回页面目录 + 自动补回 sources.json 条目
+python3 tools/build.py                        # 确认回到首页 / 相关阅读 / 搜索索引
 ```
+
+取的是**删除那次提交的父版本**（删除提交里路径已经不存在，直接 checkout 会静默什么都不做）。
+sources.json 的条目也从同一个父版本里读回来；找不回时会明确提示需要手补哪几个字段。
 
 ## 它会做什么
 
@@ -24,8 +26,8 @@ python3 tools/build.py
 |---|---|
 | `git rm -r posts/<slug>/` | 页面从工作树移除，但**历史里还在**，随时可 checkout 回来 |
 | 从 `sources.json` 移除条目 | 以后 `rebuild.py` 不会再把它生成回来 |
-| 重生成 index / prevnext / feed | 列表、上一篇下一篇、RSS、sitemap 同步消失 |
-| **列出站内入链** | 其他文章正文里指向它的链接会打印出来，人工决定改不改（脚本不动正文） |
+| 重生成 index / prevnext / **related** / **search** / feed | 列表、上下篇、相关阅读、两份搜索索引、RSS、sitemap 同步消失 |
+| **列出站内入链** | 只有**正文里手工写的**链接会打印；上下篇 / 相关阅读是自动生成的，每轮 build 重算，不参与统计 |
 
 ## 为什么不用「移动到 offline 目录」
 
