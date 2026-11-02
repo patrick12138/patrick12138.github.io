@@ -83,6 +83,21 @@ def check_dupes():
     return bad
 
 
+def check_css_stamp():
+    """页面里 post.css?v= 必须等于文件真实内容哈希，否则浏览器会一直吃旧缓存。"""
+    import hashlib
+    css = os.path.join(ROOT, "assets", "post.css")
+    if not os.path.exists(css):
+        return []
+    h = hashlib.sha1(open(css, "rb").read()).hexdigest()[:8]
+    bad = []
+    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
+        m = re.search(r"post\.css\?v=([0-9a-f]+)", open(p, encoding="utf-8").read())
+        if not m or m.group(1) != h:
+            bad.append((os.path.basename(os.path.dirname(p)), m.group(1) if m else "-"))
+    return bad, h
+
+
 def main():
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
     total = {k: 0 for k in ("P0", "P1", "P2")}
@@ -97,6 +112,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    stamp_bad, css_hash = check_css_stamp()
+    if stamp_bad:
+        print("\nCSS 版本戳过期（应为 %s，跑一次 add_toc.py）" % css_hash)
+        for slug, v in stamp_bad[:5]:
+            print("  [P0] %s：%s" % (slug, v))
+        total["P0"] += len(stamp_bad)
+
     dupe_bad = check_dupes()
     if dupe_bad:
         print("\n重复注入（会互相重叠）")
