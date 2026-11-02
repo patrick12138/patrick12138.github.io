@@ -212,3 +212,7 @@ html,body{overflow-x:clip}
     transition:opacity .22s ease,transform .22s cubic-bezier(.22,.61,.36,1),visibility .22s}
   .toc.is-open{opacity:1;visibility:visible;transform:none}
 }
+
+/* 回到顶部：静置淡出（与目录按钮同一套逻辑） */
+.to-top{transition:opacity .24s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
+.to-top.show.is-idle{opacity:0;transform:translateY(8px);pointer-events:none}

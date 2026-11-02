@@ -26,16 +26,28 @@
       return max > 0 ? max / 2 : 600;
     }
     function update() { btn.classList.toggle('show', window.pageYOffset > threshold()); }
+
+    // 静置淡出：滚动/移动鼠标/触摸才浮现，1.5s 没动作就隐去（与目录按钮同一套体感）
+    var idleTimer = null;
+    function poke() {
+      btn.classList.remove('is-idle');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(function () {
+        if (btn.classList.contains('show')) btn.classList.add('is-idle');
+      }, 1500);
+    }
     function goTop() {
       var before = window.pageYOffset;
       try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
       // WebView 里 smooth 可能被忽略，400ms 没动就硬跳
       setTimeout(function () { if (Math.abs(window.pageYOffset - before) < 4) window.scrollTo(0, 0); }, 400);
     }
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
+    window.addEventListener('scroll', function () { update(); poke(); }, { passive: true });
+    window.addEventListener('resize', function () { update(); poke(); }, { passive: true });
+    window.addEventListener('mousemove', poke, { passive: true });
+    window.addEventListener('touchstart', poke, { passive: true });
     btn.addEventListener('click', goTop);
-    update();
+    update(); poke();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
