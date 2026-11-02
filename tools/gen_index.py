@@ -49,12 +49,9 @@ body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
         '<button class="on" data-f="all">全部</button>'
         '<button data-f="repost">搬运</button>'
         '<button data-f="own">个人</button>'
-
-        '</div><button class="sbtn" id="searchBtn" aria-label="搜索">'
-
-        '</div><input id="q" class="sinput" type="search" placeholder="搜索标题或摘要…" autocomplete="off">'
+        '</div>'
+        '<input id="q" class="sinput" type="search" placeholder="搜索标题或摘要…" autocomplete="off">'
         '<button class="sbtn" id="searchBtn" aria-label="搜索">'
-
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
         '</button></div>'
