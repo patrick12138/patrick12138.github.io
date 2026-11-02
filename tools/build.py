@@ -38,7 +38,7 @@ def stamp_assets():
     vs = {}
     for rel in ASSETS:
         path = os.path.join(ROOT, rel)
-        vs[rel] = hashlib.md5(open(path, "rb").read()).hexdigest()[:8]
+        vs[rel] = hashlib.sha1(open(path, "rb").read()).hexdigest()[:8]
 
     files = (glob.glob(os.path.join(ROOT, "*.html"))
              + glob.glob(os.path.join(ROOT, "*", "index.html"))
