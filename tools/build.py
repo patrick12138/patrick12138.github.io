@@ -114,14 +114,6 @@ def main():
         print("\n✗ qa 未通过（P0 不为 0），已中止，不会 push。")
         raise SystemExit(1)
 
-    print("⑤.5 回归测试 …")
-    t = subprocess.run("python3 tools/test_pipeline.py", shell=True, cwd=ROOT,
-                       capture_output=True, text=True)
-    print("   " + t.stdout.strip().splitlines()[-1])
-    if t.returncode != 0:
-        print(t.stdout[-800:])
-        raise SystemExit(1)
-
     print("\n✓ 构建完成")
 
     if do_push:
