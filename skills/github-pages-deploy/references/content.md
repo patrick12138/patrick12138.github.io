@@ -26,7 +26,8 @@ python3 tools/build.py --push "feat: 新文章 xxx"
 python3 tools/rebuild.py              # 全部重建（按 sources.json，图片有 webp 就复用）
 python3 tools/rebuild.py slug1 slug2  # 只重建指定文章
 python3 tools/add_toc.py              # 只重灌目录
-python3 tools/qa.py                   # 排版体检
+python3 tools/qa.py                   # 排版体检（含脱敏检查）
+python3 tools/check_skills.py         # skill 文档与代码是否还对得上
 python3 tools/qa.py posts/xxx/index.html
 ```
 
@@ -163,3 +164,17 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 ```
 
 **上一篇/下一篇不跟首页分类走**：tab 只是筛选视图，不是栏目；跟分类就得在链接上带 `?from=`。
+
+## 文档与代码的一致性（check_skills.py）
+
+`build.py` 第 ⑥.8 步会自动跑，四个结论都是硬失败：
+
+| 检查 | 失败含义 |
+|---|---|
+| 脚本都登记过 | 新加了 `tools/xxx.py` 但 SKILL / AGENTS 里一次都没提 |
+| 引用都存在 | 文档写了 `references/<slug>.md`，但文件不存在 |
+| 参数都属实 | 文档写了 `md2post.py --<flag>`，源码里没这个参数 |
+| 副本同步 | `/var/minis/skills/` 与仓库 `skills/` 内容不同（sync_skills 没跑或手改了副本） |
+
+另外 SKILL.md 硬上限 **100 行**，超了必须把细节挪进 `references/`。
+改完 skill 不要手改 `/var/minis/skills/` —— 那是构建产物的下游，`build.py` 会单向覆盖。

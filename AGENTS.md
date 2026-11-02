@@ -53,6 +53,8 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 | 想改的东西 | 改这里 |
 |---|---|
 | 加文章 | vault 里的 md → `tools/sources.json` → `build.py` |
+| **新增/改名脚本** | 放进 `tools/` 并在 skill 或本文档里提一句，否则 `check_skills.py` 会让构建失败 |
+| **改 skill 文档** | 改仓库 `skills/` 里的，`build.py` 自动同步到 `/var/minis/skills/`；`SKILL.md` 不超过 100 行 |
 | **脱敏** | vault 里的 md 改词（公司名换代号）→ `md2post` 重生成 → `qa.py` 复查 |
 | **下线文章** | `tools/unpublish.py <slug>`（git rm + 移出 sources.json + 重生成列表/feed） |
 | 文章正文排版 | `assets/post.css` |

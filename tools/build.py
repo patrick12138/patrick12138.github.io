@@ -13,7 +13,8 @@
   4. gen_index.py          扫描 posts/ 生成首页
   5. test_pipeline.py      回归测试（幂等 + 注入唯一），失败即中止
   6. stamp_assets()        给 base/home/post.css 与 site.js 写内容哈希
-  7. qa.py                 排版体检，P0 不为 0 就中止（不会 push）
+  7. check_skills.py       skill 与代码一致性（脚本未登记 / 引用失效 / 参数不存在 / 副本不同步）
+  8. qa.py                 排版体检，P0 不为 0 就中止（不会 push）
   8. (可选) commit + push
 """
 import hashlib
@@ -126,6 +127,14 @@ def main():
     print("⑥.5 同步 skills（仓库 → /var/minis）…")
     print("   " + sync_skills())
 
+    print("⑥.8 skill 一致性 …")
+    k = subprocess.run("python3 tools/check_skills.py", shell=True, cwd=ROOT,
+                       capture_output=True, text=True)
+    print("\n".join("   " + l for l in k.stdout.strip().splitlines()))
+    if k.returncode != 0:
+        print("\n✗ skill 与代码不一致，已中止，不会 push。")
+        raise SystemExit(1)
+
     print("⑦ 排版体检 …")
     p = subprocess.run("python3 tools/qa.py", shell=True, cwd=ROOT,
                        capture_output=True, text=True)
@@ -139,7 +148,7 @@ def main():
 
     if do_push:
         msg = args[args.index("--push") + 1] if len(args) > args.index("--push") + 1 else "chore: rebuild site"
-        print("⑧ 推送 …")
+        print("⑨ 推送 …")
         sh('git add -A && git commit -m "%s" || true' % msg, check=False)
         sh('git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/patrick12138/patrick12138.github.io.git"')
         r = subprocess.run("git pull --rebase origin main && git push origin main",
