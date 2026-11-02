@@ -210,7 +210,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .brand-menu a.on{color:var(--accent)}
 .brand-menu a.on:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--accent)}
 .brand-menu a .tag{margin-left:8px;font-size:.62rem;color:var(--text-faint);letter-spacing:.08em}
-@media (max-width:600px){
+@media (max-width:720px){
   .brand-menu{top:calc(100% + 12px);left:-14px;min-width:128px}
   .brand-menu a{padding:9px 16px}
 }
@@ -257,4 +257,16 @@ html,body{overflow-x:clip}
 /* 1024–1279（平板横屏）：顶栏撑满，左右对齐正文与目录边缘 */
 @media (min-width:1024px) and (max-width:1279px){
   .bar-in{max-width:none;padding-left:28px;padding-right:28px}
+}
+
+/* 抽出来的 svg 图表：撑满内容宽度，别缩成小图标 */
+.body img[src$=".svg"]{width:100%;height:auto;max-width:100%}
+
+/* 平板竖屏（600–1023）：目录面板收窄成抽屉，别拉满整个宽度 */
+@media (min-width:600px) and (max-width:1023px){
+  .toc.is-open{
+    left:auto;right:24px;
+    width:420px;max-width:calc(100vw - 48px);
+    padding:18px 20px;
+  }
 }
