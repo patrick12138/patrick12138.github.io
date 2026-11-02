@@ -144,7 +144,10 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .to-top svg{display:block}
 @media (max-width:720px){.to-top{right:18px;bottom:80px}}
 /* PC：列表末尾的「回到顶部」文字链接；手机才用右下圆形按钮 */
+<<<<<<< HEAD
 
+=======
+>>>>>>> cd8736b (ui(home): 去掉 PC 端「↑ 回到顶部」文字链接，统一用圆形图标按钮)
 
 .tools{display:flex;align-items:center;gap:10px;margin:26px 0 0;
   border-bottom:1px solid var(--border);padding-bottom:12px}
