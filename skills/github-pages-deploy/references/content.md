@@ -146,3 +146,20 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 - `build.py` 第 ③ 步执行，不用手动跑
 
 样式在 `post.css`：`.meta .stats{color:var(--text-faint);opacity:.9}` —— 比日期还淡一档，不要加粗或换色。
+
+## 构建顺序（tools/build.py）
+
+```
+① (可选) rebuild.py   从 vault 重建全部文章（会改正文，慎用）
+② add_toc.py          目录 / 站名下拉 / 回到顶部 / 去重
+③ stats.py            字数与阅读时间
+④ gen_index.py        生成首页（唯一文章列表）
+④.2 gen_prevnext.py   文末「上一篇 / 下一篇」（全局按发布时间）
+④.5 gen_feed.py       feed.xml + sitemap.xml + robots.txt
+⑤ test_pipeline.py    三条幂等回归测试
+⑥ stamp_assets()      base/home/post.css + site.js 内容哈希
+⑥.5 sync_skills()     仓库 skills/ → /var/minis/skills/
+⑦ qa.py               排版 / 分类 / 重复注入 / hash / 外壳 / 摘要质量
+```
+
+**上一篇/下一篇不跟首页分类走**：tab 只是筛选视图，不是栏目；跟分类就得在链接上带 `?from=`。

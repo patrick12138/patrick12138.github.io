@@ -31,13 +31,16 @@ assets/home.css       首页特有
 assets/post.css       文章页特有（目录、来源块、站名下拉）
 assets/site.js        主题切换 / 回到顶部 / Lab 暗门
 tools/                生成器与质检脚本（手写）
+                      build.py 一键构建 / md2post 转文章 / add_toc 目录与页脚 / gen_index 首页
+                      gen_prevnext 上一篇下一篇 / gen_feed RSS+sitemap / stats 字数 / qa 体检
+                      optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
 skills/               skill 文档（单一源，build 时同步到 /var/minis/skills）
 ```
 
 ## 3. 一条命令构建
 
 ```bash
-python3 tools/build.py            # 注入目录 → 字数 → 生成首页 → 测试 → 打 hash → 同步 skill → qa
+python3 tools/build.py            # 目录 → 字数 → 首页 → 上下篇 → RSS/sitemap → 测试 → hash → 同步 skill → qa
 python3 tools/build.py --rebuild  # 另外先从 vault 的 md 重建全部文章（慢，且会改正文，慎用）
 python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + push
 ```
