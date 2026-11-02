@@ -80,6 +80,10 @@ a{color:inherit}
 .body pre code{background:none;padding:0;font-size:.84em}
 .body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
 .body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+/* 表格：宽度超出时在表格内部横向滚动，不要把整页撑宽 */
+@media (max-width:720px){
+  .body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+}
 .body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
 .body th{color:var(--text-muted);font-weight:600;font-size:.9em}
 .body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
@@ -149,7 +153,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
 /* 手机：浮动按钮 + 底部面板 */
-.toc-fab{display:none;position:fixed;right:18px;bottom:calc(24px + env(safe-area-inset-bottom,0px) + 56px);z-index:40;
+.toc-fab{display:none;position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px) + 56px);z-index:40;
   width:40px;height:40px;padding:0;align-items:center;justify-content:center;border-radius:999px;
   background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
   border:1px solid var(--border);cursor:pointer;transition:color .15s,border-color .15s}
@@ -219,3 +223,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .to-top:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 .to-top svg{display:block}
 @media (min-width:721px){ .to-top{display:flex} .back-top{display:none} }
+
+/* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
+   用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */
+html,body{overflow-x:clip}
