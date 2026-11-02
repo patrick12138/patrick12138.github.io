@@ -227,3 +227,15 @@ html,body{overflow-x:clip}
 .code-copy.ok{color:var(--accent);border-color:var(--accent);opacity:1}
 .code-copy svg{display:block}
 @media (hover:none){ .code-copy{opacity:.55} }
+
+/* ─── 横向滚动条（代码块 / 宽表格）也统一成站点风格：细、圆、低饱和强调色 ─── */
+.body pre,.body table{scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--accent) 34%,transparent) transparent}
+.body pre::-webkit-scrollbar,.body table::-webkit-scrollbar{width:4px;height:4px}
+.body pre::-webkit-scrollbar-track,.body table::-webkit-scrollbar-track{background:transparent}
+.body pre::-webkit-scrollbar-thumb,.body table::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--accent) 34%,transparent);border-radius:4px}
+.body pre:hover::-webkit-scrollbar-thumb,.body table:hover::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--accent) 55%,transparent)}
+.body pre::-webkit-scrollbar-button,.body table::-webkit-scrollbar-button{display:none;height:0;width:0}
+.body pre{padding-bottom:18px}   /* 给横向滚动条留位置，不压住最后一行代码 */
