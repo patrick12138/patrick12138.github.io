@@ -36,9 +36,7 @@ ANCHOR_TAIL = re.compile(r'(<nav class="related"|<nav class="pager"|<a class="ba
 
 NOTE = (
     '<aside class="legal-note" data-legal="1">'
-    '<span class="legal-k">/ 版权</span>'
-    "本文版权归原作者与译者所有，此处为全文搬运，仅供检索与离线阅读"
-    '<span class="legal-sep">/</span>'
+    '<span class="legal-text">本文版权归原作者与译者所有，全文搬运仅供检索与离线阅读。</span>'
     '<a class="legal-link" href="%s" rel="noopener">不希望被转载？联系我删除</a>'
     "</aside>\n" % CONTACT
 )
