@@ -17,7 +17,11 @@
 
 /* 表格：宽度超出时在表格内部横向滚动，不要把整页撑宽 */
 @media (max-width:720px){
-  .body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+  /* 手机：表格按内容宽度排开、横向滑动，而不是把每列挤成一字一行 */
+  .body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:max-content;min-width:100%;max-width:none}
+  .body th,.body td{padding:8px 12px;white-space:nowrap}
+  .body td{white-space:normal}
+  .body th{white-space:nowrap}
 }
 
 .refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
@@ -166,12 +170,15 @@
   color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
 .body .video-link:hover{border-bottom-color:var(--accent)}
 
-/* 回到顶部：PC 右下圆形图标按钮（手机用文末文字链接） */
-.to-top{display:flex;position:fixed;right:18px;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:50;width:40px;height:40px;padding:0;
-  align-items:center;justify-content:center;border-radius:999px;
-  background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
-  border:1px solid var(--border);cursor:pointer;opacity:0;transform:translateY(8px);
-  pointer-events:none;transition:opacity .22s ease,transform .22s ease,color .15s,border-color .15s}
+/* 回到顶部：文章页只留一个安静箭头（目录才是主按钮，别让两个圆钮挤在一起） */
+.to-top{display:flex;position:fixed;right:20px;bottom:calc(72px + env(safe-area-inset-bottom,0px));
+  z-index:50;width:36px;height:36px;padding:0;align-items:center;justify-content:center;
+  border:0;border-radius:999px;background:transparent;color:var(--text-faint);cursor:pointer;
+  opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease,color .15s}
+.to-top.show{opacity:.85;transform:none;pointer-events:auto}
+.to-top:hover{color:var(--accent)}
+.to-top svg{width:17px;height:17px}
 
 /* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
    用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */
@@ -231,16 +238,24 @@ html,body{overflow-x:clip}
 .code-copy svg{display:block}
 @media (hover:none){ .code-copy{opacity:.55} }
 
-/* ─── 横向滚动条（代码块 / 宽表格）也统一成站点风格：细、圆、低饱和强调色 ─── */
-.body pre,.body table{scrollbar-width:thin;
-  scrollbar-color:color-mix(in srgb,var(--accent) 34%,transparent) transparent}
-.body pre::-webkit-scrollbar,.body table::-webkit-scrollbar{width:4px;height:4px}
+/* ─── 横向滚动条（代码块 / 宽表格）：默认不显，滑动或悬停才浮出来 ─── */
+.body pre,.body table{scrollbar-width:thin;scrollbar-color:transparent transparent}
+.body pre:hover,.body table:hover,
+.body pre.is-scrolling,.body table.is-scrolling{
+  scrollbar-color:color-mix(in srgb,var(--accent) 40%,transparent) transparent}
+.body pre::-webkit-scrollbar,.body table::-webkit-scrollbar{width:5px;height:5px}
 .body pre::-webkit-scrollbar-track,.body table::-webkit-scrollbar-track{background:transparent}
 .body pre::-webkit-scrollbar-thumb,.body table::-webkit-scrollbar-thumb{
-  background:color-mix(in srgb,var(--accent) 34%,transparent);border-radius:4px}
-.body pre:hover::-webkit-scrollbar-thumb,.body table:hover::-webkit-scrollbar-thumb{
-  background:color-mix(in srgb,var(--accent) 55%,transparent)}
+  background:transparent;border-radius:5px;transition:background .18s}
+.body pre:hover::-webkit-scrollbar-thumb,.body table:hover::-webkit-scrollbar-thumb,
+.body pre.is-scrolling::-webkit-scrollbar-thumb,.body table.is-scrolling::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--accent) 40%,transparent)}
 .body pre::-webkit-scrollbar-button,.body table::-webkit-scrollbar-button{display:none;height:0;width:0}
+/* 触屏没有悬停，留一条极淡的提示 */
+@media (hover:none){
+  .body pre::-webkit-scrollbar-thumb,.body table::-webkit-scrollbar-thumb{
+    background:color-mix(in srgb,var(--accent) 22%,transparent)}
+}
 .body pre{padding-bottom:18px}   /* 给横向滚动条留位置，不压住最后一行代码 */
 
 /* 「回到上次位置」：贴底的一条细栏，不压正文中间 */

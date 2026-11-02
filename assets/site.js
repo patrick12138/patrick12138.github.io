@@ -183,3 +183,18 @@
   if (document.readyState === 'complete') restore();
   else window.addEventListener('load', restore);
 })();
+
+/* 代码块/表格：滑动时短暂显示横向滚动条，停下就收起来 */
+(function () {
+  var boxes = document.querySelectorAll('.body pre, .body table');
+  for (var i = 0; i < boxes.length; i++) {
+    (function (el) {
+      var t = null;
+      el.addEventListener('scroll', function () {
+        el.classList.add('is-scrolling');
+        clearTimeout(t);
+        t = setTimeout(function () { el.classList.remove('is-scrolling'); }, 900);
+      }, { passive: true });
+    })(boxes[i]);
+  }
+})();
