@@ -38,6 +38,7 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 | 加一篇文章 / 笔记，整站重排，排版质检 | `references/content.md` |
 | 推代码、凭据、DNS 抽风、验证线上、已知坑 | `references/deploy.md` |
 | 新页面设计（按钮、目录、深浅色、组件规范） | `references/design.md` |
+| 下线 / 恢复一篇文章 | `references/unpublish.md` |
 | 写仓库 README（中英双语） | `references/readme.md` |
 
 **脚本不在这里存副本**（存过一份，跟仓库漂移了）。一律用仓库里的 `/var/minis/workspace/site/tools/`：

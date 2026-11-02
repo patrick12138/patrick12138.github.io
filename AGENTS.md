@@ -34,6 +34,7 @@ tools/                生成器与质检脚本（手写）
                       build.py 一键构建 / md2post 转文章 / add_toc 目录与页脚 / gen_index 首页
                       gen_prevnext 上一篇下一篇 / gen_feed RSS+sitemap / stats 字数 / qa 体检
                       optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
+                      unpublish 下线与恢复
 skills/               skill 文档（单一源，build 时同步到 /var/minis/skills）
 ```
 
@@ -51,7 +52,8 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 
 | 想改的东西 | 改这里 |
 |---|---|
-| 加/删文章 | vault 里的 md → `tools/sources.json` → `build.py` |
+| 加文章 | vault 里的 md → `tools/sources.json` → `build.py` |
+| **下线文章** | `tools/unpublish.py <slug>`（git rm + 移出 sources.json + 重生成列表/feed） |
 | 文章正文排版 | `assets/post.css` |
 | 首页列表/分类/搜索 | `tools/gen_index.py`（**不是** `index.html`） |
 | 导航条（Lab / About） | `tools/gen_index.py` + `tools/post_template.html` + `lab/index.html`（三处） |
