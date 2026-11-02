@@ -294,5 +294,21 @@
   "date": "March 5, 2026",
   "kind": "repost",
   "title": ""
+ },
+ {
+  "slug": "claude-code-auto-memory",
+  "md": "Sources/Inbox/Claude Code 是如何记住你的项目的.md",
+  "author": "Jason Young",
+  "date": "September 19, 2026",
+  "kind": "repost",
+  "title": ""
+ },
+ {
+  "slug": "something-big-is-happening",
+  "md": "Sources/Inbox/Something Big Is Happening.md",
+  "author": "Matt Shumer",
+  "date": "May 29, 2026",
+  "kind": "repost",
+  "title": "Something Big Is Happening"
  }
 ]
