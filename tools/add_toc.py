@@ -207,8 +207,8 @@ def strip_toc(doc):
     doc = HEAD_RE.sub("", doc)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
     # 别的会话注入过的英文版浮动按钮
-    doc = re.sub(r'<button class="toc-fab"[^>]*aria-label="Contents".*?</button>', "", doc, flags=re.S)
-    doc = re.sub(r'<button class="toc-tab"[^>]*aria-label="Expand[^"]*".*?</button>', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>', "", doc, flags=re.S)
     # 注入的脚本块（可能有多份，全部清掉，稍后重新注入一次）
     for sig in ("brandSet", "backTop", "var toc=document.getElementById"):
         pat = r"\n<script>\n\(function\(\)\{[^<]*?%s[\s\S]*?\}\)\(\);\n</script>" % re.escape(sig)
