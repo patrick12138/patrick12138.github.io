@@ -5,15 +5,55 @@
   // —— 主题：默认暗色，只有用户手动切过才尊重选择（放在最前面，避免闪白）
   try { html.dataset.theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark'; } catch (e) {}
 
+  // —— Lab 暗门：长按主题图标 1.5s 解锁（再长按锁回去），或访问 /?u=lab 一次性打开
+  var LAB_KEY = 'labUnlocked';
+  function labOn() { try { return localStorage.getItem(LAB_KEY) === '1'; } catch (e) { return false; } }
+  function applyLab() { html.classList.toggle('lab-on', labOn()); }
+  applyLab();
+  try {
+    if (new URLSearchParams(location.search).get('u') === 'lab') {
+      localStorage.setItem(LAB_KEY, '1');
+      applyLab();
+    }
+  } catch (e) {}
+
   function init() {
     var toggle = document.getElementById('themeToggle');
-    if (toggle) toggle.addEventListener('click', function () {
-      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.classList.add('theme-switching');
-      document.documentElement.dataset.theme = next;
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      setTimeout(function () { document.documentElement.classList.remove('theme-switching'); }, 300);
-    });
+    var longFired = false;
+    var pressTimer = null;
+
+    function startPress() {
+      longFired = false;
+      clearTimeout(pressTimer);
+      pressTimer = setTimeout(function () {
+        longFired = true;
+        try { localStorage.setItem(LAB_KEY, labOn() ? '0' : '1'); } catch (e) {}
+        applyLab();
+        if (toggle) {
+          toggle.classList.add('lab-pop');
+          setTimeout(function () { toggle.classList.remove('lab-pop'); }, 560);
+        }
+      }, 1500);
+    }
+    function endPress() { clearTimeout(pressTimer); }
+
+    if (toggle) {
+      ['mousedown', 'touchstart', 'pointerdown'].forEach(function (ev) {
+        toggle.addEventListener(ev, startPress, { passive: true });
+      });
+      ['mouseup', 'mouseleave', 'touchend', 'touchcancel', 'pointerup', 'pointercancel'].forEach(function (ev) {
+        toggle.addEventListener(ev, endPress, { passive: true });
+      });
+
+      toggle.addEventListener('click', function (e) {
+        if (longFired) { longFired = false; e.preventDefault(); return; }  // 长按不切主题
+        var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.classList.add('theme-switching');
+        document.documentElement.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        setTimeout(function () { document.documentElement.classList.remove('theme-switching'); }, 300);
+      });
+    }
 
     var btn = document.getElementById('toTop');
     if (!btn) return;

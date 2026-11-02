@@ -201,7 +201,7 @@ page = """<!DOCTYPE html>
 <div class="bar"><div class="bar-in">
   <a class="brand" href="./">patrick</a>
   <nav class="nav">
-    <a href="lab/">Lab</a>
+    <a href="lab/" class="nav-lab">Lab</a>
     <a href="about/">About</a>
     %s
   </nav>

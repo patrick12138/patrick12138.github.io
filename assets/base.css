@@ -77,3 +77,14 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .to-top.show{opacity:1;transform:none;pointer-events:auto}
 .to-top:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 .to-top svg{display:block}
+
+/* Lab 暗门：默认不显示；长按主题图标 1.5s（或 /?u=lab）后出现 */
+.nav-lab{display:none}
+html.lab-on .nav-lab{display:inline}
+.theme-toggle{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.theme-toggle.lab-pop{animation:labPop .55s ease}
+@keyframes labPop{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.32);color:var(--accent)}
+  100%{transform:scale(1)}
+}
