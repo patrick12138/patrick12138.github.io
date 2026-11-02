@@ -136,7 +136,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .toc-head:hover{color:var(--accent)}
 .toc-ico{display:block}
 .toc-title{display:none}
-@media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
+@media (max-width:1023px){ .toc.is-open .toc-title{display:inline} }
 .toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:transparent transparent;
   border-left:1px solid var(--border)}
 
@@ -163,7 +163,15 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
   border:1px solid var(--border);cursor:pointer;transition:color .15s,border-color .15s}
 .toc-fab svg{display:block}
 .toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
-@media (max-width:1180px){
+
+/* 平板横屏：右侧目录贴边，不再居中偏移（否则 1024 宽会溢出屏幕） */
+@media (min-width:1024px) and (max-width:1279px){
+  /* 正文左移让位，目录贴右，避免两者重叠 */
+  .wrap{max-width:680px;margin-left:28px;margin-right:auto}
+  .toc{left:auto;right:20px;width:220px}
+}
+
+@media (max-width:1023px){
   .toc{display:none}
   .toc-fab{display:flex}
   .toc.is-open{display:flex !important;left:16px;right:16px;width:auto;top:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px) + 56px);max-height:60vh;

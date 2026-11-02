@@ -134,3 +134,14 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 
 顺带一条：浮动按钮里的 `<svg>` 加 `pointer-events:none`，
 让命中目标永远是 `<button>`，少一层不确定性。
+
+## 字数与阅读时间（自动）
+
+`tools/stats.py` 会扫描每篇文章，把 `N 字 · 约 M 分钟` 写进 `<div class="meta">`：
+
+- 中文按 400 字/分钟，英文按 230 词/分钟，取整到分钟
+- 幂等：先剥掉旧的 `<span class="stats">`，再写入，跑多少遍都不会重复
+- 首页列表的时间行由 `gen_index.py` 从文章页抓同一段文字，两处永远一致
+- `build.py` 第 ③ 步执行，不用手动跑
+
+样式在 `post.css`：`.meta .stats{color:var(--text-faint);opacity:.9}` —— 比日期还淡一档，不要加粗或换色。
