@@ -202,3 +202,12 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .tools.searching .tabs{display:none}
 .tools.searching{gap:8px}
 .tools.searching .sinput{display:block}
+
+/* 搜索框：默认收起，点放大镜展开 */
+.sbox{display:none;padding:14px 0 0}
+.sbox.on{display:block}
+.sbox input{width:100%;background:none;border:none;border-bottom:1px solid var(--border);
+  color:var(--text);font-family:var(--sans);font-size:1rem;padding:6px 0;outline:none;
+  -webkit-appearance:none;appearance:none}
+.sbox input::placeholder{color:var(--text-faint)}
+.sbox input:focus{border-bottom-color:var(--accent)}

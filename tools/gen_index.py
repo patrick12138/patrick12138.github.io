@@ -57,19 +57,7 @@ body = ('<div class="wrap"><h1 class="page-title">首页</h1>'
         '</button></div>'
         '<div class="sbox" id="searchBox"><input id="q" type="search" placeholder="搜索标题…" autocomplete="off"></div>'
         '<ul class="posts" id="posts">%s</ul></div>' % "".join(rows))
-STYLE = STYLE.replace("</style>", '''
-.tools{display:flex;align-items:center;gap:10px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
-.tools .tabs{margin:0;border:none;padding:0;flex:1}
-.sbtn{background:none;border:none;padding:0;color:var(--text-muted);cursor:pointer;width:24px;height:24px;
-  display:flex;align-items:center;justify-content:center;transition:color .15s}
-.sbtn:hover,.sbtn.on{color:var(--accent)}
-.sbox{display:none;padding:14px 0 0}
-.sbox.on{display:block}
-.sbox input{width:100%;background:none;border:none;border-bottom:1px solid var(--border);
-  color:var(--text);font-family:var(--sans);font-size:1rem;padding:6px 0;outline:none}
-.sbox input::placeholder{color:var(--text-faint)}
-.sbox input:focus{border-bottom-color:var(--accent)}
-''' + "</style>")
+# 样式统一写在 assets/home.css（页面已改为外链，这里不再往 <style> 里塞）
 body += ('<div class="wrap"><p id="emptyHint" style="display:none;color:var(--text-muted);'
          'padding:0 0 60px">这个分类下还没有文章。</p></div>')
 
@@ -81,6 +69,14 @@ JS = """<script>
   var input=document.getElementById('q');
   var empty=document.getElementById('emptyHint');
   var state={f:'all',q:''};
+  // ?tab=repost|own|all 直达分类（文章页站名下拉会带过来）
+  try{
+    var tf=(new URLSearchParams(location.search)).get('tab');
+    if(tf && ['all','repost','own'].indexOf(tf)>=0){
+      state.f=tf;
+      if(tabs)[].forEach.call(tabs.children,function(x){ x.classList.toggle('on', x.dataset.f===tf); });
+    }
+  }catch(e){}
 
   function apply(){
     var shown=0;
@@ -109,6 +105,7 @@ JS = """<script>
   if(input)input.addEventListener('input',function(){
     state.q=input.value.trim().toLowerCase(); apply();
   });
+  apply();   // 初始渲染（带 ?tab= 时直接落到对应分类）
 })();
 </script>"""
 
