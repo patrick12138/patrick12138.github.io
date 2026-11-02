@@ -29,7 +29,10 @@ NOINDEX = True
 META = re.compile(r'<div class="meta">(.*?)</div>', re.S)
 SRC_URL = re.compile(r'<a class="src-url" href="([^"]+)"')
 ANCHOR_HEAD = re.compile(r'(<meta property="og:url"[^>]*>)')
-ANCHOR_BACK = re.compile(r'(<a class="back" href=)')
+# 锚点：正文结束后遇到的第一个「尾巴容器」。不能只锚 <a class="back">：
+# 相关阅读（④.25）和上一篇/下一篇（④.2）都在 ②.5 之后才插，且也插在 back 前面——
+# 只锚 back 会让提示条每次 build 在它们前后之间来回跳（位置不幂等）。
+ANCHOR_TAIL = re.compile(r'(<nav class="related"|<nav class="pager"|<a class="back")')
 
 NOTE = (
     '<aside class="legal-note" data-legal="1">'
@@ -66,10 +69,10 @@ def apply_one(path, dry=False):
             head += '<meta name="robots" content="noindex,follow" data-legal="1">'
         if head:
             doc = ANCHOR_HEAD.sub(lambda m: m.group(1) + head, doc, count=1)
-        if ANCHOR_BACK.search(doc):
-            doc = ANCHOR_BACK.sub(lambda m: NOTE + m.group(1), doc, count=1)
+        if ANCHOR_TAIL.search(doc):
+            doc = ANCHOR_TAIL.sub(lambda m: NOTE + m.group(1), doc, count=1)
         else:
-            print("  ! 找不到 </a> 锚点，跳过版权提示：%s" % os.path.relpath(path, ROOT))
+            print("  ! 找不到正文尾巴锚点，跳过版权提示：%s" % os.path.relpath(path, ROOT))
 
     if doc == original:
         return False
@@ -101,6 +104,9 @@ def check():
                 problems.append("[P1] %s 搬运页缺版权提示" % slug)
         elif has_note or has_canon:
             problems.append("[P2] %s 不是搬运页，却带着版权标记" % slug)
+        if has_note and '<nav class="related"' in doc:
+            if doc.index('class="legal-note"') > doc.index('class="related"'):
+                problems.append("[P1] %s 版权提示跑到相关阅读后面了（位置不幂等）" % slug)
     print("  搬运页 %d 篇 · 问题 %d 条" % (reposts, len(problems)))
     for p in problems:
         print("   " + p)

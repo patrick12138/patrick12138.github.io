@@ -21,7 +21,10 @@ def body_html(html):
     if i < 0:
         return html
     i = html.find('>', i) + 1
-    ends = [html.find(x, i) for x in ('<nav class="pager"', '<a class="back"')]
+    # 正文到此为止：相关阅读 / 上下篇 / 版权提示 / 返回首页 都是页面尾巴，不算字数。
+    # （版权提示在 ②.5 就注入了，晚于它的两处 nav 还没生成——漏掉它会让每篇搬运页多算 55 字。）
+    ends = [html.find(x, i) for x in ('<nav class="related"', '<nav class="pager"',
+                                     '<aside class="legal-note"', '<a class="back"')]
     ends = [e for e in ends if e > 0]
     return html[i:min(ends) if ends else len(html)]
 
