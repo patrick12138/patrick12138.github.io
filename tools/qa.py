@@ -105,6 +105,20 @@ def check_css_stamp():
     return bad, files
 
 
+def check_page_shell():
+    """每个页面要么自带 <style>，要么必须引 base.css —— 拆分样式后 lab 就是这样丢样式的外壳。"""
+    bad = []
+    pages = (glob.glob(os.path.join(ROOT, "*.html"))
+             + glob.glob(os.path.join(ROOT, "*", "index.html"))
+             + glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
+    for p in pages:
+        s = open(p, encoding="utf-8").read()
+        if "<style" in s or "base.css" in s:
+            continue
+        bad.append(os.path.relpath(p, ROOT))
+    return bad
+
+
 def main():
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
     total = {k: 0 for k in ("P0", "P1", "P2")}
@@ -119,6 +133,13 @@ def main():
             print("  [%s] %s\n       %s" % (level, desc, seg))
         if len(hits) > 8:
             print("  … 还有 %d 处" % (len(hits) - 8))
+    shell_bad = check_page_shell()
+    if shell_bad:
+        print("\n这些页面既没有内联 <style> 也没引 base.css（会丢外壳样式）")
+        for p in shell_bad:
+            print("  [P0] %s" % p)
+        total["P0"] += len(shell_bad)
+
     stamp_bad, css_hash = check_css_stamp()
     if stamp_bad:
         print("\nCSS 版本戳过期（应为 %s，跑一次 build.py）" % " / ".join("%s=%s" % kv for kv in css_hash.items()))
