@@ -338,11 +338,10 @@ def process(path):
     doc = ensure_icon(doc)
     doc, toc_parts = build_toc(doc)
     li, bars = toc_parts if toc_parts else ("", "")
+    doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
     if not toc_parts:
-        doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
         open(path, "w", encoding="utf-8").write(doc)
         return False
-    doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
     # 目录标记：放在 body 之前（正文起点前）
     doc = doc.replace('<div class="body">', HEAD % (li, bars) + '<div class="body">', 1)
     # JS

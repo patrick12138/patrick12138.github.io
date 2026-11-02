@@ -20,10 +20,11 @@ assets/posts/<slug>/      配图（webp，本地化）
 tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.py gen_index.py qa.py sources.json
 ```
 
-## 五条硬规矩
+## 硬规矩（6 条）
 
 1. **文章一律由 `tools/md2post.py` 从 vault 的 md 生成**，不手写文章 HTML；
-   改排版走 `tools/rebuild.py`，它按 `tools/sources.json` 整站重生成。
+   改样式**只改 `assets/*.css` 然后跑 `build.py`**（它会重灌目录、重算哈希）。
+   `tools/rebuild.py` 是从 vault 的 md 重新生成正文，正文没变就别用——它会改动已有页面。
 2. **push 前必须跑 `tools/build.py`（内含 qa），P0 不为 0 不许上线。**
 3. **按钮里不放文字，只放图标**（`aria-label` 说明）；要文字就用文字链接。
 4. **动手前先对表**：`git remote -v` 确认是 `patrick12138/patrick12138.github.io`、工作副本只有
@@ -46,7 +47,7 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 | 写仓库 README（中英双语） | `references/readme.md` |
 
 **脚本不在这里存副本**（存过一份，跟仓库漂移了）。一律用仓库里的 `/var/minis/workspace/site/tools/`：
-`build.py`（一键：注入目录→生成首页→重算 hash→体检）、`gen_index.py`、`md2post.py`、`rebuild.py`、`add_toc.py`、`qa.py`、`sources.json`。
+`build.py`（一键：目录→字数→首页→上下篇→相关阅读→搜索索引→RSS→测试→hash→skill 一致性→体检，顺序以它自己的 docstring 为准）、`gen_index.py`、`md2post.py`、`rebuild.py`、`add_toc.py`、`qa.py`、`sources.json`。
 
 ## 最短路径
 

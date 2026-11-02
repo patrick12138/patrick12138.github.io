@@ -68,7 +68,7 @@ def add_toc_idempotent():
     os.unlink(tmp)
     check("add_toc 幂等（连处理两次字节一致）", a == b)
     for name, pat in (("nav.toc", '<nav class="toc"'), ("toc-fab", 'class="toc-fab"'),
-                      ("brandSet", 'id="brandSet"'), ("backTop", 'id="backTop"')):
+                      ("brandSet", 'id="brandSet"'), ("backTop", 'id="toTop"')):
         check("注入标记唯一：%s" % name, s.count(pat) <= 1, "出现 %d 次" % s.count(pat))
 
 

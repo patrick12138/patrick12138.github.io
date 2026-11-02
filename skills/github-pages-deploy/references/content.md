@@ -99,7 +99,7 @@ P0 必须为 0，P1 尽量清完，P2 多为原文 OCR 带进来的空格，可�
 
 **2. 列表摘要必须截断**
 
-首页每条的 `.desc` 要 `-webkit-line-clamp:3`。不截断的话，150 字的描述会折成 6 行，
+首页每条的 `.desc` 要 `-webkit-line-clamp:2`。不截断的话，150 字的描述会折成 6 行，
 把这条撑到别的条目的 1.5 倍高，看起来像「下面空了一大截」（实际是别人矮）。
 排查方法：`[...document.querySelectorAll('#posts li')].map(li=>li.getBoundingClientRect().height)`，
 高度方差过大就是它。
@@ -146,7 +146,6 @@ document.elementFromPoint(x, y) === document.getElementById('tocFab')  // false 
 - 首页列表的时间行由 `gen_index.py` 从文章页抓同一段文字，两处永远一致
 - `build.py` 第 ③ 步执行，不用手动跑
 
-样式在 `post.css`：`.meta .stats{color:var(--text-faint);opacity:.9}` —— 比日期还淡一档，不要加粗或换色。
 
 ## 构建顺序（tools/build.py）
 
@@ -210,7 +209,7 @@ md 表格 → `<div class="tablewrap"><table>` 两层，**不要手写 HTML 表�
 首页列表只有标题和摘要，很多词只出现在正文里（`worktree`、`缓存命中率`）。所以构建期压一份索引：
 
 ```bash
-python3 tools/gen_search.py     # 生成 search.json（45 篇约 154KB，gzip 后 ~50KB）
+python3 tools/gen_search.py     # 生成 search.js（45 篇约 154KB，gzip 后 ~50KB）
 ```
 
 - 每篇收录：slug / 标题 / 摘要 / 全部小标题 / 正文前 1500 字

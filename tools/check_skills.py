@@ -89,6 +89,9 @@ def check_skill_size(docs):
 
 
 def check_installed_sync():
+    if not os.path.isdir(INSTALLED):      # CI 上没有这个目录，跳过而不是判失败
+        notes.append("跳过副本比对：%s 不存在" % INSTALLED)
+        return
     for name in sorted(os.listdir(SKILLS)):
         src = os.path.join(SKILLS, name)
         dst = os.path.join(INSTALLED, name)

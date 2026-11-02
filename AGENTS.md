@@ -64,7 +64,7 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 | 主题切换、回到顶部 | `assets/site.js` + 对应 CSS |
 | 部署、凭据、DNS 排障 | `skills/github-pages-deploy/references/deploy.md` |
 
-## 5. 五条硬规矩
+## 5. 硬规矩（权威版在 SKILL.md，这里只留最容易踩的三条）
 
 1. **只有一个站点仓库**，不要为单个页面新建 repo。
 2. **生成物不手改**：`index.html`、`posts/**` 改了也会被下次 build 覆盖。
@@ -91,7 +91,7 @@ python3 tools/build.py --push "feat: xxx"   # 构建通过后自动 commit + pus
 
 ## 7. 文档索引（要细节看这里）
 
-- `skills/github-pages-deploy/SKILL.md` — 部署总入口 + 五条硬规矩
+- `skills/github-pages-deploy/SKILL.md` — 部署总入口 + 硬规矩权威版（本文件不复述）
 - `references/content.md` — md→文章流水线、排版体检、后处理幂等
 - `references/deploy.md` — 凭据、DNS 抽风、并发冲突、已知坑
 - `references/design.md` — 按钮/目录/暗门等交互规范

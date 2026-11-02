@@ -66,7 +66,7 @@ def unpublish(slug, dry=False):
         json.dump(rows, open(SOURCES, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     sh("python3 tools/gen_index.py >/dev/null")
     sh("python3 tools/gen_prevnext.py >/dev/null")
-    sh("python3 tools/gen_feed.py >/dev/null")
+    sh("python3 tools/gen_related.py && python3 tools/gen_search.py && python3 tools/gen_feed.py >/dev/null")
     print("✓ 已下线。接下来：python3 tools/build.py 体检 → commit → push")
     print("  恢复：python3 tools/unpublish.py %s --restore" % slug)
 

@@ -23,14 +23,6 @@
   .body th{white-space:nowrap}   /* 手机按内容排开，表头不折行才不会把列压窄 */
 }
 
-.refs{margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
-.refs h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--text-muted);margin:0 0 10px;font-weight:500}
-.refs ul{list-style:none;margin:0;padding:0}
-.refs li{margin:6px 0}
-.refs a{font-size:.95rem;color:var(--text);text-decoration:none;
-  border-bottom:1px solid color-mix(in srgb,var(--text) 18%,transparent)}
-.refs a:hover{color:var(--accent);border-color:var(--accent)}
 
 @media (max-width:720px){
   .wrap,.bar-in{padding-left:22px;padding-right:22px}
@@ -40,9 +32,6 @@
 }
 
 /* ─── 目录（toc） ─── */
-.back-top{font-family:var(--mono);font-size:.78rem;color:var(--text-muted);text-decoration:none;
-  padding:26px 0 60px;margin-left:18px;transition:color .15s}
-.back-top:hover{color:var(--accent)}
 .body h2,.body h3{scroll-margin-top:84px}
 /* ─── 目录：悬停/点按唤出的浮层（无标题、无关闭按钮，点别处即收） ─── */
 .toc{position:fixed;z-index:60;display:flex;flex-direction:column;
@@ -165,9 +154,6 @@
 .toc-fab svg,.toc-fab svg *{pointer-events:none}
 
 /* 视频一律外链，不内嵌播放器 */
-.body .video-link{display:inline-block;padding:6px 0;font-size:.9rem;
-  color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
-.body .video-link:hover{border-bottom-color:var(--accent)}
 
 /* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
    用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */

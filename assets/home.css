@@ -27,16 +27,12 @@
 .posts a:hover h2{color:var(--accent)}
 .posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
-.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
 
 /* article */
 
 @media (max-width:720px){
   .wrap,.bar-in{padding-left:22px;padding-right:22px}
   .page-title{font-size:1.95rem;margin-top:52px}
-  .article{padding:44px 0 30px}
-  .article h1{font-size:1.6rem}
-  .body{font-size:1.06rem;line-height:1.9}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
 }
@@ -45,7 +41,7 @@
 #sentinel{height:1px;margin:0}
 
 /* 工具栏：分类 tab + 搜索（放大镜点开输入框） */
-.tools{display:flex;align-items:center;gap:10px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tools{display:flex;align-items:center;gap:10px;margin:18px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
 
 
 .tools .tabs{margin:0;flex:0 0 auto;border:none;padding:0}
@@ -68,7 +64,6 @@
 /* 首页顶部的一行元信息（替代原来的「首页」大标题） */
 .page-meta{margin:56px 0 0;font-family:var(--mono);font-size:.74rem;letter-spacing:.03em;
   color:var(--text-muted)}
-.tools{margin-top:18px}
 @media (max-width:720px){ .page-meta{margin-top:36px} }
 
 /* 搜索：隐藏原生清空叉，用自定义的克制版本（只在有输入时出现） */

@@ -76,7 +76,7 @@ def check_dupes():
     for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
         s = open(p, encoding="utf-8").read()
         for name, pat in (("目录 nav.toc", r'<nav class="toc"'), ("目录按钮", r'class="toc-fab"'),
-                          ("站名下拉", r'id="brandSet"'), ("回到顶部", r'id="backTop"')):
+                          ("站名下拉", r'id="brandSet"'), ("回到顶部", r'id="toTop"')):
             n = len(re.findall(pat, s))
             if n > 1:
                 bad.append((os.path.basename(os.path.dirname(p)), name, n))
@@ -93,7 +93,8 @@ def check_css_stamp():
             files[name] = hashlib.sha1(open(f, "rb").read()).hexdigest()[:8]
     bad = []
     pages = (glob.glob(os.path.join(ROOT, "*.html"))
-             + glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
+             + glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))
+             + glob.glob(os.path.join(ROOT, "*", "index.html")))
     for p in pages:
         s = open(p, encoding="utf-8").read()
         for name, h in files.items():
@@ -110,7 +111,8 @@ def check_page_shell():
     bad = []
     pages = (glob.glob(os.path.join(ROOT, "*.html"))
              + glob.glob(os.path.join(ROOT, "*", "index.html"))
-             + glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
+             + glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))
+             + glob.glob(os.path.join(ROOT, "*", "index.html")))
     for p in pages:
         s = open(p, encoding="utf-8").read()
         if "<style" in s or "base.css" in s:
@@ -172,6 +174,17 @@ def check_tables():
     return bad
 
 
+def check_placeholders():
+    """生成物里不得残留 {{XXX}}：模板加了新占位符但 md2post 忘了替换时，会原样上线。"""
+    bad = []
+    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
+        s = open(p, encoding="utf-8").read()
+        left = set(re.findall(r"\{\{[A-Z_]+\}\}", s))
+        if left:
+            bad.append((os.path.basename(os.path.dirname(p)), " ".join(sorted(left))))
+    return bad
+
+
 def check_md_leak():
     """markdown 链接残渣：](http / 独立成段的 [ / ]( —— 微信或爬虫抓正文常留这些。"""
     bad = []
@@ -224,6 +237,13 @@ def main():
         for slug, msg, lvl in tbad[:6]:
             print("  [%s] %s · %s" % (lvl, slug, msg))
             total[lvl] += 1
+
+    ph = check_placeholders()
+    if ph:
+        print("\n生成物里的模板占位符（P0）")
+        for slug, left in ph[:8]:
+            print("  [P0] %s · %s" % (slug, left))
+        total["P0"] += len(ph)
 
     leak = check_md_leak()
     if leak:

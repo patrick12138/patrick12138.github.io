@@ -34,8 +34,17 @@ def build_post(path):
     slug = os.path.basename(os.path.dirname(path))
     title = clean(one(doc, r"<h1[^>]*>(.*?)</h1>")) or slug
     desc = clean(html.unescape(one(doc, r'<meta name="description" content="([^"]*)"')))
-    body_m = re.search(r'<div class="body">(.*?)</div>\s*(?:<a class="back"|<nav class="pager")', doc, re.S)
-    inner = body_m.group(1) if body_m else ""
+    # 正文边界：从 .body 起点到 related / pager / back 三者里最先出现的那个。
+    # 不能用「到第一个 </div>」或「到 pager」——正文里现在有 .tablewrap，
+    # 而 related 又插在 pager 之前，两种写法都会把正文截成空。
+    i = doc.find('<div class="body"')
+    if i > 0:
+        i = doc.find(">", i) + 1
+        ends = [doc.find(x, i) for x in ('<nav class="related"', '<nav class="pager"', '<a class="back"')]
+        ends = [e for e in ends if e > i]
+        inner = doc[i:min(ends) if ends else len(doc)]
+    else:
+        inner = ""
     heads = [clean(h) for h in re.findall(r"<h[234][^>]*>(.*?)</h[234]>", inner, re.S)]
     heads = [h for h in heads if h and len(h) <= 60][:MAX_HEADINGS]
     body = clean(inner)[:BODY_CHARS]

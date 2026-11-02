@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
-"""一条命令构建整站。
+"""一键构建：从 vault 重建 → 目录 → 字数 → 首页 → 上下篇 → 相关阅读 → 搜索索引 → RSS → 回归测试
+→ 资源版本号 → skill 同步与一致性 → 排版体检 →（可选）推送。
 
-用法：
-  python3 tools/build.py              # 重算资源版本 → 生成首页 → 排版体检
-  python3 tools/build.py --rebuild    # 另外先从 vault 重建全部文章（慢，约 1-2 分钟）
-  python3 tools/build.py --push       # 构建完顺便 commit + push
-
-顺序固定，不要改：
-  1. (可选) rebuild.py     从 vault 的 md 重新生成所有文章
-  2. add_toc.py            注入目录 / 站名下拉 / 回到顶部按钮 / 对齐导航
-  3. stats.py              给文章页补字数与阅读时间
-  4. gen_index.py          扫描 posts/ 生成首页
-  4.25 gen_related.py     相关阅读（tf-idf 共词，插在 pager 之前）
-  4.3 gen_search.py      生成 search.json（首页搜索只在点开时才 fetch）
-  5. test_pipeline.py      回归测试（幂等 + 注入唯一），失败即中止
-  6. stamp_assets()        给 base/home/post.css 与 site.js 写内容哈希
-  7. check_skills.py       skill 与代码一致性（脚本未登记 / 引用失效 / 参数不存在 / 副本不同步）
-  8. qa.py                 排版体检，P0 不为 0 就中止（不会 push）
-  8. (可选) commit + push
+顺序（改这里就是改全站流程，文档一律指向本文件，不要再各写一份）：
+  ① rebuild.py        可选，--rebuild 时从 vault 的 md 重生成全部文章（会改正文，慎用）
+  ② add_toc.py        注入目录/站名下拉/回到顶部，剥旧标记（幂等）
+  ③ stats.py          字数与阅读时间
+  ④ gen_index.py      生成首页
+  ④.2 gen_prevnext.py 上一篇 / 下一篇
+  ④.25 gen_related.py 相关阅读（tf-idf 共词）
+  ④.3 gen_search.py   生成 search.js（首页搜索只在点开时才加载）
+  ④.5 gen_feed.py     feed.xml / sitemap.xml / robots.txt
+  ⑤ test_pipeline.py  回归测试（幂等 + 注入唯一），失败即中止
+  ⑥ stamp_assets.py   资源 ?v= 哈希
+  ⑥.5 sync_skills()   仓库 skills/ → /var/minis/skills
+  ⑥.8 check_skills.py skill 与代码一致性（脚本登记 / 引用 / 参数 / 副本）
+  ⑦ qa.py             排版与内容体检，P0 不为 0 就中止（不会 push）
 """
 import hashlib
 import os

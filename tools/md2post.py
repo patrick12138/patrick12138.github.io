@@ -360,7 +360,8 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
            .replace("{{BODY}}", html_body.rstrip())
            .replace("{{BACK_HREF}}", "../../")
            .replace("{{KIND_REPOST_ON}}", kind_repost_on)
-           .replace("{{KIND_OWN_ON}}", kind_own_on))
+           .replace("{{KIND_OWN_ON}}", kind_own_on)
+           .replace("{{SLUG}}", slug))
 
     page_dir = os.path.join(ROOT, "posts", slug)
     os.makedirs(page_dir, exist_ok=True)
