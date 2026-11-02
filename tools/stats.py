@@ -46,9 +46,10 @@ def inject(path):
     lab = label(s)
     # 先剥掉旧的统计片段
     s = re.sub(r'\s*<span class="stats">[^<]*</span>', "", s)
-    s = re.sub(r'(<div class="meta">)(.*?)(</div>)',
-               lambda m: m.group(1) + m.group(2) + ' · <span class="stats">' + lab + '</span>' + m.group(3),
-               s, count=1, flags=re.S)
+    def repl(m):
+        base = m.group(2).rstrip(' ·　')
+        return m.group(1) + base + ' · <span class="stats">' + lab + '</span>' + m.group(3)
+    s = re.sub(r'(<div class="meta">)(.*?)(</div>)', repl, s, count=1, flags=re.S)
     open(path, "w", encoding="utf-8").write(s)
     return True
 
