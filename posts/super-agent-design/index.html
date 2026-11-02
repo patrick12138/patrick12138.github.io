@@ -11,7 +11,7 @@
 <meta property="og:description" content="DeepSeek Harness 团队的设计长文：Router + Worker 双层架构、事件驱动、存算分离与外部 Watchdog，附初步消融实验与开放问题。">
 <meta property="og:url" content="https://patrick12138.github.io/posts/super-agent-design/"><link rel="canonical" href="https://mp.weixin.qq.com/s/zoS7GlReWPhfCjENGxXCdg" data-legal="1"><meta name="robots" content="noindex,follow" data-legal="1">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=cc0b377c">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=d40009cd">
 <link rel="stylesheet" href="../../assets/post.css?v=043f49ff">
 </head>
 <body>
@@ -223,7 +223,7 @@
 <p>在这种形态下，Agent 不再只是一个被动等待指令的对话窗口，而是演进为数字环境中持续在线的自主协作者：面向个人，它可以是跨设备协助处理日常事务的个人助手；面向团队，它融入研发工作流，承接并推进具体任务。我们相信，随着模型能力与底层系统架构的共同演进，这种更自主的工作方式有望成为人机协作的常态。</p>
 <p>本文的部分设计已在 dsh-superagent-prototype 中实现（点击 阅读原文 前往 GitHub 仓库）。该插件只是一种为了验证技术路线而提供的原型，并非 DeepSeek 的正式产品。Author &amp; Acknowledgements本文源于 DeepSeek Harness 团队的共同实践。Yujia Qiao 完成了系统实现和本文写作，Huanqi Cao, Zui Chen, Xieting Chu, Tianyi Cui, Shiyuan Feng, Yudong Han, Kexin Liu, Shichun Liu, Gesi Luo, Yifan Shi, Tongrui Xiong, Hanxiang Xu，C.C. Yu, Ziya Zhang, F. Zhou 等参与审阅讨论并提供反馈。系统的实现与文章的形成，离不开团队日常的交流与积累。</p>
 <p><img alt="图" src="../../assets/posts/super-agent-design/23e4285950a1.webp"></p></div>
-<aside class="legal-note" data-legal="1"><span class="legal-k">版权</span>本文版权归原作者与译者所有，此处为全文搬运，仅供检索与离线阅读<span class="legal-sep">/</span><a class="legal-link" href="https://t.me/patrick12138" rel="noopener">不希望被转载？联系我删除</a></aside>
+<aside class="legal-note" data-legal="1"><span class="legal-k">/ 版权</span>本文版权归原作者与译者所有，此处为全文搬运，仅供检索与离线阅读<span class="legal-sep">/</span><a class="legal-link" href="https://t.me/patrick12138" rel="noopener">不希望被转载？联系我删除</a></aside>
 <nav class="related" aria-label="相关阅读"><span class="related-k">相关阅读</span><ul><li><a href="../agent-infra-and-runtime/">Agent Infra 与 Runtime</a></li><li><a href="../harness-engineering/">工程技术：在智能体优先的世界中利用 Codex</a></li></ul></nav>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../ai-token-pricing/"><span class="pager-k">← 上一篇</span><span class="pager-t" title="AI 订阅额度与 token 比价（2026-10）">AI 订阅额度与 token 比价（2026-10）</span></a></nav>
 <a class="back" href="../../">← 返回首页</a></article></div>

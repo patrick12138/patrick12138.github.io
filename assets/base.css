@@ -45,8 +45,8 @@ a{color:inherit}
 /* 搬运页的版权提示：一段发丝线上的脚注，不占视觉重量（不要框、不要底色、不要图标） */
 .legal-note{margin:52px 0 0;padding:16px 0 0;border-top:1px solid var(--border);
   font-size:.8rem;line-height:1.9;color:var(--text-faint)}
-.legal-k{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;
-  color:var(--text-muted);margin-right:10px}
+.legal-k{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+  color:var(--accent);margin-right:12px}
 .legal-sep{color:var(--text-faint);margin:0 10px;opacity:.55}
 .legal-link{color:var(--text-muted);text-decoration:none;
   border-bottom:1px solid var(--border);transition:color .15s,border-color .15s}
