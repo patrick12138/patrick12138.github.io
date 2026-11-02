@@ -113,7 +113,9 @@ footer{padding:0 0 34px}
   opacity:0;pointer-events:none;
   transition:opacity .18s ease,color .15s}
 .to-top.show{opacity:.9;pointer-events:auto}
-.to-top:hover{opacity:1;color:var(--accent)}
+@media (hover:hover){.to-top:hover{opacity:1;color:var(--accent)}}
+.to-top:focus{outline:none}
+.to-top:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
 .to-top svg{width:17px;height:17px;display:block}
 @media (max-width:720px){.to-top{right:18px;--totop-bottom:76px}}
 

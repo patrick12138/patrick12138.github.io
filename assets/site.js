@@ -85,9 +85,11 @@ window.siteUI = window.siteUI || {
       }, 1500);
     }
     function goTop() {
+      // 立刻重置：不让按钮带着 hover/focus 的强调色停在顶部，也别等滚动事件
+      btn.blur();
+      btn.classList.remove('is-idle', 'show');
       window.siteUI.scrollTo(0);
-      // 程序化滚动在部分 WebView 里不派发 scroll，手动同步一次状态，否则按钮停在“显示”态
-      setTimeout(update, 420);
+      setTimeout(update, 420);   // 兜底：程序化滚动不一定派发 scroll
     }
     window.addEventListener('scroll', function () { update(); poke(); }, { passive: true });
     window.addEventListener('resize', function () { update(); poke(); }, { passive: true });
