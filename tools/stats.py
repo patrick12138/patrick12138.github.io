@@ -7,7 +7,6 @@
 import re
 import glob
 import os
-import math
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
