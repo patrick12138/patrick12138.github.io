@@ -203,14 +203,19 @@ HEAD_RE = re.compile(r'<nav class="toc" id="toc".*?<button class="toc-fab"[^>]*>
 
 
 def strip_toc(doc):
+    """把自己注入过的东西全部清干净（含重复注入的多份），保证可重复执行。"""
     doc = HEAD_RE.sub("", doc)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
-    # 别的会话注入过的英文版浮动按钮，重复的话一并清掉
+    # 别的会话注入过的英文版浮动按钮
     doc = re.sub(r'<button class="toc-fab"[^>]*aria-label="Contents".*?</button>', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-tab"[^>]*aria-label="Expand[^"]*".*?</button>', "", doc, flags=re.S)
-    doc = re.sub(r"\n<script>\n\(function\(\)\{\n  var b=document\.getElementById\('backTop'\).*?\}\)\(\);\n</script>", "", doc, flags=re.S)
+    # 注入的脚本块（可能有多份，全部清掉，稍后重新注入一次）
+    for sig in ("brandSet", "backTop", "var toc=document.getElementById"):
+        pat = r"\n<script>\n\(function\(\)\{[^<]*?%s[\s\S]*?\}\)\(\);\n</script>" % re.escape(sig)
+        doc = re.sub(pat, "", doc)
+    # 清掉之前反复 strip 留下的空 script
+    doc = re.sub(r"\n?<script></script>", "", doc)
     doc = re.sub(r'\n/\* ─── 目录（toc） ─── \*/.*?(?=</style>)', "", doc, flags=re.S)
-    doc = re.sub(r'\n\(function\(\)\{\n  var toc=document\.getElementById\(\'toc\'\).*?\}\)\(\);\n', "", doc, flags=re.S)
     return doc
 
 
