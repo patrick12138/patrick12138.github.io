@@ -168,6 +168,15 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   align-items:center;justify-content:center;letter-spacing:0;font-size:0;
   box-shadow:0 4px 16px rgba(0,0,0,.22)}
 .toc-tab svg,.toc-fab svg{display:block}
+
+.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
+.toc-tab,.toc-fab{position:fixed}
+
+/* 目录：更紧凑 + 头部用图标 */
+.toc-head span:first-child{display:none}
+.toc-head{gap:5px;margin-bottom:8px}
+.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
+.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
@@ -181,7 +190,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>AI 输出形态与 HTML Artifact</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>Using Claude Code: The unreasonable effectiveness of HTML</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">什么时候用 HTML</a></li><li class="lvl2"><a href="#h2">和 Codex 工作流的关系</a></li><li class="lvl2"><a href="#h3">可复用 prompt</a></li><li class="lvl2"><a href="#h4">Claude Artifacts 完整能力（2026 更新）</a></li><li class="lvl3"><a href="#h5">AI-Powered Artifacts</a></li><li class="lvl3"><a href="#h6">MCP 集成</a></li><li class="lvl3"><a href="#h7">持久化存储</a></li><li class="lvl3"><a href="#h8">版本控制与多 Artifact</a></li><li class="lvl3"><a href="#h9">错误处理</a></li><li class="lvl2"><a href="#h10">与本页原有内容的关系</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><p>这篇文章的重点是：当 agent 输出越来越复杂时，Markdown 不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码 review 和交互式调参，HTML Artifact 往往更清楚、更可读、更容易分享。</p>
+<div class="wrap"><article class="article"><h1>AI 输出形态与 HTML Artifact</h1><div class="meta">June 24, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>Using Claude Code: The unreasonable effectiveness of HTML</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">什么时候用 HTML</a></li><li class="lvl2"><a href="#h2">和 Codex 工作流的关系</a></li><li class="lvl2"><a href="#h3">可复用 prompt</a></li><li class="lvl2"><a href="#h4">Claude Artifacts 完整能力（2026 更新）</a></li><li class="lvl3"><a href="#h5">AI-Powered Artifacts</a></li><li class="lvl3"><a href="#h6">MCP 集成</a></li><li class="lvl3"><a href="#h7">持久化存储</a></li><li class="lvl3"><a href="#h8">版本控制与多 Artifact</a></li><li class="lvl3"><a href="#h9">错误处理</a></li><li class="lvl2"><a href="#h10">与本页原有内容的关系</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><p>这篇文章的重点是：当 agent 输出越来越复杂时，Markdown 不一定是最适合人类审阅的最终形态。对于规格、报告、设计探索、代码 review 和交互式调参，HTML Artifact 往往更清楚、更可读、更容易分享。</p>
 <h2 id="h1">什么时候用 HTML</h2>
 <table>
 <thead>
@@ -215,7 +224,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </table>
 <p>Markdown 仍适合长期知识沉淀和可编辑笔记；HTML 更适合需要视觉结构、交互、密集信息和一次性审阅的输出。</p>
 <h2 id="h2">和 Codex 工作流的关系</h2>
-<p>[[Resources/Codex 与 AI 编程工作流|Codex 与 AI 编程工作流]] 强调“人要留在审查回路里”。HTML Artifact 的意义就在这里：它把复杂输出变成更容易被人审阅和操控的界面。</p>
+<p><a href="/posts/codex-workflow/">Codex 与 AI 编程工作流</a> 强调“人要留在审查回路里”。HTML Artifact 的意义就在这里：它把复杂输出变成更容易被人审阅和操控的界面。</p>
 <p>典型链路：</p>
 <ol>
 <li>让 agent 读代码、资料或设计约束。</li>
@@ -246,7 +255,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 - 提供 copy as JSON / Markdown / prompt 按钮。
 </code></pre>
 <h2 id="h4">Claude Artifacts 完整能力（2026 更新）</h2>
-<p>来源：[[Sources/Inbox/What are artifacts and how do I use them|What are artifacts and how do I use them]]（Anthropic 官方文档, 2026-03）</p>
+<p>来源：What are artifacts and how do I use them（Anthropic 官方文档, 2026-03）</p>
 <p>Claude Artifacts 已从单纯的"独立内容展示"进化为一套完整的应用生成和分发平台。以下补充本页未覆盖的新能力。</p>
 <h3 id="h5">AI-Powered Artifacts</h3>
 <p>Artifacts 可以内嵌 AI 能力，变成 AI 驱动的应用。用户通过文本 API 使用 Claude 的智能——问答、创意生成、个性化教练、游戏、问题解决。</p>
@@ -282,7 +291,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>面试话术演练器；</li>
 <li>需要交互调参的提示词或配置。</li>
 </ul>
-<p>如果 HTML 里的结论有长期价值，应再编译回 Markdown wiki 页，并更新 [[Index|Index]] 和 [[Log|Log]]。</p></div>
+<p>如果 HTML 里的结论有长期价值，应再编译回 Markdown wiki 页，并更新 Index 和 Log。</p></div>
 <a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>

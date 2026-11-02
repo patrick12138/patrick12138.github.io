@@ -168,6 +168,15 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   align-items:center;justify-content:center;letter-spacing:0;font-size:0;
   box-shadow:0 4px 16px rgba(0,0,0,.22)}
 .toc-tab svg,.toc-fab svg{display:block}
+
+.toc-tab svg,.toc-fab svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
+.toc-tab,.toc-fab{position:fixed}
+
+/* 目录：更紧凑 + 头部用图标 */
+.toc-head span:first-child{display:none}
+.toc-head{gap:5px;margin-bottom:8px}
+.toc-list a{padding:3px 0 3px 11px;line-height:1.45;font-size:.72rem}
+.toc-list li.lvl3 a{padding-left:22px;font-size:.7rem}
 </style>
 </head>
 <body>
@@ -181,8 +190,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>Codex 与 AI 编程工作流</h1><div class="meta">June 10, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>来自 Codex 官方团队的分享：如何把 Codex 用到极致 · 把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · 我们如何使用 Codex 在 28 天内构建 Android 版 Sora（OpenAI 官方原文） · 工程技术：在智能体优先的世界中利用 Codex · 一个半月高强度 Claude Code 使用后感受 · 好奇心周刊第25期 如何让 AI 写好代码 · The 70% problem Hard truths about AI-assisted coding · Why I Don’t Vibe Code · AI 早报 2026-05-29 · AI 时代的品味与工程思维</aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><span>目录</span><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心判断</a></li><li class="lvl2"><a href="#h2">一套可复用流程</a></li><li class="lvl2"><a href="#h3">官方最佳实践六支柱</a></li><li class="lvl2"><a href="#h4">Prompt 四要素</a></li><li class="lvl2"><a href="#h5">复杂任务先计划</a></li><li class="lvl2"><a href="#h6">AGENTS.md 的价值</a></li><li class="lvl2"><a href="#h7">配置、Skills 与 Automations</a></li><li class="lvl2"><a href="#h8">Session 管理</a></li><li class="lvl2"><a href="#h9">智能体优先工程</a></li><li class="lvl2"><a href="#h10">Claude Code 高强度使用经验</a></li><li class="lvl2"><a href="#h11">AI 专家委员会与 Worktree</a></li><li class="lvl2"><a href="#h12">对抗 AI 代码熵增</a></li><li class="lvl2"><a href="#h13">苏格拉底式编程</a></li><li class="lvl2"><a href="#h14">并行 agent 的真实瓶颈</a></li><li class="lvl2"><a href="#h15">不要只用 AI 做旧事</a></li><li class="lvl2"><a href="#h16">验证器比野心重要</a></li><li class="lvl2"><a href="#h17">反面提醒</a></li><li class="lvl2"><a href="#h18">对个人求职的用法</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><p>这组资料的共同结论是：AI 编程的上限不在“让模型多写几行代码”，而在 <strong>上下文、计划、验证、审查和人的判断</strong> 能不能跟上。</p>
-<p>补充阅读：[[Resources/AI 商品化与价值迁移|AI 商品化与价值迁移]]、[[Resources/AI 辅助编程的 70% 问题|AI 辅助编程的 70% 问题]]、[[Resources/AI 疲劳与可持续使用|AI 疲劳与可持续使用]]、[[Resources/Agent Infra 与 Runtime|Agent Infra 与 Runtime]]</p>
+<div class="wrap"><article class="article"><h1>Codex 与 AI 编程工作流</h1><div class="meta">June 10, 2026 · 原创</div><aside class="source"><span class="src-label">来源</span>来自 Codex 官方团队的分享：如何把 Codex 用到极致 · 把 Codex 用到极致！OpenAI 官方最佳实践完整解读 · 我们如何使用 Codex 在 28 天内构建 Android 版 Sora（OpenAI 官方原文） <span class="src-more">等 10 篇</span></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-expanded="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心判断</a></li><li class="lvl2"><a href="#h2">一套可复用流程</a></li><li class="lvl2"><a href="#h3">官方最佳实践六支柱</a></li><li class="lvl2"><a href="#h4">Prompt 四要素</a></li><li class="lvl2"><a href="#h5">复杂任务先计划</a></li><li class="lvl2"><a href="#h6">AGENTS.md 的价值</a></li><li class="lvl2"><a href="#h7">配置、Skills 与 Automations</a></li><li class="lvl2"><a href="#h8">Session 管理</a></li><li class="lvl2"><a href="#h9">智能体优先工程</a></li><li class="lvl2"><a href="#h10">Claude Code 高强度使用经验</a></li><li class="lvl2"><a href="#h11">AI 专家委员会与 Worktree</a></li><li class="lvl2"><a href="#h12">对抗 AI 代码熵增</a></li><li class="lvl2"><a href="#h13">苏格拉底式编程</a></li><li class="lvl2"><a href="#h14">并行 agent 的真实瓶颈</a></li><li class="lvl2"><a href="#h15">不要只用 AI 做旧事</a></li><li class="lvl2"><a href="#h16">验证器比野心重要</a></li><li class="lvl2"><a href="#h17">反面提醒</a></li><li class="lvl2"><a href="#h18">对个人求职的用法</a></li></ol></nav><button class="toc-tab" id="tocTab" aria-label="展开目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><button class="toc-fab" id="tocFab" aria-label="文章目录"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg></button><div class="body"><p>这组资料的共同结论是：AI 编程的上限不在“让模型多写几行代码”，而在 <strong>上下文、计划、验证、审查和人的判断</strong> 能不能跟上。</p>
+<p>补充阅读：AI 商品化与价值迁移、<a href="/posts/the-70-percent-problem/">AI 辅助编程的 70% 问题</a>、<a href="/posts/ai-fatigue/">AI 疲劳与可持续使用</a>、<a href="/posts/agent-infra-and-runtime/">Agent Infra 与 Runtime</a></p>
 <h2 id="h1">核心判断</h2>
 <p>Codex 更像一组能力很强、但需要明确上下文的新同事，而不是一个可以无条件接管工程责任的按钮。</p>
 <p>适合交给 Codex 的部分：</p>
@@ -236,7 +245,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </tr>
 </tbody>
 </table>
-<p>这和 [[Resources/LLM Wiki 实践指南|LLM Wiki 实践指南]] 是同一个逻辑：先编译上下文，再复用上下文。</p>
+<p>这和 LLM Wiki 实践指南 是同一个逻辑：先编译上下文，再复用上下文。</p>
 <h2 id="h3">官方最佳实践六支柱</h2>
 <p>OpenAI Codex Best Practices 的落地思路可以压缩成六个支柱：</p>
 <ul>
@@ -351,7 +360,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <li>CodeRabbit：PR 自动 review，再让主力 agent 判断哪些意见值得修。</li>
 </ul>
 <p>这个模式要配合 Git Worktree 或独立分支使用。每个 agent 在独立工作区里探索，最后通过 PR、diff 或人工 review 回收结果，避免多个 agent 在同一工作区里互相污染。</p>
-<p>这和 [[Resources/Agent Infra 与 Runtime|Agent Infra 与 Runtime]] 的判断一致：agent 能力变强以后，环境隔离、分支、调度和回收机制会变得更重要。</p>
+<p>这和 <a href="/posts/agent-infra-and-runtime/">Agent Infra 与 Runtime</a> 的判断一致：agent 能力变强以后，环境隔离、分支、调度和回收机制会变得更重要。</p>
 <h2 id="h12">对抗 AI 代码熵增</h2>
 <p>AI 产出代码很快，技术债累积也会很快。有效做法不是少用 AI，而是给 AI 更清楚的工程边界。</p>
 <p>需要长期维护的几件事：</p>
@@ -383,7 +392,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </ul>
 <p>因此，AI 提效后的瓶颈常常从“写代码”转移到“决策、反馈和整合”。</p>
 <h2 id="h15">不要只用 AI 做旧事</h2>
-<p>[[Resources/AI 商品化与价值迁移|AI 商品化与价值迁移]] 提醒：如果只是用 AI 更快生成传统形态的软件，可能只是“用电动机驱动旧工厂”。真正的效率提升，通常来自围绕新能力重新设计流程。</p>
+<p>AI 商品化与价值迁移 提醒：如果只是用 AI 更快生成传统形态的软件，可能只是“用电动机驱动旧工厂”。真正的效率提升，通常来自围绕新能力重新设计流程。</p>
 <p>对工程工作流来说，就是：</p>
 <ul>
 <li>不只让 AI 写代码，还要让它参与读代码、建计划、跑验证、生成审查材料。</li>
@@ -403,7 +412,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 </ul>
 <p>当任务很长时，先让 Codex 把计划保存成文件；跨会话继续时，新的实例先读计划，再执行下一步。</p>
 <h2 id="h17">反面提醒</h2>
-<p>[[Sources/Inbox/Why I Don’t Vibe Code|Why I Don’t Vibe Code]] 的价值在于提醒：AI 能降低 accidental complexity，但不能消除 essential complexity。</p>
+<p>Why I Don’t Vibe Code 的价值在于提醒：AI 能降低 accidental complexity，但不能消除 essential complexity。</p>
 <p>需要保留的摩擦：</p>
 <ul>
 <li>深读代码时形成的真实理解。</li>
@@ -427,13 +436,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 <blockquote>
 <p>我会把 Codex 当成很强的新同事来用，而不是直接替我做工程判断。实质性改动前，我会先让它读代码、复述数据流和模块边界，再一起制定计划。实施时可以让它补代码、补测试、跑验证，但架构取舍、用户体验、异常边界和最终 review 还是我负责。AI 提高的是产能，不是免除工程责任。</p>
 </blockquote>
-<p>相关页面：</p>
-<ul>
-<li>[[Career/工程能力/工程方法论与安全清单|工程方法论与安全清单]]</li>
-<li>[[Career/工程能力/Agentic工程架构详解|Agentic 工程架构详解]]</li>
-<li>[[Resources/AI 输出形态与 HTML Artifact|AI 输出形态与 HTML Artifact]]</li>
-<li>[[Resources/AI 行业观察|AI 行业观察]]</li>
-</ul></div>
+<p>相关</p><ul><li><a href="/posts/html-artifact/">AI 输出形态与 HTML Artifact</a></li></ul></div>
 <a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2026 <a href="../../about/">patrick</a>
