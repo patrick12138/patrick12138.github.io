@@ -6,7 +6,12 @@ from datetime import datetime
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(SITE, "index.html")
 
-STYLE = ('<link rel="alternate" type="application/rss+xml" title="patrick" href="feed.xml">'
+STYLE = ('<meta property="og:type" content="website">'
+         '<meta property="og:site_name" content="patrick">'
+         '<meta property="og:title" content="patrick">'
+         '<meta property="og:description" content="写点东西，也搬运点好东西。">'
+         '<meta property="og:url" content="https://patrick12138.github.io/">'
+         '<link rel="alternate" type="application/rss+xml" title="patrick" href="feed.xml">'
          '<link rel="stylesheet" href="assets/base.css">'
          '<link rel="stylesheet" href="assets/home.css">')   # ?v= 由 tools/build.py 统一写
 
