@@ -103,8 +103,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .body{font-size:1.06rem;line-height:1.9}
   .posts h2{font-size:1.2rem}
   .posts a{padding:24px 0 22px}
-  /* 移动端：搜索按钮靠右 */
-  .tools .sbtn{margin-left:auto}
 }
 
 /* ─── 目录（toc） ─── */
@@ -193,7 +191,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .tools{display:flex;align-items:center;gap:10px;margin:26px 0 0;
   border-bottom:1px solid var(--border);padding-bottom:12px}
 .tools .tabs{margin:0;flex:0 0 auto;border:none;padding:0}
-.sbtn{background:none;border:none;padding:0;color:var(--text-muted);cursor:pointer;
+.sbtn{background:none;border:none;padding:0;margin-left:auto;color:var(--text-muted);cursor:pointer;
   width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:color .15s}
 .sbtn:hover,.sbtn.on{color:var(--accent)}
 .sinput{display:none;flex:1 1 auto;min-width:0;background:transparent;border:none;border-radius:0;
