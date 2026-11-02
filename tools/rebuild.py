@@ -43,8 +43,8 @@ def main():
             continue
         print("· %s" % r["slug"])
         md2post.build(md, r["slug"], date_arg=iso(r.get("date")), author_arg=r.get("author"),
-                      kind=r.get("kind", "repost"), out_dir="posts", images=True,
-                      back_href="../../", title_arg=r.get("title") or None)
+                      kind=r.get("kind", "repost"), images=True,
+                      title_arg=r.get("title") or None)
         done += 1
     print("重建 %d 篇，跳过 %d 篇 %s" % (done, len(skipped), skipped or ""))
     saved, sys.argv = sys.argv, sys.argv[:1]   # add_toc 会读 argv，别把 slug 当成文件路径

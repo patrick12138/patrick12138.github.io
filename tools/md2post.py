@@ -6,11 +6,12 @@
   python3 tools/md2post.py "<md>" <slug> [--author 名字] [--date YYYY-MM-DD] [--kind repost]
 
   # 自己的浓缩笔记（没有 frontmatter，标题取第一个 H1，来源取“来源：”那段）
-  python3 tools/md2post.py "<md>" <slug> --kind own --out notes [--date YYYY-MM-DD]
+  python3 tools/md2post.py "<md>" <slug> --kind own [--date YYYY-MM-DD]
 
-- 模板直接从已有的 posts/git-worktree/index.html 里切，所以样式永远和旧文章一致。
-- 图片下载到 assets/posts/<slug>/（笔记走 assets/notes/<slug>/），正文里改成相对路径。
-- 只生成 <out>/<slug>/index.html，首页/笔记列表要手动加一条 <li>。
+- 模板是 tools/post_template.html（纯占位符，不依赖任何一篇文章）。
+- 图片下载到 assets/posts/<slug>/，正文里改成相对路径。
+- 只生成 posts/<slug>/index.html；首页由 tools/gen_index.py 全自动扫描生成，不用手改。
+- 生成后自动把记录同步进 tools/sources.json，rebuild.py 随时可全量重生成。
 """
 import argparse
 import hashlib
@@ -229,17 +230,17 @@ def optimize_image(path, max_w=1400, quality=82):
         return path
 
 
-def fetch_asset(url, slug, out_dir):
+def fetch_asset(url, slug):
     ext = os.path.splitext(urllib.parse.urlparse(url).path)[1].lower()
     if ext not in (".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"):
         ext = ".png"
     name = hashlib.sha1(url.encode()).hexdigest()[:12] + ext
-    folder = os.path.join(ROOT, "assets", out_dir, slug)
+    folder = os.path.join(ROOT, "assets", "posts", slug)
     os.makedirs(folder, exist_ok=True)
     path = os.path.join(folder, name)
     webp = os.path.splitext(path)[0] + ".webp"
     if ext != ".webp" and os.path.exists(webp):
-        return "../../assets/%s/%s/%s" % (out_dir, slug, os.path.basename(webp)), os.path.getsize(webp)
+        return "../../assets/posts/%s/%s" % (slug, os.path.basename(webp)), os.path.getsize(webp)
     if not os.path.exists(path):
         p = urllib.parse.urlparse(url)
         req = urllib.request.Request(url, headers={"User-Agent": UA,
@@ -247,17 +248,17 @@ def fetch_asset(url, slug, out_dir):
         with urllib.request.urlopen(req, timeout=45) as r, open(path, "wb") as f:
             f.write(r.read())
     path = optimize_image(path)
-    return "../../assets/%s/%s/%s" % (out_dir, slug, os.path.basename(path)), os.path.getsize(path)
+    return "../../assets/posts/%s/%s" % (slug, os.path.basename(path)), os.path.getsize(path)
 
 
-def localize_images(body, slug, out_dir):
+def localize_images(body, slug):
     sizes = []
     md_img = re.compile(r"!\[([^\]]*)\]\((https?://[^\s)]+)(?:\s+\"[^\"]*\")?\)")
     html_img = re.compile(r"(<img[^>]+src=\")(https?://[^\"]+)(\")")
 
     def repl_md(m):
         try:
-            local, size = fetch_asset(m.group(2), slug, out_dir)
+            local, size = fetch_asset(m.group(2), slug)
             sizes.append(size)
             return "![%s](%s)" % (m.group(1), local)
         except Exception as e:
@@ -266,7 +267,7 @@ def localize_images(body, slug, out_dir):
 
     def repl_html(m):
         try:
-            local, size = fetch_asset(m.group(2), slug, out_dir)
+            local, size = fetch_asset(m.group(2), slug)
             sizes.append(size)
             return m.group(1) + local + m.group(3)
         except Exception as e:
@@ -294,7 +295,7 @@ def fmt_date(d):
 
 # ─── 生成 ──────────────────────────────────────────────────
 def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
-          out_dir="posts", images=True, back_href="../../", title_arg=None):
+          images=True, title_arg=None):
     raw = open(md_path, encoding="utf-8").read()
     meta, body = split_front(raw)
 
@@ -316,7 +317,7 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
         or datetime.fromtimestamp(os.path.getmtime(md_path)).date()
 
     if images:
-        body, sizes = localize_images(body, slug, out_dir)
+        body, sizes = localize_images(body, slug)
         if sizes:
             print("  图片 %d 张，共 %.1f MB" % (len(sizes), sum(sizes) / 1048576))
 
@@ -357,23 +358,24 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
            .replace("{{META}}", " · ".join(bits))
            .replace("{{SOURCE_BLOCK}}", (src_block + "\n") if src_block else "")
            .replace("{{BODY}}", html_body.rstrip())
-           .replace("{{BACK_HREF}}", back_href)
+           .replace("{{BACK_HREF}}", "../../")
            .replace("{{KIND_REPOST_ON}}", kind_repost_on)
            .replace("{{KIND_OWN_ON}}", kind_own_on))
 
-    page_dir = os.path.join(ROOT, out_dir, slug)
+    page_dir = os.path.join(ROOT, "posts", slug)
     os.makedirs(page_dir, exist_ok=True)
     with open(os.path.join(page_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write(out)
-    print("  → %s/%s/index.html  %.1f KB" % (out_dir, slug, len(out.encode()) / 1024))
+    print("  → posts/%s/index.html  %.1f KB" % (slug, len(out.encode()) / 1024))
     
     # 自动同步记录进 tools/sources.json，保证 rebuild.py 随时可用
-    sync_to_sources_json(slug, md_path, author, d, kind, title)
+    sync_to_sources_json(slug, md_path, author, d, kind, title_arg)
 
     return {"slug": slug, "title": title, "desc": desc, "date": d, "author": author, "kind": kind}
 
 
-def sync_to_sources_json(slug, md_path, author, d, kind, title):
+def sync_to_sources_json(slug, md_path, author, d, kind, title_arg=None):
+    """把这篇登记进 sources.json（只写显式 --title，不把推导出的 H1 写脏）。"""
     import json
     json_path = os.path.join(ROOT, "tools", "sources.json")
     if not os.path.exists(json_path):
@@ -392,7 +394,7 @@ def sync_to_sources_json(slug, md_path, author, d, kind, title):
                 if author: r["author"] = author
                 if date_str: r["date"] = date_str
                 r["kind"] = kind
-                if title: r["title"] = title
+                if title_arg: r["title"] = str(title_arg).strip()
                 found = True
                 break
         if not found:
@@ -402,10 +404,11 @@ def sync_to_sources_json(slug, md_path, author, d, kind, title):
                 "author": author or "",
                 "date": date_str,
                 "kind": kind,
-                "title": title or ""
+                "title": str(title_arg).strip() if title_arg else ""
             })
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(rows, f, ensure_ascii=False, indent=1)
+            f.write("\n")
         print("  ✓ 已自动同步至 tools/sources.json (当前共 %d 篇)" % len(rows))
     except Exception as e:
         print("  ! 同步 sources.json 失败: %s" % e, file=sys.stderr)
@@ -419,13 +422,10 @@ def main():
     ap.add_argument("--author")
     ap.add_argument("--title", help="覆盖标题（爬下来的页面标题往往很脏）")
     ap.add_argument("--kind", default="repost", choices=["repost", "own"])
-    ap.add_argument("--out", default="posts", help="posts（文章）或 notes（笔记）")
-    ap.add_argument("--back", default=None, help="返回链接，默认笔记 ../、文章 ../../")
     ap.add_argument("--no-images", action="store_true")
     a = ap.parse_args()
-    back = a.back or ("../" if a.out == "notes" else "../../")
     print("· %s" % a.md)
-    info = build(a.md, a.slug, a.date, a.author, a.kind, a.out, not a.no_images, back, a.title)
+    info = build(a.md, a.slug, a.date, a.author, a.kind, images=not a.no_images, title_arg=a.title)
     print("  %s | %s | %s" % (fmt_date(info["date"]), info["author"] or "-", info["title"]))
 
 
