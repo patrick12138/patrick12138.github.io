@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="董事会问要不要用 AI 替换研发，答案不是能或不能。">
+<title>AI 究竟能不能替代程序员? · patrick</title>
+<style>
+*{box-sizing:border-box}
+:root,[data-theme="dark"]{
+  --bg:#0a0c10;--text:#ccd2da;--text-muted:#7d8794;--text-faint:#2b313a;
+  --accent:#6aa2d8;--border:#191d24;--heading:#e9edf2;--rule:#1e232b;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Figtree',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8;--text:#26313d;--text-muted:#5d6b7a;--text-faint:#c2cad4;
+  --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+
+/* top bar */
+.bar{border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)}
+.bar-in{max-width:720px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--heading)}
+.nav{display:flex;gap:16px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:.76rem;color:var(--text-muted);text-decoration:none;transition:color .15s}
+.nav a:hover,.nav a.on{color:var(--accent)}
+.theme-toggle{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+/* index */
+.page-title{font-size:2.35rem;line-height:1.15;letter-spacing:-.03em;color:var(--heading);
+  margin:72px 0 0;font-family:var(--mono);font-weight:700}
+.tabs{display:flex;gap:18px;margin:26px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tabs button{background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);
+  font-size:.78rem;color:var(--text-muted);transition:color .15s}
+.tabs button.on{color:var(--accent)}
+.tabs button:hover{color:var(--heading)}
+
+.lede{font-size:1rem;line-height:1.9;color:var(--text-muted);margin:14px 0 34px;max-width:520px}
+.posts{list-style:none;margin:0;padding:0 0 80px}
+.posts li{border-bottom:1px solid var(--rule)}
+.posts a{display:block;text-decoration:none;padding:30px 0 26px}
+.posts h2{font-size:1.34rem;line-height:1.45;font-weight:700;color:var(--heading);
+  margin:0 0 10px;letter-spacing:-.01em;transition:color .15s}
+.posts a:hover h2{color:var(--accent)}
+.posts .desc{font-size:1rem;line-height:1.75;color:var(--text-muted);margin:0 0 12px}
+.posts time{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);opacity:.72;letter-spacing:.02em}
+.posts .empty{padding:40px 0;color:var(--text-muted);font-size:.95rem}
+
+/* article */
+.article{padding:64px 0 40px}
+.article h1{font-size:2.1rem;line-height:1.3;letter-spacing:-.02em;color:var(--heading);
+  margin:0 0 18px;font-weight:700}
+.article .meta{font-family:var(--mono);font-size:.74rem;color:var(--text-muted);
+  line-height:2;padding-bottom:26px;border-bottom:1px solid var(--border);margin-bottom:34px}
+.article .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.source{margin:0 0 34px;padding:14px 16px;border-left:2px solid var(--accent);
+  background:color-mix(in srgb,var(--text) 4%,transparent);font-family:var(--mono);font-size:.76rem;line-height:1.9}
+.src-label{color:var(--text-muted);margin-right:8px}
+.src-url{color:var(--accent);text-decoration:none;word-break:break-all;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.src-url:hover{border-bottom-color:var(--accent)}
+
+.body{font-size:1.125rem;line-height:1.95;color:var(--text)}
+.body p{margin:0 0 1.35em}
+.body h2{font-size:1.55rem;line-height:1.4;color:var(--heading);margin:2.2em 0 .7em;font-weight:700;letter-spacing:-.01em}
+.body h3{font-size:1.22rem;line-height:1.5;color:var(--heading);margin:1.9em 0 .6em;font-weight:600}
+.body h4{font-size:1.05rem;color:var(--heading);margin:1.6em 0 .5em}
+.body ul,.body ol{margin:0 0 1.35em;padding-left:1.4em}
+.body li{margin:.4em 0}
+.body blockquote{margin:1.6em 0;padding:2px 0 2px 20px;border-left:2px solid var(--accent);
+  color:var(--text-muted);font-style:normal}
+.body blockquote p{margin:.5em 0}
+.body code{font-family:var(--mono);font-size:.86em;background:color-mix(in srgb,var(--text) 8%,transparent);
+  padding:.14em .38em;border-radius:3px}
+.body pre{background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border);
+  padding:16px 18px;overflow-x:auto;margin:1.5em 0;border-radius:4px;line-height:1.65}
+.body pre code{background:none;padding:0;font-size:.84em}
+.body img{max-width:100%;height:auto;display:block;margin:1.6em 0;border-radius:3px}
+.body table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:.94em}
+.body th,.body td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left}
+.body th{color:var(--text-muted);font-weight:600;font-size:.9em}
+.body a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.body a:hover{border-bottom-color:var(--accent)}
+.body hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+
+.back{display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--text-muted);
+  text-decoration:none;padding:26px 0 60px;transition:color .15s}
+.back:hover{color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 60px}
+.foot-in{font-family:var(--mono);font-size:.74rem;color:var(--text-faint);line-height:2}
+.foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:600px){
+  .wrap,.bar-in{padding-left:22px;padding-right:22px}
+  .page-title{font-size:1.95rem;margin-top:52px}
+  .article{padding:44px 0 30px}
+  .article h1{font-size:1.6rem}
+  .body{font-size:1.06rem;line-height:1.9}
+  .posts h2{font-size:1.2rem}
+  .posts a{padding:24px 0 22px}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="../../">patrick</a>
+  <nav class="nav">
+    <a href="../../">首页</a>
+    <a href="../../lab/">Lab</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>AI 究竟能不能替代程序员?</h1><div class="meta">June 8, 2025 · Lenciel · 搬运</div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://lenciel.com/2025/06/the-cycle-of-replacing-developers-1/" target="_blank" rel="noopener">https://lenciel.com/2025/06/the-cycle-of-replacing-developers-1/</a></aside><div class="body"><p>最近在董事会汇报，进入「any questions？」环节，一位董事问：「我们现在还有这么多研发，是不是可以考虑用 AI 替换？我现在投的好几个公司自从用 Cursor 之后，效率都提高了 30% 到 40%。」</p>
+<p>这是一个我这两年被反复问过的问题：在美帝的设计师朋友问过我，是不是现在有个点子就能用 AI 写代码创业；在基金里的同学问过我，是不是 Cursor 这类产品产出会超过程序员；当然，最多的还是类似于董事会上这种场景，公司究竟能不能通过这些技术，替代那些昂贵的程序员。</p>
+<p>受限于讨论这个问题的时间、场合和提问人的知识背景，我应该给了虽然意思相对统一，但都不太完整的答案。而且，三年前系统对 <a href="https://lenciel.com/2022/09/what-could-happen-after-ism/">类似问题</a> 的观点现在确实有更新，所以不如再整理一次。</p>
+<h3>先说结论</h3>
+<p>我认为：</p>
+<ol>
+<li>在 AI 消灭人类之前，不会消灭程序员；</li>
+<li>但 AI 绝对可以解放和发展现有的生产力；</li>
+<li>就个体而言：<br>
+    a. 不去动手研究 AI 的管理者特别是技术管理者是不合格的；<br>
+    b. 不去掌握和应用 AI 的程序员也是不合格的；</li>
+<li>就公司而言:<br>
+    a. 仅仅用 AI 降低成本的，会被真正用 AI 拓展能力的打垮；<br>
+    b. 应该优先考虑清楚 AI 层面的交互然后再构建其他的交互；</li>
+</ol>
+<h3>为什么消灭不了程序员</h3>
+<p>程序员的工作如果粗略分成编码和非编码两部分，我们来看看究竟 AI 能替代里面的哪些。</p>
+<h4>非编码工作</h4>
+<p>不同层级的工程师花在非编码工作的时间是不同的。但即便是最基层的自称「码农」的工程师，编码在整个工作中的占比不会超过 50%。还会有大量的时间用于沟通评审（需求、测试用例、交互设计）、文档写作、环境配置等工作（摸鱼这些非工作的我就不提了）。</p>
+<p>这些工作需要很多上下文对齐，就像 Mozilla 的 Senior Staff <a href="https://chelseatroy.com/about/">Chelsea Troy</a> 在一个反驳 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566">这篇</a> 号称 AI 对编程提效 26%的论文时 <a href="https://www.youtube.com/watch?v=bg4z70cOOF4">说的那样</a> ：</p>
+<blockquote>
+<p>Large language models have not wholesale wiped out programming jobs so much as they have called us to a more advanced, more contextually aware, and more communally oriented skill set that we frankly were already being called to anyway…. On relatively simple problems, we can get away with outsourcing some of our judgment. As the problems become more complicated, we can’t.</p>
+</blockquote>
+<h4>编码工作</h4>
+<p>只要真正用过 Cursor、Windsurf 或类似产品，就得承认它们比大部分没写过十万行代码的程序员，都写得更快更好。</p>
+<p><strong>这很像人类对化纤材料或者转基因技术的使用一样：虽然没有办法提高上限，但绝对大大提高了下限。</strong></p>
+<p>不过，编码工作会被 AI 取代吗？</p>
+<p>我仍然持怀疑态度。</p>
+<p>倒并不是说有些代码的生产就会像羊绒一样永远雍容华贵，而是没有真正干过程序员的人没理解，整个编码工作如果往细了拆，仍然可以分解成写代码、读代码和调代码等部分，并且对象可以是自己的代码，但更可能是别人的代码。</p>
+<h5>和已有代码交互</h5>
+<p>除开一些创业项目或者自己练手的 solo 项目，大部分公司里的编码工作都是所谓的「屎山雕花」：阅读调试修改其他人代码的时间远远超过自己写代码。</p>
+<p>这部分工作，不仅时间上占比更高，难度也比自己撸高。《K&amp;R C》和 AWK 的作者，Kernighan 在《The Elements of Programming Style》里说过一句我印象很深的话，它如此有名以至于被称为 Kernighan 定律：</p>
+<blockquote>
+<p>Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.</p>
+</blockquote>
+<p>消化一个代码库的架构和细节，搞清楚别人代码的逻辑和实现，「认知负担」确实挺高的。这些工作可以在 AI 的辅助下加速，但是很难被 AI 替代。</p>
+<h5>自己新写的代码</h5>
+<p>自己写代码的时候借助 AI 生成和辅助，现在好像被叫做「vibe coding」。</p>
+<p>这部分完全交给 AI 行不行？我看不行，理由如下。</p>
+<h6>什么是「代码」</h6>
+<p>代码是资产还是负债？</p>
+<p>差不多十年前，Kellan 在那篇可能是历史上关于「技术债」最精彩的 <a href="https://kellanem.com/notes/towards-an-understanding-of-technical-debt">文章</a> 中指出，它既不是资产也不是债务，而是 liability：一个项目里的每一行代码，无论来自人还是 AI，都只代表了对待解决问题当前的最佳理解，都需要被测试、维护、确保安全。</p>
+<p>并且如果你同意我 <a href="https://lenciel.com/2021/02/how-to-work-as-an-architect-1/#%E9%97%AE%E9%A2%98%E5%87%BA%E5%9C%A8%E5%93%AA%E9%87%8C">说的</a> ：</p>
+<blockquote>
+<p>要把软件开发看成一个对需要解决的问题和解决的技术进行学习的过程，把架构和代码都当成这个过程的副产品</p>
+</blockquote>
+<p>那么，AI 使编写代码变得更快、更便宜，实际上只会以前所未有的速度创造技术债。因此可以看到，行业里管着一定规模的系统，需要长期维护和迭代的人，对 AI 编程会有一些声音：</p>
+<ul>
+<li>比如 Gergely Orosz 认为，《人月神话》等书籍中描述的问题仍然存在，AI 无法改变它们；</li>
+<li>比如 Camille Fournier 说，自己的公司一直很纠结要不要从初级程序员手里收回 AI 工具（我跟阿里、字节的一些管理者聊天也听到过类似的想法），因为这些同学如果没有通过自己编码形成的分析思考能力很难成长；</li>
+<li>哪怕是走得非常前沿的推行 AI 编程的 Harper Reed 也说，他在回归瀑布模型，也就是在交给 AI 之前花大量的时间梳理需求文档、交互设计和测试用例，然后把这些内容以专门优化过的 propmt 给到 AI。</li>
+</ul>
+<p>因此，我认为从长期看，完全让 AI 来写代码在大型项目里还是很难发生。</p>
+<h6>用自然语言也是「编程」</h6>
+<p>前几年，在 NoCode 或者 LowCode 或者 RPA 还很火的时候，我跟一些朋友开玩笑说，如果无代码或者低代码那套拖拉拽的东西就能完整解决问题，那它本质上就是图灵完备的，于是，它仍然是一门程序语言：你只是在用拖拉拽的方式 coding，谈不上 NoCode。</p>
+<p>同理，如果像 Harper Reed 那样，用一个完整的瀑布流来给 AI 输入，然后不断调整、测试、上线…我认为他也在编码，只是用自然语言而已。</p>
+<p>编程的两个核心，逻辑的梳理和数据的治理，被拆成过各种概念，运用了各种工具，万变不离其宗。</p>
+<h6>可能会带来更多的「程序员」</h6>
+<p>最后，你读到这里可能会认为我很反对 AI 辅助编程（或者，我认为更合适的名称应该是 AI 辅助代码/文档/测试用例…生成），那请你相信我 <a href="https://lenciel.com/2025/06/the-cycle-of-replacing-developers/#%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA">前面的结论</a> 。</p>
+<p>只是，我不认为会替代程序员，而是更多的人，可能成为「程序员」。</p>
+<p>因为历史上，从给纸片打孔至今，每一次计算机编程方面的进步，都在不断降低成为一名程序员的认知负担，都曾经引起过「这是不是可以取代程序员」的妄念或者是担忧，最终，都带来了更多的程序员。</p>
+<p>我还记得我刚入行的时候，IBM 等公司正在推通过 UML图生成代码取代程序员。</p>
+<p>相信了的公司和个人都很惨。</p>
+<p>后来是云计算，号称取代运维工程师。</p>
+<p>还有自动化测试工具，号称取代测试工程师。</p>
+<p>最后，运维升级为 DevOps，测试左移，大家只是变得更加「程序员」了而已。</p>
+<p>这有点像 CNC 机器，它的出现只会让更多人成为木匠，而那些好的木匠成为很好的木匠，而不是消灭木匠。</p>
+<p>那么，站在管理者和从业者角度，究竟应该在 AI 工具运用上怎么办？我们下次继续…</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      h.dataset.theme=s||(d?'dark':'light');}catch(e){}
+  var t=document.getElementById('themeToggle');
+  if(t)t.addEventListener('click',function(){
+    var n=h.dataset.theme==='dark'?'light':'dark';
+    h.classList.add('theme-switching');h.dataset.theme=n;
+    try{localStorage.setItem('theme',n);}catch(e){}
+    setTimeout(function(){h.classList.remove('theme-switching');},300);
+  });
+})();
+</script>
+</body>
+</html>
