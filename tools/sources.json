@@ -342,5 +342,13 @@
   "date": "September 10, 2026",
   "kind": "own",
   "title": "LLM Wiki 实践指南"
+ },
+ {
+  "slug": "super-agent-design",
+  "md": "Sources/Inbox/Super-agent 设计探索：迈向更自主的 Agent 系统.md",
+  "author": "DeepSeek Harness 团队",
+  "date": "October 31, 2026",
+  "kind": "repost",
+  "title": ""
  }
 ]
