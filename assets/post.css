@@ -179,12 +179,9 @@ html,body{overflow-x:clip}
     width:420px;max-width:calc(100vw - 48px);
     padding:18px 20px;
   }
+  .to-top{--totop-bottom:76px}   /* 目录面板从底部滑出，箭头让开它 */
 }
 
-/* 平板竖屏：目录面板从底部滑出，箭头抬高让开它（外观同上，只有位置不同） */
-@media (min-width:600px) and (max-width:1023px){
-  .to-top{--totop-bottom:76px}
-}
 
 /* 上一篇 / 下一篇：全局按发布时间，不受首页分类影响 */
 .pager{display:flex;gap:24px;align-items:flex-start;justify-content:space-between;

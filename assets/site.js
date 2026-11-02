@@ -1,4 +1,14 @@
 /* 全站共用：主题切换 + 回到顶部（阈值由 data-threshold 决定：数字像素，或 "half" 半程） */
+// 公共小工具：平滑滚动（WebView 里 smooth 可能被忽略，400ms 没动就硬跳）
+// 文章页内联的目录脚本会调 window.siteUI.scrollTo，别再各写一份
+window.siteUI = window.siteUI || {
+  scrollTo: function (y) {
+    var before = window.pageYOffset;
+    try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, y); }
+    setTimeout(function () { if (Math.abs(window.pageYOffset - before) < 4) window.scrollTo(0, y); }, 400);
+  }
+};
+
 (function () {
   var html = document.documentElement;
 
@@ -48,10 +58,8 @@
       toggle.addEventListener('click', function (e) {
         if (longFired) { longFired = false; e.preventDefault(); return; }  // 长按不切主题
         var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-        document.documentElement.classList.add('theme-switching');
         document.documentElement.dataset.theme = next;
         try { localStorage.setItem('theme', next); } catch (e) {}
-        setTimeout(function () { document.documentElement.classList.remove('theme-switching'); }, 300);
       });
     }
 
@@ -76,12 +84,7 @@
         if (btn.classList.contains('show')) btn.classList.add('is-idle');
       }, 1500);
     }
-    function goTop() {
-      var before = window.pageYOffset;
-      try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
-      // WebView 里 smooth 可能被忽略，400ms 没动就硬跳
-      setTimeout(function () { if (Math.abs(window.pageYOffset - before) < 4) window.scrollTo(0, 0); }, 400);
-    }
+    function goTop() { window.siteUI.scrollTo(0); }
     window.addEventListener('scroll', function () { update(); poke(); }, { passive: true });
     window.addEventListener('resize', function () { update(); poke(); }, { passive: true });
     window.addEventListener('mousemove', poke, { passive: true });

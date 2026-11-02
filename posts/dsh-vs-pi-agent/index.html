@@ -11,7 +11,7 @@
 <meta property="og:description" content="Compare DeepSeek Harness vs Pi Agent on benchmarks, speed, cost, extensibility, safety, and everyday use to find the right open-source coding agent.">
 <meta property="og:url" content="https://patrick12138.github.io/posts/dsh-vs-pi-agent/">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
-<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=b1571fa8"><link rel="stylesheet" href="../../assets/post.css?v=16c28ad3">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=b1571fa8"><link rel="stylesheet" href="../../assets/post.css?v=043f49ff">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -411,7 +411,7 @@
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=445fc486"></script>
+<script src="../../assets/site.js?v=8d09879b"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){
@@ -481,13 +481,11 @@
     _st=setTimeout(function(){ list.classList.remove('is-scrolling'); }, 900);
   });
 
-  /* 平滑跳转（WebView 不支持 scrollIntoView smooth） */
+  /* 平滑跳转：实现收在 assets/site.js 的 window.siteUI.scrollTo，这里只算目标位置 */
   function goTo(el){
     var target=el.getBoundingClientRect().top+window.pageYOffset-84;
     if(target<0) target=0;
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:target,behavior:'smooth'}); }catch(e){ window.scrollTo(0,target); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target); },400);
+    window.siteUI.scrollTo(target);
   }
 
   links.forEach(function(a){

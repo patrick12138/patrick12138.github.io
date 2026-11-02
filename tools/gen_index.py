@@ -143,8 +143,7 @@ JS = """<script>
   var rows=[].map.call(document.querySelectorAll('#posts li'),function(li){
     var a=li.querySelector('a'), h=li.querySelector('h2'), d=li.querySelector('.desc');
     return {el:li, kind:li.dataset.kind, a:a, h:h, d:d,
-            hHtml:h?h.innerHTML:'', dHtml:d?d.innerHTML:'',
-            hText:h?h.textContent:'', dText:d?d.textContent:''};
+            hHtml:h?h.innerHTML:'', dHtml:d?d.innerHTML:''};
   });
 
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -254,7 +253,6 @@ JS = """<script>
     }
     var hits=[];
     IDX.forEach(function(p){
-      if(state.f!=='all' && p.s!==undefined){ /* 分类在后面按 kind 过滤 */ }
       var r=score(p,q);
       if(r.s>0) hits.push({p:p,s:r.s,bi:r.bi});
     });

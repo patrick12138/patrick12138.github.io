@@ -14,7 +14,7 @@
 
 - **按钮里尽量不放文字。** 浮动/工具按钮（目录、返回顶部、主题、关闭）一律
   「图标 + `aria-label`」，最多配 `title`。文字说明交给页面本身，不塞进按钮。
-- 浮动图标按钮统一：**圆形 40×40、`border-radius:999px`**、1px 边 `var(--border)`，
+- 浮动图标按钮统一：**圆形 36×36、`border-radius:999px`**、1px 边 `var(--border)`，
   静止 `var(--text-muted)` → hover/focus `var(--accent)`（边色取 45% accent）。
   手机端 `right:18px;bottom:24px`。同页同类按钮尺寸必须一致。
 - **要文字就用文字链接**：`← 返回首页`、`Lab →` 这类是 `.back` 的等宽字体链接，不是按钮。
@@ -239,7 +239,7 @@ el.style.color = '#fff';
 （导航里早已没有「首页」链接，品牌在左上角）。现在是一行 mono 元信息：
 
 ```
-44 篇 · 最新 10月31日
+45 篇 · 最新 10月31日
 ```
 
 规模 + 新鲜度两个真实信号，和文章页 meta 同一套语言。改文案只动 `tools/gen_index.py` 的 `meta_line`。

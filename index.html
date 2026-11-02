@@ -27,7 +27,7 @@
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
-<script src="assets/site.js?v=445fc486"></script>
+<script src="assets/site.js?v=8d09879b"></script>
 <script>
 (function(){
   var tabs=document.getElementById('tabs');
@@ -48,8 +48,7 @@
   var rows=[].map.call(document.querySelectorAll('#posts li'),function(li){
     var a=li.querySelector('a'), h=li.querySelector('h2'), d=li.querySelector('.desc');
     return {el:li, kind:li.dataset.kind, a:a, h:h, d:d,
-            hHtml:h?h.innerHTML:'', dHtml:d?d.innerHTML:'',
-            hText:h?h.textContent:'', dText:d?d.textContent:''};
+            hHtml:h?h.innerHTML:'', dHtml:d?d.innerHTML:''};
   });
 
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -159,7 +158,6 @@
     }
     var hits=[];
     IDX.forEach(function(p){
-      if(state.f!=='all' && p.s!==undefined){ /* 分类在后面按 kind 过滤 */ }
       var r=score(p,q);
       if(r.s>0) hits.push({p:p,s:r.s,bi:r.bi});
     });

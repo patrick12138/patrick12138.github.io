@@ -69,13 +69,11 @@ JS = """
     _st=setTimeout(function(){ list.classList.remove('is-scrolling'); }, 900);
   });
 
-  /* 平滑跳转（WebView 不支持 scrollIntoView smooth） */
+  /* 平滑跳转：实现收在 assets/site.js 的 window.siteUI.scrollTo，这里只算目标位置 */
   function goTo(el){
     var target=el.getBoundingClientRect().top+window.pageYOffset-84;
     if(target<0) target=0;
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:target,behavior:'smooth'}); }catch(e){ window.scrollTo(0,target); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target); },400);
+    window.siteUI.scrollTo(target);
   }
 
   links.forEach(function(a){
@@ -174,11 +172,6 @@ def strip_toc(doc):
     for sig in ("brandSet", "backTop", "var toc=document.getElementById", "getElementById('toTop')"):
         pat = r"\n<script>\n\(function\(\)\{[^<]*?%s[\s\S]*?\}\)\(\);\n</script>" % re.escape(sig)
         doc = re.sub(pat, "", doc)
-    # 站名下拉：还原成普通站名链接，稍后按当前文章分类重新生成
-    mm = re.search(r'<div class="brandset" id="brandSet">.*?<a role="menuitem" href="([^"]*)\?tab=all"', doc, re.S)
-    if mm:
-        doc = re.sub(r'<div class="brandset" id="brandSet">.*?</div></div>',
-                     '<a class="brand" href="%s">patrick</a>' % mm.group(1), doc, count=1, flags=re.S)
     # 清掉之前反复 strip 留下的空 script
     doc = re.sub(r"\n?<script></script>", "", doc)
     return doc
@@ -254,35 +247,6 @@ def inject_top_btn(doc):
     return doc
 
 
-def inject_brand(doc):
-    """把导航里的 patrick 换成可下拉的站名，菜单直接跳到首页的分类。"""
-    if 'id="brandSet"' in doc:
-        return doc
-    m = BRAND_RE.search(doc)
-    if not m:
-        return doc
-    base = m.group(1)
-    mk = re.search(r'<div class="meta">[^<]*·\s*(搬运|原创|个人)', doc)
-    cur = {"搬运": "repost", "原创": "own", "个人": "own"}.get(mk.group(1) if mk else "", "")
-    menu = "".join(
-        '<a role="menuitem" href="%s?tab=%s"%s>%s</a>'
-        % (base, f, ' class="on"' if f == cur else "", label)
-        for f, label in (("all", "全部文章"), ("repost", "搬运"), ("own", "个人"))
-    )
-    block = ('<div class="brandset" id="brandSet">'
-             '<button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick'
-             '<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-             'stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-             '<path d="M6 9l6 6 6-6"/></svg></button>'
-             '<div class="brand-menu" role="menu">%s</div></div>' % menu)
-    return doc[:m.start()] + block + doc[m.end():]
-
-
-ICON_TAGS = ('<link rel="icon" href="../../favicon.svg" type="image/svg+xml">'
-             '<meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)">'
-             '<meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)">')
-
-
 def ensure_icon(doc):
     """文章页补 favicon / theme-color（幂等）：老页面不用整篇重建也能带上。"""
     if "favicon.svg" in doc:
@@ -332,7 +296,6 @@ def process(path):
         return False
     doc = strip_toc(doc)
     doc = normalize_nav(doc)
-    doc = inject_brand(doc)
     doc = inject_top_btn(doc)
     doc = wrap_tables(doc)
     doc = ensure_icon(doc)
