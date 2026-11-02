@@ -105,7 +105,7 @@ body = ('<div class="wrap">' + meta_line +
         '<button data-f="repost">搬运</button>'
         '<button data-f="own">个人</button>'
         '</div>'
-        '<input id="q" class="sinput" type="search" placeholder="搜索标题、摘要或正文…" autocomplete="off">'
+        '<input id="q" class="sinput" type="search" placeholder="搜索" autocomplete="off">'
         '<button class="sclr" id="qClear" aria-label="清空搜索" hidden>'
         '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linecap="round" aria-hidden="true">'

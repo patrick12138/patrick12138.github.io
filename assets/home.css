@@ -41,7 +41,8 @@
 #sentinel{height:1px;margin:0}
 
 /* 工具栏：分类 tab + 搜索（放大镜点开输入框） */
-.tools{display:flex;align-items:center;gap:10px;margin:18px 0 0;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tools{display:flex;align-items:center;gap:10px;margin:18px 0 0;border-bottom:1px solid var(--border);
+  padding-bottom:12px;min-height:18px}   /* 展开搜索时高度不变，避免整页往下跳 */
 
 
 .tools .tabs{margin:0;flex:0 0 auto;border:none;padding:0}
@@ -49,7 +50,7 @@
   width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:color .15s}
 .sbtn:hover,.sbtn.on{color:var(--accent)}
 .sinput{display:none;flex:1 1 auto;min-width:0;background:transparent;border:none;border-radius:0;
-  color:var(--text);font-family:var(--sans);font-size:1rem;padding:6px 0;outline:none;
+  color:var(--text);font-family:var(--sans);font-size:.95rem;line-height:18px;height:18px;padding:0;outline:none;
   -webkit-appearance:none;appearance:none}
 .sinput::placeholder{color:var(--text-faint)}
 .tools.searching .tabs{display:none}
