@@ -117,6 +117,9 @@ def main():
         print("   %-18s %s" % (k, v))
     print("   更新了 %d 个页面" % n)
 
+    print("⑥.5 同步 skills（仓库 → /var/minis）…")
+    print("   " + sync_skills())
+
     print("⑦ 排版体检 …")
     p = subprocess.run("python3 tools/qa.py", shell=True, cwd=ROOT,
                        capture_output=True, text=True)

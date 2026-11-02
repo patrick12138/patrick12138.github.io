@@ -197,7 +197,3 @@ html,body{overflow-x:clip}
 @media (min-width:1024px){
   .to-top{right:24px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
 }
-
-/* 回到顶部：静置淡出（与目录按钮同一套逻辑） */
-.to-top{transition:opacity .24s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
-.to-top.show.is-idle{opacity:0;transform:translateY(8px);pointer-events:none}

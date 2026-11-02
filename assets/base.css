@@ -88,3 +88,7 @@ html.lab-on .nav-lab{display:inline}
   40%{transform:scale(1.32);color:var(--accent)}
   100%{transform:scale(1)}
 }
+
+/* 回到顶部：静置淡出（首页与文章页共用） */
+.to-top{transition:opacity .24s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
+.to-top.show.is-idle{opacity:0;transform:translateY(8px);pointer-events:none}
