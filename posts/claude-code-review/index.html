@@ -11,14 +11,14 @@
 <div class="bar"><div class="bar-in">
   <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost" class="on">搬运</a><a role="menuitem" href="../../?tab=own">个人</a></div></div>
   <nav class="nav">
-    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <a href="../../lab/">Lab</a><a href="../../about/">About</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>一个半月高强度 Claude Code 使用后感受</h1><div class="meta">2025年8月3日 · 王巍（onevcat） · 搬运 · <span class="stats">8,027 字 · 约 21 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://onevcat.com/2025/08/claude-code/" target="_blank" rel="noopener">https://onevcat.com/2025/08/claude-code/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Vibe Coding 的迭代速度</a></li><li class="lvl2"><a href="#h2">从传统 Editor AI 的转换</a></li><li class="lvl2"><a href="#h3">认识 CC 的边界和长处</a></li><li class="lvl2"><a href="#h4">思考先行还是实践先行</a></li><li class="lvl2"><a href="#h5">小步迭代还是放飞自我</a></li><li class="lvl2"><a href="#h6">任务规模和上下文制约</a></li><li class="lvl3"><a href="#h7">任务拆解是关键</a></li><li class="lvl3"><a href="#h8">使用 Subagent</a></li><li class="lvl3"><a href="#h9">在合适的时机手动 compact</a></li><li class="lvl2"><a href="#h10">善用命令和周边工具</a></li><li class="lvl3"><a href="#h11">Command 和 Hooks</a></li><li class="lvl3"><a href="#h12">MCP</a></li><li class="lvl3"><a href="#h13">编译、分析和测试</a></li><li class="lvl3"><a href="#h14">Code 之外，大有可为</a></li><li class="lvl2"><a href="#h15">体感降智和更多限制</a></li><li class="lvl3"><a href="#h16">Opus 远强于 Sonnet</a></li><li class="lvl3"><a href="#h17">时间玄学</a></li><li class="lvl3"><a href="#h18">降智疑云</a></li><li class="lvl3"><a href="#h19">限制的阴霾</a></li><li class="lvl3"><a href="#h20">一些应对策略</a></li><li class="lvl2"><a href="#h21">总结和未来展望</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p><img alt="" src="../../assets/posts/claude-code-review/efd52301c1eb.webp"></p>
+<div class="wrap"><article class="article"><h1>一个半月高强度 Claude Code 使用后感受</h1><div class="meta">2025年8月3日 · 王巍（onevcat） · 搬运 · <span class="stats">8,027 字 · 约 21 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://onevcat.com/2025/08/claude-code/" rel="noopener">https://onevcat.com/2025/08/claude-code/</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Vibe Coding 的迭代速度</a></li><li class="lvl2"><a href="#h2">从传统 Editor AI 的转换</a></li><li class="lvl2"><a href="#h3">认识 CC 的边界和长处</a></li><li class="lvl2"><a href="#h4">思考先行还是实践先行</a></li><li class="lvl2"><a href="#h5">小步迭代还是放飞自我</a></li><li class="lvl2"><a href="#h6">任务规模和上下文制约</a></li><li class="lvl3"><a href="#h7">任务拆解是关键</a></li><li class="lvl3"><a href="#h8">使用 Subagent</a></li><li class="lvl3"><a href="#h9">在合适的时机手动 compact</a></li><li class="lvl2"><a href="#h10">善用命令和周边工具</a></li><li class="lvl3"><a href="#h11">Command 和 Hooks</a></li><li class="lvl3"><a href="#h12">MCP</a></li><li class="lvl3"><a href="#h13">编译、分析和测试</a></li><li class="lvl3"><a href="#h14">Code 之外，大有可为</a></li><li class="lvl2"><a href="#h15">体感降智和更多限制</a></li><li class="lvl3"><a href="#h16">Opus 远强于 Sonnet</a></li><li class="lvl3"><a href="#h17">时间玄学</a></li><li class="lvl3"><a href="#h18">降智疑云</a></li><li class="lvl3"><a href="#h19">限制的阴霾</a></li><li class="lvl3"><a href="#h20">一些应对策略</a></li><li class="lvl2"><a href="#h21">总结和未来展望</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p><img alt="" src="../../assets/posts/claude-code-review/efd52301c1eb.webp"></p>
 <p>六月中旬某个闷热的夜晚，在初浅尝试使用 API Key 帮我迅速完成了一个任务后，我毫不犹豫地点下了 Claude Max 的订阅按钮。作为一个“买断制”时代的遗老，每月一两百美金的订阅对当时的我来说还是太超前了。但是在一个半月之后回头望去，看着那些按照 API 计价的被我烧掉的价值 3000 多美金的 token，我似乎捡到了一个超大便宜？不过最近 Anthropic <a href="https://x.com/AnthropicAI/status/1949898502688903593">宣布了新的 weekly 限制</a>，想来大概针对的就是我这种“重度”用户吧。所以近几天来我也在研究有没有其他替代方案，可以让我从这种限制中解脱出来。不过尝试了一圈下来（包括 CC 接其他 API，也包括像 Codex/Gemini/Qwen/Crush/Amp/AugmentCode 等等），似乎一时半会儿在这个领域 Claude Code (后文用 CC 指代) 还是没有竞争对手。既然还得续费，那不如阶段性地做一个总结，来记录下这一个半月使用 CC 的一些感受吧。</p>
 <h2 id="h1">Vibe Coding 的迭代速度</h2>
 <p>说到 vibe coding，最让我震撼的其实不是模型有多智能或者是能完成什么尖端任务，而是由它带来的产品迭代速度的提升。有个有意思的现象：Claude Code 本身就是 Anthropic 内部 dogfooding 的产物：从六月中旬我开始使用到现在，短短一个半月时间里，我们见证了很多崭新的功能：自定义命令让我们避免重复输入一样的 prompt，Hooks 功能可以在各种事件触发时自动执行命令，Subagent 则解决了上下文窗口的限制问题。这种更新频率，放在传统软件开发时代简直是天方夜谭。</p>
@@ -179,7 +179,7 @@ AI：好的，让我们拆解一下需要完成的任务：
 <h2 id="h21">总结和未来展望</h2>
 <p>一个半月的 CC 使用经历，有惊喜，有担忧，有对未来的憧憬，也有对现实的无奈。但总的来说，我感受到的是自己切实地站在在历史的进程之中。Vibe coding 不仅仅是一种新的编程方式，更是一种全新的思维模式。它要求我们重新思考什么是编程、什么是创造、什么是价值。在这个 AI 与人类共舞的时代，愿我们都能找到属于自己的节奏。</p>
 <p>最后，回到文章开头的那句话：在 vibe coding 时代，千万别让工具把自己逼死。技术是为人服务的，不是相反；工作是让人有机会追寻和思考自我的，而不是让自己迷失。保持这份清醒，可能比掌握任何具体的技巧都更重要。</p></div>
-<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -191,27 +191,16 @@ AI：好的，让我们拆解一下需要完成的任务：
     try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
     setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
   }
-  function upd(){ b.classList.toggle('show', window.pageYOffset>600); }
-  window.addEventListener('scroll',upd,{passive:true});
-  b.addEventListener('click',go);
-  if('IntersectionObserver' in window){
-    var s=document.createElement('div');
-    s.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;visibility:hidden';
-    document.body.appendChild(s);
-    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(s);
+  function upd(){
+    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    var maxScroll = docH - window.innerHeight;
+    var threshold = maxScroll > 0 ? (maxScroll / 2) : 600;
+    b.classList.toggle('show', window.pageYOffset > threshold);
   }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd,{passive:true});
+  b.addEventListener('click',go);
   upd();
-})();
-</script>
-<script>
-(function(){
-  var b=document.getElementById('backTop'); if(!b) return;
-  b.addEventListener('click',function(e){
-    e.preventDefault();
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
-  });
 })();
 </script>
 <script>

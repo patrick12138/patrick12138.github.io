@@ -227,11 +227,12 @@ def strip_toc(doc):
     doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = HEAD_RE.sub("", doc)
     doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
+    doc = re.sub(r'<button class="to-top"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     # 别的会话注入过的英文版浮动按钮
     doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>', "", doc, flags=re.S)
     # 注入的脚本块（可能有多份，全部清掉，稍后重新注入一次）
-    for sig in ("brandSet", "backTop", "var toc=document.getElementById"):
+    for sig in ("brandSet", "backTop", "var toc=document.getElementById", "getElementById('toTop')"):
         pat = r"\n<script>\n\(function\(\)\{[^<]*?%s[\s\S]*?\}\)\(\);\n</script>" % re.escape(sig)
         doc = re.sub(pat, "", doc)
     # 站名下拉：还原成普通站名链接，稍后按当前文章分类重新生成
@@ -290,15 +291,15 @@ TOP_JS = """
     try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
     setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
   }
-  function upd(){ b.classList.toggle('show', window.pageYOffset>600); }
-  window.addEventListener('scroll',upd,{passive:true});
-  b.addEventListener('click',go);
-  if('IntersectionObserver' in window){
-    var s=document.createElement('div');
-    s.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;visibility:hidden';
-    document.body.appendChild(s);
-    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(s);
+  function upd(){
+    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    var maxScroll = docH - window.innerHeight;
+    var threshold = maxScroll > 0 ? (maxScroll / 2) : 600;
+    b.classList.toggle('show', window.pageYOffset > threshold);
   }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd,{passive:true});
+  b.addEventListener('click',go);
   upd();
 })();
 """
@@ -306,8 +307,24 @@ TOP_JS = """
 BRAND_RE = re.compile(r'<a class="brand" href="([^"]*)">patrick</a>')
 
 
+def normalize_nav(doc):
+    """确保文章页右上角导航与首页一致：Lab 和 About，不放首页链接。"""
+    doc = re.sub(
+        r'<nav class="nav">\s*<a href="[^"]*"(?: class="[^"]*")?>首页</a>\s*<a href="([^"]*/lab/)"(?: class="[^"]*")?>Lab</a>',
+        r'<nav class="nav">\n    <a href="\1">Lab</a><a href="../../about/">About</a>',
+        doc
+    )
+    if '<a href="../../about/">About</a>' not in doc:
+        doc = re.sub(
+            r'(<a href="[^"]*/lab/"[^>]*>Lab</a>)(?!\s*<a href="[^"]*about/)',
+            r'\1<a href="../../about/">About</a>',
+            doc
+        )
+    return doc
+
+
 def inject_top_btn(doc):
-    """PC 的浮动「回到顶部」，与首页同款；手机端仍用文末文字链接。"""
+    """浮动「回到顶部」，下拉到文章一半再出现。"""
     if 'id="toTop"' in doc:
         return doc
     if '<a class="back"' in doc:
@@ -344,23 +361,17 @@ def process(path):
     if 'class="body"' not in doc:
         return False
     doc = strip_toc(doc)
+    doc = normalize_nav(doc)
     doc = inject_brand(doc)
     doc = inject_top_btn(doc)
     doc, li = build_toc(doc)
     if not li:
         doc = doc.replace("</style>", CSS + "</style>", 1)
-        doc = re.sub(r'(<a class="back"[^>]*>.*?</a>)',
-                     r'\1<a class="back-top" href="#" id="backTop">↑ 回到顶部</a>', doc, count=1, flags=re.S)
-        doc = doc.replace("</body>", "<script>" + BACKTOP_JS + "</script>\n</body>", 1)
         doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
         open(path, "w", encoding="utf-8").write(doc)
         return False
     # CSS
     doc = doc.replace("</style>", CSS + "</style>", 1)
-    # 「↑ 回到顶部」放在「← 返回首页」旁边
-    doc = re.sub(r'(<a class="back"[^>]*>.*?</a>)',
-                 r'\1<a class="back-top" href="#" id="backTop">↑ 回到顶部</a>', doc, count=1, flags=re.S)
-    doc = doc.replace("</body>", "<script>" + BACKTOP_JS + "</script>\n</body>", 1)
     doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)
     # 目录标记：放在 body 之前（正文起点前）
     doc = doc.replace('<div class="body">', HEAD % li + '<div class="body">', 1)

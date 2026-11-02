@@ -11,14 +11,14 @@
 <div class="bar"><div class="bar-in">
   <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost" class="on">搬运</a><a role="menuitem" href="../../?tab=own">个人</a></div></div>
   <nav class="nav">
-    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <a href="../../lab/">Lab</a><a href="../../about/">About</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
   </nav>
 </div></div>
-<div class="wrap"><article class="article"><h1>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读</h1><div class="meta">2026年6月10日 · 字节笔记本 · 搬运 · <span class="stats">4,396 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
+<div class="wrap"><article class="article"><h1>把 Codex 用到极致 ！OpenAI 官方最佳实践完整解读</h1><div class="meta">2026年6月10日 · 字节笔记本 · 搬运 · <span class="stats">4,396 字 · 约 12 分钟</span></div><aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ" rel="noopener">https://mp.weixin.qq.com/s/FDmkBYixEnMHppE04Z9NOQ</a></aside><nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">六个支柱</a></li><li class="lvl2"><a href="#h2">Prompt 要包含四个要素</a></li><li class="lvl2"><a href="#h3">复杂任务，先规划再动手</a></li><li class="lvl2"><a href="#h4">AGENTS.md，持久指引的核心</a></li><li class="lvl2"><a href="#h5">配置文件，让行为跨会话保持一致</a></li><li class="lvl2"><a href="#h6">测试和 Review，不要只看最终回复</a></li><li class="lvl2"><a href="#h7">Skills，把可复用的方法封装起来</a></li><li class="lvl2"><a href="#h8">Automations，让稳定的工作流自动跑</a></li><li class="lvl2"><a href="#h9">Session 管理，别让一个线程干所有事</a></li><li class="lvl2"><a href="#h10">八个官方明确点名的错误用法</a></li><li class="lvl2"><a href="#h11">一个完整的工作流</a></li><li class="lvl2"><a href="#h12">最后说一句</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>字节笔记本 <em>2026年6月9日 07:53</em></p>
 <p>OpenAI 的开发者文档发布一篇 Best Practices 的文章。</p>
 <p><img alt="图片" src="../../assets/posts/codex-best-practices/80c88c3ca4c6.webp"></p>
 <p>这篇文档描述的 Codex 用法，和大多数人实际在用的方式，差距相当大，本文把官方文档的所有内容逐条拆解，补充具体操作案例。</p>
@@ -321,7 +321,7 @@
 <p>继续滑动看下一个</p>
 <p>字节笔记本</p>
 <p>向上滑动看下一个</p></div>
-<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -333,27 +333,16 @@
     try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
     setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
   }
-  function upd(){ b.classList.toggle('show', window.pageYOffset>600); }
-  window.addEventListener('scroll',upd,{passive:true});
-  b.addEventListener('click',go);
-  if('IntersectionObserver' in window){
-    var s=document.createElement('div');
-    s.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;visibility:hidden';
-    document.body.appendChild(s);
-    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(s);
+  function upd(){
+    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    var maxScroll = docH - window.innerHeight;
+    var threshold = maxScroll > 0 ? (maxScroll / 2) : 600;
+    b.classList.toggle('show', window.pageYOffset > threshold);
   }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd,{passive:true});
+  b.addEventListener('click',go);
   upd();
-})();
-</script>
-<script>
-(function(){
-  var b=document.getElementById('backTop'); if(!b) return;
-  b.addEventListener('click',function(e){
-    e.preventDefault();
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
-  });
 })();
 </script>
 <script>

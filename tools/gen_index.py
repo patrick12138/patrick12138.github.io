@@ -188,21 +188,6 @@ THEME_ICONS = """<button class="theme-toggle" id="themeToggle" aria-label="Toggl
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>"""
 
-THEME_JS = """<script>
-(function(){
-  var h=document.documentElement;
-  // 默认暗色；只有用户手动切过才尊重选择
-  try{var s=localStorage.getItem('theme'); h.dataset.theme=(s==='light'?'light':'dark');}catch(e){}
-  var t=document.getElementById('themeToggle');
-  if(t)t.addEventListener('click',function(){
-    var n=h.dataset.theme==='dark'?'light':'dark';
-    h.classList.add('theme-switching');h.dataset.theme=n;
-    try{localStorage.setItem('theme',n);}catch(e){}
-    setTimeout(function(){h.classList.remove('theme-switching');},300);
-  });
-})();
-</script>"""
-
 TOTOP_JS = """<script>
 (function(){
   var b=document.getElementById('toTop'); if(!b) return;
@@ -244,11 +229,11 @@ page = """<!DOCTYPE html>
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
-%s
+<script src="assets/site.js"></script>
 %s
 %s
 </body>
-</html>""" % (STYLE, THEME_ICONS, body, THEME_JS, JS, TOTOP_JS)
+</html>""" % (STYLE, THEME_ICONS, body, JS, TOTOP_JS)
 
 open(OUT, "w", encoding="utf-8").write(page)
 print("index built:", len(items), "posts")

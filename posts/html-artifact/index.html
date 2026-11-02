@@ -11,7 +11,7 @@
 <div class="bar"><div class="bar-in">
   <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost">搬运</a><a role="menuitem" href="../../?tab=own" class="on">个人</a></div></div>
   <nav class="nav">
-    <a href="../../" class="">首页</a><a href="../../lab/">Lab</a>
+    <a href="../../lab/">Lab</a><a href="../../about/">About</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
 <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -122,7 +122,7 @@
 <li>需要交互调参的提示词或配置。</li>
 </ul>
 <p>如果 HTML 里的结论有长期价值，应再编译回 Markdown wiki 页，并更新 Index 和 Log。</p></div>
-<a class="back" href="../../">← 返回首页</a><a class="back-top" href="#" id="backTop">↑ 回到顶部</a></article></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
@@ -134,27 +134,16 @@
     try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
     setTimeout(function(){ if(Math.abs(window.pageYOffset-y)<4) window.scrollTo(0,0); },400);
   }
-  function upd(){ b.classList.toggle('show', window.pageYOffset>600); }
-  window.addEventListener('scroll',upd,{passive:true});
-  b.addEventListener('click',go);
-  if('IntersectionObserver' in window){
-    var s=document.createElement('div');
-    s.style.cssText='position:absolute;top:0;left:0;width:1px;height:600px;visibility:hidden';
-    document.body.appendChild(s);
-    new IntersectionObserver(function(es){ b.classList.toggle('show', !es[0].isIntersecting); }).observe(s);
+  function upd(){
+    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    var maxScroll = docH - window.innerHeight;
+    var threshold = maxScroll > 0 ? (maxScroll / 2) : 600;
+    b.classList.toggle('show', window.pageYOffset > threshold);
   }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd,{passive:true});
+  b.addEventListener('click',go);
   upd();
-})();
-</script>
-<script>
-(function(){
-  var b=document.getElementById('backTop'); if(!b) return;
-  b.addEventListener('click',function(e){
-    e.preventDefault();
-    var before=window.pageYOffset;
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(err){ window.scrollTo(0,0); }
-    setTimeout(function(){ if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,0); },400);
-  });
 })();
 </script>
 <script>

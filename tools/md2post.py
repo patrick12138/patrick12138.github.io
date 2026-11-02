@@ -26,7 +26,7 @@ import markdown
 import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATE = os.path.join(ROOT, "posts", "git-worktree", "index.html")
+TEMPLATE = os.path.join(ROOT, "tools", "post_template.html")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/120 Safari/537.36")
 MONTHS = ["January", "February", "March", "April", "May", "June",
@@ -330,14 +330,12 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
     html_body = re.sub(r"(?<=[\u4e00-\u9fff>])[ \t]+(?=[，。；：！？、])", "", html_body)
     html_body = re.sub(r"\n[ \t]+\n", "\n\n", html_body)
     html_body = re.sub(r"\n{3,}", "\n\n", html_body)
+    # 移动端 WebView（含 Minis 内置浏览器）不处理 target=_blank，点了没反应；一律同窗跳转
+    html_body = re.sub(r'\s+target="_blank"', "", html_body)
 
     tpl = open(TEMPLATE, encoding="utf-8").read()
-    head, rest = tpl.split('<div class="wrap"><article class="article">', 1)
-    tail = rest[rest.index('<a class="back"'):]
-    tail = re.sub(r'<a class="back" href="[^"]*"', '<a class="back" href="%s"' % back_href, tail)
-    head = re.sub(r"<title>.*?</title>", "<title>%s · patrick</title>" % htmllib.escape(title), head, flags=re.S)
-    head = re.sub(r'<meta name="description" content="[^"]*">',
-                  '<meta name="description" content="%s">' % htmllib.escape(desc or title), head, count=1)
+    kind_repost_on = "on" if kind == "repost" else ""
+    kind_own_on = "on" if kind == "own" else ""
 
     bits = [fmt_date(d)]
     if author:
@@ -347,15 +345,21 @@ def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
     src_block = ""
     if source:
         src_block = ('<aside class="source"><span class="src-label">搬运自</span>'
-                     '<a class="src-url" href="%s" target="_blank" rel="noopener">%s</a></aside>'
+                     '<a class="src-url" href="%s">%s</a></aside>'
                      % (htmllib.escape(source), htmllib.escape(source)))
     elif source_note:
         src_block = ('<aside class="source"><span class="src-label">来源</span>%s</aside>'
                      % htmllib.escape(source_note))
 
-    out = (head + '<div class="wrap"><article class="article"><h1>' + htmllib.escape(title) + "</h1>"
-           + '<div class="meta">' + " · ".join(bits) + "</div>" + src_block
-           + '<div class="body">' + html_body.rstrip() + "</div>\n" + tail)
+    out = (tpl
+           .replace("{{TITLE}}", htmllib.escape(title))
+           .replace("{{DESCRIPTION}}", htmllib.escape(desc or title))
+           .replace("{{META}}", " · ".join(bits))
+           .replace("{{SOURCE_BLOCK}}", (src_block + "\n") if src_block else "")
+           .replace("{{BODY}}", html_body.rstrip())
+           .replace("{{BACK_HREF}}", back_href)
+           .replace("{{KIND_REPOST_ON}}", kind_repost_on)
+           .replace("{{KIND_OWN_ON}}", kind_own_on))
 
     page_dir = os.path.join(ROOT, out_dir, slug)
     os.makedirs(page_dir, exist_ok=True)
