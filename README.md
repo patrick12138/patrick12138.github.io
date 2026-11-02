@@ -11,6 +11,7 @@ Small static pages I actually use, hosted on GitHub Pages. No framework, no back
 | `/` | Blog index — original posts and reposts, newest first |
 | `/posts/<slug>/` | Individual posts |
 | `/lab/` | Lab — small things I build for myself |
+| `/backlog/` | Games backlog — tick off what I finish, watch the hours drop |
 | `/tga/` | The Game Awards GOTY nominee checklist, 2014–2025 (68 entries) |
 | `/about/` | Terminal-style personal page, English / 中文 toggle |
 

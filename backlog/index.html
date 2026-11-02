@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#faf8f4">
+<title>待玩 · patrick</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --paper:#faf8f4;
+  --ink:#1c1a17;
+  --ink2:#55504a;
+  --faint:#9a938a;
+  --rule:#e6e1d8;
+  --rule2:#d5cec2;
+  --accent:#a33d2c;
+  --serif:"Songti SC","Noto Serif CJK SC",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+html{background:var(--paper);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;color:var(--ink);font-family:var(--sans);font-variant-numeric:tabular-nums;line-height:1.6}
+
+.top{max-width:660px;margin:0 auto;padding:26px 26px 0;display:flex;align-items:baseline;gap:14px}
+.top a{font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--faint);transition:color .15s}
+.top a:hover{color:var(--ink)}
+.top a.brand{color:var(--ink2);font-weight:600;letter-spacing:.01em}
+.top .sp{flex:1}
+
+main{max-width:660px;margin:0 auto;padding:0 26px 90px}
+
+.head{padding:38px 0 30px;border-bottom:1px solid var(--rule2)}
+h1{font-family:var(--serif);font-size:38px;line-height:1.1;letter-spacing:-.01em;
+   font-weight:600;margin:0 0 14px}
+.stat{font-family:var(--mono);font-size:13px;color:var(--faint);letter-spacing:.02em}
+.stat b{font-weight:600;color:var(--ink);font-size:15px}
+.stat b.hl{color:var(--accent);font-size:20px;letter-spacing:-.02em}
+.stat span{color:#b5ada0;margin-left:10px;font-size:11.5px}
+
+.grp{margin-top:40px}
+.grp h2{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.18em;
+        text-transform:uppercase;color:var(--faint);margin:0 0 4px;
+        display:flex;align-items:center;gap:12px}
+.grp h2 i{flex:1;height:1px;background:var(--rule);display:block}
+
+ul{list-style:none;margin:0;padding:0}
+.row{display:flex;align-items:baseline;gap:12px;padding:13px 6px 13px 0;
+     border-bottom:1px solid var(--rule);cursor:pointer;transition:background .12s;
+     position:relative;user-select:none}
+.row:hover{background:#f3efe6}
+.row .idx{font-family:var(--mono);font-size:11px;color:var(--faint);flex:0 0 20px}
+.row .nm{font-size:15.5px;font-weight:500;letter-spacing:-.005em;flex:1;min-width:0;
+         overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .tag{font-family:var(--mono);font-size:9.5px;color:var(--accent);opacity:.7;
+          border:1px solid currentColor;padding:1px 4px;border-radius:2px;flex:0 0 auto}
+.row .yr{font-family:var(--mono);font-size:11px;color:var(--faint);flex:0 0 auto}
+.row .hr{font-family:var(--mono);font-size:12.5px;color:var(--ink2);flex:0 0 46px;
+         text-align:right;letter-spacing:-.01em}
+.row .ck{width:15px;height:15px;border:1px solid var(--rule2);border-radius:2px;flex:0 0 15px;
+         position:relative;transition:.12s;align-self:center}
+
+.row[data-done="1"] .nm{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1px}
+.row[data-done="1"] .hr,.row[data-done="1"] .yr{color:#c4bcae}
+.row[data-done="1"] .ck{background:var(--ink);border-color:var(--ink)}
+.row[data-done="1"] .ck::after{content:'';position:absolute;left:4px;top:1px;width:4px;height:8px;
+  border:solid var(--paper);border-width:0 1.5px 1.5px 0;transform:rotate(42deg)}
+
+.done-list .row{cursor:default}
+.done-list .row:hover{background:none}
+.done-list .nm{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1px}
+.done-list .hr{color:#c4bcae}
+.done-list .ck{border-color:var(--rule2)}
+.done-list .ck::after{content:'';position:absolute;left:4px;top:1px;width:4px;height:8px;
+  border:solid var(--faint);border-width:0 1.5px 1.5px 0;transform:rotate(42deg)}
+
+.foot{max-width:660px;margin:0 auto;padding:0 26px 70px;
+      font-family:var(--mono);font-size:11px;color:var(--faint)}
+.foot a{color:var(--ink2);text-decoration:none;border-bottom:1px solid var(--rule2)}
+.foot a:hover{color:var(--accent);border-color:var(--accent)}
+
+@media (max-width:600px){
+  .top,main,.foot{padding-left:20px;padding-right:20px}
+  h1{font-size:30px}
+  .row{gap:9px;padding:12px 0}
+  .row .nm{font-size:14.5px}
+  .row .yr{display:none}
+  .row .hr{flex-basis:40px;font-size:11.5px}
+  .head{padding:30px 0 24px}
+  .grp{margin-top:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="brand" href="../">patrick</a>
+  <span class="sp"></span>
+  <a href="../lab/">Lab</a>
+</div>
+
+<main>
+  <div class="head">
+    <h1>待玩</h1>
+    <div class="stat">还有 <b id="cnt">0</b> 款 · 约 <b class="hl" id="hrs">0</b> 小时<span id="days"></span></div>
+  </div>
+
+  <div id="groups"></div>
+
+  <div class="grp">
+    <h2>已通关<i></i></h2>
+    <ul class="done-list" id="doneList"></ul>
+  </div>
+</main>
+
+<div class="foot">
+  时长取自 HowLongToBeat 的全收集数据 · 勾选存在本机
+</div>
+
+<script id="data" type="application/json">{"groups": [{"name": "魂类 / 动作", "rows": [{"en": "Sekiro: Shadows Die Twice", "zh": "只狼：影逝二度", "yr": "2019", "note": "", "h": 69.5, "miss": false}, {"en": "Dark Souls III", "zh": "黑暗之魂 3", "yr": "2016", "note": "", "h": 100.0, "miss": false}, {"en": "The First Berserker: Khazan", "zh": "第一狂战士：卡赞", "yr": "2025", "note": "", "h": 57.5, "miss": false}, {"en": "Nioh 3", "zh": "仁王 3", "yr": "2026", "note": "", "h": 63.5, "miss": false}, {"en": "Wo Long: Fallen Dynasty", "zh": "卧龙：苍天陨落", "yr": "2023", "note": "", "h": 46.5, "miss": false}, {"en": "Dynasty Warriors: Origins", "zh": "真·三国无双 起源", "yr": "2025", "note": "", "h": 46.5, "miss": false}, {"en": "God of War Ragnarok", "zh": "战神：诸神黄昏", "yr": "2022", "note": "TGA 2022 提名", "h": 55.5, "miss": false}, {"en": "Stellar Blade", "zh": "星刃", "yr": "2024", "note": "", "h": 57.0, "miss": false}, {"en": "Rise of the Ronin", "zh": "浪人崛起", "yr": "2024", "note": "", "h": 67.5, "miss": false}, {"en": "Armored Core VI: Fires of Rubicon", "zh": "装甲核心 6", "yr": "2023", "note": "", "h": 50.5, "miss": false}, {"en": "Ninja Gaiden 4", "zh": "忍者龙剑传 4", "yr": "2025", "note": "", "h": 16.5, "miss": false}, {"en": "Phantom Blade Zero", "zh": "影之刃零", "yr": "未定", "note": "未发售", "h": null, "miss": false}]}, {"name": "银河城 / 独立", "rows": [{"en": "Hollow Knight: Silksong", "zh": "空洞骑士：丝之歌", "yr": "2025", "note": "TGA 2025 提名", "h": 65.5, "miss": false}, {"en": "Prince of Persia: The Lost Crown", "zh": "波斯王子：失落王冠", "yr": "2024", "note": "", "h": 31.0, "miss": false}, {"en": "No Rest for the Wicked", "zh": "恶意不息", "yr": "2024", "note": "抢先体验", "h": 0.7, "miss": false}, {"en": "Hi-Fi RUSH", "zh": "完美音浪", "yr": "2023", "note": "", "h": 60.5, "miss": false}, {"en": "Returnal", "zh": "死亡回归", "yr": "2021", "note": "", "h": 64.0, "miss": false}]}, {"name": "大作 / 其他", "rows": [{"en": "Death Stranding 2: On the Beach", "zh": "死亡搁浅 2", "yr": "2025", "note": "TGA 2025 提名", "h": 118.0, "miss": false}, {"en": "Monster Hunter Wilds", "zh": "怪物猎人：荒野", "yr": "2025", "note": "", "h": 115.0, "miss": false}, {"en": "Final Fantasy XVI", "zh": "最终幻想 16", "yr": "2023", "note": "", "h": 82.5, "miss": false}, {"en": "Star Wars Jedi: Survivor", "zh": "星球大战 绝地：幸存者", "yr": "2023", "note": "", "h": 55.5, "miss": false}, {"en": "DOOM: The Dark Ages", "zh": "毁灭战士：黑暗时代", "yr": "2025", "note": "", "h": 24.5, "miss": false}, {"en": "Code Vein II", "zh": "嗜血代码 2", "yr": "2026", "note": "", "h": 48.5, "miss": false}]}], "done": [{"en": "Wuchang: Fallen Feathers", "zh": "明末：渊虚之羽", "yr": "2025"}, {"en": "Lies of P", "zh": "匹诺曹的谎言", "yr": "2023"}, {"en": "Nine Sols", "zh": "九日", "yr": "2024"}]}</script>
+<script>
+var DATA = JSON.parse(document.getElementById('data').textContent);
+var KEY = 'backlog_done_v1';
+var state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { state = {}; }
+
+function esc(s){ return s.replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+function build(){
+  var out = '';
+  DATA.groups.forEach(function(g, gi){
+    out += '<div class="grp"><h2>' + esc(g.name) + '<i></i></h2><ul>';
+    g.rows.forEach(function(r, ri){
+      var k = gi + '-' + ri;
+      var hr = r.h ? Math.round(r.h) + 'h' : '—';
+      var tag = r.note ? '<span class="tag">' + esc(r.note.split(' ')[0]) + '</span>' : '';
+      out += '<li class="row" data-k="' + k + '" data-h="' + (r.h || 0) + '">'
+          +  '<span class="idx">' + String(ri + 1).padStart(2, '0') + '</span>'
+          +  '<span class="nm">' + esc(r.zh) + '</span>' + tag
+          +  '<span class="yr">' + esc(r.yr) + '</span>'
+          +  '<span class="hr">' + hr + '</span>'
+          +  '<span class="ck"></span></li>';
+    });
+    out += '</ul></div>';
+  });
+  document.getElementById('groups').innerHTML = out;
+
+  var d = '';
+  DATA.done.forEach(function(r){
+    d += '<li class="row"><span class="idx">—</span><span class="nm">' + esc(r.zh) + '</span>'
+      +  '<span class="yr">' + esc(r.yr) + '</span><span class="hr">—</span>'
+      +  '<span class="ck"></span></li>';
+  });
+  document.getElementById('doneList').innerHTML = d;
+}
+
+function paint(){
+  var n = 0, h = 0;
+  document.querySelectorAll('#groups .row').forEach(function(row){
+    var done = !!state[row.dataset.k];
+    row.dataset.done = done ? '1' : '';
+    if (!done) { n++; h += parseFloat(row.dataset.h) || 0; }
+  });
+  document.getElementById('cnt').textContent = n;
+  document.getElementById('hrs').textContent = Math.round(h);
+  document.getElementById('days').textContent = h > 0
+    ? '按每天 3 小时 · ' + Math.ceil(h / 3) + ' 天' : '';
+}
+
+document.addEventListener('click', function(ev){
+  var row = ev.target.closest('#groups .row');
+  if (!row) return;
+  var k = row.dataset.k;
+  if (state[k]) delete state[k]; else state[k] = 1;
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+  paint();
+});
+
+build(); paint();
+</script>
+</body>
+</html>
