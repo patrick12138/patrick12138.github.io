@@ -43,3 +43,17 @@ GitHub Pages 有 `.nojekyll`，仓库里任何目录都会被原样发布。放�
 - **下线不是草稿**：想先写不发，别建页面再删，直接在 vault 里躺着，等要发时再走 `md2post`。
 - 下线后再想发，走正常发布流程（md → `md2post` → `sources.json`），不要用 restore 的页面当模板，
   那样会把旧的时间戳和元信息带回来。
+
+## 手动跑一遍全链路
+
+改过 `md2post` / `unpublish` / 生成器之后，跑这个（约 20 秒，只在临时目录里动，不碰仓库）：
+
+```bash
+python3 tools/test_flow.py            # 通过才继续
+python3 tools/test_flow.py --keep     # 失败时保留 /tmp/flow-test-* 便于排查
+```
+
+它断言的事：md2post 生成页面并登记 → unpublish 删页面 + 清 sources + 首页/搜索/sitemap/feed 无残留
+→ restore 取回页面并自动补回 sources → 重建后回到列表与搜索索引。
+
+**不放进 build.py**：每次构建都跑太重；改完这几个脚本后手动跑一次即可。

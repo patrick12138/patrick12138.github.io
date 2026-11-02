@@ -33,6 +33,12 @@ def sh(cmd, check=False):
     return (p.stdout + p.stderr).strip()
 
 
+def sh_out(cmd):
+    """只要 stdout（解析 JSON / 提交号时用；sh() 会把 stderr 也拼进来）。"""
+    p = subprocess.run(cmd, shell=True, cwd=ROOT, capture_output=True, text=True)
+    return p.stdout.strip()
+
+
 def inbound_links(slug, skip_self=True):
     hits = []
     for p in __import__("glob").glob(os.path.join(ROOT, "posts", "*", "index.html")):
@@ -97,7 +103,26 @@ def restore(slug, dry=False):
     sh("git checkout %s -- posts/%s" % (parent, slug))
     if not os.path.isdir(os.path.join(ROOT, "posts", slug)):
         raise SystemExit("恢复失败：%s 里没有 posts/%s/" % (parent[:8], slug))
-    print("✓ 页面已恢复。sources.json 需要手动补回这一条（作者/日期/kind），然后 build.py")
+    print("✓ 页面已恢复")
+
+    # 顺手把 sources.json 的条目找回来：从「删除它的那次提交」的父版本里读
+    try:
+        raw = sh_out("git show %s:tools/sources.json" % parent)
+        entry = next((r for r in json.loads(raw) if r.get("slug") == slug), None)
+    except Exception:
+        entry = None
+    if entry:
+        rows = json.load(open(SOURCES, encoding="utf-8"))
+        if not any(r.get("slug") == slug for r in rows):
+            rows.append(entry)
+            rows.sort(key=lambda r: r.get("date", ""), reverse=True)
+            with open(SOURCES, "w", encoding="utf-8") as f:
+                json.dump(rows, f, ensure_ascii=False, indent=1)
+                f.write("\n")
+        print("  · sources.json 条目已自动补回：%s" % entry.get("md", "?"))
+    else:
+        print("  · sources.json 里没找到它的旧条目，需手动补：slug / md / author / date / kind")
+    print("  下一步：python3 tools/build.py")
 
 
 def main():
