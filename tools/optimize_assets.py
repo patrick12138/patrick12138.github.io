@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """把已入库的大图压成 webp 并就地改写引用（存量清理用，幂等）。
 
+webp 分支是就地重编码（quality 逐代下降），**非幂等**，属一次性手动清理。
 用法：python3 tools/optimize_assets.py [--max-kb 400] [--dry]
 """
 import glob
@@ -15,7 +16,35 @@ MAX_W = 1400
 
 def convert(path, max_kb, dry):
     ext = os.path.splitext(path)[1].lower()
-    if ext in (".webp", ".svg", ".gif"):
+    if ext == ".webp":
+        # 一次性手动清理：超限的存量 webp 就地重编码（每跑一次质量降一代，别反复跑）
+        if os.path.getsize(path) < max_kb * 1024:
+            return None
+        try:
+            from PIL import Image
+        except ImportError:
+            return None
+        try:
+            im = Image.open(path)
+            im.load()
+        except Exception:
+            print("  ! 不是图片，跳过：%s" % os.path.relpath(path, ROOT))
+            return None
+        if im.width > MAX_W:
+            im = im.resize((MAX_W, round(im.height * MAX_W / im.width)), Image.LANCZOS)
+        im = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
+        before = os.path.getsize(path)
+        if dry:
+            return (path, path, before, None)
+        import io
+        buf = io.BytesIO()
+        im.save(buf, "WEBP", quality=82, method=5)
+        if buf.tell() >= before:
+            return None    # 没省就放弃，保留原件
+        with open(path, "wb") as f:
+            f.write(buf.getvalue())
+        return (path, path, before, buf.tell())
+    if ext in (".svg", ".gif"):
         return None
     if os.path.getsize(path) < max_kb * 1024:
         return None
@@ -53,8 +82,9 @@ def main():
         if not r:
             continue
         old, new, before, after = r
-        rel_old = os.path.relpath(old, os.path.join(ROOT, "assets"))
-        rel_new = os.path.relpath(new, os.path.join(ROOT, "assets"))
+        # Windows relpath 给反斜杠，HTML 里是正斜杠，必须归一
+        rel_old = os.path.relpath(old, os.path.join(ROOT, "assets")).replace(os.sep, "/")
+        rel_new = os.path.relpath(new, os.path.join(ROOT, "assets")).replace(os.sep, "/")
         # 改写所有页面里的引用
         if not dry:
             for page in glob.glob(os.path.join(ROOT, "posts", "*", "index.html")):
