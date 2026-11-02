@@ -157,7 +157,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 
 .toc-close{display:none;margin-left:auto;font-size:.95rem;line-height:1;opacity:.6}
 /* 手机：浮动按钮 + 底部面板 */
-.toc-fab{display:none;position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px) + 56px);z-index:40;
+.toc-fab{display:none;position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(130px + env(safe-area-inset-bottom,0px));z-index:40;
   width:40px;height:40px;padding:0;align-items:center;justify-content:center;border-radius:999px;
   background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
   border:1px solid var(--border);cursor:pointer;transition:color .15s,border-color .15s}
@@ -224,7 +224,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .body .video-link:hover{border-bottom-color:var(--accent)}
 
 /* 回到顶部：PC 右下圆形图标按钮（手机用文末文字链接） */
-.to-top{display:none;position:fixed;right:24px;bottom:30px;z-index:50;width:40px;height:40px;padding:0;
+.to-top{display:flex;position:fixed;right:18px;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:50;width:40px;height:40px;padding:0;
   align-items:center;justify-content:center;border-radius:999px;
   background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
   border:1px solid var(--border);cursor:pointer;opacity:0;transform:translateY(8px);
@@ -232,7 +232,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 28px}
 .to-top.show{opacity:1;transform:none;pointer-events:auto}
 .to-top:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 .to-top svg{display:block}
-@media (min-width:721px){ .to-top{display:flex} .back-top{display:none} }
+
 
 /* 兜底：不要出现整页横向滚动（否则右下浮动按钮会被推到屏幕外）
    用 clip 而不是 hidden：hidden 会让 body 变成滚动容器，把 sticky 顶栏弄坏 */
