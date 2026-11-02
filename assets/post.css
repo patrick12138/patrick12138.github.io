@@ -208,3 +208,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .brand-menu{top:calc(100% + 12px);left:-14px;min-width:128px}
   .brand-menu a{padding:9px 16px}
 }
+
+
+/* 浮动按钮里的图标不吃点击 */
+.toc-fab svg,.toc-tab svg,.toc-fab svg *,.toc-tab svg *{pointer-events:none}
