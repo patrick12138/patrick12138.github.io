@@ -213,6 +213,11 @@ def strip_toc(doc):
     for sig in ("brandSet", "backTop", "var toc=document.getElementById"):
         pat = r"\n<script>\n\(function\(\)\{[^<]*?%s[\s\S]*?\}\)\(\);\n</script>" % re.escape(sig)
         doc = re.sub(pat, "", doc)
+    # 站名下拉：还原成普通站名链接，稍后按当前文章分类重新生成
+    mm = re.search(r'<div class="brandset" id="brandSet">.*?<a role="menuitem" href="([^"]*)\?tab=all"', doc, re.S)
+    if mm:
+        doc = re.sub(r'<div class="brandset" id="brandSet">.*?</div></div>',
+                     '<a class="brand" href="%s">patrick</a>' % mm.group(1), doc, count=1, flags=re.S)
     # 清掉之前反复 strip 留下的空 script
     doc = re.sub(r"\n?<script></script>", "", doc)
     doc = re.sub(r'\n/\* ─── 目录（toc） ─── \*/.*?(?=</style>)', "", doc, flags=re.S)
@@ -272,8 +277,11 @@ def inject_brand(doc):
     if not m:
         return doc
     base = m.group(1)
+    mk = re.search(r'<div class="meta">[^<]*·\s*(搬运|原创)', doc)
+    cur = {"搬运": "repost", "原创": "own"}.get(mk.group(1) if mk else "", "")
     menu = "".join(
-        '<a role="menuitem" href="%s?tab=%s">%s</a>' % (base, f, label)
+        '<a role="menuitem" href="%s?tab=%s"%s>%s</a>'
+        % (base, f, ' class="on"' if f == cur else "", label)
         for f, label in (("all", "全部文章"), ("repost", "搬运"), ("own", "个人"))
     )
     block = ('<div class="brandset" id="brandSet">'
