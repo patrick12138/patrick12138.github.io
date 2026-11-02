@@ -189,7 +189,7 @@ html,body{overflow-x:clip}
 .pager a{display:flex;flex-direction:column;gap:5px;max-width:48%;min-width:0;text-decoration:none;
   transition:color .15s}
 .pager-next{margin-left:auto;text-align:right}
-.pager-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--text-faint)}
+.pager-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--text-muted)}
 .pager-t{font-size:.92rem;line-height:1.45;color:var(--text-muted);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;  /* 太长就省略，不换行 */
   transition:color .15s}
@@ -256,7 +256,7 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 /* 相关阅读：文末、上一篇之前，一条淡标题 + 竖排链接 */
 .related{margin:52px 0 0}
 .related-k{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;
-  color:var(--text-faint);margin-bottom:10px}
+  color:var(--text-muted);margin-bottom:10px}
 .related ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
 .related a{font-size:.94rem;line-height:1.5;color:var(--text-muted);text-decoration:none;
   transition:color .15s}

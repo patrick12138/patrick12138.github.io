@@ -44,7 +44,7 @@ a{color:inherit}
 .src-url:hover{border-bottom-color:var(--accent)}
 /* 搬运页的版权提示：斜体脚注，一条发丝线压在上面；不要框、不要底色、不要图标 */
 .legal-note{margin:52px 0 0;padding:16px 0 0;border-top:1px solid var(--rule);
-  max-width:46em;font-size:.82rem;line-height:1.85;color:var(--text-faint);
+  max-width:46em;font-size:.82rem;line-height:1.85;color:var(--text-muted);
   font-style:italic;letter-spacing:.005em}
 .legal-text{font-style:italic}
 .legal-link{display:inline-block;margin-left:10px;font-style:normal;
