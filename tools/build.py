@@ -21,7 +21,7 @@ import glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.join(ROOT, "tools")
-ASSETS = ("assets/home.css", "assets/post.css", "assets/site.js")
+ASSETS = ("assets/base.css", "assets/home.css", "assets/post.css", "assets/site.js")
 
 
 def sh(cmd, check=True):
@@ -59,6 +59,28 @@ def stamp_assets():
     return vs, changed
 
 
+SKILLS_SRC = os.path.join(ROOT, "skills")
+SKILLS_DST = "/var/minis/skills"
+
+
+def sync_skills():
+    """仓库 skills/ 是唯一源，单向同步到 /var/minis/skills/（本机没那个目录就跳过）。"""
+    if not os.path.isdir(SKILLS_SRC) or not os.path.isdir(SKILLS_DST):
+        return "跳过（无 skills 目录）"
+    import shutil
+    changed = 0
+    for name in os.listdir(SKILLS_SRC):
+        src = os.path.join(SKILLS_SRC, name)
+        if not os.path.isdir(src):
+            continue
+        dst = os.path.join(SKILLS_DST, name)
+        if os.path.isdir(dst):
+            shutil.rmtree(dst)
+        shutil.copytree(src, dst)
+        changed += 1
+    return "同步 %d 个 skill" % changed
+
+
 def main():
     args = sys.argv[1:]
     do_rebuild = "--rebuild" in args
@@ -90,6 +112,14 @@ def main():
     print(tail)
     if p.returncode != 0:
         print("\n✗ qa 未通过（P0 不为 0），已中止，不会 push。")
+        raise SystemExit(1)
+
+    print("⑤.5 回归测试 …")
+    t = subprocess.run("python3 tools/test_pipeline.py", shell=True, cwd=ROOT,
+                       capture_output=True, text=True)
+    print("   " + t.stdout.strip().splitlines()[-1])
+    if t.returncode != 0:
+        print(t.stdout[-800:])
         raise SystemExit(1)
 
     print("\n✓ 构建完成")

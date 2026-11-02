@@ -84,18 +84,25 @@ def check_dupes():
 
 
 def check_css_stamp():
-    """页面里 post.css?v= 必须等于文件真实内容哈希，否则浏览器会一直吃旧缓存。"""
+    """页面里所有 assets/*.css?v= 必须等于文件真实内容哈希，否则浏览器会一直吃旧缓存。"""
     import hashlib
-    css = os.path.join(ROOT, "assets", "post.css")
-    if not os.path.exists(css):
-        return []
-    h = hashlib.sha1(open(css, "rb").read()).hexdigest()[:8]
+    files = {}
+    for name in ("base.css", "home.css", "post.css"):
+        f = os.path.join(ROOT, "assets", name)
+        if os.path.exists(f):
+            files[name] = hashlib.sha1(open(f, "rb").read()).hexdigest()[:8]
     bad = []
-    for p in sorted(glob.glob(os.path.join(ROOT, "posts", "*", "index.html"))):
-        m = re.search(r"post\.css\?v=([0-9a-f]+)", open(p, encoding="utf-8").read())
-        if not m or m.group(1) != h:
-            bad.append((os.path.basename(os.path.dirname(p)), m.group(1) if m else "-"))
-    return bad, h
+    pages = (glob.glob(os.path.join(ROOT, "*.html"))
+             + glob.glob(os.path.join(ROOT, "posts", "*", "index.html")))
+    for p in pages:
+        s = open(p, encoding="utf-8").read()
+        for name, h in files.items():
+            m = re.search(r"%s\?v=([0-9a-f]+)" % re.escape(name), s)
+            if m and m.group(1) != h:
+                bad.append((os.path.basename(os.path.dirname(p)) or "index", name, m.group(1)))
+            elif not m and ("assets/%s" % name) in s:
+                bad.append((os.path.basename(os.path.dirname(p)) or "index", name, "无版本号"))
+    return bad, files
 
 
 def main():
@@ -114,9 +121,9 @@ def main():
             print("  … 还有 %d 处" % (len(hits) - 8))
     stamp_bad, css_hash = check_css_stamp()
     if stamp_bad:
-        print("\nCSS 版本戳过期（应为 %s，跑一次 add_toc.py）" % css_hash)
-        for slug, v in stamp_bad[:5]:
-            print("  [P0] %s：%s" % (slug, v))
+        print("\nCSS 版本戳过期（应为 %s，跑一次 build.py）" % " / ".join("%s=%s" % kv for kv in css_hash.items()))
+        for slug, name, v in stamp_bad[:5]:
+            print("  [P0] %s：%s?v=%s" % (slug, name, v))
         total["P0"] += len(stamp_bad)
 
     dupe_bad = check_dupes()

@@ -1,0 +1,32 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install pyyaml markdown pillow
+
+      - name: Build (TOC → index → hashes → QA → tests)
+        run: python3 tools/build.py
+
+      - name: Generated files must be committed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "✗ 有未提交的生成结果，请在本地跑一遍 build.py 并提交："
+            git status --porcelain
+            git diff | head -200
+            exit 1
+          fi
+          echo "✓ 生成结果与提交一致"

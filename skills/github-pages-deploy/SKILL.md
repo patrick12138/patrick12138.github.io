@@ -18,13 +18,16 @@ assets/posts/<slug>/      配图（webp，本地化）
 tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.py gen_index.py qa.py sources.json
 ```
 
-## 四条硬规矩
+## 五条硬规矩
 
 1. **文章一律由 `tools/md2post.py` 从 vault 的 md 生成**，不手写文章 HTML；
    改排版走 `tools/rebuild.py`，它按 `tools/sources.json` 整站重生成。
 2. **push 前必须跑 `tools/build.py`（内含 qa），P0 不为 0 不许上线。**
 3. **按钮里不放文字，只放图标**（`aria-label` 说明）；要文字就用文字链接。
-4. **后处理脚本必须幂等**：跑两遍 diff 为空、注入标记计数为 1，才算做完（详见 `references/content.md`）。
+4. **动手前先对表**：`git remote -v` 确认是 `patrick12138/patrick12138.github.io`、工作副本只有
+   `/var/minis/workspace/site` 一处；`git fetch && git rev-list --left-right --count HEAD...origin/main`
+   必须是 `0 0`（这个仓库经常被别的会话并发推），并向用户明确报「本地 = 远端 @ <commit>」。
+5. **后处理脚本必须幂等**：跑两遍 diff 为空、注入标记计数为 1，才算做完（详见 `references/content.md`）。
 
 ## 按需读的参考文件
 
