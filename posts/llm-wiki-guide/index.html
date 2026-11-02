@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="这篇是从LLMWiki和Obsidian+ClaudeCode：用Karpathy的方法，搭建真正可用的第二大脑编译出来的操作指南。">
+<title>LLM Wiki 实践指南 · patrick</title>
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
+<link rel="stylesheet" href="../../assets/post.css?v=0ca7241f">
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost">搬运</a><a role="menuitem" href="../../?tab=own" class="on">个人</a></div></div>
+  <nav class="nav">
+    <a href="../../lab/">Lab</a><a href="../../about/">About</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>LLM Wiki 实践指南</h1>
+<div class="meta">2026年9月10日 · 个人 · <span class="stats">1,131 字 · 约 3 分钟</span></div>
+
+<nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">核心区别</a></li><li class="lvl2"><a href="#h2">三层结构</a></li><li class="lvl2"><a href="#h3">导入时 agent 要做什么</a></li><li class="lvl2"><a href="#h4">查询时 agent 要做什么</a></li><li class="lvl2"><a href="#h5">定期修复检查</a></li><li class="lvl2"><a href="#h6">自我迭代闭环</a></li><li class="lvl2"><a href="#h7">常用指令</a></li><li class="lvl2"><a href="#h8">使用外部 AI 时</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>这篇是从 LLM Wiki 和 Obsidian + Claude Code：用 Karpathy 的方法，搭建真正可用的第二大脑 编译出来的操作指南。</p>
+<p>核心不是“把文章存起来以后再搜”，而是让 agent 先完整阅读资料，再把知识编译进一个持续维护的 wiki。</p>
+<h2 id="h1">核心区别</h2>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>工作方式</th>
+<th>问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>普通收藏</td>
+<td>把文章、截图、文档丢进文件夹</td>
+<td>资料越来越多，但没有结构，后面很难找回</td>
+</tr>
+<tr>
+<td>RAG/临时检索</td>
+<td>提问时再从原文片段里拼答案</td>
+<td>每次都重新理解，长期积累弱，容易漏上下文</td>
+</tr>
+<tr>
+<td>LLM Wiki</td>
+<td>导入时就总结、归类、互链、更新索引</td>
+<td>前期需要维护规则，但知识会持续复利</td>
+</tr>
+</tbody>
+</table>
+<p>LLM Wiki 的重点是：知识只需要“编译”一次，之后通过 <code>Index.md</code>、专题页、实体页和交叉链接持续复用。</p>
+<h2 id="h2">三层结构</h2>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>当前目录</th>
+<th>责任</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raw sources</td>
+<td><code>Sources/</code></td>
+<td>保存原始资料，作为 source of truth</td>
+</tr>
+<tr>
+<td>Wiki</td>
+<td><code>Career/</code>、<code>Work/</code>、<code>Resources/</code></td>
+<td>保存整理后的知识、方法、项目复盘、面试话术</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td><code>AGENTS.md</code>、<code>CLAUDE.md</code></td>
+<td>约束 agent 怎么读、怎么写、怎么更新</td>
+</tr>
+</tbody>
+</table>
+<p>这个 Vault 不再用 <code>Notion/</code>、<code>interview/</code> 作为长期顶层名，因为它们更像来源或局部场景。现在顶层按用途命名：<code>Career/</code>、<code>Work/</code>、<code>Resources/</code>、<code>Sources/</code>、<code>Attachments/</code>。</p>
+<h2 id="h3">导入时 agent 要做什么</h2>
+<p>导入一篇新资料时，不是简单移动文件，而是做一次小型编译：</p>
+<ol>
+<li>判断资料类型：求职、工作项目、通用方法、剪藏阅读、附件。</li>
+<li>保留原文到 <code>Sources/</code>：文章剪藏先进入 <code>Sources/Clippings/</code> 待处理，处理完成后 raw 文件移到 <code>Sources/Inbox/</code> 归档。</li>
+<li>提取长期有价值的内容：概念、方法、事实、决策、风险、可复用话术。</li>
+<li>更新已有页面，而不是重复造一堆孤立页面。</li>
+<li>如果出现新概念，创建独立页面或专题页。</li>
+<li>建立 Obsidian 双链，让原文、专题、实体之间能互相跳转。</li>
+<li>更新 <code>Index.md</code>，让以后从索引就能找到它。</li>
+<li>更新 <code>Log.md</code>，记录这次导入做了什么。</li>
+</ol>
+<h2 id="h4">查询时 agent 要做什么</h2>
+<p>查询不是直接全库乱搜，而是按顺序来：</p>
+<ol>
+<li>先读 Index，判断相关入口。</li>
+<li>再读对应专题页，例如 <code>Career/</code>、<code>Work/合地/</code>、<code>Work/保信/</code>。</li>
+<li>必要时回看 <code>Sources/</code> 原文。</li>
+<li>生成答案时带上 Obsidian 链接。</li>
+<li>如果答案形成了可复用结论，写回 wiki，并更新 <code>Index.md</code> 和 <code>Log.md</code>。</li>
+</ol>
+<h2 id="h5">定期修复检查</h2>
+<p>随着资料变多，知识库会出现几类问题：</p>
+<ul>
+<li>链接失效：文件移动后旧路径没改。</li>
+<li>页面孤立：有价值的页面没有被索引或其它页面链接。</li>
+<li>概念重复：同一个主题散在多个地方，没有主入口。</li>
+<li>结论冲突：新资料推翻旧判断，但旧页面还没更新。</li>
+<li>信息过时：需求、面试策略、项目状态已经变化。</li>
+</ul>
+<p>巡检时 agent 应先生成问题清单，再根据用户确认修复。不要一上来就大规模合并或删除。</p>
+<h2 id="h6">自我迭代闭环</h2>
+<p>每次新资料处理后，至少要满足这几个条件：</p>
+<table>
+<thead>
+<tr>
+<th>检查点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原文可追溯</td>
+<td>原始资料仍在 <code>Sources/</code></td>
+</tr>
+<tr>
+<td>知识已沉淀</td>
+<td>有对应的 wiki 页面或已有页面被更新</td>
+</tr>
+<tr>
+<td>索引可发现</td>
+<td><code>Index.md</code> 能找到新增或更新内容</td>
+</tr>
+<tr>
+<td>日志可回溯</td>
+<td><code>Log.md</code> 有本次动作记录</td>
+</tr>
+<tr>
+<td>链接可跳转</td>
+<td>旧路径、图片路径、显式双链已检查</td>
+</tr>
+</tbody>
+</table>
+<p>如果这五点都满足，才算一次完整导入。</p>
+<h2 id="h7">常用指令</h2>
+<pre><code class="language-text">处理 Sources/Clippings 里的剪藏，按知识库规则编译，处理完 raw 文件移到 Sources/Inbox，并更新相关专题、Index.md 和 Log.md。
+</code></pre>
+<pre><code class="language-text">处理 Sources/Inbox 里的新资料，先判断是否已经是已处理剪藏归档；未处理的按知识库规则编译，更新相关专题、Index.md 和 Log.md。
+</code></pre>
+<pre><code class="language-text">基于 Index.md 和 Career/，帮我总结最近求职准备还有哪些短板。
+</code></pre>
+<pre><code class="language-text">基于 Work/合地/需求 和 Work/合地/记录，整理合地项目的业务地图。
+</code></pre>
+<pre><code class="language-text">lint 一下知识库，检查旧路径、断链、孤立页面、重复概念和过时内容。
+</code></pre>
+<h2 id="h8">使用外部 AI 时</h2>
+<p>如果要把这个知识库给另一个 AI 看，优先给它：</p>
+<ol>
+<li><code>Index.md</code></li>
+<li><code>AGENTS.md</code> 或 <code>CLAUDE.md</code></li>
+<li>相关专题页面</li>
+</ol>
+<p><code>Index.md</code> 是目录和摘要，外部 AI 读它就能知道有哪些页面，再根据问题读具体材料，减少胡乱猜测。</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2023–2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script src="../../assets/site.js?v=9084725c"></script>
+<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  function edge(){
+    // 滚到底就不显示底部渐隐；不需要滚动时也算到底
+    var atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+    toc.classList.toggle('at-bottom', atBottom);
+  }
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+      edge();
+    },{passive:true});
+  }
+  edge();
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -296,7 +296,7 @@ def fmt_date(d):
 # ─── 生成 ──────────────────────────────────────────────────
 def build(md_path, slug, date_arg=None, author_arg=None, kind="repost",
           images=True, title_arg=None):
-    raw = open(md_path, encoding="utf-8").read()
+    raw = open(md_path, encoding="utf-8").read().replace("\ufeff", "")   # 去 BOM，否则首个 H1 识别不到
     meta, body = split_front(raw)
 
     title = str(title_arg or meta.get("title") or "").strip()

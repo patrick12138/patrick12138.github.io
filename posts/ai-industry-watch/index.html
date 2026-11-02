@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="这页不是预测结论，而是把几篇资料里的行业信号编译成观察框架。后续新资料进来时，可以继续补充或修正。">
+<title>AI 行业观察 · patrick</title>
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
+<link rel="stylesheet" href="../../assets/post.css?v=0ca7241f">
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost">搬运</a><a role="menuitem" href="../../?tab=own" class="on">个人</a></div></div>
+  <nav class="nav">
+    <a href="../../lab/">Lab</a><a href="../../about/">About</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>AI 行业观察</h1>
+<div class="meta">2026年10月12日 · 个人 · <span class="stats">3,424 字 · 约 9 分钟</span></div>
+<aside class="source"><span class="src-label">来源</span>Something Big Is Happening · 在中国 AI 生态圈摸底了两周，我学到了什么 · AI 早报 2026-05-29 · Why I Don’t Vibe Code · 当我们站在变革的开端 · AI fatigue is real and nobody talks about it · 实录直出：腾讯如何做AI？ 目标是什么？ · 当我们在谈论 Agent Infra 时我们在谈论什么 · AIGC 多智能体创作系统架构拆解 · State of Open Models: Summer 2026 Observations · AI 越来越强，为什么打工人反而越来越累、越来越内耗了？</aside>
+
+<nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">当前信号</a></li><li class="lvl2"><a href="#h2">对个人最有用的判断</a></li><li class="lvl2"><a href="#h3">商品化与价值迁移</a></li><li class="lvl2"><a href="#h4">人的可持续性</a></li><li class="lvl2"><a href="#h5">AI 下半场：Context、Co-Design 和 Runtime</a></li><li class="lvl2"><a href="#h6">AIGC 产品化</a></li><li class="lvl2"><a href="#h7">2026 夏季开源大模型生态格局（Hugging Face Hub 实测）</a></li><li class="lvl3"><a href="#h8">1. 中美开源战略分野与真实驱动力</a></li><li class="lvl3"><a href="#h9">2. Attention ≠ Adoption：工业落地的双重经济学</a></li><li class="lvl3"><a href="#h10">3. Qwen（通义千问）成为事实上的全球开源默认基座</a></li><li class="lvl3"><a href="#h11">4. 运行时（Runtime）与量化分发层是真正的分水岭</a></li><li class="lvl3"><a href="#h12">5. Agent 成为平台首要用户与安全攻防变量</a></li><li class="lvl2"><a href="#h13">中国 AI 生态的几个观察</a></li><li class="lvl2"><a href="#h14">AI 早报 2026-05-29 的信号</a></li><li class="lvl2"><a href="#h15">保留怀疑</a></li><li class="lvl2"><a href="#h16">后续更新口径</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p>这页不是预测结论，而是把几篇资料里的行业信号编译成观察框架。后续新资料进来时，可以继续补充或修正。</p>
+<h2 id="h1">当前信号</h2>
+<table>
+<thead>
+<tr>
+<th>观察</th>
+<th>含义</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型迭代周期继续缩短</td>
+<td>能独立完成的任务长度在变长，agent 能力从补全走向执行</td>
+<td>容易高估短期采用速度，也容易低估长期冲击</td>
+</tr>
+<tr>
+<td>编程是最先被改变的白领工作</td>
+<td>AI 写代码是为了反哺 AI 研发，也让开发者最早感知变化</td>
+<td>“会语法”价值下降，“会判断和验证”价值上升</td>
+</tr>
+<tr>
+<td>agent 编排正在组织化</td>
+<td>dynamic workflows、长期记忆、监控、自动化把 agent 从单次聊天推向工作流</td>
+<td>多 agent 也有协调成本，不能假设线性提效</td>
+</tr>
+<tr>
+<td>资本继续涌入基础模型</td>
+<td>高估值和大融资说明算力、人才、数据仍是核心战场</td>
+<td>估值可能先于商业化，泡沫和真实能力会混在一起</td>
+</tr>
+<tr>
+<td>中国硬件生态强，软件生态更复杂</td>
+<td>深圳供应链和工程执行力是硬优势，软件创始人与商业化路径仍有短板</td>
+<td>软件初创容易被大模型原生功能覆盖</td>
+</tr>
+<tr>
+<td>coding 正在商品化</td>
+<td>代码生产成本下降，价值迁移到问题定义、产品判断、分发和护城河</td>
+<td>只用 AI 更快做旧形态产品，容易进入低防御力竞争</td>
+</tr>
+<tr>
+<td>人的可持续性成为新约束</td>
+<td>AI 把瓶颈从生产转移到 review、协调和决策；AI 监工循环加重认知负荷</td>
+<td>组织容易把“更快”误解成“可以无限加任务”，导致 Jevons 悖论内耗</td>
+</tr>
+<tr>
+<td>Context 成为壁垒</td>
+<td>模型越通用，真实用户、企业流程和个人知识库上下文越值钱</td>
+<td>没有真实场景的模型/产品容易只剩 demo</td>
+</tr>
+<tr>
+<td>开源模型战略分化（中美驱动分歧）</td>
+<td>中国头部 Lab（DeepSeek、Moonshot、MiniMax、阿里等）突破 700B~2.8T MoE 争夺开源前沿与 API 估值；美国开源转为芯片巨头（AMD、NVIDIA 各发 200+ 模型）通过权重为硬件带货</td>
+<td>仅靠参数和开源跑量难以直接变现，必须收敛至 API/云生态或芯片生态</td>
+</tr>
+<tr>
+<td>Attention ≠ Adoption 悖论</td>
+<td>Likes 代表社区短期兴奋度，Downloads 代表工业流水线长期依赖；Top 25 仅 1 个重合，&lt;1B 模型占全平台 83% 下载量，&gt;70B 仅占 3%</td>
+<td>开发者容易被榜单带偏，工业落地依然严重依赖成熟、轻量的小型基座</td>
+</tr>
+<tr>
+<td>Qwen 成为全球开源默认基座</td>
+<td>社区衍生模型超 15.1 万（Llama 的 4.7 倍），凭借高频迭代、全尺寸覆盖与 Apache 2.0 构筑下游飞轮</td>
+<td>单一基座依赖可能带来潜在生态迁移成本</td>
+</tr>
+<tr>
+<td>Runtime/量化层增速碾压模型层</td>
+<td>llama.cpp 并入 HF 成为基建，GGUF（+464%）和 MLX（+148%）等本地推理层让万亿 MoE 分布式跑在消费级设备上</td>
+<td>量化损失与多卡协同稳定性需要工程持续验证</td>
+</tr>
+<tr>
+<td>Agent 成为 Hub 第一用户与安全变量</td>
+<td>Coding Agent 成为模型库主要调用者；首现自主 Agent 持续性渗透入侵，溯源反向依赖私有化开源模型（GLM-5.2）</td>
+<td>闭源商用模型安全护栏在攻防分析中受限，开源私有化具备不可替代的底线价值</td>
+</tr>
+<tr>
+<td>Agent Infra 上移到 Runtime</td>
+<td>复杂任务需要环境隔离、分支、调度、消息和生命周期管理</td>
+<td>只靠 prompt 和 tool 列表难以支撑长程任务</td>
+</tr>
+<tr>
+<td>AIGC 从生成走向生产系统</td>
+<td>角色、场景、风格和资产库决定连续创作能力</td>
+<td>只做单点生成容易被模型原生能力覆盖</td>
+</tr>
+</tbody>
+</table>
+<h2 id="h2">对个人最有用的判断</h2>
+<p>AI 时代不适合把自己定位成“只会写某个栈的人”。更稳的方向是：</p>
+<ul>
+<li>能用 AI 放大产能；</li>
+<li>能拆解真实业务和系统边界；</li>
+<li>能做验证和质量兜底；</li>
+<li>能把复杂问题讲清楚；</li>
+<li>能把 AI 输出变成可维护结果。</li>
+</ul>
+<p>这和 AI 时代的品味与工程思维、Codex 与 AI 编程工作流 是同一条线：语法和样板越来越便宜，判断、责任、协作和真实上下文越来越重要。</p>
+<h2 id="h3">商品化与价值迁移</h2>
+<p>AI 商品化与价值迁移 补充了一个历史框架：印刷术商品化了复制，电力商品化了动力，云计算商品化了服务器，AI 正在商品化 coding。</p>
+<p>可复用结论：</p>
+<ul>
+<li>被商品化的层利润下降，价值会迁移到相邻的新专有层。</li>
+<li>供给爆炸后，注意力、信任、分发和网络效应会更稀缺。</li>
+<li>生产率提升不只是换工具，而是围绕新技术重新设计流程。</li>
+<li>对个人来说，“会写代码”变弱，“会定义问题、做判断、整合系统”变强。</li>
+<li>对创业来说，“做出来”不再是优势，护城河要建在代码之外。</li>
+</ul>
+<h2 id="h4">人的可持续性</h2>
+<p>AI 疲劳与可持续使用 补充了一个容易被忽略的行业信号：AI 的采用速度不只受模型能力影响，也受人的注意力、审查能力和组织节奏影响。在 Agent 与自动化吞吐提升后，开发者往往从单纯编写代码沦为高强度的“AI 监工与日志审核员”，同时遭遇 Jevons 悖论带来的任务清单无序膨胀。</p>
+<p>AI 越能生成，越需要新的管理方式：</p>
+<ul>
+<li>明确哪些输出必须 review，哪些可以低风险接受；</li>
+<li>让测试、日志、监控和权限边界承担更多验证工作；</li>
+<li>避免用 AI 产能把人推入持续上下文切换；</li>
+<li>建立防御性停止规则，克制无边界的实验欲望；</li>
+<li>把“知道什么时候停”当成 AI 使用能力的一部分；</li>
+<li>观察 AI burnout 与心智负荷，而不是只统计生成量和节省工时。</li>
+</ul>
+<h2 id="h5">AI 下半场：Context、Co-Design 和 Runtime</h2>
+<p>AI 产品与模型 Co-Design 和 Agent Infra 与 Runtime 指向同一个方向：AI 下半场的关键不只是模型能力，而是模型如何进入真实场景并稳定完成任务。</p>
+<p>几个可复用判断：</p>
+<ul>
+<li>通用模型方法论逐渐成熟后，找到好问题、好场景和好上下文更难。</li>
+<li>产品和模型需要 Co-Design，真实 Eval 比单纯 benchmark 更接近用户价值。</li>
+<li>Agent 要可规模化，必须有环境隔离、上下文管理、调度、消息和失败恢复。</li>
+<li>工程师会更像产品和系统负责人，驱动多个 coding agent，并把测试、Eval、质量标准前置。</li>
+</ul>
+<p>对个人来说，这说明知识库、项目复盘、真实产品小工具和可展示的 AI workflow 都不是“额外整理”，而是在积累自己的 context 和产品判断。</p>
+<h2 id="h6">AIGC 产品化</h2>
+<p>AIGC 创作生产系统 提醒：AIGC 的产品机会不只是“生成一张图/一段视频”，而是围绕持续创作建立资产和工作流。</p>
+<p>重要变化：</p>
+<ul>
+<li>从一次性 prompt 转向角色、场景、风格、音乐、视频和衍生物料的资产库；</li>
+<li>从单模型调用转向艺术总监、专业设计师、执行 agent 和共享能力的分工；</li>
+<li>从看生成效果转向看能不能持续复用、修改、延展和商业化；</li>
+<li>创作产品的护城河从模型接入迁移到流程组织、资产一致性和用户工作流。</li>
+</ul>
+<h2 id="h7">2026 夏季开源大模型生态格局（Hugging Face Hub 实测）</h2>
+<p>基于 Hugging Face 2026 年 1-7 月全量 Hub 数据（见 State of Open Models Summer 2026 Observations），开源大模型正在发生结构性重塑：</p>
+<h3 id="h8">1. 中美开源战略分野与真实驱动力</h3>
+<ul>
+<li><strong>中国 Lab 垄断开源前沿天花板</strong>：2026 年几乎每个月，中国开源模型（DeepSeek、MiniMax、Moonshot、阿里通义、小米、美团、蚂蚁等）的最大参数上限均远超美国同行，天花板在 754B 至 2.78T MoE 区间。中国 Lab 大多采用纯粹的 Apache 2.0 / MIT 宽松开源协议，核心目标是<strong>建立行业声量、撬动 API 业务与拉升估值</strong>。</li>
+<li><strong>美国开源转为硬件厂商主导</strong>：开源发布量最多的前两位是芯片巨头 AMD 与 NVIDIA（各自发布超 200 个模型），LiquidAI 位列第三。硬件厂商把开源权重作为“芯片带货的最有力证明”，开源模型成为了硬件生态与优化分发层（Distribution &amp; Optimization Layer）的护城河。</li>
+</ul>
+<h3 id="h9">2. Attention ≠ Adoption：工业落地的双重经济学</h3>
+<ul>
+<li><strong>关注度与真实依赖割裂</strong>：Hub 累计 Downloads Top 25 与 Likes Top 25 中，<strong>仅有 1 个模型同时重合</strong>。下载量前 25 名中多达 13 个发布于 2022 年（如 <code>all-MiniLM-L6-v2</code> 7 个月内被拉取 15.5 亿次）。Likes 反映的是模型发布数周内的社群兴奋度，Downloads 反映的是常年挂载在稳定生产流水线中的真实系统依赖。</li>
+<li><strong>小模型仍然是落地主力</strong>：有声明参数的模型中，<strong>&lt;1B 的模型占领了全周期 83% 的下载量</strong>，而 &gt;70B 的大模型仅占 3%（全平台 85.6% 的模型终身下载量不足 200 次，头部 1.5% 垄断了 99.2% 的下载量）。工程落地不是盲目追逐最新参数，而是选择兼具成本与吞吐的确定性基座。</li>
+</ul>
+<h3 id="h10">3. Qwen（通义千问）成为事实上的全球开源默认基座</h3>
+<ul>
+<li><strong>衍生生态绝对垄断</strong>：Qwen 在 Hub 上的社区衍生模型达到 <strong>151,448 个</strong>，是 Meta 全系衍生量的 2.6 倍、Llama 衍生量的 4.7 倍（Google 为 8.2 万个）。全年前 7 个月，Qwen 衍生库以每天 180~210 个的速度增长。</li>
+<li><strong>正反馈飞轮的三大支柱</strong>：<br>
+  1. <strong>高频稳定性（Consistency）</strong>：持续敏捷发布，而非依赖偶发性旗舰；<br>
+  2. <strong>全尺寸覆盖（Coverage）</strong>：从 &lt;1B 到 2.4T Max 完整覆盖端侧到云端；<br>
+  3. <strong>开源友好（Openness）</strong>：Apache 2.0 极大降低下游二开与商用摩擦。</li>
+</ul>
+<h3 id="h11">4. 运行时（Runtime）与量化分发层是真正的分水岭</h3>
+<ul>
+<li><strong>生态增速对比</strong>：模型库增长约 21.5%，但运行时与推理工具层增速达到数倍——GGUF 增长 <strong>464%</strong>，LeRobot 增长 194%，Apple MLX 增长 148%。</li>
+<li><strong>llama.cpp 的战略支点价值</strong>：ggml/llama.cpp 正式并入 Hugging Face 成为长效公共基建。万亿级 MoE 模型（如 Kimi-K3 2.8T、DeepSeek-V4-Flash 284B）之所以能真正进入普通开发者视野，完全依赖 GGUF 使得超大模型能够在消费级硬件间分布式运行。</li>
+</ul>
+<h3 id="h12">5. Agent 成为平台首要用户与安全攻防变量</h3>
+<ul>
+<li><strong>流量结构质变</strong>：coding agent（Claude Code、Codex）成为 Hub API 核心流量源；超过 1/4 的流量来自未经登记的新兴 agent harness。平台正从服务“人类浏览器”重构为服务“Agent 机器读取”（如 MCP 工具链、agents.md 端点）。</li>
+<li><strong>攻防与开源的不可替代性</strong>：记录到首例自主 Agent 持续网络入侵事件。在溯源应急中，闭源商用大模型因安全护栏机制拒绝分析攻击恶意代码，团队最终依靠私有部署的开源量化模型（GLM-5.2）完成了逆向分析。这证明了<strong>可完全掌控的私有/开源模型在核心工程与安全领域具有闭源不可替代的防御底线价值</strong>。</li>
+</ul>
+<h2 id="h13">中国 AI 生态的几个观察</h2>
+<p>来自“中国 AI 生态圈摸底”一文的可复用观点：</p>
+<ul>
+<li>本土创始人履历强、执行力强，但很多项目更像现有产品的 V2，而不是从零到一。</li>
+<li>本土 VC 容易押注大厂履历，可能漏掉真正有反叛性和原创愿景的创始人。</li>
+<li>深圳硬件网络效应是真实壁垒：供应链密度、逆向工程能力、快速迭代能力很难复制。</li>
+<li>中国软件初创若只是做大模型实验室未来可能内置的功能，风险很高。</li>
+<li>“中国工程执行力 + 西方 go-to-market / 产品愿景”可能是一个值得关注的不对称机会。</li>
+</ul>
+<h2 id="h14">AI 早报 2026-05-29 的信号</h2>
+<p>这类日报不适合逐条沉淀，但有几条可放入观察框架：</p>
+<ul>
+<li>Claude Opus 4.8 强化编码、agent 任务和长时运行一致性，同时引入推理努力程度控制。</li>
+<li>Claude Code dynamic workflows 支持大规模 subagent 编排，说明 agent 正在从个人工具走向组织级工作流。</li>
+<li>Hy-Memory、Firecrawl Monitoring、OpenClaw 等工具都在解决长期记忆、网页变更、稳定冷启动和安全边界问题。</li>
+<li>小米 AI Coding 工程化实践强调组织级提效与知识沉淀，说明 AI Coding 的难点正在从个体 prompt 转向流程、知识索引和协作平台。</li>
+</ul>
+<h2 id="h15">保留怀疑</h2>
+<p>Why I Don’t Vibe Code 提醒了一个必要的反面角度：AI 可以消除很多 accidental complexity，但不会自动理解 essential complexity。</p>
+<p>需要长期警惕：</p>
+<ul>
+<li>用旧版本或免费模型低估技术进展；</li>
+<li>用演示和营销高估真实可靠性；</li>
+<li>把团队协作、用户研究、审查、合规都当成可以删除的“摩擦”；</li>
+<li>把模型输出当成现实本身，忽略数据、抽象和上下文的缺口。</li>
+</ul>
+<h2 id="h16">后续更新口径</h2>
+<p>新行业资料进来时，优先补这几类：</p>
+<ul>
+<li>模型能力变化：任务长度、可靠性、成本、工具使用能力。</li>
+<li>agent 工程化：记忆、编排、验证、权限、安全边界。</li>
+<li>职业影响：哪些工作流被重写，哪些能力更值钱。</li>
+<li>中国/海外生态差异：硬件、软件、资本、出海、监管。</li>
+<li>反例和失败案例：幻觉、误用、组织成本、伦理和责任。</li>
+</ul></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2023–2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script src="../../assets/site.js?v=9084725c"></script>
+<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  function edge(){
+    // 滚到底就不显示底部渐隐；不需要滚动时也算到底
+    var atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+    toc.classList.toggle('at-bottom', atBottom);
+  }
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+      edge();
+    },{passive:true});
+  }
+  edge();
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

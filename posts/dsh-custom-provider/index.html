@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="记录时间：2026-10-22环境：DSH0.2.1-rc.2（本机dsh已装），profile目录%USERPROFILE%\.dsh\profiles\{web,desktop}。">
+<title>DSH 接自建模型与 Profile 配置 · patrick</title>
+<link rel="stylesheet" href="../../assets/base.css?v=ecdcc0ec">
+<link rel="stylesheet" href="../../assets/post.css?v=0ca7241f">
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost">搬运</a><a role="menuitem" href="../../?tab=own" class="on">个人</a></div></div>
+  <nav class="nav">
+    <a href="../../lab/">Lab</a><a href="../../about/">About</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+  </nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>DSH 接自建模型与 Profile 配置</h1>
+<div class="meta">2026年10月22日 · 个人 · <span class="stats">1,107 字 · 约 3 分钟</span></div>
+
+<nav class="toc" id="toc" aria-label="文章目录"><button class="toc-head" id="tocHead" aria-label="目录" aria-expanded="true"><svg class="toc-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg><span class="toc-title">目录</span><span class="toc-close" aria-hidden="true">×</span></button><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">一、先理解 DSH 的配置模型</a></li><li class="lvl2"><a href="#h2">二、接自建 / 本地 DeepSeek 的完整步骤</a></li><li class="lvl3"><a href="#h3">1. 把模型起成 OpenAI 兼容服务</a></li><li class="lvl3"><a href="#h4">2. 在 profile 的 patch 层声明一条路由</a></li><li class="lvl3"><a href="#h5">3. 切默认模型（不改也行，可在 GUI 里逐会话选）</a></li><li class="lvl3"><a href="#h6">4. 验证</a></li><li class="lvl2"><a href="#h7">三、字段与硬约束</a></li><li class="lvl2"><a href="#h8">四、坑</a></li><li class="lvl2"><a href="#h9">五、和 Pi 的关系（为什么这条路成立）</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><div class="body"><p><strong>记录时间</strong>：2026-10-22<br>
+<strong>环境</strong>：DSH <code>0.2.1-rc.2</code>（本机 <code>dsh</code> 已装），profile 目录 <code>%USERPROFILE%\.dsh\profiles\{web,desktop}</code>。</p>
+<p>一句话结论：<strong>DSH 的官方 DeepSeek 适配器不给你改端点，接自建/本地 DeepSeek 必须走 <code>dsh-llm-pi-ai</code> 的手工 provider 路由（<code>api: openai-completions</code>）。</strong></p>
+<p>相关：Agent Harness 版图与个人选型、Tern 架构与插件实践</p>
+<hr>
+<h2 id="h1">一、先理解 DSH 的配置模型</h2>
+<ul>
+<li>启动器：<code>dsh [--profile] &lt;name&gt;</code>，<code>--dump-config</code> 打出<strong>组合后</strong>的插件树，<code>--dump-config-schema</code> 打 JSON Schema，<code>--patch FILE</code> 加临时 overlay，<code>--from-default-profile</code> 重置 profile。</li>
+<li>每个 profile 是一个<strong>分层叠加</strong>的插件树：bundle 层（<code>package.json</code> 的 <code>dsh.profile.bundles</code>）→ <code>cordis.patch.yml</code>（你的层）→ <code>--patch</code> 的 overlay。</li>
+<li><code>cordis.yml</code> 只是空数组入口，<strong>官方注释明写 "Edit cordis.patch.yml, not this file"</strong>。</li>
+<li>用到的相关插件 id（<code>dsh web --dump-config</code> 实测）：</li>
+</ul>
+<pre><code class="language-yaml">- id: llm                  # @deepseek-ai/dsh-llm，纯服务，不含协议代码
+- id: llm-pi-ai            # @deepseek-ai/dsh-llm-pi-ai，pi 的模型层：25+ provider + 自定义端点
+- id: llm-deepseek         # @deepseek-ai/dsh-llm-deepseek-api-key，官方 DeepSeek
+- id: llm-deepseek-account # 账号登录那套
+- id: agent-default-model  # config: { provider: deepseek-official, model: deepseek-flash }
+</code></pre>
+<p><code>dsh-llm-deepseek-api-key</code> 的配置面<strong>只有 <code>apiKeyEnv</code></strong>（默认 <code>DEEPSEEK_API_KEY</code>），端点固定指向 api.deepseek.com —— 这就是为什么不能直接改它来接本地服务。</p>
+<hr>
+<h2 id="h2">二、接自建 / 本地 DeepSeek 的完整步骤</h2>
+<h3 id="h3">1. 把模型起成 OpenAI 兼容服务</h3>
+<p>vLLM / SGLang / Ollama 都行，关键是 <code>GET {baseURL}/models</code> 能列出来：</p>
+<pre><code class="language-bash">python -m vllm.entrypoints.openai.api_server --model deepseek-ai/DeepSeek-V3.2 --port 8000
+# 或 Ollama：ollama serve &amp;&amp; ollama pull deepseek-v3.2    → http://127.0.0.1:11434/v1
+curl -s 127.0.0.1:8000/v1/models
+</code></pre>
+<h3 id="h4">2. 在 profile 的 patch 层声明一条路由</h3>
+<p><code>~/.dsh/profiles/web/cordis.patch.yml</code>（数组，追加，别覆盖已有项）：</p>
+<pre><code class="language-yaml">- id: llm-pi-ai
+  name: '@deepseek-ai/dsh-llm-pi-ai'
+  config:
+    providers:
+      local-ds:
+        displayName: Local DeepSeek
+        api: openai-completions
+        baseURL: http://127.0.0.1:8000/v1
+        apiKeyEnv: LOCAL_DS_KEY        # 本地无鉴权也要给占位凭据
+        compat:
+          thinkingFormat: deepseek     # 服务端不认 DeepSeek 的 reasoning 字段就删掉
+        models:
+          - id: deepseek-v3.2         # 必须与 /v1/models 返回的 id 完全一致
+            name: DeepSeek V3.2 (local)
+            contextWindow: 131072
+            maxTokens: 32768
+            reasoningEfforts:
+              off:
+              high: high
+</code></pre>
+<h3 id="h5">3. 切默认模型（不改也行，可在 GUI 里逐会话选）</h3>
+<pre><code class="language-yaml">- id: agent-default-model
+  name: '@deepseek-ai/dsh-agent-default-model'
+  config:
+    provider: local-ds
+    model: deepseek-v3.2
+</code></pre>
+<h3 id="h6">4. 验证</h3>
+<pre><code class="language-bash">dsh web --dump-config | rg -A14 &quot;local-ds&quot;   # 条目是否并进组合树
+dsh web                                      # GUI：Settings → Models 里能看到该路由与模型
+dsh web --patch ./local-ds.yml               # 不写 profile、临时试
+</code></pre>
+<hr>
+<h2 id="h7">三、字段与硬约束</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api</code></td>
+<td>取已装目录</td>
+<td><code>openai-completions</code> / <code>openai-responses</code> / <code>anthropic-messages</code></td>
+</tr>
+<tr>
+<td><code>baseURL</code></td>
+<td>取已装目录</td>
+<td>该路由所有模型的端点；模型发现走 <code>GET {baseURL}/models</code>（bearer），<code>anthropic-messages</code> 走 x-api-key + <code>anthropic-version</code></td>
+</tr>
+<tr>
+<td><code>apiKeyEnv</code></td>
+<td>无</td>
+<td>凭据引用，<strong>配置文件里不放密钥</strong>；解析为空报 <code>MISSING_CREDENTIAL</code></td>
+</tr>
+<tr>
+<td><code>models</code></td>
+<td>取已装目录</td>
+<td>手工声明的路由<strong>必须非空</strong>；列表是整体替换，不是追加</td>
+</tr>
+<tr>
+<td><code>modelOverrides</code></td>
+<td>无</td>
+<td>只修个别已装模型的容量/能力，不替换整个目录</td>
+</tr>
+<tr>
+<td><code>compat</code></td>
+<td>目录检测</td>
+<td>协议兼容开关，逐路由/逐模型</td>
+</tr>
+<tr>
+<td><code>defaultContextWindow</code> / <code>defaultMaxTokens</code></td>
+<td>262,144 / 32,768</td>
+<td>未描述模型的回退值</td>
+</tr>
+<tr>
+<td><code>retryPolicy</code></td>
+<td>normal，最多 5 次</td>
+<td>由 <code>dsh-llm-retry</code> 执行</td>
+</tr>
+</tbody>
+</table>
+<p>必须记住的几条：</p>
+<ol>
+<li><strong>无密钥的本地服务也要占位凭据</strong>：<code>apiKeyEnv: LOCAL_DS_KEY</code> + 环境变量 <code>LOCAL_DS_KEY=sk-noop</code>，或 <code>headers: { Authorization: "Bearer sk-noop" }</code>。pi-ai 的 openai-completions 实现强制要有 key/Authorization。</li>
+<li><strong>GUI 只列 <code>models</code> 里出现的 id</strong>（"GUI 的模型选择与提交要求模型出现在目录中"），id 写错就是选不到/<code>UNKNOWN_MODEL</code>。</li>
+<li><code>models</code> 条目的 <code>id</code> 是请求 id；<code>name</code> 只是显示名。</li>
+<li>自建端点常用开关：<code>compat.thinkingTokenBudgetField: thinking_token_budget</code>（把推理预算塞进指定字段）、<code>compat.vllmPriority: &lt;int&gt;</code>（vLLM 优先级调度，服务端要开）、<code>compat.supportsMaxOutputTokens: false</code>（网关不吃 <code>max_output_tokens</code>）。</li>
+<li><code>reasoningEfforts: false</code> 声明非推理模型；<code>off</code> 不保证关掉推理（协议用"省略字段"表达时就是随服务端默认）。</li>
+</ol>
+<hr>
+<h2 id="h8">四、坑</h2>
+<ul>
+<li><strong>联网搜索 / 抓取会失效</strong>：profile 里 <code>searchProvider: deepseek-official</code>、<code>fetchProvider: http</code>，本地端点没有 DeepSeek 的 tools 接口；纯编码不受影响。</li>
+<li><strong>两套 profile</strong>（<code>web</code> / <code>desktop</code>）要分别加 patch，否则只有一个入口生效。</li>
+<li>改完<strong>不用重启 GUI</strong>：provider 配置在运行时解析（"运行时更改配置"），但写坏会在保存时被拒并点名路由+模型（<code>INVALID_CREDENTIAL</code> / <code>MISSING_CREDENTIAL</code> / <code>UNKNOWN_MODEL</code> / <code>QUOTA</code> / <code>RATE_LIMIT</code>）。</li>
+<li><code>GenerateOptions.stop</code> 会被 <code>UNSUPPORTED_OPTION</code> 拒绝（pi-ai 的通用流式层不保证跨提供方）。</li>
+<li>字段名随版本变（当前 rc），兜底看包自带中文文档：<br>
+<code>…\npm\node_modules\@deepseek-ai\dsh\node_modules\@deepseek-ai\dsh-llm-pi-ai\README.zh.md</code></li>
+</ul>
+<hr>
+<h2 id="h9">五、和 Pi 的关系（为什么这条路成立）</h2>
+<p>DSH 没有另写 provider 抽象，<strong>直接复用了 Pi 的模型层</strong>（<code>dsh-llm-pi-ai</code>）。所以 Pi 能接的（Ollama、vLLM、OpenRouter、自定义 OpenAI 兼容端点、切模型），DSH 这条路由也能接；反过来，官方 DeepSeek 原生适配器只在跑 V4 Pro / Flash 时才有优势（它懂 DeepSeek 的协议细节）。</p></div>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2023–2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script src="../../assets/site.js?v=9084725c"></script>
+<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var list=document.getElementById('tocList');
+  var head=document.getElementById('tocHead');
+  var fab=document.getElementById('tocFab');
+  var links=[].slice.call(list.querySelectorAll('a'));
+  // 滚动条只在滚动时出现，静置时隐藏
+  var _st=null;
+  function edge(){
+    // 滚到底就不显示底部渐隐；不需要滚动时也算到底
+    var atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+    toc.classList.toggle('at-bottom', atBottom);
+  }
+  if(list){
+    list.addEventListener('scroll',function(){
+      list.classList.add('is-scrolling');
+      clearTimeout(_st);
+      _st=setTimeout(function(){ list.classList.remove('is-scrolling'); },900);
+      edge();
+    },{passive:true});
+  }
+  edge();
+  if(!links.length) return;
+
+  var key='tocCollapsed';
+  try{ if(localStorage.getItem(key)==='1') toc.classList.add('is-collapsed'); }catch(e){}
+  function syncChev(){ head.setAttribute('aria-expanded', toc.classList.contains('is-collapsed')?'false':'true'); }
+
+  var mobile=window.matchMedia('(max-width:1180px)');
+  head.addEventListener('click',function(){
+    if(mobile.matches){ toc.classList.remove('is-open'); return; }
+    toc.classList.toggle('is-collapsed');
+    try{ localStorage.setItem(key, toc.classList.contains('is-collapsed')?'1':'0'); }catch(e){}
+    syncChev();
+  });
+  if(fab) fab.addEventListener('click',function(){ toc.classList.toggle('is-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toc.classList.remove('is-open'); });
+
+  // 原生 smooth 不支持（部分 WebView / 后台标签页 rAF 被暂停）时兜底直接跳
+  function smoothTo(el){
+    var target=el.getBoundingClientRect().top+window.pageYOffset-84;
+    if(target<0) target=0;
+    var before=window.pageYOffset;
+    try{ window.scrollTo({top:target,behavior:'smooth'}); }
+    catch(e){ window.scrollTo(0,target); }
+    setTimeout(function(){
+      if(Math.abs(window.pageYOffset-before)<4) window.scrollTo(0,target);
+    },400);
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href').slice(1);
+      var el=document.getElementById(id); if(!el) return;
+      e.preventDefault();
+      smoothTo(el);
+      mark(id);
+      toc.classList.remove('is-open');
+      history.replaceState(null,'','#'+id);
+    });
+  });
+
+  var targets=links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function mark(id){
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+id); });
+  }
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var best=null, bestTop=-1e9;
+      for(var i=0;i<targets.length;i++){
+        var t=targets[i]; if(!t) continue;
+        var top=t.getBoundingClientRect().top;
+        if(top-90<=0 && top>bestTop){ bestTop=top; best=t; }
+      }
+      if(!best && targets[0]) best=targets[0];
+      if(best) mark(best.id);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  syncChev();
+  if(location.hash) mark(location.hash.slice(1));
+  onScroll();
+})();
+</script>
+</body>
+</html>

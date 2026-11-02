@@ -318,5 +318,37 @@
   "date": "December 23, 2025",
   "kind": "repost",
   "title": "Steam, Steel, and Infinite Minds"
+ },
+ {
+  "slug": "dsh-custom-provider",
+  "md": "Resources/DSH 接自建模型.md",
+  "author": "",
+  "date": "October 22, 2026",
+  "kind": "own",
+  "title": ""
+ },
+ {
+  "slug": "cursor-to-kilo",
+  "md": "Resources/从 cursor 到 kilo 加 api.md",
+  "author": "",
+  "date": "October 26, 2026",
+  "kind": "own",
+  "title": ""
+ },
+ {
+  "slug": "ai-industry-watch",
+  "md": "Resources/AI 行业观察.md",
+  "author": "",
+  "date": "October 12, 2026",
+  "kind": "own",
+  "title": ""
+ },
+ {
+  "slug": "llm-wiki-guide",
+  "md": "Resources/LLM Wiki 实践指南.md",
+  "author": "",
+  "date": "September 10, 2026",
+  "kind": "own",
+  "title": "LLM Wiki 实践指南"
  }
 ]
