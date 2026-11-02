@@ -129,8 +129,9 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
 .toc-ico{display:block}
 .toc-title{display:none}
 @media (max-width:1180px){ .toc.is-open .toc-title{display:inline} }
-.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:thin;
+.toc-list{list-style:none;margin:0;padding:0 0 0 1px;overflow-y:auto;scrollbar-width:none;
   border-left:1px solid var(--border)}
+.toc-list::-webkit-scrollbar{width:0;height:0;display:none}
 .toc-list a{display:block;padding:6px 0 6px 12px;margin-left:-1px;color:var(--text-muted);
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
   font-size:.84rem;font-weight:400;line-height:1.5;letter-spacing:0;
@@ -161,23 +162,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 60px}
   .toc.is-open .toc-list a{padding:9px 0 9px 12px;font-size:.92rem}
 }
 
-
-/* 目录滚动条：细线、无轨道、用强调色的低透明度 */
-.toc-list{
-  scrollbar-width:thin;
-  scrollbar-color:rgba(106,162,216,.22) transparent;
-  padding-right:4px;
-}
-.toc-list:hover{scrollbar-color:rgba(106,162,216,.42) transparent}
-.toc-list::-webkit-scrollbar{width:3px;height:3px}
-.toc-list::-webkit-scrollbar-track{background:transparent}
-.toc-list::-webkit-scrollbar-thumb{background:rgba(106,162,216,.22);border-radius:3px}
-.toc-list:hover::-webkit-scrollbar-thumb{background:rgba(106,162,216,.42)}
-[data-theme="light"] .toc-list{scrollbar-color:rgba(45,100,150,.25) transparent}
-[data-theme="light"] .toc-list:hover{scrollbar-color:rgba(45,100,150,.45) transparent}
-[data-theme="light"] .toc-list::-webkit-scrollbar-thumb{background:rgba(45,100,150,.25)}
-[data-theme="light"] .toc-list:hover::-webkit-scrollbar-thumb{background:rgba(45,100,150,.45)}
-.toc-list::-webkit-scrollbar-button{display:none;height:0;width:0}
 
 /* ─── 站名下拉：回到首页分类 ─── */
 .brandset{position:relative;display:inline-flex}
