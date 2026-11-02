@@ -13,25 +13,27 @@ MONTHS = {m: i for i, m in enumerate(
      "August","September","October","November","December"], 1)}
 
 def cn_date(meta):
-    """October 26, 2026 · 个人 → 10月26日 · 个人（非当年补年份）"""
-    m = re.match(r"([A-Z][a-z]+)\s+(\d+),\s*(\d{4})(.*)", meta or "")
+    """首页用短日期：2026年10月26日 → 10月26日（非当年才补年份）"""
+    m = re.match(r"(\d{4})年(\d{1,2})月(\d{1,2})日(.*)", meta or "")
     if not m:
         return meta
-    mon, day, year, rest = m.group(1), int(m.group(2)), int(m.group(3)), m.group(4)
-    mi = MONTHS.get(mon, 0)
-    if not mi:
-        return meta
-    label = "%d月%d日" % (mi, day)
+    year, mon, day, rest = int(m.group(1)), m.group(2), m.group(3), m.group(4)
+    label = "%s月%s日" % (mon, day)
     if year != datetime.now().year:
         label = "%d年%s" % (year, label)
     return label + rest
 
 
 def parse_date(s):
-    m = re.search(r"([A-Z][a-z]+)\s+(\d+),\s+(\d{4})", s or "")
-    if not m:
-        return (0, 0, 0), ""
-    return (int(m.group(3)), MONTHS.get(m.group(1), 0), int(m.group(2))), s
+    """支持中文 2026年10月15日 与英文 October 15, 2026 两种写法。"""
+    s = s or ""
+    m = re.search(r"(\d{4})年(\d{1,2})月(\d{1,2})日", s)
+    if m:
+        return (int(m.group(1)), int(m.group(2)), int(m.group(3))), s
+    m = re.search(r"([A-Z][a-z]+)\s+(\d+),\s+(\d{4})", s)
+    if m:
+        return (int(m.group(3)), MONTHS.get(m.group(1), 0), int(m.group(2))), s
+    return (0, 0, 0), s
 
 items = []
 for path in glob.glob(os.path.join(SITE, "posts", "*", "index.html")):
