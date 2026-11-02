@@ -40,7 +40,8 @@ def build_post(path):
     i = doc.find('<div class="body"')
     if i > 0:
         i = doc.find(">", i) + 1
-        ends = [doc.find(x, i) for x in ('<nav class="related"', '<nav class="pager"', '<a class="back"')]
+        ends = [doc.find(x, i) for x in ('<nav class="related"', '<nav class="pager"',
+                                         '<aside class="legal-note"', '<a class="back"')]
         ends = [e for e in ends if e > i]
         inner = doc[i:min(ends) if ends else len(doc)]
     else:
