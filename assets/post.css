@@ -313,9 +313,13 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
    顺序（消失）：回到顶部 → 沉浸阅读 → 目录，间隔 70ms；
    顺序（浮现）：反过来，间隔同样 70ms。 */
 @media (max-width:1023px){
-  html.readmode .to-top,
-  html.readmode .read-open,
-  html.readmode .toc-fab{opacity:.3}
+  /* 只给“本来就该显示”的控件上虚化值：
+     回到顶部仍受半程阈值（.show）、目录圆钮仍受静置淡出（.is-active）——
+     否则移动端会变成一进文章就有回到顶部，和 PC 不一致 */
+  html.readmode .to-top.show,
+  html.readmode .to-top.show.is-idle{opacity:.3}   /* 沉浸态只由 no-ui 统一隐藏，不再叠加静置淡出 */
+  html.readmode .toc-fab.is-active{opacity:.3}
+  html.readmode .read-open{opacity:.3}   /* 沉浸按钮本身常驻 */
 
   /* 消失：上 → 下 */
   html.readmode.no-ui .to-top{transition-delay:0s}
