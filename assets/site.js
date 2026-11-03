@@ -243,11 +243,24 @@ window.siteUI = window.siteUI || {
   var bar = document.querySelector('.bar');
 
   function paint(on) {
+    // 先量它在顶栏里的位置：进沉浸后顶栏隐藏，按钮要钉在**同一个屏幕坐标**上，不能跳
+    var r = btn.getBoundingClientRect();
+    var top = Math.round(r.top), right = Math.round(window.innerWidth - r.right);
+
     html.classList.toggle('readmode', on);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
     btn.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
-    if (on) { document.body.appendChild(btn); } else if (home) { home.appendChild(btn); }
+
+    if (on) {
+      document.body.appendChild(btn);
+      btn.style.top = top + 'px';
+      btn.style.right = right + 'px';
+    } else {
+      btn.style.top = '';
+      btn.style.right = '';
+      if (home) home.appendChild(btn);
+    }
   }
 
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
