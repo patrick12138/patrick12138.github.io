@@ -263,6 +263,62 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 .related a:hover{color:var(--accent)}
 
 /* ─── 沉浸阅读 ─────────────────────────────────────────────
+   三个元素各自有固定位置，只靠 display / opacity 切换，**不搬 DOM、不改定位**：
+     #readOpen     文章标题右上角（普通态入口，绝对定位在 .article 内）
+     #readExitBtn  视口右上角（仅沉浸态，fixed，坐标恒定）
+     #readExit     文末文字出口（仅沉浸态）
+   这样无论怎么切换，每个元素都不会移动。 */
+.article{position:relative}
+.article h1{padding-right:44px}          /* 给入口按钮让出右上角，长标题不会压到 */
+.read-open{position:absolute;top:6px;right:0;width:26px;height:26px;padding:0;border:0;
+  background:transparent;color:var(--text-faint);cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;transition:color .15s;-webkit-tap-highlight-color:transparent}
+.read-open svg{display:block}
+@media (hover:hover){.read-open:hover{color:var(--accent)}}
+
+.read-exit-btn{display:none;position:fixed;top:8px;right:16px;z-index:70;
+  width:26px;height:26px;padding:0;border:0;background:transparent;color:var(--text-muted);
+  cursor:pointer;align-items:center;justify-content:center;opacity:.3;
+  transition:opacity .18s,color .15s;-webkit-tap-highlight-color:transparent}
+.read-exit-btn svg{display:block}
+@media (hover:hover){.read-exit-btn:hover{opacity:.9;color:var(--accent)}}
+.read-exit{display:none}
+
+html.readmode .bar,
+html.readmode .article .meta,
+html.readmode .source,
+html.readmode .related,
+html.readmode .pager,
+html.readmode .back,
+html.readmode footer,
+html.readmode .readpos-tip{display:none!important}
+html.readmode .read-open{display:none}
+html.readmode .read-exit-btn{display:inline-flex}
+html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;
+  color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);
+  padding-bottom:2px;transition:color .15s,border-color .15s}
+html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--accent)}
+html.readmode .article{padding:64px 0 40px}
+html.readmode{scrollbar-width:none}
+html.readmode::-webkit-scrollbar{width:0;height:0}
+/* 滚动即隐：退出钮、目录、回到顶部一起退场 */
+html.readmode.no-ui .read-exit-btn,
+html.readmode.no-ui .toc-fab,
+html.readmode.no-ui .toc-bars,
+html.readmode.no-ui .to-top{opacity:0!important;pointer-events:none!important}
+@media (min-width:1024px){html.readmode .toc-bars{top:32px}}
+@media (max-width:720px){html.readmode .read-exit-btn{top:8px;right:16px}}
+
+/* 相关阅读：文末、上一篇之前，一条淡标题 + 竖排链接 */
+.related{margin:52px 0 0}
+.related-k{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;
+  color:var(--text-muted);margin-bottom:10px}
+.related ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.related a{font-size:.94rem;line-height:1.5;color:var(--text-muted);text-decoration:none;
+  transition:color .15s}
+.related a:hover{color:var(--accent)}
+
+/* ─── 沉浸阅读 ─────────────────────────────────────────────
    只留标题、正文、目录；顶栏/元信息/来源/文末块/页脚全部退场。
    按钮和文末出口由 add_toc.ensure_readmode() 注入。 */
 .read-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;

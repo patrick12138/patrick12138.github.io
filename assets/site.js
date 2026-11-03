@@ -229,31 +229,24 @@ window.siteUI = window.siteUI || {
   }
 })();
 
-/* 沉浸阅读：只留标题、正文、目录。状态记在 localStorage，跨文章跨刷新保持。
-   进入时尝试真全屏；系统手势/Esc 退出全屏后同步退出沉浸态。 */
+/* 沉浸阅读：只留标题、正文、目录。
+   两个按钮各有固定位置（入口在标题右上、出口在视口右上），只切 display，
+   全程不搬 DOM、不改定位 —— 因此不可能出现“按钮在跳”。
+   状态记在 localStorage，跨文章、跨刷新保持。 */
 (function () {
   var KEY = 'readmode';
-  var btn = document.getElementById('readBtn');
-  if (!btn || !document.querySelector('.article')) return;
+  var open = document.getElementById('readOpen');
+  var exit = document.getElementById('readExitBtn');
+  var exitLink = document.getElementById('readExit');
+  if (!open || !document.querySelector('.article')) return;
 
   var html = document.documentElement;
-  var meta = document.querySelector('.article .meta');
-  var exitLink = document.getElementById('readExit');
-  var bar = document.querySelector('.bar');
-
-  var home = btn.parentNode;      // 普通态所在位置（顶栏 nav）
 
   function paint(on) {
-    // 按钮不搬家：顶栏保持原位（透明 + 只留按钮），所以按钮永远在同一个坐标上，
-    // 也不会有布局位移，不需要做位置补偿
     html.classList.toggle('readmode', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    btn.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
-    btn.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
-    if (on) document.body.appendChild(btn);          // 顶栏整条隐藏，按钮得搬出来
-    else if (home) home.appendChild(btn);
+    if (open) open.setAttribute('aria-expanded', on ? 'true' : 'false');
+    if (exit) exit.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
-
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
 
   /* 顶栏/元信息被隐藏会让下方内容整体上移，用正文首个标题做锚把位置补回来 */
@@ -266,11 +259,10 @@ window.siteUI = window.siteUI || {
     if (delta) window.scrollTo(0, Math.max(0, window.pageYOffset + delta));
   }
 
-  // 桌面（有精确指针、能悬停）才进真全屏；手机/平板一律不动视口，避免转屏
+  // 真全屏只在桌面（有精确指针、能悬停、宽度够）；手机平板不碰视口，避免转屏
   function desktop() {
-    try {
-      return window.matchMedia('(hover:hover) and (pointer:fine)').matches && window.innerWidth >= 1024;
-    } catch (e) { return false; }
+    try { return window.matchMedia('(hover:hover) and (pointer:fine)').matches && window.innerWidth >= 1024; }
+    catch (e) { return false; }
   }
   function fsEnter() {
     if (!desktop()) return;
@@ -286,38 +278,6 @@ window.siteUI = window.siteUI || {
     } catch (e) {}
   }
 
-  function enter() {
-    keepPosition(function () { paint(true); });
-    save(true);
-    fsEnter();
-    // 沉浸态里阅读位置提示条本来就不显示，顺手把它的“压住浮动按钮”状态解掉
-    document.body.classList.remove('readpos-on');
-    var tip = document.querySelector('.readpos-tip');
-    if (tip) tip.remove();
-  }
-
-  function leave() {
-    html.classList.remove('no-ui');
-    clearTimeout(hideTimer);
-    keepPosition(function () { paint(false); });
-    save(false);
-    fsExit();
-  }
-
-  function toggle() {
-    html.classList.contains('readmode') ? leave() : enter();
-    btn.blur();                 // 点完立刻失焦，避免触屏把焦点/悬停态留在按钮上
-  }
-
-  btn.addEventListener('click', toggle);
-  if (exitLink) exitLink.addEventListener('click', function (e) { e.preventDefault(); leave(); });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && html.classList.contains('readmode') && !document.fullscreenElement) leave();
-  });
-
-  /* 第二层：沉浸态里「手在动就退场」——滚动立刻隐藏控件，静止也不回来；
-     轻点空白处（移动端）或移动鼠标（桌面）才临时召出。 */
   var hideTimer = null;
   function uiOff() { if (html.classList.contains('readmode')) html.classList.add('no-ui'); }
   function uiOn(ms) {
@@ -326,15 +286,41 @@ window.siteUI = window.siteUI || {
     clearTimeout(hideTimer);
     hideTimer = setTimeout(uiOff, ms || 2600);
   }
+
+  function enter() {
+    keepPosition(function () { paint(true); });
+    save(true);
+    fsEnter();
+    uiOn(2600);            // 进去先露 2.6 秒，让人知道出口在哪
+    document.body.classList.remove('readpos-on');
+    var tip = document.querySelector('.readpos-tip');
+    if (tip) tip.remove();
+  }
+  function leave() {
+    html.classList.remove('no-ui');
+    clearTimeout(hideTimer);
+    keepPosition(function () { paint(false); });
+    save(false);
+    fsExit();
+  }
+
+  open.addEventListener('click', function () { enter(); open.blur(); });
+  if (exit) exit.addEventListener('click', function () { leave(); exit.blur(); });
+  if (exitLink) exitLink.addEventListener('click', function (e) { e.preventDefault(); leave(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && html.classList.contains('readmode')) leave();
+  });
+
+  // 滚动即隐；轻点空白/移动鼠标召出
   window.addEventListener('scroll', uiOff, { passive: true });
   document.addEventListener('mousemove', function () { uiOn(2600); }, { passive: true });
   document.addEventListener('click', function (e) {
     if (!html.classList.contains('readmode')) return;
-    if (e.target.closest('a,button,input,pre,table')) return;   // 点在可交互元素上不拦截
+    if (e.target.closest('a,button,input,pre,table')) return;
     uiOn(3000);
   });
 
-  // 恢复上次状态（全屏必须由用户手势触发，所以这里只恢复样式）
   var on = false;
   try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
   if (on) { paint(true); uiOn(2600); }

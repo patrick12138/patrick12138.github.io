@@ -125,38 +125,50 @@ def inject_top_btn(doc):
     return doc
 
 
-READ_BTN = ('<button class="read-btn" id="readBtn" type="button" aria-label="沉浸阅读" '
-            'title="沉浸阅读" aria-pressed="false">'
-            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-            '<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9'
-            'M20 15v3.5A1.5 1.5 0 0 1 18.5 20H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg>'
-            '</button>')
+ICON_SVG = ('<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+           'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+           '<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9'
+           'M20 15v3.5A1.5 1.5 0 0 1 18.5 20H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg>')
+
+# 入口按钮：固定在文章头部（标题右上角），普通态可见
+READ_OPEN = ('<button class="read-open" id="readOpen" type="button" aria-label="沉浸阅读" title="沉浸阅读">'
+             + ICON_SVG + '</button>')
+# 出口钮：只在沉浸态出现，固定在右上角（它从头到尾都在同一个位置，不存在“跳”）
+READ_EXIT_BTN = ('<button class="read-exit-btn" id="readExitBtn" type="button" '
+                 'aria-label="退出沉浸阅读" title="退出沉浸阅读（Esc）">' + ICON_SVG + '</button>')
 READ_EXIT = '<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸阅读</a>'
 
 
 def ensure_readmode(doc):
-    """注入「沉浸阅读」按钮与文末出口（幂等，两件东西各自判断）。
+    """注入沉浸阅读的三个元素（幂等，各管各的）：
 
-    按钮放顶栏 nav；进沉浸后顶栏隐藏，JS 会把它移到 body 上固定显示。
-    文末出口放在版权提示/相关阅读之前，普通态 display:none。
+    - `#readOpen`  文章标题右上角（普通态入口，绝对定位在文章容器内）
+    - `#readExitBtn` 固定右上角（只在沉浸态显示，全程同坐标）
+    - `#readExit`  文末文字出口（只在沉浸态显示）
+
+    三个元素各自占一个固定位置，靠 display 切换显隐 —— 不需要搬 DOM，也就不会跳。
     """
-    # 按钮：先清掉可能存在的多份，再按需补一个
-    doc = re.sub(r'<button class="read-btn" id="readBtn".*?</button>', '', doc, flags=re.S)
-    m = re.search(r'(<button class="theme-toggle")', doc)      # 放主题按钮左侧，主题仍在最右
-    if m:
-        doc = doc[:m.start(1)] + READ_BTN + doc[m.start(1):]
-    else:
-        m = re.search(r'(<nav class="nav">)', doc)
-        if m:
-            doc = doc[:m.end(1)] + READ_BTN + doc[m.end():]
+    for pat in (r'<button class="read-open"[^>]*>.*?</button>',
+                r'<button class="read-btn"[^>]*>.*?</button>',   # 旧版注入的（在顶栏里）一并清掉
+                r'<button class="read-exit-btn"[^>]*>.*?</button>',
+                r'\n*<a class="read-exit"[^>]*>.*?</a>'):
+        doc = re.sub(pat, '', doc, flags=re.S)
 
-    # 文末出口：同样先去重
-    doc = re.sub(r'\n*<a class="read-exit" id="readExit"[^>]*>.*?</a>', '', doc, flags=re.S)
+    # 入口：紧跟在 <h1> 之后（.article 是定位容器）
+    m = re.search(r'(<h1[^>]*>.*?</h1>)', doc, re.S)
+    if m:
+        doc = doc[:m.end(1)] + READ_OPEN + doc[m.end(1):]
+
+    # 出口钮：插到 </article> 前一个位置即可（fixed 定位，位置与 DOM 顺序无关）
+    k = doc.rfind('</article>')
+    if k > 0:
+        doc = doc[:k] + READ_EXIT_BTN + doc[k:]
+
+    # 文末文字出口
     for anchor in ('<aside class="legal-note"', '<nav class="related"', '<nav class="pager"', '<a class="back"'):
-        i = doc.find(anchor)
-        if i > 0:
-            doc = doc[:i].rstrip("\n") + "\n" + READ_EXIT + "\n" + doc[i:]
+        i2 = doc.find(anchor)
+        if i2 > 0:
+            doc = doc[:i2].rstrip("\n") + "\n" + READ_EXIT + "\n" + doc[i2:]
             break
     return doc
 
