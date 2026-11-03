@@ -407,7 +407,14 @@ window.siteUI = window.siteUI || {
 
   // 滚动即隐；轻点空白/移动鼠标召出
   window.addEventListener('scroll', uiOff, { passive: true });
-  document.addEventListener('mousemove', function () { uiOn(2600); }, { passive: true });
+  document.addEventListener('mousemove', function (e) {
+    if (!html.classList.contains('readmode')) return;
+    // 桌面：光标不在右下热区就不唤醒（沉浸态尤其不能一动鼠标就冒出控件）
+    var hover = true;
+    try { hover = window.matchMedia('(hover:hover)').matches; } catch (err) {}
+    if (hover && !window.siteUI.hot(e)) return;
+    uiOn(2600);
+  }, { passive: true });
   document.addEventListener('click', function (e) {
     if (!html.classList.contains('readmode')) return;
     if (e.target.closest('a,button,input,pre,table')) return;
