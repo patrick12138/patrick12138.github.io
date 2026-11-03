@@ -13,12 +13,10 @@ window.siteUI.hot = function (e, size) {
   return e.clientX > window.innerWidth - z && e.clientY > window.innerHeight - z;
 };
 
-window.siteUI = window.siteUI || {
-  scrollTo: function (y) {
+window.siteUI.scrollTo = function (y) {
     var before = window.pageYOffset;
     try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, y); }
-    setTimeout(function () { if (Math.abs(window.pageYOffset - before) < 4) window.scrollTo(0, y); }, 400);
-  }
+  setTimeout(function () { if (Math.abs(window.pageYOffset - before) < 4) window.scrollTo(0, y); }, 400);
 };
 
 (function () {
