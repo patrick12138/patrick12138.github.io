@@ -307,17 +307,26 @@ window.siteUI = window.siteUI || {
     fsExit();
   }
 
-  /* PC 浏览器全屏（F11 / 窗口最大化按钮）无法用 Fullscreen API 事件感知，
-     只能靠视口变化推断：内高≈屏幕高、且外层高与内高几乎相等（没有浏览器 chrome）。
-     推断成“进全屏”就自动进沉浸；用户手动退出后，本次全屏期间不再自动弹回。 */
+  /* PC 浏览器全屏（F11）无法用 Fullscreen API 事件感知，用「浏览器 chrome 高度」推断：
+     outerHeight - innerHeight 在窗口态约 80~120px，进 F11 后降到 0~8px。
+     同时把 innerHeight ≈ screen.height 作为第二判据（Firefox / 部分 Linux 桌面）。 */
   var autoEntered = false;      // 这次沉浸是不是被全屏自动打开的
   var optedOut = false;         // 全屏期间用户主动退出过
+  var chromeBase = null;        // 窗口态下 chrome 的基准高度
 
+  function chromeH() {
+    var o = window.outerHeight || 0, i = window.innerHeight || 0;
+    if (!o || !i) return -1;
+    return o - i;
+  }
   function fsLike() {
     try {
-      if (!desktop()) return false;                       // 只在桌面端启用
-      if (Math.abs(window.innerHeight - screen.height) > 2) return false;
-      return Math.abs(window.outerHeight - window.innerHeight) < 20;
+      if (!desktop()) return false;
+      var c = chromeH();
+      if (c >= 0 && c <= 8) return true;                        // 没有 chrome = 全屏
+      if (window.innerHeight >= screen.height - 2) return true;  // 高度顶满 = 全屏
+      if (chromeBase !== null && c >= 0 && c < chromeBase - 40) return true;  // chrome 掉了 40px 以上
+      return false;
     } catch (e) { return false; }
   }
 
@@ -325,11 +334,12 @@ window.siteUI = window.siteUI || {
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
-      var f = fsLike();
+      var c = chromeH(), f = fsLike();
+      if (!f && c > 20) chromeBase = Math.max(chromeBase || 0, c);  // 只在窗口态更新基准
       if (f && !html.classList.contains('readmode') && !optedOut) {
         autoEntered = true;
         enter();
-        save(false);              // 全屏只是环境，不算用户偏好，别写进 localStorage
+        save(false);              // 全屏是环境状态，不写进 localStorage
       } else if (!f) {
         if (autoEntered && html.classList.contains('readmode')) leave();
         autoEntered = false;
@@ -337,6 +347,28 @@ window.siteUI = window.siteUI || {
       }
     }, 220);
   }, { passive: true });
+  chromeBase = chromeH() > 20 ? chromeH() : null;
+  window.__fsLike = fsLike;      // 调试：控制台里 __fsLike() 可看当前判定
+  window.__fsInfo = function () { return { chrome: chromeH(), inner: innerHeight, screen: screen.height, base: chromeBase }; };
+
+  // 有些浏览器按 F11 不会派发 resize（或有延迟），键帽也补一次
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'F11') return;
+    setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 350);
+  });
+
+  /* 沉浸按钮也要“停一下就消失”（PC 端常驻太吵） */
+  var readIdle = null;
+  function pokeRead() {
+    if (!open) return;
+    open.classList.remove('is-idle');
+    clearTimeout(readIdle);
+    readIdle = setTimeout(function () { open.classList.add('is-idle'); }, 1500);
+  }
+  ['scroll', 'mousemove', 'touchstart'].forEach(function (ev) {
+    window.addEventListener(ev, pokeRead, { passive: true });
+  });
+  pokeRead();
 
   open.addEventListener('click', function () {
     html.classList.contains('readmode') ? leave() : enter();
