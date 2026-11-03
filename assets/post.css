@@ -275,14 +275,11 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 
 /* 顶栏不消失、也不移出文档流：只把它变成透明空壳，内容藏掉，露出按钮。
    这样按钮的位置从头到尾不变，页面也不会有任何布局位移。 */
-/* 顶栏留在文档流里（占位不变 → 不再有布局位移），保持不透明底（内容不会从字缝里透出来），
-   只把里面的东西藏掉，露出按钮。 */
-html.readmode .bar{background:var(--bg);border-bottom-color:transparent;pointer-events:none}
-html.readmode .bar .brand,
-html.readmode .bar .brandset,
-html.readmode .bar .nav a,
-html.readmode .bar .theme-toggle{visibility:hidden}
-html.readmode .read-btn{pointer-events:auto}
+/* 顶栏整个撤掉，按钮变成正文上的一枚淡影（不是一条空带子）。
+   撤掉会带来 53px 的布局位移，JS 里用锚点补偿把阅读位置钉住。 */
+html.readmode .bar{display:none}
+html.readmode .read-btn{position:fixed;top:10px;right:14px;z-index:70;
+  width:30px;height:30px;margin:0;color:var(--text-muted);opacity:.3}
 
 html.readmode .article .meta,
 html.readmode .source,
@@ -291,12 +288,12 @@ html.readmode .pager,
 html.readmode .back,
 html.readmode footer,
 html.readmode .readpos-tip{display:none!important}
-html.readmode .article{padding:34px 0 40px}
+html.readmode .article{padding:22px 0 40px}
 html.readmode{scrollbar-width:none}
 html.readmode::-webkit-scrollbar{width:0;height:0}
 html.readmode .read-btn{z-index:70;color:var(--text-muted);opacity:.35}
 @media (hover:hover){
-  html.readmode .read-btn:hover{opacity:1;color:var(--accent)}
+  html.readmode .read-btn:hover{opacity:.9;color:var(--accent)}
 }
 html.readmode .read-btn:focus-visible{opacity:1;color:var(--accent)}
 html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;

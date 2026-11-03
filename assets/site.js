@@ -241,6 +241,8 @@ window.siteUI = window.siteUI || {
   var exitLink = document.getElementById('readExit');
   var bar = document.querySelector('.bar');
 
+  var home = btn.parentNode;      // 普通态所在位置（顶栏 nav）
+
   function paint(on) {
     // 按钮不搬家：顶栏保持原位（透明 + 只留按钮），所以按钮永远在同一个坐标上，
     // 也不会有布局位移，不需要做位置补偿
@@ -248,12 +250,25 @@ window.siteUI = window.siteUI || {
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
     btn.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
+    // 顶栏在沉浸态是 display:none，按钮必须搬出来，否则跟着一起消失
+    if (on) document.body.appendChild(btn);
+    else if (home) home.appendChild(btn);
   }
 
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
 
+  /* 顶栏/元信息被隐藏会让下方内容整体上移，用正文首个标题做锚把位置补回来 */
+  function keepPosition(mutate) {
+    var ref = document.querySelector('.body h2, .body h3, .body p');
+    var before = ref ? ref.getBoundingClientRect().top + window.pageYOffset : 0;
+    mutate();
+    if (!ref) return;
+    var delta = (ref.getBoundingClientRect().top + window.pageYOffset) - before;
+    if (delta) window.scrollTo(0, Math.max(0, window.pageYOffset + delta));
+  }
+
   function enter() {
-    paint(true);
+    keepPosition(function () { paint(true); });
     save(true);
     // 沉浸态里阅读位置提示条本来就不显示，顺手把它的“压住浮动按钮”状态解掉
     document.body.classList.remove('readpos-on');
@@ -264,7 +279,7 @@ window.siteUI = window.siteUI || {
   function leave() {
     html.classList.remove('no-ui');
     clearTimeout(hideTimer);
-    paint(false);
+    keepPosition(function () { paint(false); });
     save(false);
   }
 
