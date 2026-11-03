@@ -27,6 +27,8 @@ from datetime import date, datetime
 import markdown
 import yaml
 
+import config
+
 from mdclean import (clean_author, first_paragraph, normalize_md,
                      pull_source_block, split_front, strip_clip_junk,
                      strip_title_heading, unwiki)
@@ -263,7 +265,8 @@ def main():
     ap.add_argument("--no-images", action="store_true")
     a = ap.parse_args()
     print("· %s" % a.md)
-    info = build(a.md, a.slug, a.date, a.author, a.kind, images=not a.no_images, title_arg=a.title)
+    info = build(a.md, a.slug, a.date, a.author, a.kind, images=not a.no_images,
+                 title_arg=a.title, desc_arg=a.desc)
     print("  %s | %s | %s" % (fmt_date(info["date"]), info["author"] or "-", info["title"]))
 
 

@@ -5,8 +5,15 @@
 <link>https://patrick12138.github.io/</link>
 <description>写点东西，也搬运点好东西。</description>
 <language>zh-CN</language>
-<lastBuildDate>Sat, 31 Oct 2026 00:00:00 +0000</lastBuildDate>
+<lastBuildDate>Tue, 03 Nov 2026 00:00:00 +0000</lastBuildDate>
 <atom:link href="https://patrick12138.github.io/feed.xml" rel="self" type="application/rss+xml" />
+<item>
+<title>MIT让GPT-6 Astra直接修改Qwen权重！数学成绩飙升</title>
+<link>https://patrick12138.github.io/posts/weight-space-programming/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/weight-space-programming/</guid>
+<pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+<description>MIT CSAIL 让 GPT-6 Astra 直接读写神经网络权重：只改 0.016% 参数，把 Qwen3.5-0.8B 的 MATH-500 从 7.9% 拉到 48.1%，还从零写出超过 PPO 的策略网络。</description>
+</item>
 <item>
 <title>Super-agent 设计探索：迈向更自主的 Agent 系统</title>
 <link>https://patrick12138.github.io/posts/super-agent-design/</link>
