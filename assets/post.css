@@ -277,7 +277,6 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
   right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
   bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
-.read-open.is-idle{opacity:0;pointer-events:none}   /* 静置 1.5s 淡出，滚动/移动鼠标再回来 */
 @media (hover:hover){.read-open:hover{opacity:1}}
 @media (hover:hover){.read-open:hover{color:var(--accent);opacity:1}}
 @media (min-width:1024px){
@@ -301,10 +300,10 @@ html.readmode::-webkit-scrollbar{width:0;height:0}
 /* 沉浸态：按钮虚化；滚动即隐，轻点再召出 */
 html.readmode .read-open{opacity:.3}
 @media (hover:hover){html.readmode .read-open:hover{opacity:.9;color:var(--accent)}}
-html.readmode.no-ui .read-open,
-html.readmode.no-ui .toc-fab,
-html.readmode.no-ui .toc-bars,
-html.readmode.no-ui .to-top{opacity:0!important;pointer-events:none!important}
+/* 唯一开关：三个浮动控件一起睡；PC 目录横杠不参与，保持可点 */
+html.ui-asleep .read-open,
+html.ui-asleep .to-top,
+html.ui-asleep .toc-fab{opacity:0!important;pointer-events:none!important}
 @media (min-width:1024px){html.readmode .toc-bars{top:32px}}
 html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;
   color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);
@@ -318,20 +317,19 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
   /* 只给“本来就该显示”的控件上虚化值：
      回到顶部仍受半程阈值（.show）、目录圆钮仍受静置淡出（.is-active）——
      否则移动端会变成一进文章就有回到顶部，和 PC 不一致 */
-  html.readmode .to-top.show,
-  html.readmode .to-top.show.is-idle{opacity:.3}   /* 沉浸态只由 no-ui 统一隐藏，不再叠加静置淡出 */
+  html.readmode .to-top.show{opacity:.3}
   html.readmode .toc-fab.is-active{opacity:.3}
   html.readmode .read-open{opacity:.3}   /* 沉浸按钮本身常驻 */
 
   /* 消失：上 → 下 */
-  html.readmode.no-ui .to-top{transition-delay:0s}
-  html.readmode.no-ui .read-open{transition-delay:.07s}
-  html.readmode.no-ui .toc-fab{transition-delay:.14s}
+  html.ui-asleep .to-top{transition-delay:0s}
+  html.ui-asleep .read-open{transition-delay:.07s}
+  html.ui-asleep .toc-fab{transition-delay:.14s}
 
   /* 出现：下 → 上 */
-  html.readmode:not(.no-ui) .toc-fab{transition-delay:0s}
-  html.readmode:not(.no-ui) .read-open{transition-delay:.07s}
-  html.readmode:not(.no-ui) .to-top{transition-delay:.14s}
+  html.readmode:not(.ui-asleep) .toc-fab{transition-delay:0s}
+  html.readmode:not(.ui-asleep) .read-open{transition-delay:.07s}
+  html.readmode:not(.ui-asleep) .to-top{transition-delay:.14s}
 
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
 }

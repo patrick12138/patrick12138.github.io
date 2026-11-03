@@ -5,6 +5,9 @@
 /* 右下热区：PC 上只有鼠标移到这块区域，浮动控件（回到顶部 / 沉浸阅读）才浮现。
    之前是“动一下鼠标就出现”，阅读时太吵。 */
 window.siteUI = window.siteUI || {};
+window.siteUI.hasPointer = function () {
+  try { return window.matchMedia('(hover:hover) and (pointer:fine)').matches; } catch (e) { return false; }
+};
 window.siteUI.hot = function (e, size) {
   var z = size || 240;
   return e.clientX > window.innerWidth - z && e.clientY > window.innerHeight - z;
@@ -20,9 +23,7 @@ window.siteUI = window.siteUI || {
 
 (function () {
   var html = document.documentElement;
-  function hasPointer() {
-    try { return window.matchMedia('(hover:hover) and (pointer:fine)').matches; } catch (e) { return false; }
-  }
+  var hasPointer = window.siteUI.hasPointer;
 
   // —— 主题：默认暗色，只有用户手动切过才尊重选择（放在最前面，避免闪白）
   try { html.dataset.theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark'; } catch (e) {}
@@ -87,38 +88,14 @@ window.siteUI = window.siteUI || {
     }
     function update() { btn.classList.toggle('show', window.pageYOffset > threshold()); }
 
-    // 静置淡出：滚动/移动鼠标/触摸才浮现，1.5s 没动作就隐去（与目录按钮同一套体感）
-    var idleTimer = null;
-    function poke() {
-      btn.classList.remove('is-idle');
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(function () {
-        if (btn.classList.contains('show')) btn.classList.add('is-idle');
-      }, 1500);
-    }
     function goTop() {
-      // 立刻重置：不让按钮带着 hover/focus 的强调色停在顶部，也别等滚动事件
       btn.blur();
-      btn.classList.remove('is-idle', 'show');
+      btn.classList.remove('show');
       window.siteUI.scrollTo(0);
-      setTimeout(update, 420);   // 兜底：程序化滚动不一定派发 scroll
+      setTimeout(update, 420);   // 程序化滚动不一定派发 scroll
     }
-    // 桌面（有鼠标）滚动不再点亮控件——只有鼠标进右下热区才出现；触屏没有光标，保持滚动浮现
-    var canHover = true;
-    try { canHover = window.matchMedia('(hover:hover)').matches; } catch (e) {}
-    window.addEventListener('scroll', function () {
-      update();
-      if (!canHover) poke();                                  // 触屏：滚动浮现
-      else if (!hotOn && btn.classList.contains('show')) btn.classList.add('is-idle');  // 桌面：只有热区才亮
-    }, { passive: true });
-    window.addEventListener('resize', function () { update(); poke(); }, { passive: true });
-    var hotOn = false;
-    window.addEventListener('mousemove', function (e) {
-      hotOn = window.siteUI.hot(e);
-      if (hotOn) poke();
-      else if (btn.classList.contains('show')) btn.classList.add('is-idle');
-    }, { passive: true });
-    window.addEventListener('touchstart', poke, { passive: true });
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
     btn.addEventListener('click', goTop);
     update(); poke();
   }
@@ -254,8 +231,11 @@ window.siteUI = window.siteUI || {
 })();
 
 /* 沉浸阅读：只留标题、正文、目录。
-   两个按钮各有固定位置（入口在标题右上、出口在视口右上），只切 display，
-   全程不搬 DOM、不改定位 —— 因此不可能出现“按钮在跳”。
+   浮动控件的显隐只有一个开关：html.ui-asleep。
+     · 普通模式 · 桌面：光标进右下热区才醒
+     · 普通模式 · 触屏：滚动唤醒，静置 1.5s 睡
+     · 沉浸模式：进入先醒着 → 滚动就睡 → 桌面靠热区、触屏靠轻点屏幕中间唤醒
+   PC 目录横杠不参与，永远可点。
    状态记在 localStorage，跨文章、跨刷新保持。 */
 (function () {
   var KEY = 'readmode';
@@ -265,17 +245,30 @@ window.siteUI = window.siteUI || {
 
   var html = document.documentElement;
 
+  var hasPointer = window.siteUI.hasPointer;
+  function inRead() { return html.classList.contains('readmode'); }
+  function desktopWide() {
+    try { return hasPointer() && window.innerWidth >= 1024; } catch (e) { return false; }
+  }
+
+  /* ── 唯一开关 ── */
+  var sleepTimer = null;
+  function setAsleep(v) { html.classList.toggle('ui-asleep', !!v); }
+  function awakeFor(ms) {
+    setAsleep(false);
+    clearTimeout(sleepTimer);
+    if (ms) sleepTimer = setTimeout(function () { setAsleep(true); }, ms);
+  }
+
+  /* ── 进出沉浸 ── */
   function paint(on) {
     html.classList.toggle('readmode', on);
-    if (open) {
-      open.setAttribute('aria-pressed', on ? 'true' : 'false');
-      open.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
-      open.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
-    }
+    open.setAttribute('aria-pressed', on ? 'true' : 'false');
+    open.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
+    open.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
   }
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
 
-  /* 顶栏/元信息被隐藏会让下方内容整体上移，用正文首个标题做锚把位置补回来 */
   function keepPosition(mutate) {
     var ref = document.querySelector('.body h2, .body h3, .body p');
     var before = ref ? ref.getBoundingClientRect().top + window.pageYOffset : 0;
@@ -285,13 +278,8 @@ window.siteUI = window.siteUI || {
     if (delta) window.scrollTo(0, Math.max(0, window.pageYOffset + delta));
   }
 
-  // 真全屏只在桌面（有精确指针、能悬停、宽度够）；手机平板不碰视口，避免转屏
-  function desktop() {
-    try { return window.matchMedia('(hover:hover) and (pointer:fine)').matches && window.innerWidth >= 1024; }
-    catch (e) { return false; }
-  }
   function fsEnter() {
-    if (!desktop()) return;
+    if (!desktopWide()) return;
     try {
       if (html.requestFullscreen) html.requestFullscreen().catch(function () {});
       else if (html.webkitRequestFullscreen) html.webkitRequestFullscreen();
@@ -304,128 +292,91 @@ window.siteUI = window.siteUI || {
     } catch (e) {}
   }
 
-  var hideTimer = null;
-  function uiOff() { if (html.classList.contains('readmode')) html.classList.add('no-ui'); }
-  function uiOn(ms) {
-    if (!html.classList.contains('readmode')) return;
-    html.classList.remove('no-ui');
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(uiOff, ms || 2600);
-  }
+  var autoEntered = false, optedOut = false;
 
   function enter() {
     keepPosition(function () { paint(true); });
     save(true);
     fsEnter();
-    if (!hasPointer()) uiOn(2600);   // 触屏：先露 2.6 秒提示出口；桌面交给热区逻辑，别闪
-    else uiOff();
+    awakeFor(0);                       // 进来先保持显示；滚动再收
     document.body.classList.remove('readpos-on');
     var tip = document.querySelector('.readpos-tip');
     if (tip) tip.remove();
   }
   function leave() {
     if (autoEntered) optedOut = true;
-    html.classList.remove('no-ui');
-    clearTimeout(hideTimer);
+    clearTimeout(sleepTimer);
     keepPosition(function () { paint(false); });
     save(false);
     fsExit();
+    setAsleep(hasPointer());           // 桌面回到“等热区”，触屏保持可见
   }
 
-  /* PC 浏览器全屏（F11）无法用 Fullscreen API 事件感知，用「浏览器 chrome 高度」推断：
-     outerHeight - innerHeight 在窗口态约 80~120px，进 F11 后降到 0~8px。
-     同时把 innerHeight ≈ screen.height 作为第二判据（Firefox / 部分 Linux 桌面）。 */
-  var autoEntered = false;      // 这次沉浸是不是被全屏自动打开的
-  var optedOut = false;         // 全屏期间用户主动退出过
-  var chromeBase = null;        // 窗口态下 chrome 的基准高度
-
-  function chromeH() {
-    var o = window.outerHeight || 0, i = window.innerHeight || 0;
-    if (!o || !i) return -1;
-    return o - i;
-  }
-  function fsLike() {
-    try {
-      if (!desktop()) return false;
-      var c = chromeH();
-      if (c >= 0 && c <= 8) return true;                        // 没有 chrome = 全屏
-      if (window.innerHeight >= screen.height - 2) return true;  // 高度顶满 = 全屏
-      if (chromeBase !== null && c >= 0 && c < chromeBase - 40) return true;  // chrome 掉了 40px 以上
-      return false;
-    } catch (e) { return false; }
-  }
-
-  var resizeTimer = null;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      var c = chromeH(), f = fsLike();
-      if (!f && c > 20) chromeBase = Math.max(chromeBase || 0, c);  // 只在窗口态更新基准
-      if (f && !html.classList.contains('readmode') && !optedOut) {
-        autoEntered = true;
-        enter();
-        save(false);              // 全屏是环境状态，不写进 localStorage
-      } else if (!f) {
-        if (autoEntered && html.classList.contains('readmode')) leave();
-        autoEntered = false;
-        optedOut = false;
-      }
-    }, 220);
+  /* ── 交互 ── */
+  document.addEventListener('mousemove', function (e) {
+    if (!hasPointer()) return;
+    setAsleep(!window.siteUI.hot(e));
   }, { passive: true });
-  chromeBase = chromeH() > 20 ? chromeH() : null;
-  window.__fsLike = fsLike;      // 调试：控制台里 __fsLike() 可看当前判定
-  window.__fsInfo = function () { return { chrome: chromeH(), inner: innerHeight, screen: screen.height, base: chromeBase }; };
 
-  // 有些浏览器按 F11 不会派发 resize（或有延迟），键帽也补一次
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== 'F11') return;
-    setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 350);
+  window.addEventListener('scroll', function () {
+    if (inRead()) { setAsleep(true); return; }
+    if (!hasPointer()) awakeFor(1500);
+  }, { passive: true });
+
+  document.addEventListener('click', function (e) {
+    if (!inRead()) return;
+    if (e.target.closest('a,button,input,pre,table')) return;
+    awakeFor(3000);
   });
 
-  /* 沉浸按钮也要“停一下就消失”（PC 端常驻太吵） */
-  var readIdle = null;
-  function pokeRead() {
-    if (!open) return;
-    open.classList.remove('is-idle');
-    clearTimeout(readIdle);
-    readIdle = setTimeout(function () { open.classList.add('is-idle'); }, 1500);
-  }
-  window.addEventListener('mousemove', function (e) {
-    if (window.siteUI.hot(e)) pokeRead();
-    else if (open) open.classList.add('is-idle');
-  }, { passive: true });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Tab') pokeRead();     // 键盘用户走 Tab 时也让它出现
+    if (e.key === 'Escape' && inRead()) leave();
+    if (e.key === 'Tab') setAsleep(false);
   });
-  if (!hasPointer()) pokeRead(); else open.classList.add('is-idle');
 
   open.addEventListener('click', function () {
-    html.classList.contains('readmode') ? leave() : enter();
-    open.blur();               // 触屏点完不留悬停/焦点
+    inRead() ? leave() : enter();
+    open.blur();
   });
   if (exitLink) exitLink.addEventListener('click', function (e) { e.preventDefault(); leave(); });
 
+  /* ── PC 浏览器全屏（F11）自动进沉浸 ── */
+  var chromeBase = null;
+  function chromeH() {
+    var o = window.outerHeight || 0, i = window.innerHeight || 0;
+    return (o && i) ? o - i : -1;
+  }
+  function fsLike() {
+    if (!desktopWide()) return false;
+    var c = chromeH();
+    if (c >= 0 && c <= 8) return true;
+    if (window.innerHeight >= screen.height - 2) return true;
+    return chromeBase !== null && c >= 0 && c < chromeBase - 40;
+  }
+  var resizeTimer = null;
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      var c = chromeH(), f = fsLike();
+      if (!f && c > 20) chromeBase = c;
+      if (f && !inRead() && !optedOut) { autoEntered = true; enter(); save(false); }
+      else if (!f) {
+        if (autoEntered && inRead()) leave();
+        autoEntered = false; optedOut = false;
+      }
+    }, 220);
+  }
+  window.addEventListener('resize', onResize, { passive: true });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && html.classList.contains('readmode')) leave();
+    if (e.key === 'F11') setTimeout(onResize, 350);
   });
+  window.__fsLike = fsLike;
+  window.__fsInfo = function () { return { chrome: chromeH(), inner: innerHeight, screen: screen.height, base: chromeBase }; };
 
-  // 滚动即隐；轻点空白/移动鼠标召出
-  window.addEventListener('scroll', uiOff, { passive: true });
-  document.addEventListener('mousemove', function (e) {
-    if (!html.classList.contains('readmode')) return;
-    // 桌面：光标不在右下热区就不唤醒（沉浸态尤其不能一动鼠标就冒出控件）
-    var hover = true;
-    try { hover = window.matchMedia('(hover:hover)').matches; } catch (err) {}
-    if (hover && !window.siteUI.hot(e)) return;
-    uiOn(2600);
-  }, { passive: true });
-  document.addEventListener('click', function (e) {
-    if (!html.classList.contains('readmode')) return;
-    if (e.target.closest('a,button,input,pre,table')) return;
-    uiOn(3000);
-  });
-
+  /* ── 初始状态 ── */
+  chromeBase = chromeH() > 20 ? chromeH() : null;
   var on = false;
   try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (on) { paint(true); if (hasPointer()) uiOff(); else uiOn(2600); }
+  if (on) paint(true);
+  setAsleep(hasPointer());
 })();

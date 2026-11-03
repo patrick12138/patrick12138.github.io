@@ -140,4 +140,3 @@ html.lab-on .nav-lab{display:inline}
 }
 
 /* 回到顶部：静置 1.5s 淡出（外观与过渡都在上面那一块，这里只管 idle 态） */
-.to-top.show.is-idle{opacity:0;pointer-events:none}   /* 只淡出，不位移 */
