@@ -379,4 +379,5 @@ window.siteUI = window.siteUI || {
   try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
   if (on) paint(true);
   setAsleep(hasPointer());
+  html.classList.add('ui-ready');   // 初始状态就位后才允许显示浮动按钮（防刷新闪一下）
 })();

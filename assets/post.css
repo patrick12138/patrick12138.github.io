@@ -277,6 +277,7 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
   right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
   bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
+html:not(.ui-ready) .read-open{opacity:0!important}   /* 脚本没跑完之前不显示，避免刷新闪一下 */
 @media (hover:hover){.read-open:hover{opacity:1}}
 @media (hover:hover){.read-open:hover{color:var(--accent);opacity:1}}
 @media (min-width:1024px){
@@ -300,10 +301,11 @@ html.readmode::-webkit-scrollbar{width:0;height:0}
 /* 沉浸态：按钮虚化；滚动即隐，轻点再召出 */
 html.readmode .read-open{opacity:.3}
 @media (hover:hover){html.readmode .read-open:hover{opacity:.9;color:var(--accent)}}
-/* 唯一开关：三个浮动控件一起睡；PC 目录横杠不参与，保持可点 */
+/* 唯一开关：沉浸/滚动时浮动控件退场。
+   目录圆钮只在沉浸态跟着退；普通态常驻可点（否则会“目录打不开”） */
 html.ui-asleep .read-open,
-html.ui-asleep .to-top,
-html.ui-asleep .toc-fab{opacity:0!important;pointer-events:none!important}
+html.ui-asleep .to-top{opacity:0!important;pointer-events:none!important}
+
 @media (min-width:1024px){html.readmode .toc-bars{top:32px}}
 html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;
   color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);
@@ -324,12 +326,22 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
   /* 消失：上 → 下 */
   html.ui-asleep .to-top{transition-delay:0s}
   html.ui-asleep .read-open{transition-delay:.07s}
-  html.ui-asleep .toc-fab{transition-delay:.14s}
 
   /* 出现：下 → 上 */
-  html.readmode:not(.ui-asleep) .toc-fab{transition-delay:0s}
-  html.readmode:not(.ui-asleep) .read-open{transition-delay:.07s}
-  html.readmode:not(.ui-asleep) .to-top{transition-delay:.14s}
+  html.readmode:not(.ui-asleep) .read-open{transition-delay:0s}
+  html.readmode:not(.ui-asleep) .to-top{transition-delay:.07s}
 
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
+}
+
+/* 目录圆钮常驻：它是手机/平板唯一能打开目录的入口，不能因为“静置淡出”变成不可用。
+   写在文件末尾，确保盖过前面 @media 里的基础样式。 */
+@media (max-width:1023px){
+  html .toc-fab{opacity:1!important;pointer-events:auto!important}
+}
+
+/* 触屏（没有光标）在普通阅读时，沉浸按钮也常驻——没有热区可“去找它”。
+   沉浸态仍由 ui-asleep 控制（滚动隐、轻点中间醒）。 */
+@media (hover:none){
+  html:not(.readmode) .read-open{opacity:.85!important;pointer-events:auto!important}
 }
