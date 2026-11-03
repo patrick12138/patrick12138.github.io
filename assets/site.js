@@ -20,6 +20,9 @@ window.siteUI = window.siteUI || {
 
 (function () {
   var html = document.documentElement;
+  function hasPointer() {
+    try { return window.matchMedia('(hover:hover) and (pointer:fine)').matches; } catch (e) { return false; }
+  }
 
   // —— 主题：默认暗色，只有用户手动切过才尊重选择（放在最前面，避免闪白）
   try { html.dataset.theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark'; } catch (e) {}
@@ -314,7 +317,8 @@ window.siteUI = window.siteUI || {
     keepPosition(function () { paint(true); });
     save(true);
     fsEnter();
-    uiOn(2600);            // 进去先露 2.6 秒，让人知道出口在哪
+    if (!hasPointer()) uiOn(2600);   // 触屏：先露 2.6 秒提示出口；桌面交给热区逻辑，别闪
+    else uiOff();
     document.body.classList.remove('readpos-on');
     var tip = document.querySelector('.readpos-tip');
     if (tip) tip.remove();
@@ -393,7 +397,7 @@ window.siteUI = window.siteUI || {
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Tab') pokeRead();     // 键盘用户走 Tab 时也让它出现
   });
-  pokeRead();
+  if (!hasPointer()) pokeRead(); else open.classList.add('is-idle');
 
   open.addEventListener('click', function () {
     html.classList.contains('readmode') ? leave() : enter();
@@ -423,5 +427,5 @@ window.siteUI = window.siteUI || {
 
   var on = false;
   try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (on) { paint(true); uiOn(2600); }
+  if (on) { paint(true); if (hasPointer()) uiOff(); else uiOn(2600); }
 })();
