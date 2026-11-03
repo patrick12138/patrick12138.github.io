@@ -297,6 +297,7 @@ window.siteUI.scrollTo = function (y) {
     save(true);
     fsEnter();
     awakeFor(0);                       // 进来先保持显示；滚动再收
+    html.classList.remove('toc-asleep');
     document.body.classList.remove('readpos-on');
     var tip = document.querySelector('.readpos-tip');
     if (tip) tip.remove();
@@ -307,17 +308,21 @@ window.siteUI.scrollTo = function (y) {
     keepPosition(function () { paint(false); });
     save(false);
     fsExit();
+    html.classList.remove('toc-asleep');
     setAsleep(hasPointer());           // 桌面回到“等热区”，触屏保持可见
   }
 
   /* ── 交互 ── */
   document.addEventListener('mousemove', function (e) {
+    // 目录横杠的唤醒只看位置（触屏没有 mousemove，不受影响）
+    if (e.clientX > window.innerWidth - 160) html.classList.remove('toc-asleep');
+    else if (inRead()) html.classList.add('toc-asleep');
     if (!hasPointer()) return;
     setAsleep(!window.siteUI.hot(e));
   }, { passive: true });
 
   window.addEventListener('scroll', function () {
-    if (inRead()) { setAsleep(true); return; }
+    if (inRead()) { setAsleep(true); html.classList.add('toc-asleep'); return; }
     if (!hasPointer()) awakeFor(1500);
   }, { passive: true });
 
