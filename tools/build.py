@@ -8,6 +8,7 @@
   ②.5 gen_legal.py      搬运页版权信号：canonical + noindex + 文末版权提示（原创页自动剥净）
   ③   stats.py          字数与阅读时间（正文边界走 postbody）
   ④   gen_index.py      生成首页
+  ④.1 partials.py      同步顶栏导航（Lab/About/主题）——全站只有这一份来源
   ④.2 gen_prevnext.py   上一篇 / 下一篇
   ④.25 gen_related.py   相关阅读（tf-idf 共词）
   ④.3 gen_search.py     生成 search.js（首页搜索点开时才加载）
@@ -111,6 +112,9 @@ def main():
 
     print("④ 生成首页 …")
     print(sh('"%s" tools/gen_index.py' % PY).strip().splitlines()[0])
+
+    print("④.1 同步顶栏（外壳唯一来源）…")
+    print("   " + sh('"%s" tools/partials.py' % PY).strip())
 
     print("④.2 上一篇 / 下一篇 …")
     print("   " + sh('"%s" tools/gen_prevnext.py' % PY).strip())

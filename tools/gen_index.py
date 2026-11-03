@@ -2,7 +2,8 @@
 """扫描 posts/ 生成首页 index.html。用法：python3 tools/gen_index.py"""
 import os, re, glob, html
 from datetime import datetime
-from home_snippets import JS, THEME_ICONS
+from home_snippets import JS
+import partials
 import dates
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,11 +134,7 @@ page = """<!DOCTYPE html>
 <body>
 <div class="bar"><div class="bar-in">
   <a class="brand" href="./">patrick</a>
-  <nav class="nav">
-    <a href="lab/" class="nav-lab">Lab</a>
-    <a href="about/">About</a>
-    %s
-  </nav>
+  %s
 </div></div>
 %s
 <footer><div class="wrap"><div class="foot-in">
@@ -150,7 +147,7 @@ page = """<!DOCTYPE html>
 <script src="assets/site.js"></script>
 %s
 </body>
-</html>""" % (STYLE, THEME_ICONS, body, JS)
+</html>""" % (STYLE, partials.nav('', 'home'), body, JS)
 
 open(OUT, "w", encoding="utf-8").write(page)
 print("index built:", len(items), "posts")

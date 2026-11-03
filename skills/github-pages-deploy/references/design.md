@@ -272,3 +272,21 @@ el.style.color = '#fff';
 - 滚动即隐（`no-ui`）：出口钮 / 目录 / 回到顶部一起退场；轻点空白或移动鼠标召回
 - 真全屏只在桌面触发（`hover:hover && pointer:fine && innerWidth>=1024`），手机平板不碰视口
 - 退出：出口钮 / `Esc` / 文末文字链
+
+## 顶栏外壳（tools/partials.py）
+
+Lab / About / 主题按钮这套标记以前散在四处（首页模板、文章页模板、lab、404），
+加一个入口要改四个地方。现在只有一份来源：
+
+```python
+import partials
+partials.nav(prefix, current)   # 生成 <nav class="nav">…</nav>
+python3 tools/partials.py       # 构建时把全站这一段整体同步
+```
+
+- `LINKS` 是入口表，加新入口只改这里
+- `prefix` 按页面层级算：根 `""`、子目录 `"../"`、文章页 `"../../"`
+- **404.html 单独用绝对前缀 `/`**（它会在任意路径下被返回）
+- `current` 标记当前页（`lab` / `home`），生成 `class="on"`
+- 品牌那一段不纳入：首页是链接、文章页是站名下拉，两者本来就不是同一个东西
+- `about/` 是独立外壳，不参与同步
