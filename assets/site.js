@@ -238,54 +238,33 @@ window.siteUI = window.siteUI || {
 
   var html = document.documentElement;
   var meta = document.querySelector('.article .meta');
-  var home = btn.parentNode;                    // 普通态：留在 .meta 里
   var exitLink = document.getElementById('readExit');
   var bar = document.querySelector('.bar');
 
   function paint(on) {
-    // 先量它在顶栏里的位置：进沉浸后顶栏隐藏，按钮要钉在**同一个屏幕坐标**上，不能跳
-    var r = btn.getBoundingClientRect();
-    var top = Math.round(r.top), right = Math.round(window.innerWidth - r.right);
-
+    // 按钮不搬家：顶栏保持原位（透明 + 只留按钮），所以按钮永远在同一个坐标上，
+    // 也不会有布局位移，不需要做位置补偿
     html.classList.toggle('readmode', on);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
     btn.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
-
-    if (on) {
-      document.body.appendChild(btn);
-      btn.style.top = top + 'px';
-      btn.style.right = right + 'px';
-    } else {
-      btn.style.top = '';
-      btn.style.right = '';
-      if (home) home.appendChild(btn);
-    }
   }
 
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
 
-  /* 切换时保住阅读位置：以正文里第一个标题为锚，算它在文档里的位移再补回滚动。
-     隐藏顶栏/元信息/来源块会让它们下方的所有内容整体上移，光补顶栏高度不够。 */
-  function keepPosition(mutate) {
-    var ref = document.querySelector('.body h2, .body h3, .body p');
-    var before = ref ? ref.getBoundingClientRect().top + window.pageYOffset : 0;
-    mutate();
-    if (!ref) return;
-    var after = ref.getBoundingClientRect().top + window.pageYOffset;
-    var delta = after - before;
-    if (delta) window.scrollTo(0, Math.max(0, window.pageYOffset + delta));
-  }
-
   function enter() {
-    keepPosition(function () { paint(true); });
+    paint(true);
     save(true);
+    // 沉浸态里阅读位置提示条本来就不显示，顺手把它的“压住浮动按钮”状态解掉
+    document.body.classList.remove('readpos-on');
+    var tip = document.querySelector('.readpos-tip');
+    if (tip) tip.remove();
   }
 
   function leave() {
     html.classList.remove('no-ui');
     clearTimeout(hideTimer);
-    keepPosition(function () { paint(false); });
+    paint(false);
     save(false);
   }
 
