@@ -240,7 +240,7 @@ window.siteUI = window.siteUI || {
   var meta = document.querySelector('.article .meta');
   var home = btn.parentNode;                    // 普通态：留在 .meta 里
   var exitLink = document.getElementById('readExit');
-  var wantFullscreen = false;
+  var bar = document.querySelector('.bar');
 
   function paint(on) {
     html.classList.toggle('readmode', on);
@@ -252,26 +252,28 @@ window.siteUI = window.siteUI || {
 
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
 
+  /* 切换时保住阅读位置：以正文里第一个标题为锚，算它在文档里的位移再补回滚动。
+     隐藏顶栏/元信息/来源块会让它们下方的所有内容整体上移，光补顶栏高度不够。 */
+  function keepPosition(mutate) {
+    var ref = document.querySelector('.body h2, .body h3, .body p');
+    var before = ref ? ref.getBoundingClientRect().top + window.pageYOffset : 0;
+    mutate();
+    if (!ref) return;
+    var after = ref.getBoundingClientRect().top + window.pageYOffset;
+    var delta = after - before;
+    if (delta) window.scrollTo(0, Math.max(0, window.pageYOffset + delta));
+  }
+
   function enter() {
-    paint(true);
+    keepPosition(function () { paint(true); });
     save(true);
-    wantFullscreen = true;
-    try {
-      if (html.requestFullscreen) html.requestFullscreen().catch(function () {});
-      else if (html.webkitRequestFullscreen) html.webkitRequestFullscreen();
-    } catch (e) {}
   }
 
   function leave() {
     html.classList.remove('no-ui');
     clearTimeout(hideTimer);
-    paint(false);
+    keepPosition(function () { paint(false); });
     save(false);
-    wantFullscreen = false;
-    try {
-      if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
-      else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
-    } catch (e) {}
   }
 
   function toggle() { html.classList.contains('readmode') ? leave() : enter(); }
@@ -282,14 +284,6 @@ window.siteUI = window.siteUI || {
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && html.classList.contains('readmode') && !document.fullscreenElement) leave();
   });
-
-  // 用户用系统手势/键退出全屏时，同步退出沉浸态，别“退一半”
-  function onFsChange() {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement &&
-        wantFullscreen && html.classList.contains('readmode')) leave();
-  }
-  document.addEventListener('fullscreenchange', onFsChange);
-  document.addEventListener('webkitfullscreenchange', onFsChange);
 
   /* 第二层：沉浸态里「手在动就退场」——滚动立刻隐藏控件，静止也不回来；
      轻点空白处（移动端）或移动鼠标（桌面）才临时召出。 */

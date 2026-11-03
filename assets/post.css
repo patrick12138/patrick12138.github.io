@@ -265,9 +265,9 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 /* ─── 沉浸阅读 ─────────────────────────────────────────────
    只留标题、正文、目录；顶栏/元信息/来源/文末块/页脚全部退场。
    按钮和文末出口由 add_toc.ensure_readmode() 注入。 */
-.read-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
-  margin-left:10px;padding:0;border:0;background:transparent;color:var(--text-faint);cursor:pointer;
-  vertical-align:-4px;transition:color .15s,opacity .18s}
+.read-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+  margin:0 8px 0 2px;padding:0;border:0;background:transparent;color:var(--text-muted);cursor:pointer;
+  vertical-align:middle;transition:color .15s,opacity .18s}
 .read-btn:hover{color:var(--accent)}
 .read-btn svg{display:block}
 .read-exit{display:none}

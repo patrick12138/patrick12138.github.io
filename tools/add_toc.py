@@ -136,20 +136,23 @@ READ_EXIT = '<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸�
 
 
 def ensure_readmode(doc):
-    """注入「沉浸阅读」按钮与文末出口（幂等）。
+    """注入「沉浸阅读」按钮与文末出口（幂等，两件东西各自判断）。
 
-    按钮放在 .meta 行右端；进沉浸后 .meta 会被隐藏，所以 JS 会把它移到 body 上固定显示。
+    按钮放顶栏 nav；进沉浸后顶栏隐藏，JS 会把它移到 body 上固定显示。
     文末出口放在版权提示/相关阅读之前，普通态 display:none。
     """
-    if 'id="readBtn"' in doc:
-        return doc
-    m = re.search(r'(<div class="meta">.*?)</div>', doc, re.S)
+    # 按钮：先清掉可能存在的多份，再按需补一个
+    doc = re.sub(r'<button class="read-btn" id="readBtn".*?</button>', '', doc, flags=re.S)
+    m = re.search(r'(<nav class="nav">)', doc)
     if m:
-        doc = doc[:m.end(1)] + READ_BTN + "</div>" + doc[m.end():]
+        doc = doc[:m.end(1)] + READ_BTN + doc[m.end():]
+
+    # 文末出口：同样先去重
+    doc = re.sub(r'\n*<a class="read-exit" id="readExit"[^>]*>.*?</a>', '', doc, flags=re.S)
     for anchor in ('<aside class="legal-note"', '<nav class="related"', '<nav class="pager"', '<a class="back"'):
         i = doc.find(anchor)
         if i > 0:
-            doc = doc[:i] + READ_EXIT + "\n" + doc[i:]
+            doc = doc[:i].rstrip("\n") + "\n" + READ_EXIT + "\n" + doc[i:]
             break
     return doc
 
