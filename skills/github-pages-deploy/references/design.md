@@ -256,7 +256,11 @@ el.style.color = '#fff';
 - 状态存 `localStorage.readmode`，**跨文章、跨刷新保持**；只对文章页生效
 - 进入时尝试 `requestFullscreen()`；系统手势退出全屏时同步退出沉浸态（避免“退一半”）
 - 退出三个口：右上角图标 / `Esc` / 文末「读完 · 退出沉浸阅读」
-- 沉浸态下 `html.readmode` 隐藏滚动条，PC 目录横杠 `top` 从 88 抬到 32，文章上边距 64→40
+- **按钮定位**：`.read-btn` 在两种状态下都是 `position:fixed`（`top:12 right:14`），
+  顶栏在沉浸态压成 **0 高**（不是 `display:none`，否则按钮跟着消失）→ 按钮坐标全程不变，也不会留下空带子
+- 顶栏压成 0 高会让内容上移，靠 `keepPosition()`（以正文首个标题为锚）补回滚动位置
+- 沉浸态隐藏滚动条，PC 目录横杠 `top` 从 88 抬到 32，文章上边距降到 22
+- `.bar .nav` 固定留 30px 右内边距，给按钮让位，避免压住主题开关
 - 注入在 `add_toc.py` 的 `ensure_readmode()`（幂等），`qa.py` 校验每篇恰好一个 `#readBtn`
 
 **第二层（已做）交互反转**：`html.readmode.no-ui` 下退出按钮 / 目录圆钮 / 目录横杠全隐（`opacity:0` +
