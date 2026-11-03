@@ -277,7 +277,8 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
   right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
   bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
-html:not(.ui-ready) .read-open{opacity:0!important}   /* 脚本没跑完之前不显示，避免刷新闪一下 */
+html:not(.ui-ready) .read-open,
+html:not(.ui-ready) .toc-bars{opacity:0!important}   /* 脚本没跑完之前不显示，避免刷新闪一下 */
 @media (hover:hover){.read-open:hover{opacity:1}}
 @media (hover:hover){.read-open:hover{color:var(--accent);opacity:1}}
 @media (min-width:1024px){

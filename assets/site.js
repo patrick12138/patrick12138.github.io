@@ -380,7 +380,10 @@ window.siteUI.scrollTo = function (y) {
   chromeBase = chromeH() > 20 ? chromeH() : null;
   var on = false;
   try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (on) paint(true);
+  if (on) {
+    paint(true);
+    html.classList.add('toc-asleep');   // 沉浸刷新：目录横杠一开始就不显示，避免闪一下
+  }
   setAsleep(hasPointer());
   html.classList.add('ui-ready');   // 初始状态就位后才允许显示浮动按钮（防刷新闪一下）
 })();
