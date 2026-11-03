@@ -265,13 +265,12 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 /* ─── 沉浸阅读 ─────────────────────────────────────────────
    只留标题、正文、目录；顶栏/元信息/来源/文末块/页脚全部退场。
    按钮和文末出口由 add_toc.ensure_readmode() 注入。 */
-.read-btn{position:fixed;top:var(--rb-top,12px);right:var(--rb-right,14px);z-index:70;
+.read-btn{position:fixed;top:var(--rb-top,12px);left:var(--rb-left,112px);z-index:70;
   display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
   margin:0;padding:0;border:0;background:transparent;color:var(--text-muted);cursor:pointer;
   transition:color .15s,opacity .18s;
   -webkit-tap-highlight-color:transparent;   /* 触屏点完不留系统蓝/灰高亮 */}
-/* 顶栏给按钮让出位置，免得压在主题按钮下面 */
-.bar .nav{padding-right:30px}
+/* 按钮不占流：顶栏右侧 About / 主题的间距与之前一模一样，没有因为多一个按钮被推开 */
 @media (hover:hover){.read-btn:hover{color:var(--accent)}}
 .read-btn svg{display:block}
 .read-exit{display:none}
@@ -296,7 +295,7 @@ html.readmode .pager,
 html.readmode .back,
 html.readmode footer,
 html.readmode .readpos-tip{display:none!important}
-html.readmode .article{padding:22px 0 40px}
+html.readmode .article{padding:44px 0 40px}   /* 给左上角那枚按钮留一行空隙，标题不与它重叠 */
 html.readmode{scrollbar-width:none}
 html.readmode::-webkit-scrollbar{width:0;height:0}
 html.readmode .read-btn{opacity:.3}

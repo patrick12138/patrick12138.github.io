@@ -243,6 +243,15 @@ window.siteUI = window.siteUI || {
 
   var home = btn.parentNode;      // 普通态所在位置（顶栏 nav）
 
+  // 量一次站名右边缘，把按钮钉在它右边（fixed，不参与顶栏排版 → 不影响任何现有间距）
+  (function place() {
+    var brand = document.querySelector('.bar .brandset, .bar .brand');
+    if (!brand) return;
+    var r = brand.getBoundingClientRect();
+    html.style.setProperty('--rb-left', Math.round(r.right + 12) + 'px');
+    html.style.setProperty('--rb-top', Math.round(r.top + (r.height - 24) / 2) + 'px');
+  })();
+
 
   function paint(on) {
     // 按钮不搬家：顶栏保持原位（透明 + 只留按钮），所以按钮永远在同一个坐标上，
@@ -265,9 +274,30 @@ window.siteUI = window.siteUI || {
     if (delta) window.scrollTo(0, Math.max(0, window.pageYOffset + delta));
   }
 
+  // 桌面（有精确指针、能悬停）才进真全屏；手机/平板一律不动视口，避免转屏
+  function desktop() {
+    try {
+      return window.matchMedia('(hover:hover) and (pointer:fine)').matches && window.innerWidth >= 1024;
+    } catch (e) { return false; }
+  }
+  function fsEnter() {
+    if (!desktop()) return;
+    try {
+      if (html.requestFullscreen) html.requestFullscreen().catch(function () {});
+      else if (html.webkitRequestFullscreen) html.webkitRequestFullscreen();
+    } catch (e) {}
+  }
+  function fsExit() {
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
+    } catch (e) {}
+  }
+
   function enter() {
     keepPosition(function () { paint(true); });
     save(true);
+    fsEnter();
     // 沉浸态里阅读位置提示条本来就不显示，顺手把它的“压住浮动按钮”状态解掉
     document.body.classList.remove('readpos-on');
     var tip = document.querySelector('.readpos-tip');
@@ -279,6 +309,7 @@ window.siteUI = window.siteUI || {
     clearTimeout(hideTimer);
     keepPosition(function () { paint(false); });
     save(false);
+    fsExit();
   }
 
   function toggle() {
