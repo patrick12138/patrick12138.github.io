@@ -243,16 +243,6 @@ window.siteUI = window.siteUI || {
 
   var home = btn.parentNode;      // 普通态所在位置（顶栏 nav）
 
-  // 量一次站名右边缘，把按钮钉在它右边（fixed，不参与顶栏排版 → 不影响任何现有间距）
-  (function place() {
-    var brand = document.querySelector('.bar .brandset, .bar .brand');
-    if (!brand) return;
-    var r = brand.getBoundingClientRect();
-    html.style.setProperty('--rb-left', Math.round(r.right + 12) + 'px');
-    html.style.setProperty('--rb-top', Math.round(r.top + (r.height - 24) / 2) + 'px');
-  })();
-
-
   function paint(on) {
     // 按钮不搬家：顶栏保持原位（透明 + 只留按钮），所以按钮永远在同一个坐标上，
     // 也不会有布局位移，不需要做位置补偿
@@ -260,6 +250,8 @@ window.siteUI = window.siteUI || {
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
     btn.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
+    if (on) document.body.appendChild(btn);          // 顶栏整条隐藏，按钮得搬出来
+    else if (home) home.appendChild(btn);
   }
 
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }

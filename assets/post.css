@@ -265,27 +265,21 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 /* ─── 沉浸阅读 ─────────────────────────────────────────────
    只留标题、正文、目录；顶栏/元信息/来源/文末块/页脚全部退场。
    按钮和文末出口由 add_toc.ensure_readmode() 注入。 */
-.read-btn{position:fixed;top:var(--rb-top,12px);left:var(--rb-left,112px);z-index:70;
-  display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+.read-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
   margin:0;padding:0;border:0;background:transparent;color:var(--text-muted);cursor:pointer;
-  transition:color .15s,opacity .18s;
+  vertical-align:middle;transition:color .15s,opacity .18s;
   -webkit-tap-highlight-color:transparent;   /* 触屏点完不留系统蓝/灰高亮 */}
-/* 按钮不占流：顶栏右侧 About / 主题的间距与之前一模一样，没有因为多一个按钮被推开 */
 @media (hover:hover){.read-btn:hover{color:var(--accent)}}
 .read-btn svg{display:block}
 .read-exit{display:none}
 
 /* 顶栏不消失、也不移出文档流：只把它变成透明空壳，内容藏掉，露出按钮。
    这样按钮的位置从头到尾不变，页面也不会有任何布局位移。 */
-/* 顶栏压成 0 高（不是 display:none，否则里面的按钮会一起消失），
-   内容不占位 = 没有空带子；按钮本身是 position:fixed，位置在两种状态下完全一致。 */
-html.readmode .bar{height:0;min-height:0;padding:0;margin:0;border:0;
-  background:transparent;overflow:visible;pointer-events:none}
-html.readmode .bar .brand,
-html.readmode .bar .brandset,
-html.readmode .bar .nav a,
-html.readmode .bar .theme-toggle{visibility:hidden}
-html.readmode .read-btn{pointer-events:auto}
+/* 沉浸态：顶栏整条撤掉（按钮由 JS 搬到 body，否则会跟着消失），
+   按钮固定到右上角，做成一枚淡影。 */
+html.readmode .bar{display:none}
+html.readmode .read-btn{position:fixed;top:12px;right:14px;z-index:70;
+  width:26px;height:26px;margin:0;opacity:.3}
 html.readmode .read-btn{opacity:.3}
 
 html.readmode .article .meta,
