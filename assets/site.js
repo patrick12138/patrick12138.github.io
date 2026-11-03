@@ -236,7 +236,6 @@ window.siteUI = window.siteUI || {
 (function () {
   var KEY = 'readmode';
   var open = document.getElementById('readOpen');
-  var exit = document.getElementById('readExitBtn');
   var exitLink = document.getElementById('readExit');
   if (!open || !document.querySelector('.article')) return;
 
@@ -244,8 +243,11 @@ window.siteUI = window.siteUI || {
 
   function paint(on) {
     html.classList.toggle('readmode', on);
-    if (open) open.setAttribute('aria-expanded', on ? 'true' : 'false');
-    if (exit) exit.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (open) {
+      open.setAttribute('aria-pressed', on ? 'true' : 'false');
+      open.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
+      open.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
+    }
   }
   function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
 
@@ -304,8 +306,10 @@ window.siteUI = window.siteUI || {
     fsExit();
   }
 
-  open.addEventListener('click', function () { enter(); open.blur(); });
-  if (exit) exit.addEventListener('click', function () { leave(); exit.blur(); });
+  open.addEventListener('click', function () {
+    html.classList.contains('readmode') ? leave() : enter();
+    open.blur();               // 触屏点完不留悬停/焦点
+  });
   if (exitLink) exitLink.addEventListener('click', function (e) { e.preventDefault(); leave(); });
 
   document.addEventListener('keydown', function (e) {

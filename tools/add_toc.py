@@ -133,9 +133,6 @@ ICON_SVG = ('<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke=
 # 入口按钮：固定在文章头部（标题右上角），普通态可见
 READ_OPEN = ('<button class="read-open" id="readOpen" type="button" aria-label="沉浸阅读" title="沉浸阅读">'
              + ICON_SVG + '</button>')
-# 出口钮：只在沉浸态出现，固定在右上角（它从头到尾都在同一个位置，不存在“跳”）
-READ_EXIT_BTN = ('<button class="read-exit-btn" id="readExitBtn" type="button" '
-                 'aria-label="退出沉浸阅读" title="退出沉浸阅读（Esc）">' + ICON_SVG + '</button>')
 READ_EXIT = '<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸阅读</a>'
 
 
@@ -143,7 +140,6 @@ def ensure_readmode(doc):
     """注入沉浸阅读的三个元素（幂等，各管各的）：
 
     - `#readOpen`  文章标题右上角（普通态入口，绝对定位在文章容器内）
-    - `#readExitBtn` 固定右上角（只在沉浸态显示，全程同坐标）
     - `#readExit`  文末文字出口（只在沉浸态显示）
 
     三个元素各自占一个固定位置，靠 display 切换显隐 —— 不需要搬 DOM，也就不会跳。
@@ -158,11 +154,6 @@ def ensure_readmode(doc):
     m = re.search(r'(<h1[^>]*>.*?</h1>)', doc, re.S)
     if m:
         doc = doc[:m.end(1)] + READ_OPEN + doc[m.end(1):]
-
-    # 出口钮：插到 </article> 前一个位置即可（fixed 定位，位置与 DOM 顺序无关）
-    k = doc.rfind('</article>')
-    if k > 0:
-        doc = doc[:k] + READ_EXIT_BTN + doc[k:]
 
     # 文末文字出口
     for anchor in ('<aside class="legal-note"', '<nav class="related"', '<nav class="pager"', '<a class="back"'):
