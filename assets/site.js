@@ -1,6 +1,15 @@
 /* 全站共用：主题切换 + 回到顶部（阈值由 data-threshold 决定：数字像素，或 "half" 半程） */
 // 公共小工具：平滑滚动（WebView 里 smooth 可能被忽略，400ms 没动就硬跳）
 // 文章页内联的目录脚本会调 window.siteUI.scrollTo，别再各写一份
+
+/* 右下热区：PC 上只有鼠标移到这块区域，浮动控件（回到顶部 / 沉浸阅读）才浮现。
+   之前是“动一下鼠标就出现”，阅读时太吵。 */
+window.siteUI = window.siteUI || {};
+window.siteUI.hot = function (e, size) {
+  var z = size || 240;
+  return e.clientX > window.innerWidth - z && e.clientY > window.innerHeight - z;
+};
+
 window.siteUI = window.siteUI || {
   scrollTo: function (y) {
     var before = window.pageYOffset;
@@ -91,9 +100,21 @@ window.siteUI = window.siteUI || {
       window.siteUI.scrollTo(0);
       setTimeout(update, 420);   // 兜底：程序化滚动不一定派发 scroll
     }
-    window.addEventListener('scroll', function () { update(); poke(); }, { passive: true });
+    // 桌面（有鼠标）滚动不再点亮控件——只有鼠标进右下热区才出现；触屏没有光标，保持滚动浮现
+    var canHover = true;
+    try { canHover = window.matchMedia('(hover:hover)').matches; } catch (e) {}
+    window.addEventListener('scroll', function () {
+      update();
+      if (!canHover) poke();                                  // 触屏：滚动浮现
+      else if (!hotOn && btn.classList.contains('show')) btn.classList.add('is-idle');  // 桌面：只有热区才亮
+    }, { passive: true });
     window.addEventListener('resize', function () { update(); poke(); }, { passive: true });
-    window.addEventListener('mousemove', poke, { passive: true });
+    var hotOn = false;
+    window.addEventListener('mousemove', function (e) {
+      hotOn = window.siteUI.hot(e);
+      if (hotOn) poke();
+      else if (btn.classList.contains('show')) btn.classList.add('is-idle');
+    }, { passive: true });
     window.addEventListener('touchstart', poke, { passive: true });
     btn.addEventListener('click', goTop);
     update(); poke();
@@ -365,8 +386,12 @@ window.siteUI = window.siteUI || {
     clearTimeout(readIdle);
     readIdle = setTimeout(function () { open.classList.add('is-idle'); }, 1500);
   }
-  ['scroll', 'mousemove', 'touchstart'].forEach(function (ev) {
-    window.addEventListener(ev, pokeRead, { passive: true });
+  window.addEventListener('mousemove', function (e) {
+    if (window.siteUI.hot(e)) pokeRead();
+    else if (open) open.classList.add('is-idle');
+  }, { passive: true });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Tab') pokeRead();     // 键盘用户走 Tab 时也让它出现
   });
   pokeRead();
 
