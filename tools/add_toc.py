@@ -41,7 +41,6 @@ def strip_toc(doc):
     doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-tab"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     doc = re.sub(r'<button class="toc-handle"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
-    doc = re.sub(r'<a class="back-top".*?</a>', "", doc, flags=re.S)
     doc = re.sub(r'<button class="to-top"[^>]*>.*?</button>\s*', "", doc, flags=re.S)
     # 别的会话注入过的英文版浮动按钮
     doc = re.sub(r'<button class="toc-fab"[^>]*>.*?</button>', "", doc, flags=re.S)

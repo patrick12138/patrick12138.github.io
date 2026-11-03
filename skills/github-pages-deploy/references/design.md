@@ -251,7 +251,7 @@ el.style.color = '#fff';
 | 元素 | 位置 | 可见时段 |
 |---|---|---|
 | `#readOpen` | `.article` 内绝对定位（标题右上，`top:6 right:0`），`h1` 留 44px 右内边距 | 普通态 |
-| `#readExitBtn` | `position:fixed`（视口右上 `top:8 right:16`） | 沉浸态 |
+| `#readOpen` | `position:fixed`（视口右上 `top:8 right:16`） | 沉浸态 |
 | `#readExit` | 正文末尾文字链（`读完 · 退出沉浸阅读`） | 沉浸态 |
 
 ### 为什么这么做（踩过的坑）

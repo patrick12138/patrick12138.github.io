@@ -76,7 +76,7 @@ def check_dupes():
         s = open(p, encoding="utf-8").read()
         for name, pat in (("目录 nav.toc", r'<nav class="toc"'), ("目录按钮", r'class="toc-fab"'),
                           ("站名下拉", r'id="brandSet"'), ("回到顶部", r'id="toTop"'),
-                          ("沉浸阅读按钮", r'id="readBtn"'), ("文末出口", r'id="readExit"')):
+                          ("沉浸阅读按钮", r'id="readOpen"'), ("文末出口", r'id="readExit"')):
             n = len(re.findall(pat, s))
             if n > 1:
                 bad.append((os.path.basename(os.path.dirname(p)), name, n))
