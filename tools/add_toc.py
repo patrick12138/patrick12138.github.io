@@ -143,9 +143,13 @@ def ensure_readmode(doc):
     """
     # 按钮：先清掉可能存在的多份，再按需补一个
     doc = re.sub(r'<button class="read-btn" id="readBtn".*?</button>', '', doc, flags=re.S)
-    m = re.search(r'(<nav class="nav">)', doc)
+    m = re.search(r'(<button class="theme-toggle")', doc)      # 放主题按钮左侧，主题仍在最右
     if m:
-        doc = doc[:m.end(1)] + READ_BTN + doc[m.end():]
+        doc = doc[:m.start(1)] + READ_BTN + doc[m.start(1):]
+    else:
+        m = re.search(r'(<nav class="nav">)', doc)
+        if m:
+            doc = doc[:m.end(1)] + READ_BTN + doc[m.end():]
 
     # 文末出口：同样先去重
     doc = re.sub(r'\n*<a class="read-exit" id="readExit"[^>]*>.*?</a>', '', doc, flags=re.S)
