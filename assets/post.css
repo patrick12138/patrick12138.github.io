@@ -106,9 +106,9 @@
   .toc-handle{display:none}
 
   .toc-fab{display:flex;position:fixed;z-index:61;
-    right:calc(18px + env(safe-area-inset-right,0px));
-    bottom:calc(18px + env(safe-area-inset-bottom,0px));
-    width:40px;height:40px;padding:0;align-items:center;justify-content:center;border-radius:999px;
+    right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
+    bottom:calc(var(--rail-b1) + env(safe-area-inset-bottom,0px));
+    width:var(--rail-size);height:var(--rail-size);padding:0;align-items:center;justify-content:center;border-radius:999px;
     background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
     border:1px solid var(--border);cursor:pointer;
     opacity:0;transform:translateY(10px) scale(.94);pointer-events:none;
@@ -179,7 +179,6 @@ html,body{overflow-x:clip}
     width:420px;max-width:calc(100vw - 48px);
     padding:18px 20px;
   }
-  .to-top{--totop-bottom:76px}   /* 目录面板从底部滑出，箭头让开它 */
 }
 
 
@@ -268,13 +267,15 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
      平板 / 手机   贴在右下角目录圆钮的正上方
    切换沉浸只改两件事：顶栏等元素显隐 + 这个按钮的透明度（普通 .85 → 沉浸 .3）。
    没有搬 DOM、没有换定位，所以不可能跳。 */
-.read-open{position:fixed;z-index:60;width:26px;height:26px;padding:0;border:0;background:transparent;
-  color:var(--text-muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
-  opacity:.85;transition:opacity .2s ease,color .15s;-webkit-tap-highlight-color:transparent;
-  right:25px;bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+.read-open{position:fixed;z-index:60;width:var(--rail-size);height:var(--rail-size);padding:0;border:0;
+  background:transparent;color:var(--text-muted);cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;opacity:.85;
+  transition:opacity .2s ease,color .15s;-webkit-tap-highlight-color:transparent;
+  right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
+  bottom:calc(var(--rail-b3) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
 @media (hover:hover){.read-open:hover{color:var(--accent);opacity:1}}
-@media (min-width:1024px){.read-open{right:10px;bottom:auto;top:56px}}   /* 与目录横杠居中对齐 */
+@media (min-width:1024px){.read-open{right:12px;bottom:auto;top:56px}}   /* 与回到顶部同一右缘 */
 
 .read-exit{display:none}
 

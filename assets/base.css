@@ -11,6 +11,12 @@
   --bg:#f3f5f8;--text:#1e2935;--text-muted:#526070;--text-faint:#a8b2be;
   --accent:#2d6496;--border:#dfe4ea;--heading:#16202b;--rule:#e3e8ee;
 }
+/* 右下浮动控件栏：三个按钮共用一条竖列（尺寸/右距/间距只在这里定义一次） */
+:root{--rail-right:18px;--rail-size:38px;--rail-gap:10px;
+  --rail-b1:18px;                                                   /* 最底：目录 */
+  --rail-b2:calc(var(--rail-b1) + var(--rail-size) + var(--rail-gap));  /* 中：回到顶部 */
+  --rail-b3:calc(var(--rail-b2) + var(--rail-size) + var(--rail-gap));  /* 上：沉浸阅读 */
+}
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7}
 a{color:inherit}
@@ -105,10 +111,11 @@ footer{padding:0 0 34px}
 .foot-in a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border)}
 .foot-in a:hover{color:var(--accent)}
 
-/* 回到顶部：外观全站只有这一份（不加边框的箭头），各页只改 --totop-bottom 让位 */
-.to-top{display:flex;position:fixed;right:20px;z-index:50;
-  bottom:calc(var(--totop-bottom, 30px) + env(safe-area-inset-bottom, 0px));
-  width:36px;height:36px;padding:0;align-items:center;justify-content:center;
+/* 回到顶部：浮动控件栏的第二格（尺寸/右距来自 :root 的 --rail-*） */
+.to-top{display:flex;position:fixed;z-index:50;
+  right:calc(var(--rail-right) + env(safe-area-inset-right, 0px));
+  bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom, 0px));
+  width:var(--rail-size);height:var(--rail-size);padding:0;align-items:center;justify-content:center;
   border:0;background:transparent;color:var(--text-muted);cursor:pointer;
   opacity:0;pointer-events:none;
   transition:opacity .18s ease,color .15s}
@@ -117,7 +124,9 @@ footer{padding:0 0 34px}
 .to-top:focus{outline:none}
 .to-top:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
 .to-top svg{width:17px;height:17px;display:block}
-@media (max-width:720px){.to-top{right:18px;--totop-bottom:76px}}
+@media (min-width:1024px){
+  .to-top{right:12px;bottom:calc(30px + env(safe-area-inset-bottom, 0px))}   /* 桌面：与沉浸按钮同右缘 */
+}
 
 /* Lab 暗门：默认不显示；长按主题图标 1.5s（或 /?u=lab）后出现 */
 .nav-lab{display:none}
