@@ -277,7 +277,10 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
   bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
 @media (hover:hover){.read-open:hover{color:var(--accent);opacity:1}}
-@media (min-width:1024px){.read-open{right:12px;bottom:auto;top:56px}}   /* 与回到顶部同一右缘 */
+@media (min-width:1024px){
+  /* 桌面：叠在“回到顶部”正上方（回到顶部是 right:12 / bottom:30） */
+  .read-open{right:12px;bottom:calc(30px + var(--rail-size) + var(--rail-gap));top:auto}
+}
 
 .read-exit{display:none}
 

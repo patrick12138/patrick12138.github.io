@@ -68,7 +68,7 @@ window.siteUI = window.siteUI || {
     var mode = btn.getAttribute('data-threshold') || '600';
 
     function threshold() {
-      if (mode !== 'half') return parseInt(mode, 10) || 600;
+      if (mode !== 'half') { var n = parseInt(mode, 10); return isNaN(n) ? 600 : n; }
       var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
       var max = docH - window.innerHeight;
       return max > 0 ? max / 2 : 600;
