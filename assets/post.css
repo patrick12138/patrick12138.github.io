@@ -267,8 +267,9 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
    按钮和文末出口由 add_toc.ensure_readmode() 注入。 */
 .read-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
   margin:0 8px 0 2px;padding:0;border:0;background:transparent;color:var(--text-muted);cursor:pointer;
-  vertical-align:middle;transition:color .15s,opacity .18s}
-.read-btn:hover{color:var(--accent)}
+  vertical-align:middle;transition:color .15s,opacity .18s;
+  -webkit-tap-highlight-color:transparent;   /* 触屏点完不留系统蓝/灰高亮 */}
+@media (hover:hover){.read-btn:hover{color:var(--accent)}}
 .read-btn svg{display:block}
 .read-exit{display:none}
 
@@ -286,7 +287,9 @@ html.readmode{scrollbar-width:none}
 html.readmode::-webkit-scrollbar{width:0;height:0}
 html.readmode .read-btn{position:fixed;top:14px;right:16px;z-index:70;margin:0;width:32px;height:32px;
   color:var(--text-muted);opacity:.35;border-radius:999px}
-html.readmode .read-btn:hover,
+@media (hover:hover){
+  html.readmode .read-btn:hover{opacity:1;color:var(--accent)}
+}
 html.readmode .read-btn:focus-visible{opacity:1;color:var(--accent)}
 html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;
   color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);

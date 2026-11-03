@@ -276,7 +276,10 @@ window.siteUI = window.siteUI || {
     save(false);
   }
 
-  function toggle() { html.classList.contains('readmode') ? leave() : enter(); }
+  function toggle() {
+    html.classList.contains('readmode') ? leave() : enter();
+    btn.blur();                 // 点完立刻失焦，避免触屏把焦点/悬停态留在按钮上
+  }
 
   btn.addEventListener('click', toggle);
   if (exitLink) exitLink.addEventListener('click', function (e) { e.preventDefault(); leave(); });
