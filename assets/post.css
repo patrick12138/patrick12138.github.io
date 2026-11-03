@@ -97,7 +97,8 @@
 
 /* ── 移动 / iPad：右下按钮，静置淡出；面板从底部浮起 ── */
 @media (max-width:1023px){
-  .toc{left:12px;right:12px;width:auto;bottom:calc(76px + env(safe-area-inset-bottom,0px));
+  .toc{left:12px;right:12px;width:auto;
+    bottom:calc(var(--rail-b3) + var(--rail-size) + var(--rail-gap) + env(safe-area-inset-bottom,0px));
     max-height:60vh;transform:translateY(14px) scale(.985)}
   .toc.is-open{transform:none}
   .toc-list a{padding:9px 16px 9px 13px;font-size:.9rem}
@@ -314,7 +315,7 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
 @media (max-width:1023px){
   html.readmode .to-top,
   html.readmode .read-open,
-  html.readmode .toc-fab{opacity:.32}
+  html.readmode .toc-fab{opacity:.3}
 
   /* 消失：上 → 下 */
   html.readmode.no-ui .to-top{transition-delay:0s}
