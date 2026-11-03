@@ -333,15 +333,3 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
 
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
 }
-
-/* 目录圆钮常驻：它是手机/平板唯一能打开目录的入口，不能因为“静置淡出”变成不可用。
-   写在文件末尾，确保盖过前面 @media 里的基础样式。 */
-@media (max-width:1023px){
-  html .toc-fab{opacity:1!important;pointer-events:auto!important}
-}
-
-/* 触屏（没有光标）在普通阅读时，沉浸按钮也常驻——没有热区可“去找它”。
-   沉浸态仍由 ui-asleep 控制（滚动隐、轻点中间醒）。 */
-@media (hover:none){
-  html:not(.readmode) .read-open{opacity:.85!important;pointer-events:auto!important}
-}
