@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://patrick12138.github.io/posts/claude-code-review/"><link rel="canonical" href="https://onevcat.com/2025/08/claude-code/" data-legal="1"><meta name="robots" content="noindex,follow" data-legal="1">
 <link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=f22fdda9">
-<link rel="stylesheet" href="../../assets/post.css?v=225d4d9a">
+<link rel="stylesheet" href="../../assets/post.css?v=0d6720f8">
 </head>
 <body>
 <div class="bar"><div class="bar-in">
@@ -26,7 +26,7 @@
   </nav>
 </div></div>
 <div class="wrap"><article class="article"><h1>一个半月高强度 Claude Code 使用后感受</h1>
-<div class="meta">2025年8月3日 · 王巍（onevcat） · 搬运 · <span class="stats">8,027 字 · 约 21 分钟</span></div>
+<div class="meta">2025年8月3日 · 王巍（onevcat） · 搬运 ·<button class="read-btn" id="readBtn" type="button" aria-label="沉浸阅读" title="沉浸阅读" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5A1.5 1.5 0 0 1 18.5 20H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg></button> · <span class="stats">8,035 字 · 约 21 分钟</span></div>
 <aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://onevcat.com/2025/08/claude-code/">https://onevcat.com/2025/08/claude-code/</a></aside>
 
 <nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Vibe Coding 的迭代速度</a></li><li class="lvl2"><a href="#h2">从传统 Editor AI 的转换</a></li><li class="lvl2"><a href="#h3">认识 CC 的边界和长处</a></li><li class="lvl2"><a href="#h4">思考先行还是实践先行</a></li><li class="lvl2"><a href="#h5">小步迭代还是放飞自我</a></li><li class="lvl2"><a href="#h6">任务规模和上下文制约</a></li><li class="lvl3"><a href="#h7">任务拆解是关键</a></li><li class="lvl3"><a href="#h8">使用 Subagent</a></li><li class="lvl3"><a href="#h9">在合适的时机手动 compact</a></li><li class="lvl2"><a href="#h10">善用命令和周边工具</a></li><li class="lvl3"><a href="#h11">Command 和 Hooks</a></li><li class="lvl3"><a href="#h12">MCP</a></li><li class="lvl3"><a href="#h13">编译、分析和测试</a></li><li class="lvl3"><a href="#h14">Code 之外，大有可为</a></li><li class="lvl2"><a href="#h15">体感降智和更多限制</a></li><li class="lvl3"><a href="#h16">Opus 远强于 Sonnet</a></li><li class="lvl3"><a href="#h17">时间玄学</a></li><li class="lvl3"><a href="#h18">降智疑云</a></li><li class="lvl3"><a href="#h19">限制的阴霾</a></li><li class="lvl3"><a href="#h20">一些应对策略</a></li><li class="lvl2"><a href="#h21">总结和未来展望</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l3" data-h="h7"></i><i class="b l3" data-h="h8"></i><i class="b l3" data-h="h9"></i><i class="b l2" data-h="h10"></i><i class="b l3" data-h="h11"></i><i class="b l3" data-h="h12"></i><i class="b l3" data-h="h13"></i><i class="b l3" data-h="h14"></i><i class="b l2" data-h="h15"></i><i class="b l3" data-h="h16"></i><i class="b l3" data-h="h17"></i><i class="b l3" data-h="h18"></i><i class="b l3" data-h="h19"></i><i class="b l3" data-h="h20"></i><i class="b l2" data-h="h21"></i></span></button><div class="body"><p><img alt="" src="../../assets/posts/claude-code-review/efd52301c1eb.webp"></p>
@@ -190,6 +190,7 @@ AI：好的，让我们拆解一下需要完成的任务：
 <h2 id="h21">总结和未来展望</h2>
 <p>一个半月的 CC 使用经历，有惊喜，有担忧，有对未来的憧憬，也有对现实的无奈。但总的来说，我感受到的是自己切实地站在在历史的进程之中。Vibe coding 不仅仅是一种新的编程方式，更是一种全新的思维模式。它要求我们重新思考什么是编程、什么是创造、什么是价值。在这个 AI 与人类共舞的时代，愿我们都能找到属于自己的节奏。</p>
 <p>最后，回到文章开头的那句话：在 vibe coding 时代，千万别让工具把自己逼死。技术是为人服务的，不是相反；工作是让人有机会追寻和思考自我的，而不是让自己迷失。保持这份清醒，可能比掌握任何具体的技巧都更重要。</p></div>
+<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸阅读</a>
 <aside class="legal-note" data-legal="1"><span class="legal-text">本文版权归原作者与译者所有，全文搬运仅供检索与离线阅读。</span><a class="legal-link" href="https://t.me/patrick12138" rel="noopener">不希望被转载？联系我删除</a></aside>
 <nav class="related" aria-label="相关阅读"><span class="related-k">相关阅读</span><ul><li><a href="../claude-code-auto-memory/">Claude Code 是如何记住你的项目的？</a></li><li><a href="../codex-workflow/">Codex 与 AI 编程工作流</a></li></ul></nav>
 <nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../can-ai-replace-programmers/"><span class="pager-k">← 上一篇</span><span class="pager-t" title="AI 究竟能不能替代程序员?">AI 究竟能不能替代程序员?</span></a><a class="pager-next" href="../sora-android-28-days/"><span class="pager-k">下一篇 →</span><span class="pager-t" title="我们如何使用 Codex 在 28 天内构建 Android 版 Sora">我们如何使用 Codex 在 28 天内构建 Android 版 Sora</span></a></nav>
@@ -197,7 +198,7 @@ AI：好的，让我们拆解一下需要完成的任务：
 <footer><div class="wrap"><div class="foot-in">
   © 2023–2026 <a href="../../about/">patrick</a>
 </div></div></footer>
-<script src="../../assets/site.js?v=328ef3d0"></script>
+<script src="../../assets/site.js?v=d99b2ef5"></script>
 <button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>
 (function(){

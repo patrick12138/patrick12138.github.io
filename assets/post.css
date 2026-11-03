@@ -261,3 +261,43 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 .related a{font-size:.94rem;line-height:1.5;color:var(--text-muted);text-decoration:none;
   transition:color .15s}
 .related a:hover{color:var(--accent)}
+
+/* ─── 沉浸阅读 ─────────────────────────────────────────────
+   只留标题、正文、目录；顶栏/元信息/来源/文末块/页脚全部退场。
+   按钮和文末出口由 add_toc.ensure_readmode() 注入。 */
+.read-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  margin-left:10px;padding:0;border:0;background:transparent;color:var(--text-faint);cursor:pointer;
+  vertical-align:-4px;transition:color .15s,opacity .18s}
+.read-btn:hover{color:var(--accent)}
+.read-btn svg{display:block}
+.read-exit{display:none}
+
+html.readmode .bar,
+html.readmode .article .meta,
+html.readmode .source,
+html.readmode .related,
+html.readmode .pager,
+html.readmode .back,
+html.readmode footer,
+html.readmode .to-top,
+html.readmode .readpos-tip{display:none!important}
+html.readmode .article{padding:34px 0 40px}
+html.readmode{scrollbar-width:none}
+html.readmode::-webkit-scrollbar{width:0;height:0}
+html.readmode .read-btn{position:fixed;top:14px;right:16px;z-index:70;margin:0;width:32px;height:32px;
+  color:var(--text-muted);opacity:.35;border-radius:999px}
+html.readmode .read-btn:hover,
+html.readmode .read-btn:focus-visible{opacity:1;color:var(--accent)}
+html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;
+  color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);
+  padding-bottom:2px;transition:color .15s,border-color .15s}
+html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--accent)}
+/* 第二层：滚动即隐（跟常规相反），轻点空白/移动鼠标才召回 */
+html.readmode .read-btn,
+html.readmode .toc-fab,
+html.readmode .toc-bars{transition:opacity .14s ease}
+html.readmode.no-ui .read-btn,
+html.readmode.no-ui .toc-fab,
+html.readmode.no-ui .toc-bars{opacity:0!important;pointer-events:none!important}
+@media (min-width:1024px){html.readmode .toc-bars{top:32px}}
+@media (max-width:720px){html.readmode .read-btn{top:10px;right:12px}}

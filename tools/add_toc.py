@@ -125,6 +125,35 @@ def inject_top_btn(doc):
     return doc
 
 
+READ_BTN = ('<button class="read-btn" id="readBtn" type="button" aria-label="沉浸阅读" '
+            'title="沉浸阅读" aria-pressed="false">'
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+            '<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9'
+            'M20 15v3.5A1.5 1.5 0 0 1 18.5 20H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg>'
+            '</button>')
+READ_EXIT = '<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸阅读</a>'
+
+
+def ensure_readmode(doc):
+    """注入「沉浸阅读」按钮与文末出口（幂等）。
+
+    按钮放在 .meta 行右端；进沉浸后 .meta 会被隐藏，所以 JS 会把它移到 body 上固定显示。
+    文末出口放在版权提示/相关阅读之前，普通态 display:none。
+    """
+    if 'id="readBtn"' in doc:
+        return doc
+    m = re.search(r'(<div class="meta">.*?)</div>', doc, re.S)
+    if m:
+        doc = doc[:m.end(1)] + READ_BTN + "</div>" + doc[m.end():]
+    for anchor in ('<aside class="legal-note"', '<nav class="related"', '<nav class="pager"', '<a class="back"'):
+        i = doc.find(anchor)
+        if i > 0:
+            doc = doc[:i] + READ_EXIT + "\n" + doc[i:]
+            break
+    return doc
+
+
 def ensure_icon(doc):
     """文章页补 favicon / theme-color（幂等）：老页面不用整篇重建也能带上。"""
     if "favicon.svg" in doc:
@@ -175,6 +204,7 @@ def process(path):
     doc = inject_top_btn(doc)
     doc = wrap_tables(doc)
     doc = ensure_icon(doc)
+    doc = ensure_readmode(doc)
     doc, toc_parts = build_toc(doc)
     li, bars = toc_parts if toc_parts else ("", "")
     doc = doc.replace("</body>", "<script>" + BRAND_JS + "</script>\n</body>", 1)

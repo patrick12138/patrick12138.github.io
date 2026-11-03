@@ -228,3 +228,89 @@ window.siteUI = window.siteUI || {
     })(boxes[i]);
   }
 })();
+
+/* 沉浸阅读：只留标题、正文、目录。状态记在 localStorage，跨文章跨刷新保持。
+   进入时尝试真全屏；系统手势/Esc 退出全屏后同步退出沉浸态。 */
+(function () {
+  var KEY = 'readmode';
+  var btn = document.getElementById('readBtn');
+  if (!btn || !document.querySelector('.article')) return;
+
+  var html = document.documentElement;
+  var meta = document.querySelector('.article .meta');
+  var home = btn.parentNode;                    // 普通态：留在 .meta 里
+  var exitLink = document.getElementById('readExit');
+  var wantFullscreen = false;
+
+  function paint(on) {
+    html.classList.toggle('readmode', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', on ? '退出沉浸阅读' : '沉浸阅读');
+    btn.setAttribute('title', on ? '退出沉浸阅读（Esc）' : '沉浸阅读');
+    if (on) { document.body.appendChild(btn); } else if (home) { home.appendChild(btn); }
+  }
+
+  function save(on) { try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {} }
+
+  function enter() {
+    paint(true);
+    save(true);
+    wantFullscreen = true;
+    try {
+      if (html.requestFullscreen) html.requestFullscreen().catch(function () {});
+      else if (html.webkitRequestFullscreen) html.webkitRequestFullscreen();
+    } catch (e) {}
+  }
+
+  function leave() {
+    html.classList.remove('no-ui');
+    clearTimeout(hideTimer);
+    paint(false);
+    save(false);
+    wantFullscreen = false;
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
+    } catch (e) {}
+  }
+
+  function toggle() { html.classList.contains('readmode') ? leave() : enter(); }
+
+  btn.addEventListener('click', toggle);
+  if (exitLink) exitLink.addEventListener('click', function (e) { e.preventDefault(); leave(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && html.classList.contains('readmode') && !document.fullscreenElement) leave();
+  });
+
+  // 用户用系统手势/键退出全屏时，同步退出沉浸态，别“退一半”
+  function onFsChange() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement &&
+        wantFullscreen && html.classList.contains('readmode')) leave();
+  }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+
+  /* 第二层：沉浸态里「手在动就退场」——滚动立刻隐藏控件，静止也不回来；
+     轻点空白处（移动端）或移动鼠标（桌面）才临时召出。 */
+  var hideTimer = null;
+  function uiOff() { if (html.classList.contains('readmode')) html.classList.add('no-ui'); }
+  function uiOn(ms) {
+    if (!html.classList.contains('readmode')) return;
+    html.classList.remove('no-ui');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(uiOff, ms || 2600);
+  }
+  window.addEventListener('scroll', uiOff, { passive: true });
+  document.addEventListener('mousemove', function () { uiOn(2600); }, { passive: true });
+  document.addEventListener('click', function (e) {
+    if (!html.classList.contains('readmode')) return;
+    if (e.target.closest('a,button,input,pre,table')) return;   // 点在可交互元素上不拦截
+    uiOn(3000);
+  });
+
+  // 恢复上次状态（全屏必须由用户手势触发，所以这里只恢复样式）
+  var on = false;
+  try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  if (on) { paint(true); uiOn(2600); }
+})();
