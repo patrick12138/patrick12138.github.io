@@ -96,7 +96,6 @@ TOP_BTN = ('<button class="to-top" id="toTop" data-threshold="half" aria-label="
            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
            '<path d="M12 19V5M5 12l7-7 7 7"/></svg></button>')
 
-BRAND_RE = re.compile(r'<a class="brand" href="([^"]*)">patrick</a>')
 
 
 def normalize_nav(doc):

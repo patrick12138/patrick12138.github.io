@@ -95,7 +95,7 @@ window.siteUI.scrollTo = function (y) {
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update, { passive: true });
     btn.addEventListener('click', goTop);
-    update(); poke();
+    update();
   }
 
   // —— 代码块复制按钮（文章页）

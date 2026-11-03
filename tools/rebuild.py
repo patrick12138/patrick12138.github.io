@@ -12,11 +12,6 @@ import dates
 import sys
 from datetime import datetime
 
-MONTHS = {m: i + 1 for i, m in enumerate(
-    ["January", "February", "March", "April", "May", "June",
-     "July", "August", "September", "October", "November", "December"])}
-
-
 def iso(d):
     """英文长日期 → ISO；认不出来原样返回。解析逻辑在 tools/dates.py。"""
     return dates.to_iso(d)

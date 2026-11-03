@@ -18,14 +18,6 @@ TITLE = "patrick"
 DESC = "写点东西，也搬运点好东西。"
 NOW = datetime.now(timezone.utc)
 
-CN = re.compile(r"(\d{4})年(\d{1,2})月(\d{1,2})日")
-EN = re.compile(r"([A-Z][a-z]+)\s+(\d{1,2}),\s*(\d{4})")
-SHORT = re.compile(r"^(\d{1,2})月(\d{1,2})日")
-MONTHS = {m: i for i, m in enumerate(
-    ["January", "February", "March", "April", "May", "June",
-     "July", "August", "September", "October", "November", "December"], 1)}
-
-
 def parse_date(text):
     """认不出来就用当前时间（feed 必须有 pubDate）。解析逻辑在 tools/dates.py。"""
     d = dates.to_date(text)

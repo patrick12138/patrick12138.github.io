@@ -33,9 +33,6 @@ def trim_desc(s, limit=92):
     return cut.rstrip("，、；,; ") + "…"
 
 
-MONTHS = {m: i for i, m in enumerate(
-    ["January","February","March","April","May","June","July",
-     "August","September","October","November","December"], 1)}
 
 def cn_date(meta):
     """首页用短日期：2026年10月26日 → 10月26日（非当年才补年份）"""
