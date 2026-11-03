@@ -114,7 +114,7 @@ footer{padding:0 0 34px}
 /* 回到顶部：浮动控件栏的第二格（尺寸/右距来自 :root 的 --rail-*） */
 .to-top{display:flex;position:fixed;z-index:50;
   right:calc(var(--rail-right) + env(safe-area-inset-right, 0px));
-  bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom, 0px));
+  bottom:calc(var(--rail-b3) + env(safe-area-inset-bottom, 0px));
   width:var(--rail-size);height:var(--rail-size);padding:0;align-items:center;justify-content:center;
   border:0;background:transparent;color:var(--text-muted);cursor:pointer;
   opacity:0;pointer-events:none;

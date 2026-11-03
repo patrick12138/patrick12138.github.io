@@ -105,6 +105,8 @@
   .toc-list li.lvl4>a{padding-left:44px;font-size:.8rem}
   .toc-handle{display:none}
 
+  /* 轨道顺序（下→上）：目录 → 沉浸阅读 → 回到顶部。
+     回到顶部不到半程不出现，那时沉浸按钮自然就贴在目录上方。 */
   .toc-fab{display:flex;position:fixed;z-index:61;
     right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
     bottom:calc(var(--rail-b1) + env(safe-area-inset-bottom,0px));
@@ -272,7 +274,7 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
   align-items:center;justify-content:center;opacity:.85;
   transition:opacity .2s ease,color .15s;-webkit-tap-highlight-color:transparent;
   right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
-  bottom:calc(var(--rail-b3) + env(safe-area-inset-bottom,0px))}
+  bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
 @media (hover:hover){.read-open:hover{color:var(--accent);opacity:1}}
 @media (min-width:1024px){.read-open{right:12px;bottom:auto;top:56px}}   /* 与回到顶部同一右缘 */
@@ -302,3 +304,24 @@ html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--
   color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);
   padding-bottom:2px;transition:color .15s,border-color .15s}
 html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ─── 移动端：沉浸态下三个按钮依次虚化 / 依次淡出 ────────────
+   顺序（消失）：回到顶部 → 沉浸阅读 → 目录，间隔 70ms；
+   顺序（浮现）：反过来，间隔同样 70ms。 */
+@media (max-width:1023px){
+  html.readmode .to-top,
+  html.readmode .read-open,
+  html.readmode .toc-fab{opacity:.32}
+
+  /* 消失：上 → 下 */
+  html.readmode.no-ui .to-top{transition-delay:0s}
+  html.readmode.no-ui .read-open{transition-delay:.07s}
+  html.readmode.no-ui .toc-fab{transition-delay:.14s}
+
+  /* 出现：下 → 上 */
+  html.readmode:not(.no-ui) .toc-fab{transition-delay:0s}
+  html.readmode:not(.no-ui) .read-open{transition-delay:.07s}
+  html.readmode:not(.no-ui) .to-top{transition-delay:.14s}
+
+  /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
+}
