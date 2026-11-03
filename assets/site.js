@@ -299,12 +299,44 @@ window.siteUI = window.siteUI || {
     if (tip) tip.remove();
   }
   function leave() {
+    if (autoEntered) optedOut = true;
     html.classList.remove('no-ui');
     clearTimeout(hideTimer);
     keepPosition(function () { paint(false); });
     save(false);
     fsExit();
   }
+
+  /* PC 浏览器全屏（F11 / 窗口最大化按钮）无法用 Fullscreen API 事件感知，
+     只能靠视口变化推断：内高≈屏幕高、且外层高与内高几乎相等（没有浏览器 chrome）。
+     推断成“进全屏”就自动进沉浸；用户手动退出后，本次全屏期间不再自动弹回。 */
+  var autoEntered = false;      // 这次沉浸是不是被全屏自动打开的
+  var optedOut = false;         // 全屏期间用户主动退出过
+
+  function fsLike() {
+    try {
+      if (!desktop()) return false;                       // 只在桌面端启用
+      if (Math.abs(window.innerHeight - screen.height) > 2) return false;
+      return Math.abs(window.outerHeight - window.innerHeight) < 20;
+    } catch (e) { return false; }
+  }
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      var f = fsLike();
+      if (f && !html.classList.contains('readmode') && !optedOut) {
+        autoEntered = true;
+        enter();
+        save(false);              // 全屏只是环境，不算用户偏好，别写进 localStorage
+      } else if (!f) {
+        if (autoEntered && html.classList.contains('readmode')) leave();
+        autoEntered = false;
+        optedOut = false;
+      }
+    }, 220);
+  }, { passive: true });
 
   open.addEventListener('click', function () {
     html.classList.contains('readmode') ? leave() : enter();
