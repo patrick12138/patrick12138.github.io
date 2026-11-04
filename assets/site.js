@@ -38,9 +38,18 @@ window.siteUI.scrollTo = function (y) {
   if (!window.siteUI.hasPointer()) {
     var t = null;
     var sleep = function () { html.classList.add('ui-asleep'); };
+    var lastY = window.pageYOffset;
     window.addEventListener('scroll', function () {
+      var y = window.pageYOffset;
+      var down = y > lastY + 2;        // 只认真正往下滑
+      var up = y < lastY - 2;
+      lastY = y;
       if (pointerSeen) return;                       // 有鼠标就别用触摸逻辑
+      // 沉浸态：一律不因滚动出现
       if (html.classList.contains('readmode')) { sleep(); return; }
+      // 普通态：下滑才浮现，上滑立刻收起
+      if (up) { clearTimeout(t); sleep(); return; }
+      if (!down) return;                             // 微小抖动忽略
       html.classList.remove('ui-asleep');
       clearTimeout(t);
       t = setTimeout(sleep, 1500);
