@@ -342,3 +342,13 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
 
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
 }
+
+/* 移动端：沉浸按钮与另外两个统一成圆形（写在文件末尾，盖过上面的透明底/无边框） */
+@media (max-width:1023px){
+  .read-open{border-radius:999px;
+    background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);
+    border:1px solid var(--border);color:var(--text-muted)}
+  @media (hover:hover){
+    .read-open:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+  }
+}

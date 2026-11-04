@@ -141,3 +141,17 @@ html.lab-on .nav-lab{display:inline}
 }
 
 /* 回到顶部：静置 1.5s 淡出（外观与过渡都在上面那一块，这里只管 idle 态） */
+
+/* 手机 / iPad：三个浮动按钮统一成目录那种圆形（同底、同描边、同尺寸）
+   桌面保持原来的裸图标，因为那里是右缘/角落的极简位置。 */
+@media (max-width:1023px){
+  .to-top{
+    border-radius:999px;
+    background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+  }
+  @media (hover:hover){
+    .to-top:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+  }
+}
