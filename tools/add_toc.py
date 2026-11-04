@@ -14,7 +14,7 @@ import re
 import postbody
 import sys
 
-from post_snippets import BRAND_JS, JS
+from post_snippets import BRAND_JS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -221,8 +221,9 @@ def process(path):
         return False
     # 目录标记：放在 body 之前（正文起点前）
     doc = doc.replace('<div class="body">', HEAD % (li, bars) + '<div class="body">', 1)
-    # JS
-    doc = doc.replace("</body>", "<script>" + JS + "</script>\n</body>", 1)
+    # 脚本：外链（之前是把整段 JS 内联进每个页面）
+    if 'assets/post.js' not in doc:                 # 幂等：已经引过就不再插
+        doc = doc.replace("</body>", '<script src="../../assets/post.js"></script>\n</body>', 1)
     open(path, "w", encoding="utf-8").write(doc)
     return True
 

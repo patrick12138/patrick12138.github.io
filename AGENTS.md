@@ -34,8 +34,9 @@ tools/                生成器与质检脚本（手写）
                       build.py 一键构建 / md2post 转文章 / mdclean 剪藏 md 清洗管线（md2post 调用） / add_toc 目录与页脚 / gen_index 首页
                       gen_prevnext 上一篇下一篇 / gen_feed RSS+sitemap / stats 字数 / qa 体检
                       gen_legal 搬运页版权信号（canonical 指回原文 + noindex + 文末提示）
-                      home_snippets 首页内嵌 JS/图标常量（gen_index 调用）
-                      post_snippets 文章页注入的 JS 片段（add_toc 调用）
+                      post_snippets 只有 BRAND_JS（站名下拉的一小段内联脚本）
+assets/home.js            首页脚本（搜索 / 标签 / 阅读标记）
+assets/post.js            文章页脚本（目录 / 下拉 / 回顶 / 沉浸阅读）
                       optimize_assets 存量图片压缩 / test_pipeline 回归测试 / rebuild 全量重建
                       unpublish 下线与恢复
                       config.py 环境配置（vault/skills 目录；PC 用 config.local.json 覆盖，已 gitignore）

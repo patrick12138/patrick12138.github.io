@@ -30,7 +30,8 @@ PY = sys.executable   # 子进程统一用当前解释器，Windows 没有 pytho
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.join(ROOT, "tools")
-ASSETS = ("assets/base.css", "assets/home.css", "assets/post.css", "assets/site.js")
+ASSETS = ("assets/base.css", "assets/home.css", "assets/post.css",
+          "assets/site.js", "assets/home.js", "assets/post.js")
 
 
 def sh(cmd, check=True):

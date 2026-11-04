@@ -1,9 +1,4 @@
-"""首页 index.html 的内嵌常量：搜索/标签页脚本与主题切换图标。
-
-gen_index.py 生成时原样拼入，内容改这里即可。
-"""
-
-JS = """<script>
+/* 首页：搜索 / 标签页 / 阅读状态标记。由 gen_index 以 <script src> 引入。 */
 (function(){
   var tabs=document.getElementById('tabs');
   var btn=document.getElementById('searchBtn');
@@ -320,8 +315,3 @@ JS = """<script>
     });
   }
   paintReadMarks();
-
-
-</script>"""
-
-

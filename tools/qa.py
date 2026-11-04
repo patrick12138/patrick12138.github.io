@@ -87,7 +87,7 @@ def check_css_stamp():
     """页面里所有 assets/*.css?v= 必须等于文件真实内容哈希，否则浏览器会一直吃旧缓存。"""
     import hashlib
     files = {}
-    for name in ("base.css", "home.css", "post.css", "site.js"):
+    for name in ("base.css", "home.css", "post.css", "site.js", "home.js", "post.js"):
         f = os.path.join(ROOT, "assets", name)
         if os.path.exists(f):
             files[name] = hashlib.sha1(open(f, "rb").read()).hexdigest()[:8]
