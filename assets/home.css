@@ -78,13 +78,13 @@
 
 /* 阅读状态：标题左侧的进度弧（读完实心）。20px 热区，视觉只有 8px */
 .posts h2{position:relative}
-.read-mark{position:absolute;left:-21px;top:.55em;margin-top:-10px;width:20px;height:20px;
+.read-mark{position:absolute;left:-21px;top:.725em;transform:translateY(-50%);width:20px;height:20px;
   display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.read-mark::before{content:'';width:10px;height:10px;border-radius:50%;
+.read-mark::before{content:'';width:8px;height:8px;border-radius:50%;
   background:conic-gradient(var(--accent) calc(var(--p, 0) * 1%),
     color-mix(in srgb, var(--accent) 18%, transparent) 0);
-  -webkit-mask:radial-gradient(circle at center, transparent 0 2.8px, #000 3.4px);
-  mask:radial-gradient(circle at center, transparent 0 2.8px, #000 3.4px)}
+  -webkit-mask:radial-gradient(circle at center, transparent 0 2.1px, #000 2.7px);
+  mask:radial-gradient(circle at center, transparent 0 2.1px, #000 2.7px)}
 .read-mark.is-done::before{background:var(--accent);-webkit-mask:none;mask:none}
 .read-mark:focus-visible{outline:1px solid var(--accent);outline-offset:2px;border-radius:999px}
 @media (max-width:720px){.read-mark{left:-19px}}
