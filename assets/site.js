@@ -314,8 +314,8 @@ window.siteUI.scrollTo = function (y) {
     keepPosition(function () { paint(true); });
     save(true);
     fsEnter();
-    awakeFor(0);                       // 进来先保持显示；滚动再收
-    html.classList.remove('toc-asleep');
+    awakeFor(0);                       // 按钮：进来先保持显示；滚动再收
+    html.classList.add('toc-asleep');   // 目录横杠：一进沉浸就退场，只有鼠标靠右缘才出现
     document.body.classList.remove('readpos-on');
     var tip = document.querySelector('.readpos-tip');
     if (tip) tip.remove();

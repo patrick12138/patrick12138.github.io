@@ -310,7 +310,8 @@ html.ui-asleep .read-open{opacity:0!important;pointer-events:none!important}
 
 /* PC 沉浸态：目录横杠也跟着退场；鼠标移到右缘 160px 内再浮现 */
 .toc-bars{transition:opacity .34s cubic-bezier(.25,.8,.35,1)}
-html.readmode.toc-asleep .toc-bars{opacity:0!important;pointer-events:none!important;transition-delay:.24s}
+html.readmode.toc-asleep .toc-bars{opacity:0!important;pointer-events:none!important}
+html.readmode:not(.toc-asleep) .toc-bars{opacity:1!important;pointer-events:auto!important}
 /* 兜底：非沉浸态下目录横杠永远是可见的（它只在沉浸态参与退场） */
 html.ui-ready:not(.readmode) .toc-bars{opacity:1!important}
 
