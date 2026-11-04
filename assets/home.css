@@ -75,3 +75,12 @@
 /* 搜索命中高亮：只做一点点强调，不抢正文 */
 .posts mark{background:color-mix(in srgb,var(--accent) 20%,transparent);color:inherit;
   border-radius:2px;padding:0 1px}
+
+/* 阅读状态：标题左侧一个小点（读完实心，读到一半空心） */
+.posts li{position:relative}
+.posts li.is-done h2::before,
+.posts li.is-reading h2::before{content:'';position:absolute;left:-15px;top:.62em;
+  width:6px;height:6px;border-radius:50%;box-sizing:border-box}
+.posts li.is-done h2::before{background:var(--accent)}
+.posts li.is-reading h2::before{border:1px solid color-mix(in srgb,var(--accent) 65%,transparent)}
+.posts h2{position:relative}

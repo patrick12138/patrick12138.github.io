@@ -267,6 +267,17 @@ JS = """<script>
   setTimeout(function(){ if(state.q) return; if(shown>=matched.length) return;
     if(document.body.scrollHeight <= window.innerHeight + 200) loadMore(); }, 300);
 
+  /* 阅读状态标记（本机 localStorage，不同步） */
+  [].forEach.call(document.querySelectorAll('#posts li'), function (li) {
+    var a = li.querySelector('a'); if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var path = '/' + href.replace(/^\.?\//, '');
+    var v = null;
+    try { v = JSON.parse(localStorage.getItem('read:' + path) || 'null'); } catch (e) {}
+    if (!v) return;
+    li.classList.add(v.done ? 'is-done' : 'is-reading');
+  });
+
   if(state.q){ loadIdx(); } else { apply(); }   // 带 ?q= 打开时先把索引拉起来再筛
 })();
 </script>"""

@@ -419,3 +419,31 @@ window.siteUI.scrollTo = function (y) {
   setAsleep(hasPointer());
   html.classList.add('ui-ready');   // 初始状态就位后才允许显示浮动按钮（防刷新闪一下）
 })();
+
+/* 阅读状态：只记在本机 localStorage（不同步）。
+   键：read:/posts/<slug>/ = {p: 百分比, done: 是否读完, t: 时间} */
+(function () {
+  if (!document.querySelector('.body')) return;
+  var key = 'read:' + location.pathname;
+  var timer = null;
+
+  function store(v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+  function load() { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function progress() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return max <= 0 ? 1 : Math.min(1, Math.max(0, window.pageYOffset / max));
+  }
+  function onScroll() {
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      var p = Math.round(progress() * 100), cur = load();
+      var done = (cur && cur.done) || p >= 97;
+      if (!cur || done !== cur.done || Math.abs(p - (cur.p || 0)) >= 3) {
+        store({ p: done ? 100 : p, done: done, t: Date.now() });
+      }
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  var exit = document.getElementById('readExit');
+  if (exit) exit.addEventListener('click', function () { store({ p: 100, done: true, t: Date.now() }); });
+})();
