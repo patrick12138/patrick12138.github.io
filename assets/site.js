@@ -314,7 +314,9 @@ window.siteUI.scrollTo = function (y) {
     keepPosition(function () { paint(true); });
     save(true);
     fsEnter();
-    awakeFor(0);                       // 按钮：进来先保持显示；滚动再收
+    // 桌面：一进来全部收起，只有热区能唤醒；触屏：先亮 2.6 秒提示出口
+    if (hasPointer()) setAsleep(true);
+    else awakeFor(2600);
     html.classList.add('toc-asleep');   // 目录横杠：一进沉浸就退场，只有鼠标靠右缘才出现
     document.body.classList.remove('readpos-on');
     var tip = document.querySelector('.readpos-tip');
