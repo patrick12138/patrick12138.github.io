@@ -20,6 +20,24 @@ window.siteUI.scrollTo = function (y) {
 };
 
 (function () {
+  /* 全局：浮动控件的触摸节奏（首页也有回到顶部，所以不能只在文章页里做）
+     普通模式：滚动唤醒 → 静置 1.5s 收
+     沉浸模式：滚动即收（轻点中间才唤醒） */
+  var html = document.documentElement;
+  if (!window.siteUI.hasPointer()) {
+    var t = null;
+    var sleep = function () { html.classList.add('ui-asleep'); };
+    window.addEventListener('scroll', function () {
+      if (html.classList.contains('readmode')) { sleep(); return; }
+      html.classList.remove('ui-asleep');
+      clearTimeout(t);
+      t = setTimeout(sleep, 1500);
+    }, { passive: true });
+    t = setTimeout(sleep, 1500);
+  }
+})();
+
+(function () {
   var html = document.documentElement;
   var hasPointer = window.siteUI.hasPointer;
 
@@ -322,8 +340,10 @@ window.siteUI.scrollTo = function (y) {
   }, { passive: true });
 
   window.addEventListener('scroll', function () {
-    if (inRead()) { setAsleep(true); html.classList.add('toc-asleep'); return; }
-    if (!hasPointer()) awakeFor(1500);
+    // 触摸端的“滚动唤醒/沉浸即收”由文件顶部的全局逻辑统一处理；
+    // 这里只负责桌面：一滚就收 + 目录横杠同步退场
+    if (!hasPointer()) return;
+    if (inRead()) { setAsleep(true); html.classList.add('toc-asleep'); }
   }, { passive: true });
 
   document.addEventListener('click', function (e) {

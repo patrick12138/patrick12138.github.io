@@ -115,7 +115,7 @@
     background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
     border:1px solid var(--border);cursor:pointer;
     opacity:0;transform:translateY(10px) scale(.94);pointer-events:none;
-    transition:opacity .24s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
+    transition:opacity .3s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
   .toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
   .toc-fab svg{display:block}
   .toc-fab svg,.toc-fab svg *{pointer-events:none}
@@ -272,8 +272,8 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
    没有搬 DOM、没有换定位，所以不可能跳。 */
 .read-open{position:fixed;z-index:60;width:var(--rail-size);height:var(--rail-size);padding:0;border:0;
   background:transparent;color:var(--text-muted);cursor:pointer;display:inline-flex;
-  align-items:center;justify-content:center;opacity:.85;
-  transition:opacity .2s ease,color .15s;-webkit-tap-highlight-color:transparent;
+  align-items:center;justify-content:center;opacity:1;
+  transition:opacity .3s ease,color .15s;-webkit-tap-highlight-color:transparent;
   right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
   bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
@@ -300,15 +300,15 @@ html.readmode .article{padding:64px 0 40px}
 html.readmode{scrollbar-width:none}
 html.readmode::-webkit-scrollbar{width:0;height:0}
 /* 沉浸态：按钮虚化；滚动即隐，轻点再召出 */
-html.readmode .read-open{opacity:.3}
-@media (hover:hover){html.readmode .read-open:hover{opacity:.9;color:var(--accent)}}
+html.readmode .read-open{opacity:1}
+@media (hover:hover){html.readmode .read-open:hover{color:var(--accent)}}
 /* 唯一开关：沉浸/滚动时浮动控件退场。
    目录圆钮只在沉浸态跟着退；普通态常驻可点（否则会“目录打不开”） */
-html.ui-asleep .read-open,
-html.ui-asleep .to-top{opacity:0!important;pointer-events:none!important}
+html.ui-asleep .read-open{opacity:0!important;pointer-events:none!important}
+@media (max-width:1023px){html.ui-asleep .toc-fab{opacity:0!important;pointer-events:none!important}}
 
 /* PC 沉浸态：目录横杠也跟着退场；鼠标移到右缘 160px 内再浮现 */
-.toc-bars{transition:opacity .18s ease}
+.toc-bars{transition:opacity .3s ease}
 html.readmode.toc-asleep .toc-bars{opacity:0!important;pointer-events:none!important}
 
 @media (min-width:1024px){html.readmode .toc-bars{top:32px}}
@@ -324,17 +324,19 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
   /* 只给“本来就该显示”的控件上虚化值：
      回到顶部仍受半程阈值（.show）、目录圆钮仍受静置淡出（.is-active）——
      否则移动端会变成一进文章就有回到顶部，和 PC 不一致 */
-  html.readmode .to-top.show{opacity:.3}
-  html.readmode .toc-fab.is-active{opacity:.3}
-  html.readmode .read-open{opacity:.3}   /* 沉浸按钮本身常驻 */
+  html.readmode .to-top.show{opacity:1}
+  html.readmode .toc-fab.is-active{opacity:1}
+  html.readmode .read-open{opacity:1}   /* 沉浸按钮本身常驻 */
 
   /* 消失：上 → 下 */
-  html.ui-asleep .to-top{transition-delay:0s}
-  html.ui-asleep .read-open{transition-delay:.07s}
+  html.ui-asleep .toc-fab{transition-delay:0s}
+  html.ui-asleep .read-open{transition-delay:.08s}
+  html.ui-asleep .to-top{transition-delay:.16s}
 
   /* 出现：下 → 上 */
-  html.readmode:not(.ui-asleep) .read-open{transition-delay:0s}
-  html.readmode:not(.ui-asleep) .to-top{transition-delay:.07s}
+  html.readmode:not(.ui-asleep) .to-top{transition-delay:0s}
+  html.readmode:not(.ui-asleep) .read-open{transition-delay:.08s}
+  html.readmode:not(.ui-asleep) .toc-fab{transition-delay:.16s}
 
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
 }

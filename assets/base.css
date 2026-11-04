@@ -118,8 +118,9 @@ footer{padding:0 0 34px}
   width:var(--rail-size);height:var(--rail-size);padding:0;align-items:center;justify-content:center;
   border:0;background:transparent;color:var(--text-muted);cursor:pointer;
   opacity:0;pointer-events:none;
-  transition:opacity .18s ease,color .15s}
-.to-top.show{opacity:.9;pointer-events:auto}
+  transition:opacity .3s ease,color .15s}
+.to-top.show{opacity:1;pointer-events:auto}
+html.ui-asleep .to-top{opacity:0!important;pointer-events:none!important}   /* 静置 / 沉浸时收起（首页也用） */
 @media (hover:hover){.to-top:hover{opacity:1;color:var(--accent)}}
 .to-top:focus{outline:none}
 .to-top:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
