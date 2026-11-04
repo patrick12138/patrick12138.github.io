@@ -329,14 +329,16 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
   html.readmode .read-open{opacity:1}   /* 沉浸按钮本身常驻 */
 
   /* 消失：上 → 下 */
-  html.ui-asleep .toc-fab{transition-delay:0s}
-  html.ui-asleep .read-open{transition-delay:.08s}
-  html.ui-asleep .to-top{transition-delay:.16s}
+  /* 消失：从上往下 —— 回到顶部 → 沉浸 → 目录，各错开 100ms */
+  html.ui-asleep .to-top{transition-delay:0s}
+  html.ui-asleep .read-open{transition-delay:.1s}
+  html.ui-asleep .toc-fab{transition-delay:.2s}
 
   /* 出现：下 → 上 */
-  html.readmode:not(.ui-asleep) .to-top{transition-delay:0s}
-  html.readmode:not(.ui-asleep) .read-open{transition-delay:.08s}
-  html.readmode:not(.ui-asleep) .toc-fab{transition-delay:.16s}
+  /* 出现：从下往上 —— 目录 → 沉浸 → 回到顶部 */
+  html.readmode:not(.ui-asleep) .toc-fab{transition-delay:0s}
+  html.readmode:not(.ui-asleep) .read-open{transition-delay:.1s}
+  html.readmode:not(.ui-asleep) .to-top{transition-delay:.2s}
 
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
 }
