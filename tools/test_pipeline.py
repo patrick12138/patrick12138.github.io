@@ -82,6 +82,7 @@ def add_toc_idempotent():
 
 def gen_index_stable():
     idx = os.path.join(ROOT, "index.html")
+    orig = open(idx, encoding="utf-8").read() if os.path.exists(idx) else None
     subprocess.run([sys.executable, "tools/gen_index.py"], cwd=ROOT,
                    capture_output=True, check=False)
     a = md5(idx)
@@ -89,6 +90,10 @@ def gen_index_stable():
                    capture_output=True, check=False)
     b = md5(idx)
     check("gen_index 输出稳定（连生成两次一致）", a == b)
+    # 这个测试会重写 index.html，而 gen_index 不打资源戳 → 会把已打戳的首页冲掉。
+    # 跑完把原内容还原，避免「跑完测试忘了再 build」导致线上版本戳缺失。
+    if orig is not None and open(idx, encoding="utf-8").read() != orig:
+        open(idx, "w", encoding="utf-8").write(orig)
 
 
 def gen_legal_idempotent():
