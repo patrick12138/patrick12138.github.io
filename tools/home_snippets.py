@@ -71,6 +71,7 @@ JS = """<script>
   function apply(reset){
     if(reset!==false) shown=BATCH;
     restoreOrder(); scan(); paint(); setMeta(matched.length);
+    if (window.paintReadMarks) window.paintReadMarks();   // 重渲染会冲掉标记，补回来
   }
 
   function setEmpty(n){
@@ -180,6 +181,7 @@ JS = """<script>
     });
     setEmpty(shownN);
     if(sentinel) sentinel.style.display='none';
+    if (window.paintReadMarks) window.paintReadMarks();
     setMeta(shownN);
   }
 
@@ -272,7 +274,7 @@ JS = """<script>
   /* 阅读状态标记（本机 localStorage，不同步）
      · 用 slug 匹配（不比对完整路径，避免 href/路径格式差异）
      · conic-gradient 画进度弧；长按 600ms / 双击 / Enter 清除记录 */
-  function paintReadMarks() {
+  window.paintReadMarks = function () {
     var seen = {};
     try {
       for (var i = 0; i < localStorage.length; i++) {
