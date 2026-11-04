@@ -26,9 +26,11 @@ window.siteUI.scrollTo = function (y) {
   var html = document.documentElement;
   /* 桌面：光标热区统一控制 ui-asleep（首页也适用——首页没有文章页那套逻辑）。
      不依赖 matchMedia 判定：触屏没有 mousemove，这条监听自然不触发。 */
-  var pointerSeen = false;              // 只要真收到鼠标事件，就按桌面处理
+  var pointerSeen = false;              // 只有「真实鼠标」才算桌面
   if (window.siteUI.hasPointer()) { html.classList.add('ui-asleep'); pointerSeen = true; }
   document.addEventListener('mousemove', function (e) {
+    // 触屏点按会派发兼容鼠标事件，这类事件不能当成“有鼠标”
+    if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
     pointerSeen = true;
     html.classList.toggle('ui-asleep', !window.siteUI.hot(e));
   }, { passive: true });
