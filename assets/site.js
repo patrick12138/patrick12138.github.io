@@ -24,10 +24,20 @@ window.siteUI.scrollTo = function (y) {
      普通模式：滚动唤醒 → 静置 1.5s 收
      沉浸模式：滚动即收（轻点中间才唤醒） */
   var html = document.documentElement;
+  /* 桌面：光标热区统一控制 ui-asleep（首页也适用——首页没有文章页那套逻辑）。
+     不依赖 matchMedia 判定：触屏没有 mousemove，这条监听自然不触发。 */
+  var pointerSeen = false;              // 只要真收到鼠标事件，就按桌面处理
+  if (window.siteUI.hasPointer()) { html.classList.add('ui-asleep'); pointerSeen = true; }
+  document.addEventListener('mousemove', function (e) {
+    pointerSeen = true;
+    html.classList.toggle('ui-asleep', !window.siteUI.hot(e));
+  }, { passive: true });
+
   if (!window.siteUI.hasPointer()) {
     var t = null;
     var sleep = function () { html.classList.add('ui-asleep'); };
     window.addEventListener('scroll', function () {
+      if (pointerSeen) return;                       // 有鼠标就别用触摸逻辑
       if (html.classList.contains('readmode')) { sleep(); return; }
       html.classList.remove('ui-asleep');
       clearTimeout(t);
