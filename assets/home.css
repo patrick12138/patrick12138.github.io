@@ -77,8 +77,8 @@
   border-radius:2px;padding:0 1px}
 
 /* 阅读状态：标题左侧的进度弧（读完实心）。20px 热区，视觉只有 8px */
-.posts li.has-mark{position:relative}
-.read-mark{position:absolute;left:-21px;top:.1em;width:20px;height:20px;
+.posts h2{position:relative}
+.read-mark{position:absolute;left:-21px;top:.55em;margin-top:-10px;width:20px;height:20px;
   display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .read-mark::before{content:'';width:8px;height:8px;border-radius:50%;
   background:conic-gradient(var(--accent) calc(var(--p, 0) * 1%),

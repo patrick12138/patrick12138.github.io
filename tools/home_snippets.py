@@ -267,45 +267,59 @@ JS = """<script>
   setTimeout(function(){ if(state.q) return; if(shown>=matched.length) return;
     if(document.body.scrollHeight <= window.innerHeight + 200) loadMore(); }, 300);
 
-  /* 阅读状态标记（本机 localStorage，不同步）
-     · 小圆点用 conic-gradient 画进度弧（读完实心）
-     · 长按 600ms 或双击 = 清除这一篇的记录（可重读） */
-  [].forEach.call(document.querySelectorAll('#posts li'), function (li) {
-    var a = li.querySelector('a'); if (!a) return;
-    var h2 = li.querySelector('h2'); if (!h2) return;
-    var path = '/' + (a.getAttribute('href') || '').replace(/^\.?\//, '');
-    var key = 'read:' + path;
-    var v = null;
-    try { v = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
-    if (!v) return;
-
-    var m = document.createElement('span');
-    m.className = 'read-mark' + (v.done ? ' is-done' : '');
-    m.style.setProperty('--p', v.done ? 100 : Math.max(4, v.p || 0));
-    m.setAttribute('role', 'button');
-    m.setAttribute('tabindex', '0');
-    m.setAttribute('title', (v.done ? '已读完' : '读到这里') + '（长按清除记录）');
-    li.classList.add('has-mark');
-    li.insertBefore(m, a);   // h2 在 <a> 里面，标记要插在 a 之前（相对 li 定位）
-
-    function clearMark() {
-      try { localStorage.removeItem(key); } catch (e) {}
-      m.remove();
-      li.classList.remove('has-mark');
-    }
-    var hold = null;
-    m.addEventListener('pointerdown', function (e) { e.preventDefault(); hold = setTimeout(clearMark, 600); });
-    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) {
-      m.addEventListener(ev, function () { clearTimeout(hold); });
-    });
-    m.addEventListener('dblclick', clearMark);
-    m.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clearMark(); }
-    });
-  });
-
   if(state.q){ loadIdx(); } else { apply(); }   // 带 ?q= 打开时先把索引拉起来再筛
 })();
+  /* 阅读状态标记（本机 localStorage，不同步）
+     · 用 slug 匹配（不比对完整路径，避免 href/路径格式差异）
+     · conic-gradient 画进度弧；长按 600ms / 双击 / Enter 清除记录 */
+  function paintReadMarks() {
+    var seen = {};
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!k || k.indexOf('read:/') !== 0) continue;
+        var slug = k.replace('read:/posts/', '').replace(/\/$/, '');
+        var v = null;
+        try { v = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) {}
+        if (v) seen[slug] = { v: v, key: k };
+      }
+    } catch (e) { return; }
+
+    [].forEach.call(document.querySelectorAll('#posts li'), function (li) {
+      if (li.querySelector('.read-mark')) return;
+      var a = li.querySelector('a'), h2 = li.querySelector('h2');
+      if (!a || !h2) return;
+      var slug = (a.getAttribute('href') || '').replace(/\/$/, '').split('/').pop();
+      var hit = seen[slug];
+      if (!hit) return;
+
+      var m = document.createElement('span');
+      m.className = 'read-mark' + (hit.v.done ? ' is-done' : '');
+      m.style.setProperty('--p', hit.v.done ? 100 : Math.max(4, hit.v.p || 0));
+      m.setAttribute('role', 'button');
+      m.setAttribute('tabindex', '0');
+      m.setAttribute('title', (hit.v.done ? '已读完' : '读到这里') + '（长按清除记录）');
+      h2.insertBefore(m, h2.firstChild);
+
+      function clearMark() {
+        try { localStorage.removeItem(hit.key); } catch (e) {}
+        m.remove();
+      }
+      m.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); });
+      var hold = null;
+      m.addEventListener('pointerdown', function (e) { e.preventDefault(); hold = setTimeout(clearMark, 600); });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) {
+        m.addEventListener(ev, function () { clearTimeout(hold); });
+      });
+      m.addEventListener('dblclick', clearMark);
+      m.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clearMark(); }
+      });
+    });
+  }
+  paintReadMarks();
+
+
 </script>"""
 
 
