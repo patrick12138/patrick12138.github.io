@@ -115,7 +115,7 @@
     background:color-mix(in srgb,var(--bg) 88%,var(--text) 8%);color:var(--text-muted);
     border:1px solid var(--border);cursor:pointer;
     opacity:0;transform:translateY(10px) scale(.94);pointer-events:none;
-    transition:opacity .3s ease,transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
+    transition:opacity .34s cubic-bezier(.25,.8,.35,1),transform .24s cubic-bezier(.22,.61,.36,1),color .15s,border-color .15s}
   .toc-fab:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
   .toc-fab svg{display:block}
   .toc-fab svg,.toc-fab svg *{pointer-events:none}
@@ -274,7 +274,7 @@ body.readpos-on .to-top,body.readpos-on .toc-fab{opacity:0!important;transform:t
 .read-open{position:fixed;z-index:60;width:var(--rail-size);height:var(--rail-size);padding:0;border:0;
   background:transparent;color:var(--text-muted);cursor:pointer;display:inline-flex;
   align-items:center;justify-content:center;opacity:1;
-  transition:opacity .3s ease,color .15s;-webkit-tap-highlight-color:transparent;
+  transition:opacity .34s cubic-bezier(.25,.8,.35,1),color .15s;-webkit-tap-highlight-color:transparent;
   right:calc(var(--rail-right) + env(safe-area-inset-right,0px));
   bottom:calc(var(--rail-b2) + env(safe-area-inset-bottom,0px))}
 .read-open svg{display:block}
@@ -309,8 +309,8 @@ html.ui-asleep .read-open{opacity:0!important;pointer-events:none!important}
 @media (max-width:1023px){html.ui-asleep .toc-fab{opacity:0!important;pointer-events:none!important}}
 
 /* PC 沉浸态：目录横杠也跟着退场；鼠标移到右缘 160px 内再浮现 */
-.toc-bars{transition:opacity .3s ease}
-html.readmode.toc-asleep .toc-bars{opacity:0!important;pointer-events:none!important}
+.toc-bars{transition:opacity .34s cubic-bezier(.25,.8,.35,1)}
+html.readmode.toc-asleep .toc-bars{opacity:0!important;pointer-events:none!important;transition-delay:.24s}
 
 @media (min-width:1024px){html.readmode .toc-bars{top:32px}}
 html.readmode .read-exit{display:inline-block;margin:44px 0 0;font-family:var(--mono);font-size:.76rem;
@@ -329,18 +329,6 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
   html.readmode .toc-fab.is-active{opacity:1}
   html.readmode .read-open{opacity:1}   /* 沉浸按钮本身常驻 */
 
-  /* 消失：上 → 下 */
-  /* 消失：从上往下 —— 回到顶部 → 沉浸 → 目录，各错开 100ms */
-  html.ui-asleep .to-top{transition-delay:0s}
-  html.ui-asleep .read-open{transition-delay:.1s}
-  html.ui-asleep .toc-fab{transition-delay:.2s}
-
-  /* 出现：下 → 上 */
-  /* 出现：从下往上 —— 目录 → 沉浸 → 回到顶部 */
-  html.readmode:not(.ui-asleep) .toc-fab{transition-delay:0s}
-  html.readmode:not(.ui-asleep) .read-open{transition-delay:.1s}
-  html.readmode:not(.ui-asleep) .to-top{transition-delay:.2s}
-
   /* 没有“回到顶部”时（不到半程），沉浸按钮自然落在目录正上方，不留空档 */
 }
 
@@ -353,3 +341,18 @@ html.readmode .read-exit:hover{color:var(--accent);border-bottom-color:var(--acc
     .read-open:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
   }
 }
+
+/* 浮动控件退场/出现的错开节奏（桌面与移动端共用） */
+/* 消失：上 → 下 */
+/* 消失：从上往下 —— 回到顶部 → 沉浸 → 目录，各错开 100ms */
+html.ui-asleep .to-top{transition-delay:0s}
+html.ui-asleep .read-open{transition-delay:.12s}
+html.ui-asleep .toc-fab{transition-delay:.24s}
+
+/* 出现：下 → 上 */
+/* 出现：从下往上 —— 目录 → 沉浸 → 回到顶部 */
+html.readmode:not(.ui-asleep) .toc-fab{transition-delay:0s}
+html.readmode:not(.ui-asleep) .read-open{transition-delay:.12s}
+html.readmode:not(.ui-asleep) .to-top{transition-delay:.24s}
+
+
