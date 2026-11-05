@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Notion 创始人 Ivan Zhao 拆解 Notion 的四个阶段：从早期图形编程到通用数据库，再到 AI 转型；迈入第四章后，Notion 将成为全网所有 Agent 的最佳上下文系统。">
+<title>The Next Era of Notion</title>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="patrick">
+<meta property="og:title" content="The Next Era of Notion">
+<meta property="og:description" content="Notion 创始人 Ivan Zhao 拆解 Notion 的四个阶段：从早期图形编程到通用数据库，再到 AI 转型；迈入第四章后，Notion 将成为全网所有 Agent 的最佳上下文系统。">
+<meta property="og:url" content="https://patrick12138.github.io/posts/the-next-era-of-notion/"><link rel="canonical" href="https://x.com/ivanhzhao/status/2118030537101361168" data-legal="1"><meta name="robots" content="noindex,follow" data-legal="1">
+<link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=7bb478d8">
+<link rel="stylesheet" href="../../assets/post.css?v=97c2f807">
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost" class="on">搬运</a><a role="menuitem" href="../../?tab=own" class="">个人</a></div></div>
+  <nav class="nav"><a href="../../lab/" class="nav-lab">Lab</a><a href="../../about/">About</a><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg><svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>The Next Era of Notion</h1><button class="read-open" id="readOpen" type="button" aria-label="沉浸阅读" title="沉浸阅读"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5A1.5 1.5 0 0 1 18.5 20H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg></button>
+<div class="meta">2026年11月5日 · Ivan Zhao · 搬运 · <span class="stats">931 字 · 约 4 分钟</span></div>
+<aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/ivanhzhao/status/2118030537101361168">https://x.com/ivanhzhao/status/2118030537101361168</a></aside>
+
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Chapter 1: 2013-2018</a></li><li class="lvl2"><a href="#h2">Chapter 2: 2018-2022</a></li><li class="lvl2"><a href="#h3">Chapter 3: 2022-2026</a></li><li class="lvl2"><a href="#h4">Chapter 4: 2026-?</a></li><li class="lvl2"><a href="#h5">Changing how we work ourselves</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i></span></button><div class="body"><p><img alt="The Next Era of Notion" src="../../assets/posts/the-next-era-of-notion/bc5139ccdd76.webp"></p>
+<p>I love David Bowie. “Sound and Vision” was our wedding song. But what I love most is his courage to keep reinventing himself. He had four or five distinct chapters. So did Miles Davis, Pablo Picasso, and Georgia O’Keeffe. They’re my heroes.</p>
+<p>I think of Notion’s story in chapters too.</p>
+<h2 id="h1">Chapter 1: 2013-2018</h2>
+<p>A lot of people forget Notion’s early struggles. Our founding idea was romantic but vague: “fix the sorry state of personal computing and let everyone, not just programmers, shape their own tools for thought.” (<a href="https://web.archive.org/web/20170425163051/http://ivzhao.com/notion_background">Internet Archive link to our founding memo.</a>)</p>
+<p>Figuring out what that meant took five years. We built a visual programming app and threw it away. Then we built a productivity app and threw that away too. At one point we sublet our apartments in San Francisco and moved to Kyoto to start over. The craft and joy of building tools for others kept us going.</p>
+<p>Eventually we launched Notion 1.0, got some early traction, and survived.</p>
+<h2 id="h2">Chapter 2: 2018-2022</h2>
+<p>The breakthrough came with Notion 2.0, when we added general-purpose databases. With docs and databases together, companies had one place to work and collaborate. This time we found real product market fit, growth taking off, and a community that loved our product to spread it around the world. Today roughly 70% of our business is still outside the US.</p>
+<p><img alt="Early Notion Community in Asia." src="../../assets/posts/the-next-era-of-notion/e2d57cdc5475.webp"><br>
+<em>Early Notion Community in Asia.</em></p>
+<h2 id="h3">Chapter 3: 2022-2026</h2>
+<p>In late 2022, we dove headfirst into AI. To be honest, it started as a defensive move. We didn’t want another startup to become “Notion, but with AI,” so we decided to disrupt ourselves. First came AI Writer (a GPT wrapper!), then Enterprise Search, and then AI Meeting Notes. We wanted AI to do more, which led to Notion 3.0 and Agents. We quickly saw how much more useful AI can be when it understood a customer’s context.</p>
+<p>Each chapter so far has lasted about four years. This year, we started to feel the market pulling us to the next one.</p>
+<h2 id="h4">Chapter 4: 2026-?</h2>
+<p>When we launched Agents about a year ago, people started asking Notion agents to do the work instead of typing it themselves. Today, roughly half the pages in Notion are created by agents. AI usage inside Notion is up 9x this year.</p>
+<p><img alt="AI usage inside Notion is up 9x this year." src="../../assets/posts/the-next-era-of-notion/041146944887.webp"><br>
+<em>AI usage inside Notion is up 9x this year.</em></p>
+<p>9x is great, but that turned out to be the smaller signal. Each week, more agents come online, built by other companies for other jobs. All of them need the right context to do the work well, and a lot of these agents choose Notion to store and collaborate on that context. As a result, our MCP volume is up roughly 60x this year.</p>
+<p><img alt="MCP volume for Notion is up 60x this year." src="../../assets/posts/the-next-era-of-notion/9a4b6411543e.webp"><br>
+<em>MCP volume for Notion is up 60x this year.</em></p>
+<p>This pull clearly points to a gap in the market. Even the smartest agent isn’t much use without the right context. Big tech companies like <a href="https://stripe.dev/blog/meet-stripes-knowledge-ai-platform">Stripe</a>, <a href="https://www.uber.com/au/en/blog/efficient-software-factory/">Uber</a>, and <a href="https://engineering.fb.com/2026/04/06/developer-tools/how-meta-used-ai-to-map-tribal-knowledge-in-large-scale-data-pipelines/">Meta</a> saw this early and built their own context systems to get the most of their tokens. Every other business will soon need one too.</p>
+<p>This puts us in a unique spot. In the first two chapters of Notion’s story, we gave people a place to keep and collaborate on their business context. In our third chapter, we built state-of-the-art agents &amp; harnesses to work with that context. Very few companies have gone this deep on both, and can bridge AI, data, and UI.</p>
+<p>Our next chapter brings them together. Notion is the best context system for every agent on the planet, and our own agents keep that context up to date for people and other agents. We believe this is the biggest missing piece in diffusing AI today. It’s our mission to bring this to every business, because we believe no one should be left behind.</p>
+<h2 id="h5">Changing how we work ourselves</h2>
+<p>Every new chapter requires us to change ourselves. It takes courage and new perspectives to build new products, bring in new leaders, and sometimes even rethink our business model. The playbook that got us here won’t work for what’s next. Over the past few months, we’ve made some changes at Notion:</p>
+<ul>
+<li><a href="https://www.notion.com/blog/meet-max-schoening-notion-cto">We brought tech under one leader, Max.</a> The lines between design, product and engineering were already blurry, so we leaned in and created one “building” org. I’m grateful to Fuzzy for his excellent leadership of engineering over the past three years.</li>
+<li>Earlier this year, we split Marketing into creative and storytelling (now closer to product) and revenue marketing (now closer to sales). That’s a big reason our <a href="https://x.com/NotionHQ/status/2098548738503610677?s=20">memes</a>, social and <a href="https://x.com/gautham_city_/status/2114764957485068631?a=PHjgXgJmgS0DOqGVerE&amp;s=20">billboards</a> are more in sync with our product vision, and why our field enablement can unlock all the changes and experiments in our recent sales motions.</li>
+<li>Finally, we're evolving our Finance organization. In the tokenomics era, we've had to update our cadence to keep up with the dynamism of models releases. Earlier this year, we went from monthly finance reviews to multiple times a week. We recently kicked off a search for a new CFO who will help steer us through this next chapter. I'm very grateful to Rama, who diligently made Notion Finance into a world-class, well-oiled machine these past four years.</li>
+</ul>
+<p>This is my 13th year at Notion.</p>
+<p>Thirteen years into his career, David Bowie was about to move to Germany and start his “Berlin Era,” one of his creative peaks. The next year, he released the song we played at our wedding: “Sound and Vision.”</p>
+<p><img alt="David Bowie's Berlin Trilogy: Low (1977), &quot;Heroes&quot; (1977), Lodger (1979). One of his creative peaks." src="../../assets/posts/the-next-era-of-notion/b2e27598ba02.webp"><br>
+<em>David Bowie's Berlin Trilogy: Low (1977), "Heroes" (1977), Lodger (1979). One of his creative peaks.</em></p></div>
+<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸阅读</a>
+<aside class="legal-note" data-legal="1"><span class="legal-text">本文版权归原作者与译者所有，全文搬运仅供检索与离线阅读。</span><a class="legal-link" href="https://t.me/patrick12138" rel="noopener">不希望被转载？联系我删除</a></aside>
+<nav class="related" aria-label="相关阅读"><span class="related-k">相关阅读</span><ul><li><a href="../something-big-is-happening/">Something Big Is Happening</a></li><li><a href="../claude-code-team-review/">How the Claude Code team does code review</a></li><li><a href="../how-to-be-good-at-research/">how to be good at research</a></li></ul></nav>
+<nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../weight-space-programming/"><span class="pager-k">← 上一篇</span><span class="pager-t" title="MIT让GPT-6 Astra直接修改Qwen权重！数学成绩飙升">MIT让GPT-6 Astra直接修改Qwen权重！数学成绩飙升</span></a></nav>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2023–2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script src="../../assets/site.js?v=2eede4bb"></script>
+<script src="../../assets/post.js?v=cf7b8d3d"></script>
+<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+</body>
+</html>
