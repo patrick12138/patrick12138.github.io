@@ -14,6 +14,28 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# —— 白名单：人工确认过、决定不修的存量告警 ——
+# (slug, 类别, 说明包含片段或 None)。类别：table=表格可读性；privacy=脱敏软提醒（邮箱/求职痕迹）。
+# 只对 P1/P2 生效，P0 永远不豁免。加白名单时在此登记并写一句理由。
+IGNORED = [
+    ("ai-industry-watch", "table", None),          # 数据本身长，表格结构没问题
+    ("claude-code-team-review", "table", None),    # 同上
+    ("dsh-custom-provider", "table", None),        # 同上
+    ("how-to-ask-questions", "privacy", None),     # ESR 原文自带的公开联系邮箱，非隐私
+    ("html-artifact", "privacy", None),            # 自己的 lab 页，「面试话术」是功能名不是求职痕迹
+]
+
+
+IGNORED_HITS = [0]
+
+
+def ignored(slug, kind, desc=""):
+    for s, k, d in IGNORED:
+        if s == slug and k == kind and (not d or d in desc):
+            IGNORED_HITS[0] += 1
+            return True
+    return False
+
 CHECKS = [
     # (级别, 说明, 正则)
     ("P0", "残留 markdown 标题 ##", r"(?<![\w#])#{2,}\s+\S"),
@@ -167,7 +189,8 @@ def check_tables():
                 for cell in c:
                     txt = re.sub(r"<[^>]+>", "", cell).strip()
                     if len(txt) > 90:
-                        bad.append((slug, "表格%d 有 %d 字的单元格" % (ti, len(txt)), "P1"))
+                        if not ignored(slug, "table"):
+                            bad.append((slug, "表格%d 有 %d 字的单元格" % (ti, len(txt)), "P1"))
                         break
     return bad
 
@@ -211,6 +234,8 @@ def check_privacy():
                 hard.append((slug, name, text[max(0, m.start() - 20):m.start() + 24].strip()))
         for name, pat in PRIVACY_SOFT:
             for m in re.finditer(pat, text):
+                if ignored(slug, "privacy", name):
+                    continue
                 soft.append((slug, name, text[max(0, m.start() - 16):m.start() + 20].strip()))
     return hard, soft
 
@@ -299,6 +324,8 @@ def main():
 
     print("\n汇总：P0=%d  P1=%d  P2=%d（共 %d 篇）"
           % (total["P0"], total["P1"], total["P2"], len(paths)))
+    if IGNORED_HITS[0]:
+        print("· 白名单豁免 %d 条存量告警（登记在 qa.py 的 IGNORED）" % IGNORED_HITS[0])
     if total["P0"]:
         print("✗ 有 P0 问题，先修再上线")
         sys.exit(1)
