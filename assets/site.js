@@ -189,13 +189,11 @@ window.siteUI.scrollTo = function (y) {
 })();
 
 /* 阅读位置记忆：只存本地（localStorage），按文章路径记「当前标题 + 比例」
-   刷新、关掉重开都能回到那个标题；从站内点进来则从顶部开始。 */
+   刷新、重开、从首页/别的文章点回来都能续读；带 #锚点 的链接以锚点为准。 */
 (function () {
   var body = document.querySelector('.body');
   if (!body || !window.localStorage) return;
   var key = 'readpos:' + location.pathname;
-  var fromInside = false;
-  try { fromInside = document.referrer && document.referrer.indexOf(location.origin) === 0; } catch (e) {}
   var heads = function () {
     return [].slice.call(body.querySelectorAll('h2[id],h3[id],h4[id]'));
   };
@@ -221,10 +219,11 @@ window.siteUI.scrollTo = function (y) {
 
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
-  if (!saved || fromInside || location.hash) return;
+  if (!saved || location.hash) return;
   // 只恢复 30 天内的位置，且确实读到有内容的地方
   if (Date.now() - (saved.t || 0) > 30 * 864e5) return;
   if (saved.ratio < 0.03) return;
+  if (saved.ratio > 0.97) return;   // 读完了就从头开始，别把人扔到文末
 
   function restore() {
     var y = 0, el = saved.id ? document.getElementById(saved.id) : null;
