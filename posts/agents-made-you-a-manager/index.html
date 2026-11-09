@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="The skills for managing agents are pretty much the skills for managing a team, and you don&#x27;t need to be a manager to learn them.">
+<title>Your coding agents made you a manager</title>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="patrick">
+<meta property="og:title" content="Your coding agents made you a manager">
+<meta property="og:description" content="The skills for managing agents are pretty much the skills for managing a team, and you don&#x27;t need to be a manager to learn them.">
+<meta property="og:url" content="https://patrick12138.github.io/posts/agents-made-you-a-manager/"><link rel="canonical" href="https://x.com/addyosmani/status/2119332146485891501" data-legal="1"><meta name="robots" content="noindex,follow" data-legal="1">
+<link rel="alternate" type="application/rss+xml" title="patrick" href="../../feed.xml">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1319" media="(prefers-color-scheme: dark)"><link rel="stylesheet" href="../../assets/base.css?v=7bb478d8">
+<link rel="stylesheet" href="../../assets/post.css?v=97c2f807">
+</head>
+<body>
+<div class="bar"><div class="bar-in">
+  <div class="brandset" id="brandSet"><button class="brand-btn" id="brandBtn" aria-haspopup="true" aria-expanded="false">patrick<svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="brand-menu" role="menu"><a role="menuitem" href="../../?tab=all">全部文章</a><a role="menuitem" href="../../?tab=repost" class="on">搬运</a><a role="menuitem" href="../../?tab=own" class="">个人</a></div></div>
+  <nav class="nav"><a href="../../lab/" class="nav-lab">Lab</a><a href="../../about/">About</a><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg><svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></nav>
+</div></div>
+<div class="wrap"><article class="article"><h1>Your coding agents made you a manager</h1><button class="read-open" id="readOpen" type="button" aria-label="沉浸阅读" title="沉浸阅读"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5A1.5 1.5 0 0 1 18.5 20H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg></button>
+<div class="meta">2026年11月8日 · Addy Osmani · 搬运 · <span class="stats">3,739 字 · 约 16 分钟</span></div>
+<aside class="source"><span class="src-label">搬运自</span><a class="src-url" href="https://x.com/addyosmani/status/2119332146485891501">https://x.com/addyosmani/status/2119332146485891501</a></aside>
+
+<nav class="toc" id="toc" aria-label="文章目录" aria-hidden="true"><ol class="toc-list" id="tocList"><li class="lvl2"><a href="#h1">Give it a way to check its work</a></li><li class="lvl2"><a href="#h2">Set clear context</a></li><li class="lvl2"><a href="#h3">Make every correction compound</a></li><li class="lvl2"><a href="#h4">Let it decide, and enforce only what can&#x27;t bend</a></li><li class="lvl2"><a href="#h5">Plan before it builds</a></li><li class="lvl2"><a href="#h6">Steer early, reset fast</a></li><li class="lvl2"><a href="#h7">Delegate the task, never the judgment</a></li><li class="lvl2"><a href="#h8">Design the run that doesn&#x27;t need you</a></li><li class="lvl2"><a href="#h9">Scale verification, not attention</a></li><li class="lvl2"><a href="#h10">Decide what not to build</a></li><li class="lvl2"><a href="#h11">Where the analogy breaks</a></li><li class="lvl2"><a href="#h12">You don&#x27;t need the title</a></li></ol></nav><button class="toc-fab" id="tocFab" aria-label="目录" aria-expanded="false" aria-controls="toc"><svg class="toc-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.6" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.6" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button><button class="toc-handle" id="tocHandle" aria-label="目录" tabindex="-1"><span class="toc-bars"><i class="b l2" data-h="h1"></i><i class="b l2" data-h="h2"></i><i class="b l2" data-h="h3"></i><i class="b l2" data-h="h4"></i><i class="b l2" data-h="h5"></i><i class="b l2" data-h="h6"></i><i class="b l2" data-h="h7"></i><i class="b l2" data-h="h8"></i><i class="b l2" data-h="h9"></i><i class="b l2" data-h="h10"></i><i class="b l2" data-h="h11"></i><i class="b l2" data-h="h12"></i></span></button><div class="body"><p>The skills for managing agents are pretty much the skills for managing a team, and you don't need to be a manager to learn them.</p>
+<p>If you're spending all day with a coding agent, you are managing. You're repeatedly selecting tasks, writing instructions, delegating, following up, evaluating results, and deciding what ships. The engineers who get the most out of agents aren't necessarily the ones who are best at prompt engineering. They're the ones who learned how to manage, intentionally or otherwise.</p>
+<p>This might be an unwelcome idea. Many of the engineers I admire took an individual contributor (IC) career path because they want to stay close to the work. They've seen friends become managers and disappear into their calendars. But I'm not telling you to become a manager like that. I'm using "management" in a specific sense: producing good outcomes by enabling others' work. And I'm certainly not saying agents are a substitute for managers or colleagues.</p>
+<p>Every gripe you have about bad managers is a bug report for interacting with agents. Think about handoffs. If you've experienced a bad one you may have got an ask that felt vague, lacked context or just had expectations shift a lot. The good news for ICs is that since you've been on the receiving end of handoffs for years, you might know what a good one looks like.</p>
+<p>I've written before that your coding agents need a manager. I've also written about the quiet risk of delegation, cognitive surrender. This piece compares good engineering managers' practices with what we've learned from using and creating Claude Code. The sections are roughly ordered by impact, so that the most high-leverage habit comes first.</p>
+<h2 id="h1">Give it a way to check its work</h2>
+<p>Best practice: Provide the agent with a mechanism to validate its work, like a test suite, build, or screenshot, and have it show you the results as proof.</p>
+<p>Anti-pattern: Taking "looks done" as confirmation. This forces you to do all the validation, becoming the agent's test suite.</p>
+<p>Ask an experienced manager how they can be confident their team is producing good work without reading everything, and they'll talk about guardrails. CI, code review, dashboards, on-call, etc. Inexperienced managers who don't build guardrails end up validating everything themselves, and within a quarter they're the bottleneck. The same is true for agents. As the Claude Code best-practices guide explains, agents stop when the work looks done. If there's no validation, "looks done" is the only validation the agent has. Providing a mechanism to validate the work allows the agent to do the work, run the validator, see the failure, and correct it on its own. For a UI change, this can mean actually opening the page in a browser and iterating until it works and looks good.</p>
+<p>The validation mechanism can be almost anything, as long as it's something that yields a definitive pass/fail result. Think tests, build exit codes, linters, diff scripts, and screenshots. The guide notes that the command that runs these validations is the single most useful line you can have in your CLAUDE.md, the instructions file the agent starts each session with. Once you have the validation mechanism, here are some ways you can bring it into your workflow:</p>
+<ul>
+<li>Ask. "Run the auth tests after, and continue until they pass."</li>
+<li>Set a goal. With /goal, a separate model runs a condition check after every turn, which is most useful when doing long background work.</li>
+<li>Enforce. A Stop hook can prevent the turn from completing until the typecheck passes.</li>
+<li>Have it reviewed. /code-review sends the diff to a new subagent (which didn't see your conversation) for review, like how authors don't approve their own PRs.</li>
+</ul>
+<p>You can even control the scope of the review. If you ask it to find problems, it will always find something. But if you ask it to find correctness issues and ignore style, it will do that. This is how good managers learn to ask for feedback, as well. Most of the functionality in the Claude Code toolkit is all about tightening this loop. Skills, hooks, subagents, and MCP all exist to bridge the gap between doing the work and validating the work, so your focus is only on the things the agent couldn't validate. This is what experienced engineering managers do.</p>
+<h2 id="h2">Set clear context</h2>
+<p>Best practice: Provide a clear summary of what the agent can't know by inspecting the repo, including: the task's objective and why it's important, constraints, out-of-scope items, and success criteria.</p>
+<p>Anti-pattern: Passing a one-line task, while the real expectations live in your head, or padding the brief with things the agent would discover by reading the code.</p>
+<p>Effective managers provide clear descriptions of the desired outcome, constraints, and objectives. They articulate what the work should accomplish, but give the person doing the work the freedom to figure out how to do it. In the military, they call it commander's intent. At Netflix, they call it "context, not control."</p>
+<p>The challenge of working with agents is that it's hard to know what context the agent is missing. The first thing a coding agent does on every task is read your code. Current models are fantastic at picking up on your folder structure, conventions, and test set-up much faster than you could describe them.</p>
+<p>Before you write anything down, think about what the agent can figure out on its own. If the agent can read it in your code, and it would actually go read it, you don't need to say anything. Spend your words on the parts that are not in the repo - e.g. a meeting decision, someone's internal process for deploying, why this task is important, and what it means to be done this time.</p>
+<p>Let's take the example of a vague task, "make the dashboard faster", and turn it into a prompt. The numbers here are just for example.</p>
+<pre><code>Get p95 load time for the /team dashboard under 2s for orgs with 10k+ members.
+
+Why: enterprise admins open it daily, and slow loads are their top support ticket.
+
+Constraints: no schema changes; keep the API response shape.
+
+Out of scope: UI changes; caching the whole page.
+Check: run scripts/perf/team.sh and show before and after numbers.
+</code></pre>
+<p>You don't need to do this for every task. If you're doing discovery work, it's totally fine to write a generic prompt. You'll just refine a little more as you go. If you're not ready to write a prompt, have the agent interview you until it could write the spec, save that spec to a file, and then start a new session with the agent to build from that. You can use that spec to review against later.</p>
+<p>You might also need to give your agent access to other tools, like your issue tracker, error dashboard, or team chat. Treat your agent the same way you'd treat a new hire on your team. If it's a CLI tool it already knows about, like gh, you often won't need to tell it anything.</p>
+<h2 id="h3">Make every correction compound</h2>
+<p>Best practice: When you correct the same thing more than once, document it in the team's CLAUDE.md or turn it into a shared skill. Over time, check if newer models reduce the need for these corrections.</p>
+<p>Anti-pattern: Manually correcting the same thing every session or relying on tacit knowledge that only exists on your own machine.</p>
+<p>Teams that maximize the value of CLAUDE.md update it semi often and write down lessons learned from mistakes worth preventing. Some teams even mention @claude in code reviews, turning feedback into a permanent policy. Keep CLAUDE.md concise. Here are the types of things that belong in it:</p>
+<ul>
+<li>How to verify something (exact commands)</li>
+<li>Misleading areas of the code</li>
+<li>Decisions that don't exist in the repo</li>
+<li>Anything you've corrected twice</li>
+</ul>
+<p>These are all examples of the compounding nature of written information. It outlasts people changing teams and models getting replaced.</p>
+<h2 id="h4">Let it decide, and enforce only what can't bend</h2>
+<p>Best practice: Let the agent decide by default and only use hard enforcement (e.g. hooks, deny rules) for the few things that must always or never happen.</p>
+<p>Anti-pattern: You write rules in ALL CAPS, define hooks for optional preferences, or keep habits from older models long after newer models outgrew them.</p>
+<p>Andy Grove's High Output Management describes this as task-relevant maturity: the level of supervision should depend on a person's history of performance in that specific task, not their overall capability.</p>
+<p>An old piece of advice for new managers says the same thing: give people a little more latitude than you're comfortable with while backing them up and holding them accountable.</p>
+<p>Claude Code takes this and makes it explicit: prompts, CLAUDE.md, and skills are requests that the model can consider and choose to act on; hooks, deny rules, and managed settings are requirements that are always enforced. In most cases, you want the agent to make the call. There are often cases where the model, looking at real code, is better placed to judge if a guideline applies than a rule you set ahead of time. Use enforcement to set hard requirements such as "never edit the generated client" or "always run the license-header script." In particular, new terminal and VS Code sessions start in auto mode, with a classifier that will filter out unsafe behaviors like deploying to production or force pushing over someone's work.</p>
+<p>The guide's advice has two sides. If you're putting more emphasis on a CLAUDE.md line and the agent still isn't picking it up, it should be a hook. If a hook is expressing a preference instead of a requirement, it should be removed in favor of letting the agent call the shots. It's like your team deciding to retire a process that is no longer useful. This also means adjusting when you have a new model. The guide keeps a list of habits you can stop: ALL CAPS directions, "think harder" (effort is a setting now), and "don't be lazy." With current models, these tend to lead to over-enforced rules and overwork. With agents, over-process is the new micromanagement.</p>
+<h2 id="h5">Plan before it builds</h2>
+<p>Best practice: Set an agreed-upon plan before the agent starts coding, read for underlying assumptions, and partition tasks into non-overlapping parallel work.</p>
+<p>Anti-pattern: Allowing multiple agents to tackle overlapping tasks simultaneously, then spending the afternoon resolving merge conflicts and duplicated decisions.</p>
+<p>A good workflow here is to first enter plan mode and iterate on your plan until you have the right one, then delegate the coding. With a good plan, the model can often build it all in a single pass. For larger tasks, use a second session to look through the plan as a staff engineer would; it's a design review, which is the cheapest place to catch a wrong turn. When reviewing the plan, look for underlying assumptions (in a 1:1 this would be asking, "What are you unsure about?").</p>
+<p>Decomposition is increasingly being delegated to agents. /batch in Claude Code takes a big mechanical change and creates 5 to 30 tasks, displays the plan, executes them in separate worktrees (separate checkouts of the repo), and creates a PR for each one. You no longer need to divide up the work, just check the slices for overlap and make sure shared interfaces land first. Without this, you might get a false level of parallelism. Five agents taking on overlapping tasks won't lead to five times the output, it leads to one merge conflict with five authors.</p>
+<h2 id="h6">Steer early, reset fast</h2>
+<p>Best practice: Watch the first minute and steer the agent. As soon as you see it go off course, correct. If you've already made two failed attempts to correct the agent, start anew with a fresh session and better prompt.</p>
+<p>Anti-pattern: Adding a third or fourth attempt to correct the agent, instead of correcting the request.</p>
+<p>An experienced manager knows that if a capable person has a miss multiple times, the problem might be upstream with the instructions, context or scope. The agent version is explicit: as soon as the agent goes off course, hit Esc. If you've already made two failed attempts to correct the agent, clear the session and write a better prompt, incorporating the lessons you learned. A third attempt to correct the agent is mostly just more information that the model has to keep re-reading and re-processing (including failed attempts).</p>
+<p>Cheap rollback is also changing the game. /rewind rolls the code and conversation to an earlier point, making it low-risk to try a more ambitious approach first. Good managers do the same with employees: if undoing a mistake is cheap, let them try an ambitious approach. Then run the retro afterwards, and generalize the fix into CLAUDE.md if applicable.</p>
+<h2 id="h7">Delegate the task, never the judgment</h2>
+<p>Best practice: The agent does the work, you decide the important things: product calls, security boundaries, what ships. Treat every diff like you're going to get paged for it.</p>
+<p>Anti-pattern: Approving large diffs because the tests are green and the names look reasonable. This is not code review, this is code ratification.</p>
+<p>No manager can say "my report shipped that, not me." The same is true for every agent you run. I've fallen into this trap myself. I told an agent to research gaps with competitors and write local PRs to close those gaps. I read the research, skimmed the code and almost went ahead and pushed changes that added complexity for users for little gain. I had delegated the work, and almost delegated the decision as well. It's an easy trap to fall into: it's a 600-line diff, the names look reasonable, the tests are green, approve.</p>
+<p>It makes sense to split tasks this way: let agents do the style, linting, follow-ups to reviews, typical bugs and unit testing, but let humans handle security boundaries, compliance and product decisions.</p>
+<p>Coordination works the same way. An agent can keep track of handoffs, but deciding between competing requests and getting people to actually commit is still a human job.</p>
+<p>You don't need to be in the inner loop of every change. What you do need to own are the outer loops: what the constraints are, how much of the output you actually read, what evidence you keep, and what a human has to sign off on. And keep changes small, since the unit of review is the unit of comprehension.</p>
+<h2 id="h8">Design the run that doesn't need you</h2>
+<p>Best practice: Before deploying an autonomous task, define done, the self-verification, the boundaries, the guardrails, and the human approval.</p>
+<p>Anti-pattern: Starting a long-running process before bed, without a definition of done or a stopping point, and waking up the next morning to find out that your model has been working overnight on a faulty premise.</p>
+<p>Skip-level managers don't manage the work of individual engineers; they manage the work of goals, guardrails, checkpoints, and leads. AI agents are following a similar trajectory. They are already delegating parts of a task to sub-agents, and they can run autonomously on schedules, after CI failures or after new pull requests are opened. The frontier is self-governing systems that can autonomously start, self-verify, and only call for human intervention when decisions are needed.</p>
+<p>The role shifts from controlling the session to designing your loops. The five questions to ask yourself when designing an unattended run are the same questions a good manager asks before giving a senior engineer a project and going on vacation:</p>
+<ul>
+<li>Does it know what done looks like? (Goal condition, spec file, or a failing test it has to turn green.)</li>
+<li>Does it have a self-verification mechanism? (Test suite, Stop hook, or review step.)</li>
+<li>What are its boundaries? (Permission controls, sandbox, worktree, or the one branch it's allowed to push to.)</li>
+<li>What are its guardrails? (Turn limit or spend limit.)</li>
+<li>Where does it produce output, and who approves it? (A PR or summary, and a human approval of any non-reversible actions.)</li>
+</ul>
+<p>The guide has two more habits that managers will recognize as good practices: pilot, i.e., get a batch job to run on three files, iterate the prompt, then run the rest; and watch the first few runs of anything new before you trust it unattended. Think of it as a probation period.</p>
+<h2 id="h9">Scale verification, not attention</h2>
+<p>Best practice: Scale up the use of agents only as fast as checks, goals and fresh reviewers can take over the watching, and measure quality in addition to throughput.</p>
+<p>Anti-pattern: Opening more sessions than you can review well, and measuring success by how much code the AI wrote.</p>
+<p>Managers learn their span of control pretty quickly. Past a certain number of direct reports, everyone gets less of the manager and the quality goes down. The same is true for agents. It's what I call the orchestration tax: Past the first few agents, each additional agent requires more of your attention than the last. Most days I run four or five background agents and a few local sessions, and some days that's too many.</p>
+<p>Managing lots of sessions isn't about being super-focused, it's about delegating most of the monitoring to self-evaluation, goals and new-context reviewers and reserving attention for decisions. It also helps to have notifications instead of polling and a centralized view of the background jobs. You can't scale the number of agents by monitoring more, only by needing to monitor less. Then measure the system rather than the activity. Useful metrics include cycle time for PRs, ramp up time for new employees and the frequency of reverts or rework. Measuring the percentage of AI-written code isn't a useful goal, because what you're aiming for is quality and reliability. Grove's rule of measuring with a countermeasure applies here: If you measure the number of PRs merged, then also measure reverts and rework.</p>
+<h2 id="h10">Decide what not to build</h2>
+<p>Best practice: Ask who needs it, how you'll know it worked and what would make you stop, and limit WIP.</p>
+<p>Anti-pattern: Just throwing every plausible idea into a PR; after all it's cheap to build. You'll now have a junk drawer the team needs to review, secure and maintain.</p>
+<p>The most important word a manager says is often "no." With agents, it's harder to say no. It's nearly free to start work and you can throw any plausible idea into a PR by lunch. But you'll now have a bunch of PRs that the team needs to review, secure, support and maintain. Review and validation are the scarce resources now.</p>
+<p>In fact, the old management questions matter now more than they used to. Who asked for it? How do we measure success? How do we know when to stop? If it's cheap to build the hard question is not "can we?" but "should we?"</p>
+<h2 id="h11">Where the analogy breaks</h2>
+<p>Best practice: Follow management best practices, but account for the differences in the agent model, like cheap rework, how quick they are to agree, and strengths that shift with every model release.</p>
+<p>Anti-pattern: Thinking that an agent is just like a junior developer, or that you're prepared to manage five people because you can run five agents.</p>
+<p>The analogy is a useful but imperfect one, and the best practitioners of this work are aware of where it is imperfect:</p>
+<ul>
+<li>Managing people is harder, and the skills don't transfer back. You're not prepared to manage five people because you've run five agents. There is no equivalent for motivation, conflict, career development, or months-long trust building.</li>
+<li>Rework is almost free. You can ask an agent things you would never ask of a person. If a technical debate happens at the whiteboard, the agent can build two or three options and you can compare them.</li>
+<li>Agents don't have experience, just a notebook. Auto memory only records notes on one machine. They don't transfer to your teammates' sessions. They aren't the experience and judgment you develop over the course of your career, and you need to write those lessons down for the whole team.</li>
+<li>Agents are eager and confident. If you ask a good engineer to do something wrong, they push back. Agents are more likely to do what you ask, and you're likely to overtrust them. In Wharton research on cognitive surrender, participants accepted faulty AI answers most of the time, and grew more confident. You can counter the overconfidence by asking the agent to argue against its own answer.</li>
+<li>You only have one agent archetype, and it changes every few months. Human teams have diverse skills and strengths. All your agents have the same strengths and weaknesses, which shift with each model release.</li>
+<li>You still have to train your junior devs. When agents take over the starter work junior devs need to learn the fundamentals of the craft, you have to create those reps intentionally as a manager.</li>
+<li>The human team still matters. Sometimes you can spend a day managing agents without realizing that you've crowded out the time it takes to build a cohesive team. Don't do this.</li>
+</ul>
+<h2 id="h12">You don't need the title</h2>
+<p>Best practice: Focus your effort on making good software happen: setting the context, defining done, and reviewing well.</p>
+<p>Anti-pattern: Evaluating yourself by lines of code while running under-briefed, unchecked agents.</p>
+<p>Good staff engineers have always been like this. They write the design doc. They set the context. They do a thorough review. They make the people around them better. Agents let all engineers do this on day one. They give you a crash course on management. You get feedback in minutes, not quarters. You can undo your own mistakes. The job is becoming less about writing the code and more about being the reason good code gets written.</p>
+<p>Nobody's born a great manager (or a great engineer). You build skills the same way you always have, through practice. But with agents, practice is cheap.</p>
+<p>Try these ideas:</p>
+<ul>
+<li>Every task needs a check it can run. Ask for the proof.</li>
+<li>Tell the agent what it can't see and leave out what it can.</li>
+<li>Talk through the plan before writing the code.</li>
+<li>Corrected something twice? Log it in CLAUDE.md. Repeated workflows? Turn them into skills.</li>
+<li>Two failed corrections? Restart and rephrase the prompt.</li>
+<li>Review the diff as if you'll get paged for it.</li>
+</ul>
+<p>You don't have to want to be a manager. But the engineers who do well with agents will have learned to manage along the way.</p></div>
+<a class="read-exit" id="readExit" href="#">读完 · 退出沉浸阅读</a>
+<aside class="legal-note" data-legal="1"><span class="legal-text">本文版权归原作者与译者所有，全文搬运仅供检索与离线阅读。</span><a class="legal-link" href="https://t.me/patrick12138" rel="noopener">不希望被转载？联系我删除</a></aside>
+<nav class="related" aria-label="相关阅读"><span class="related-k">相关阅读</span><ul><li><a href="../how-i-work-with-agents/">How I work with Agents</a></li><li><a href="../claude-code-team-review/">How the Claude Code team does code review</a></li><li><a href="../ai-fatigue-is-real/">AI fatigue is real and nobody talks about it</a></li></ul></nav>
+<nav class="pager" aria-label="文章导航"><a class="pager-prev" href="../night-submarine/"><span class="pager-k">← 上一篇</span><span class="pager-t" title="旧山河与新宇宙的暗道：陈春成《夜晚的潜水艇》多维诗学评传">旧山河与新宇宙的暗道：陈春成《夜晚的潜水艇》多维诗学评传</span></a></nav>
+<a class="back" href="../../">← 返回首页</a></article></div>
+<footer><div class="wrap"><div class="foot-in">
+  © 2023–2026 <a href="../../about/">patrick</a>
+</div></div></footer>
+<script src="../../assets/site.js?v=2eede4bb"></script>
+<button class="to-top" id="toTop" data-threshold="half" aria-label="返回顶部" title="返回顶部"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function(){
+  var set=document.getElementById('brandSet'); if(!set) return;
+  var btn=document.getElementById('brandBtn');
+  function close(){ set.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=set.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  document.addEventListener('click',function(e){ if(!set.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script src="../../assets/post.js?v=cf7b8d3d"></script>
+</body>
+</html>
