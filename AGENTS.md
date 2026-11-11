@@ -73,3 +73,5 @@ PC（Windows）首次：`python -m pip install pyyaml markdown pillow`；之后�
 ## 7. 算不算做完
 
 green → push → 等 30–60s → `curl` 线上并 **grep 本次新增的字符串**（只看 200 会被缓存骗）。
+
+> 觉得上下文变臃肿、或模型升级后想重新瘦身 → 读 `docs/context-diet.md`。
