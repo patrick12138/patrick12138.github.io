@@ -43,6 +43,7 @@ assets/posts/<slug>/      配图（webp，本地化）
 | 新页面设计（按钮、目录、深浅色、组件规范） | `references/design.md` |
 | 下线 / 恢复一篇文章 | `references/unpublish.md` |
 | **上线前脱敏**（公司名、证件、联系方式、求职痕迹） | `references/privacy.md` |
+| **撞到怪事**（改了没生效、看着像 bug 其实是特性） | `references/pitfalls.md` |
 | **做图标 / favicon** | `references/icons.md`（32 网格、笔画≥4u、16px 灰边验收） |
 | 写仓库 README（中英双语） | `references/readme.md` |
 
