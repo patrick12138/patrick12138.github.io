@@ -1,6 +1,6 @@
 ---
 name: github-pages-deploy
-description: Deploy pages to Patrick's single GitHub Pages site (patrick12138.github.io) and hand back a URL. Use whenever the user says 上线, 部署, 推到远程, 想要个链接, 手机上打不开, or asks to publish an HTML tool,写/搬运一篇文章, 排版体检. Covers the one-repo rule, credentials, the one-command build (tools/build.py), the md→post pipeline, design rules for buttons/TOC/theme, and the bilingual README convention.
+description: Deploy to Patrick's single GitHub Pages site (patrick12138.github.io) and hand back a URL. Use when the user says 上线 / 部署 / 推远程 / 要链接 / 手机上打不开, or asks to 写/搬运文章、排版体检。不用于其他仓库或托管平台。
 version: 3.1.0
 ---
 
@@ -17,7 +17,6 @@ index.html                首页 = 唯一文章列表（全部 / 搬运 / 个人
 about/  lab/  tga/  backlog/
 posts/<slug>/index.html   所有长文与笔记，一篇一个目录
 assets/posts/<slug>/      配图（webp，本地化）
-tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.py gen_index.py qa.py sources.json
 ```
 
 ## 硬规矩（6 条）
@@ -47,6 +46,22 @@ tools/                    build.py 一键构建；md2post.py rebuild.py add_toc.
 | **做图标 / favicon** | `references/icons.md`（32 网格、笔画≥4u、16px 灰边验收） |
 | 写仓库 README（中英双语） | `references/readme.md` |
 
+## 脚本一览（从左 AGENTS.md §2 搬来）
+
+| 脚本 | 干什么 |
+|---|---|
+| `build.py` | 一键构建（顺序以它 docstring 为准），P0 不为 0 中止 |
+| `preflight.py` | 开工对表：remote、是否落后、工作区是否干净 |
+| `md2post.py` / `mdclean.py` | 剪藏 md 清洗 + 转文章 |
+| `add_toc.py` | 目录、页脚、表格包裹、相关阅读注入 |
+| `gen_index.py` / `gen_feed.py` / `gen_legal.py` | 首页 / RSS+sitemap / 搬运页版权信号 |
+| `gen_prevnext.py` / `gen_search.py` | 上下篇 / 搜索索引 |
+| `qa.py` / `check_skills.py` | 体检（P0 中止）/ 文档与代码一致性 |
+| `post_snippets.py` | 只剩 `BRAND_JS`（站名下拉的一小段内联脚本） |
+| `rebuild.py` / `unpublish.py` / `optimize_assets.py` | 全量重建 / 下线恢复 / 图片压缩 |
+| `test_pipeline.py` / `test_flow.py` | 回归 / 上线-下线-恢复链路 |
+| `postbody.py` / `dates.py` / `partials.py` / `config.py` / `stats.py` | 公共模块：正文边界、日期、顶栏、配置、字数 |
+
 **脚本不在这里存副本**（存过一份，跟仓库漂移了）。一律用**当前工作副本**仓库内的 `tools/`（两处路径见 AGENTS.md §0）：
 `build.py`（一键：目录→字数→首页→上下篇→相关阅读→搜索索引→RSS→测试→hash→skill 一致性→体检，顺序以它自己的 docstring 为准）、`gen_index.py`、`md2post.py`、`rebuild.py`、`add_toc.py`、`qa.py`、`sources.json`。
 
@@ -68,19 +83,13 @@ P0 不为 0 会**自动中止**，不会推上去。参数：
 | `--rebuild` | 额外先从 vault 重建全部文章（1–2 分钟） |
 | `--push "msg"` | 构建成功后提交并推送 |
 
-手动分步（调试时用）：
-
-```bash
-python3 tools/rebuild.py          # 从 vault 重新生成全部文章 + 重灌目录
-python3 tools/gen_index.py        # 扫描 posts/ 重新生成首页
-python3 tools/qa.py               # 排版体检，P0 必须为 0
-```
-
 - 只 grep 状态码会被 Pages 缓存骗，**必须验证本次新增的字符串**。
-- 远端偶尔被别的会话推进：push 前 `git fetch && git rebase origin/main`，
-  冲突时 `git checkout --ours <file>` 取远端版，再用幂等脚本把自己的改动加回去。
+- 远端偶尔被别的会话推进：push 前 `git fetch && git rebase origin/main`；冲突处理见 `references/deploy.md`。
 
-## 交付话术
+## 交付话术（别写报告腔）
 
-给一行可点链接 + 本次改了什么 + 一句状态存哪（localStorage / 无后端）。
-部署过程不展开，只有网络或权限问题才单独说明。
+**NO**：我已经成功完成了本次修改！主要做了以下几点优化：1) 优化了间距 2) 调整了按钮位置。希望这些改动对您有帮助，如有问题随时告诉我。
+
+**OK**：改了三处（h2 间距 12→16、沉浸按钮只在 >1024px 显示、`post.css` 版本戳重算），线上已验证 `v=7d83bae`。
+
+一行可点链接 + 改了什么 + 状态存哪（localStorage / 无后端）。部署过程不展开，只有网络或权限问题才单独说明。
