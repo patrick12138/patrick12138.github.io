@@ -183,8 +183,11 @@ body{display:flex;flex-direction:column}
     'a': {'color': c0.link}
   });
 
+  var booted = false;
+  rendition.on('rendered', function(){ if (!booted) { booted = true; boot.classList.add('gone'); } });
+  setTimeout(function(){ if (!booted) { booted = true; boot.classList.add('gone'); } }, 8000);
+
   book.ready.then(function(){
-    boot.classList.add('gone');
     var saved = null;
     try { saved = localStorage.getItem(K('cfi')); } catch (e) {}
     var p = saved ? rendition.display(saved) : rendition.display();
@@ -196,7 +199,7 @@ body{display:flex;flex-direction:column}
       if (book.spine.length > 240) return;              // 超大合集不做全文索引，用章节估算
       try {
         var g = book.locations.generate(1400);
-        if (g && g.then) g.then(function(){ if (lastLoc) updPct(lastLoc); }).catch(function(){});
+        if (g && g.then) g.then(function(){ locReady = true; if (lastLoc) updPct(lastLoc); }).catch(function(){});
       } catch (e) {}
     }, 1200);
   }).catch(function(err){
@@ -226,7 +229,7 @@ body{display:flex;flex-direction:column}
   }
 
   /* ---- 进度 ---- */
-  var hideTimer, lastLoc = null;
+  var hideTimer, lastLoc = null, locReady = false;
 
   function showPct(v){
     if (isNaN(v)) return;
@@ -240,7 +243,7 @@ body{display:flex;flex-direction:column}
     var sp = book.spine.length;
     var idx = typeof loc.start.index === 'number' ? loc.start.index : 0;
     if (sp > 1) showPct(idx / (sp - 1) * 100);          // 粗估，立刻可用
-    if (book.locations && book.locations.length() > 10) {
+    if (locReady && book.locations && book.locations.length()) {
       var p = book.locations.percentageFromCfi(loc.start.cfi);
       if (!isNaN(p)) showPct(Math.max(p * 100, 0.1));    // 精确值覆盖
     }
