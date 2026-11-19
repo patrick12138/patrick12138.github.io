@@ -31,6 +31,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 READ = os.path.join(ROOT, "read")
 TPL = os.path.join(ROOT, "tools", "read_template.html")
 
+# 出版信息、内嵌目录这类章节对读者没有价值，直接不生成（目录走侧边抽屉）
+JUNK_TITLE = re.compile(
+    r"^\s*(版权|版权页|版权信息|目录|目\s*录|扉页|封面|书名页|出版信息|出版说明|"
+    r"内容简介|内容提要|关于作者|Contents|Table of Contents|Cover|Title\s*Page|"
+    r"Copyright|Colophon)\s*$", re.I)
+JUNK_TEXT = re.compile(r"图书在版编目|CIP数据|责任编辑|装帧设计|出版发行|印刷厂|ISBN\s*978")
+
 ATTR_RE = re.compile(r'\b(src|href|xlink:href|poster)\s*=\s*(["\'])(.*?)\2', re.I | re.S)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script>", re.I | re.S)
 STYLE_RE = re.compile(r"<style\b[^>]*>.*?</style>", re.I | re.S)
@@ -250,7 +257,7 @@ __CARDS__
     if (!total) return;
     var pos = null;
     try { pos = JSON.parse(localStorage.getItem('rd:' + a.dataset.slug + ':pos') || 'null'); } catch (e) {}
-    if (!pos || typeof pos.ch !== 'number') return;
+    if (!pos || typeof pos.ch !== 'number' || pos.ch >= sizes.length) return;
     var before = 0;
     for (var i = 0; i < pos.ch && i < sizes.length; i++) before += sizes[i];
     var n = sizes[pos.ch] || 0;
@@ -295,6 +302,8 @@ def build_book(epub, slug, title_override):
 
         chapters = []
         for ci, (lab, files) in enumerate(chunks):
+            if lab and JUNK_TITLE.match(lab):
+                continue
             parts, n = [], 0
             for p in files:
                 try:
@@ -317,10 +326,13 @@ def build_book(epub, slug, title_override):
                 h = re.search(r"<h[1-3][^>]*>(.*?)</h[1-3]>", parts[0], re.S | re.I)
                 label = html_text(h.group(1)) if h else ("第 %d 节" % (len(chapters) + 1))
             frag = "\n".join(parts)
+            # 标题不像正文、内容又是一整套出版信息的，整章丢掉
+            if n < 3000 and len(JUNK_TEXT.findall(frag)) >= 2:
+                continue
             idx = len(chapters)
             fn = "%03d.html" % idx
             open(os.path.join(dst, "ch", fn), "w", encoding="utf-8").write(frag)
-            skip = bool(re.search(r"^(版权页|目录|扉页|封面|序言?页|Cover|Title)", label)) or n < 400
+            skip = n < 400
             chapters.append({"t": label, "f": "ch/" + fn, "n": n, "_h": frag, "skip": skip})
 
         # 资源：只拷图片和字体，保持包内相对结构

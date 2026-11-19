@@ -48,7 +48,7 @@ html[data-theme="light"] .cv .ph{background:linear-gradient(140deg,#e9edf2,#d8de
 <h1>书架</h1>
 <div class="sub">共 1 本</div>
 <div class="grid" id="grid">
-<a class="bk" href="4eb7ca/" data-slug="4eb7ca" data-sizes="371,45,8048,17215,7481,6315,4490,15579,9665,6663,27363"><div class="cv"><img src="4eb7ca/a/cover.jpeg" alt="" loading="lazy" decoding="async"><i class="pg"></i></div><div class="mt"><b>夜晚的潜水艇</b><span>陈春成</span></div></a>
+<a class="bk" href="4eb7ca/" data-slug="4eb7ca" data-sizes="8048,17215,7481,6315,4490,15579,9665,6663,27363"><div class="cv"><img src="4eb7ca/a/cover.jpeg" alt="" loading="lazy" decoding="async"><i class="pg"></i></div><div class="mt"><b>夜晚的潜水艇</b><span>陈春成</span></div></a>
 </div>
 <script>
 (function () {
@@ -59,7 +59,7 @@ html[data-theme="light"] .cv .ph{background:linear-gradient(140deg,#e9edf2,#d8de
     if (!total) return;
     var pos = null;
     try { pos = JSON.parse(localStorage.getItem('rd:' + a.dataset.slug + ':pos') || 'null'); } catch (e) {}
-    if (!pos || typeof pos.ch !== 'number') return;
+    if (!pos || typeof pos.ch !== 'number' || pos.ch >= sizes.length) return;
     var before = 0;
     for (var i = 0; i < pos.ch && i < sizes.length; i++) before += sizes[i];
     var n = sizes[pos.ch] || 0;

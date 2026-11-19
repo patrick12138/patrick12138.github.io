@@ -231,6 +231,8 @@ img{max-width:100%;height:auto}
 
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(K('pos')) || 'null'); } catch (e) {}
+  /* 章节结构变了（重新拆过书），旧位置对不上，重来 */
+  if (saved && saved.n !== meta.chapters.length) saved = null;
   var firstReal = 0;
   meta.chapters.forEach(function (c, i) { if (!firstReal && !c.skip) firstReal = i; });
   var start = saved && typeof saved.ch === 'number' ? Math.min(saved.ch, meta.chapters.length - 1) : firstReal;
@@ -281,7 +283,9 @@ img{max-width:100%;height:auto}
     }
     clearTimeout(saveTimer);
     saveTimer = setTimeout(function () {
-      try { localStorage.setItem(K('pos'), JSON.stringify({ ch: ch, r: Math.min(r, 1) })); } catch (e) {}
+      try {
+        localStorage.setItem(K('pos'), JSON.stringify({ ch: ch, r: Math.min(r, 1), n: sizes.length }));
+      } catch (e) {}
     }, 400);
   }
 
