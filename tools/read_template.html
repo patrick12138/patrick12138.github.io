@@ -136,7 +136,8 @@ img{max-width:100%;height:auto}
   var $ = function (id) { return document.getElementById(id); };
   var html = document.documentElement;
   var docEl = $('doc'), boot = $('boot'), bar = $('bar'), pct = $('pct'), pctTxt = pct.firstElementChild;
-  var canHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  /* 有鼠标就走 PC 交互：顶栏只认指针位置，进度只认悬停 */
+  var pcMode = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var tocEl = $('toc'), tocList = $('toclist'), mask = $('mask'), panel = $('panel');
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';  // 位置由我们自己恢复
@@ -291,12 +292,12 @@ img{max-width:100%;height:auto}
 
   function onScroll() {
     var y = window.scrollY;
-    if (!canHover) {   /* 触屏：上滑唤出、下滑收起；PC 走鼠标悬停，见下面 */
+    if (!pcMode) {   /* 触屏：上滑唤出、下滑收起；PC 走指针位置，见下面 */
       if (y > lastY + 8 && y > 90) bar.classList.add('hide');
       else if (y < lastY - 8) bar.classList.remove('hide');
     }
     lastY = y;
-    if (!canHover) flashPct();
+    if (!pcMode) flashPct();
     updateProgressDebounced();
   }
 
@@ -310,15 +311,23 @@ img{max-width:100%;height:auto}
     }, 600);
   }
 
-  if (canHover) {
-    bar.classList.add('hide');
-    window.addEventListener('mousemove', function (e) {
-      if (e.clientY < 80) { clearTimeout(barTimer); bar.classList.remove('hide'); }
-      else hideBarSoon();
-    }, { passive: true });
-    bar.addEventListener('mouseenter', function () { clearTimeout(barTimer); });
-    bar.addEventListener('mouseleave', hideBarSoon);
-  }
+  if (pcMode) bar.classList.add('hide');
+  var mvSeen = 0, mvLast = null;
+  window.addEventListener('mousemove', function (e) {
+    /* 媒体查询在某些 WebView 里会把鼠标误判成触屏；连续几次真实位移才切 PC 模式，
+       免得触屏的一次点击（合成 mousemove）把整页交互切成桌面版。 */
+    if (!pcMode) {
+      if (mvLast && (e.clientX !== mvLast[0] || e.clientY !== mvLast[1])) mvSeen++;
+      mvLast = [e.clientX, e.clientY];
+      if (mvSeen < 3) return;
+      pcMode = true;
+      bar.classList.add('hide');
+    }
+    if (e.clientY < 80) { clearTimeout(barTimer); bar.classList.remove('hide'); }
+    else hideBarSoon();
+  }, { passive: true });
+  bar.addEventListener('mouseenter', function () { clearTimeout(barTimer); });
+  bar.addEventListener('mouseleave', hideBarSoon);
 
   var pctTimer = null;
   function flashPct() {

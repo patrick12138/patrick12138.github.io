@@ -38,15 +38,18 @@ THEME_BTN = (
 # 顶栏右侧的入口表：以后加入口只改这里
 LINKS = (
     ("lab/", "Lab", "lab"),
+    ("read/", "Read", "read"),
     ("about/", "About", "about"),
 )
+# 这几个入口平时藏起来，长按主题按钮才显示
+HIDDEN = ("lab", "read")
 
 
 def nav(prefix="", current=None):
     """prefix：相对当前页面的路径前缀（""/="../"/"../../"/"/"）。"""
     parts = []
     for href, label, key in LINKS:
-        cls = ' class="on"' if key == current else (' class="nav-lab"' if key == "lab" else "")
+        cls = ' class="on"' if key == current else (' class="nav-lab"' if key in HIDDEN else "")
         parts.append('<a href="%s%s"%s>%s</a>' % (prefix, href, cls, label))
     return '<nav class="nav">%s%s</nav>' % ("".join(parts), THEME_BTN)
 
