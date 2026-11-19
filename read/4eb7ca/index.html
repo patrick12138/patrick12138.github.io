@@ -1344,12 +1344,13 @@ img{max-width:100%;height:auto}
 
   function onScroll() {
     var y = window.scrollY;
+    var up = y < lastY - 8;        /* 上滑 = 回头看，这时候才值得给进度 */
     if (!pcMode) {   /* 触屏：上滑唤出、下滑收起；PC 走指针位置，见下面 */
       if (y > lastY + 8 && y > 90) bar.classList.add('hide');
-      else if (y < lastY - 8) bar.classList.remove('hide');
+      else if (up) bar.classList.remove('hide');
     }
     lastY = y;
-    if (!pcMode) flashPct();
+    if (!pcMode && up) flashPct();
     updateProgressDebounced();
   }
 
