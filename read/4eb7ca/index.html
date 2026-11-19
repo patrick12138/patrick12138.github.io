@@ -29,6 +29,7 @@ img{max-width:100%;height:auto}
 .btn{flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
   background:none;border:none;border-radius:8px;color:var(--text-muted);cursor:pointer}
 .btn:active{background:color-mix(in srgb,var(--text) 12%,transparent)}
+a.btn{text-decoration:none}
 .btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7;
   stroke-linecap:round;stroke-linejoin:round}
 
@@ -113,6 +114,9 @@ img{max-width:100%;height:auto}
   <button class="btn" id="btn-set" aria-label="设置">
     <svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
   </button>
+  <a class="btn" href="../" aria-label="书架">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="8" rx="1.2"/><rect x="14" y="3" width="7" height="8" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>
+  </a>
 </header>
 
 <div id="doc"></div>
