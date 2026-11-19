@@ -145,7 +145,8 @@ img{max-width:100%;height:auto}
   var lastY = 0, saveTimer = null, ticking = false;
 
   /* ---------- 外观 ---------- */
-  var theme = localStorage.getItem(K('ui')) || 'dark';
+  var theme = localStorage.getItem(K('ui')) ||
+    ((window.matchMedia && window.matchMedia('(prefers-color-scheme:light)').matches) ? 'light' : 'dark');
   html.setAttribute('data-theme', theme);
 
   function applySize() {

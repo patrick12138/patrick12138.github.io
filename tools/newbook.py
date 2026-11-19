@@ -81,9 +81,27 @@ def parse_opf(z):
     ncx = manifest.get(toc.group(1), ("", ""))[0] if toc else ""
     if not ncx:
         ncx = next((h for h, t in manifest.values() if t == "application/x-dtbncx+xml"), "")
+
+    cover = ""
+    mm = re.search(r'<meta\b[^>]*\bname=["\']cover["\'][^>]*\bcontent=["\']([^"\']+)["\']', opf)
+    if mm:
+        cover = manifest.get(mm.group(1), ("", ""))[0]
+    if not cover:
+        for tag in re.findall(r"<item\b[^>]*>", opf):
+            if "cover-image" in tag:
+                h = re.search(r'\bhref="([^"]+)"', tag)
+                if h:
+                    cover = h.group(1)
+                    break
+    if not cover:
+        for h, t in manifest.values():
+            if re.search(r"cover\.(jpe?g|png|gif)$", h, re.I):
+                cover = h
+                break
+
     return (base, manifest, spine,
             html_text(title.group(1)) if title else "",
-            html_text(creator.group(1)) if creator else "", ncx)
+            html_text(creator.group(1)) if creator else "", ncx, cover)
 
 
 def html_text(s):
@@ -130,7 +148,8 @@ def rewrite(chapter_path, body, spine_map):
 
 
 def build_shelf():
-    rows = []
+    """书架：封面网格，进度从 localStorage 读（阅读页写的是 rd:<slug>:pos）。"""
+    books = []
     if os.path.isdir(READ):
         for name in sorted(os.listdir(READ)):
             cfg = os.path.join(READ, name, "book.json")
@@ -141,49 +160,116 @@ def build_shelf():
             except Exception:
                 continue
             chs = meta.get("chapters", [])
-            words = sum(c.get("n", 0) for c in chs)
-            rows.append((name, meta.get("title", name), meta.get("author", ""), len(chs), words))
-    li = "\n".join(
-        '<a class="bk" href="%s/"><span class="t">%s</span>'
-        '<span class="m">%d 章 · %s 万字</span></a>'
-        % (n, htmllib.escape(t), c, ("%.1f" % (w / 10000.0)) if w else "—")
-        for n, t, a, c, w in rows) or '<p class="empty">书架是空的。</p>'
+            cover = meta.get("cover", "")
+            if cover and not os.path.isfile(os.path.join(READ, name, cover)):
+                cover = ""
+            books.append({
+                "slug": name,
+                "title": meta.get("title", name),
+                "author": meta.get("author", ""),
+                "cover": cover,
+                "sizes": [c.get("n", 0) for c in chs],
+                "mtime": os.path.getmtime(cfg),
+            })
+    books.sort(key=lambda b: -b["mtime"])
+
+    cards = []
+    for b in books:
+        sizes = ",".join(str(x) for x in b["sizes"])
+        if b["cover"]:
+            art = ('<img src="%s/%s" alt="" loading="lazy" decoding="async">'
+                   % (b["slug"], urllib.parse.quote(b["cover"])))
+        else:
+            art = '<span class="ph">%s</span>' % htmllib.escape((b["title"] or "?")[:1])
+        cards.append(
+            '<a class="bk" href="%s/" data-slug="%s" data-sizes="%s">'
+            '<div class="cv">%s<i class="pg"></i></div>'
+            '<div class="mt"><b>%s</b><span>%s</span></div></a>'
+            % (b["slug"], b["slug"], sizes, art,
+               htmllib.escape(b["title"]), htmllib.escape(b["author"] or "　")))
+
+    body = "\n".join(cards) or '<p class="empty">书架是空的。</p>'
     page = """<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>书架</title>
+<script>document.documentElement.dataset.theme =
+window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';</script>
 <style>
-:root{--bg:#0a0c10;--text:#dfe5ec;--muted:#98a2b0;--border:#191d24;--accent:#6aa2d8;
---sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
---mono:ui-monospace,Menlo,monospace}
-@media (prefers-color-scheme:light){:root{--bg:#f3f5f8;--text:#1e2935;--muted:#526070;--border:#dfe4ea;--accent:#2d6496}}
-*{box-sizing:border-box}
+html[data-theme="light"]{--bg:#f7f8fa;--text:#1a1c20;--muted:#8b929d;--card:#fff;
+--sh:0 1px 3px rgba(0,0,0,.08),0 6px 16px rgba(0,0,0,.06)}
+html[data-theme="dark"]{--bg:#0d0f13;--text:#e6e9ee;--muted:#79818d;--card:#171a20;
+--sh:0 1px 3px rgba(0,0,0,.4),0 6px 16px rgba(0,0,0,.3)}
+:root{--sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;--mono:ui-monospace,Menlo,monospace}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
- padding:calc(48px + env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom))}
-h1{font-size:1.15rem;margin:0 0 4px;letter-spacing:-.01em}
-.sub{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:26px}
-.list{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:2px}
-.bk{display:flex;align-items:baseline;gap:12px;padding:15px 4px;text-decoration:none;
- color:inherit;border-bottom:1px solid var(--border);transition:padding-left .15s}
-.bk:active{padding-left:10px}
-.bk .t{flex:1;font-size:.94rem;line-height:1.4}
-.bk .m{flex:none;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
-.empty{color:var(--muted);font-size:.85rem}
+ padding:calc(26px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom))}
+h1{max-width:900px;margin:0 auto 4px;font-size:1.25rem;letter-spacing:-.01em}
+.sub{max-width:900px;margin:0 auto 24px;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.grid{max-width:900px;margin:0 auto;display:grid;gap:24px 14px;
+ grid-template-columns:repeat(2,1fr)}
+@media (min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:880px){.grid{grid-template-columns:repeat(4,1fr);gap:30px 18px}}
+.bk{text-decoration:none;color:inherit;display:block;transition:transform .16s ease}
+.bk:active{transform:scale(.97)}
+.cv{position:relative;aspect-ratio:3/4;border-radius:5px;overflow:hidden;background:var(--card);
+ box-shadow:var(--sh);display:flex;align-items:center;justify-content:center}
+.cv img{width:100%;height:100%;object-fit:cover;display:block}
+.cv .ph{font-size:2.4rem;font-weight:600;color:var(--muted);opacity:.55;
+ background:linear-gradient(140deg,#2b3138,#1a1e24);width:100%;height:100%;
+ display:flex;align-items:center;justify-content:center}
+html[data-theme="light"] .cv .ph{background:linear-gradient(140deg,#e9edf2,#d8dee6);opacity:1}
+.pg{position:absolute;right:7px;bottom:7px;padding:2px 8px;border-radius:11px;
+ font-size:.6rem;font-family:var(--mono);color:#f2f5f8;font-style:normal;
+ background:rgba(8,10,14,.62);backdrop-filter:blur(6px);display:none;letter-spacing:.02em}
+.pg.on{display:block}
+.mt{margin-top:9px;line-height:1.45}
+.mt b{display:block;font-size:.82rem;font-weight:500;
+ display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mt span{display:block;font-size:.68rem;color:var(--muted);margin-top:3px;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.empty{max-width:900px;margin:0 auto;color:var(--muted);font-size:.85rem}
 </style>
 </head>
-<body><div class="list"><h1>书架</h1><div class="sub">%d 本</div>
-%s
-</div></body></html>
-""" % (len(rows), li)
+<body>
+<h1>书架</h1>
+<div class="sub">共 __N__ 本</div>
+<div class="grid" id="grid">
+__CARDS__
+</div>
+<script>
+(function () {
+  var TOTAL = {};
+  [].forEach.call(document.querySelectorAll('.bk'), function (a) {
+    var sizes = (a.dataset.sizes || '').split(',').filter(Boolean).map(Number);
+    var total = sizes.reduce(function (x, y) { return x + y; }, 0);
+    if (!total) return;
+    var pos = null;
+    try { pos = JSON.parse(localStorage.getItem('rd:' + a.dataset.slug + ':pos') || 'null'); } catch (e) {}
+    if (!pos || typeof pos.ch !== 'number') return;
+    var before = 0;
+    for (var i = 0; i < pos.ch && i < sizes.length; i++) before += sizes[i];
+    var n = sizes[pos.ch] || 0;
+    var pct = (before + n * Math.min(pos.r || 0, 1)) / total * 100;
+    if (isNaN(pct)) return;
+    var p = Math.max(1, Math.round(pct));
+    var tag = a.querySelector('.pg');
+    tag.textContent = p >= 99 ? '已读完' : '读至 ' + p + '%';
+    tag.classList.add('on');
+  });
+})();
+</script>
+</body></html>
+""".replace("__CARDS__", body).replace("__N__", str(len(books)))
     open(os.path.join(READ, "index.html"), "w", encoding="utf-8").write(page)
 
 
 def build_book(epub, slug, title_override):
     with zipfile.ZipFile(epub) as z:
-        base, manifest, spine, title, creator, ncx = parse_opf(z)
+        base, manifest, spine, title, creator, ncx, cover_href = parse_opf(z)
         labels = parse_ncx(z, base, ncx)
 
         dst = os.path.join(READ, slug)
@@ -248,8 +334,14 @@ def build_book(epub, slug, title_override):
     if not chapters:
         die("这本书拆不出任何正文（可能全是图片页或加密了）")
 
+    cover_path = ""
+    if cover_href:
+        cp = posixpath.normpath(posixpath.join(base, htmllib.unescape(cover_href)))
+        if os.path.isfile(os.path.join(dst, "a", cp)):
+            cover_path = "a/" + cp
+
     meta = {"title": title_override or title or slug,
-            "author": creator, "chapters": chapters}
+            "author": creator, "cover": cover_path, "chapters": chapters}
 
     # 正文直接内嵌：页面不发任何额外请求，minis:// 之类不支持 fetch 的环境也能读
     holder = "\n".join(
