@@ -291,11 +291,33 @@ img{max-width:100%;height:auto}
 
   function onScroll() {
     var y = window.scrollY;
-    if (y > lastY + 8 && y > 90) bar.classList.add('hide');
-    else if (y < lastY - 8) bar.classList.remove('hide');
+    if (!canHover) {   /* 触屏：上滑唤出、下滑收起；PC 走鼠标悬停，见下面 */
+      if (y > lastY + 8 && y > 90) bar.classList.add('hide');
+      else if (y < lastY - 8) bar.classList.remove('hide');
+    }
     lastY = y;
     if (!canHover) flashPct();
     updateProgressDebounced();
+  }
+
+  /* PC：指针进到顶部 80px 以内才出现顶栏，离开 600ms 后收起 —— 阅读时整屏干净 */
+  var barTimer = null;
+  function hideBarSoon() {
+    clearTimeout(barTimer);
+    barTimer = setTimeout(function () {
+      if (bar.matches(':hover')) return;
+      bar.classList.add('hide');
+    }, 600);
+  }
+
+  if (canHover) {
+    bar.classList.add('hide');
+    window.addEventListener('mousemove', function (e) {
+      if (e.clientY < 80) { clearTimeout(barTimer); bar.classList.remove('hide'); }
+      else hideBarSoon();
+    }, { passive: true });
+    bar.addEventListener('mouseenter', function () { clearTimeout(barTimer); });
+    bar.addEventListener('mouseleave', hideBarSoon);
   }
 
   var pctTimer = null;
