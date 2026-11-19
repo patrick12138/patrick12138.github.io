@@ -111,7 +111,7 @@ img{max-width:100%;height:auto}
 </header>
 
 <div id="doc"></div>
-<template id="ch0" data-t="版权页" data-n="371"><p class="kindle-cn-copyright-text" id="1T141-a247137667ff426097d689c48856f585"><span class="kindle-cn-bold">图书在版编目（CIP）数据</span></p>
+<template id="ch0" data-t="版权页" data-n="371" data-skip="1"><p class="kindle-cn-copyright-text" id="1T141-a247137667ff426097d689c48856f585"><span class="kindle-cn-bold">图书在版编目（CIP）数据</span></p>
 
   <p class="kindle-cn-copyright-text">夜晚的潜水艇/陈春成著．-- 上海：上海三联书店，2020.9</p>
 
@@ -176,7 +176,7 @@ img{max-width:100%;height:auto}
   <p class="kindle-cn-copyright-text1"><br class="calibre1"/></p>
 
   <p class="kindle-cn-copyright-text1">如发现印装质量问题，影响阅读，请与印刷厂联系调换。</p></template>
-<template id="ch1" data-t="目录" data-n="45"><div class="kindle-cn-toc-title" id="2RHM1-a247137667ff426097d689c48856f585">目录</div>
+<template id="ch1" data-t="目录" data-n="45" data-skip="1"><div class="kindle-cn-toc-title" id="2RHM1-a247137667ff426097d689c48856f585">目录</div>
 <div class="kindle-cn-toc-level">
   <a href="#ch5" class="calibre2">夜晚的潜水艇</a>
 </div>
@@ -1186,6 +1186,7 @@ img{max-width:100%;height:auto}
   var docEl = $('doc'), boot = $('boot'), bar = $('bar'), meter = $('meter'), pct = $('pct');
   var tocEl = $('toc'), tocList = $('toclist'), mask = $('mask'), panel = $('panel');
 
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';  // 位置由我们自己恢复
   var meta = null, sizes = [], total = 0, loaded = 0, busy = Promise.resolve();
   var curCh = 0, size = parseInt(localStorage.getItem(K('sz')) || '100', 10);
   var lastY = 0, saveTimer = null, ticking = false;
@@ -1251,7 +1252,7 @@ img{max-width:100%;height:auto}
   meta = {
     title: document.title,
     chapters: tpls.map(function (t) {
-      return { t: t.dataset.t || '', n: parseInt(t.dataset.n || '0', 10) };
+      return { t: t.dataset.t || '', n: parseInt(t.dataset.n || '0', 10), skip: t.dataset.skip === '1' };
     })
   };
   meta.chapters.forEach(function (c) { sizes.push(c.n || 0); total += (c.n || 0); });
@@ -1275,14 +1276,17 @@ img{max-width:100%;height:auto}
 
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(K('pos')) || 'null'); } catch (e) {}
-  var start = saved && typeof saved.ch === 'number' ? Math.min(saved.ch, meta.chapters.length - 1) : 0;
+  var firstReal = 0;
+  meta.chapters.forEach(function (c, i) { if (!firstReal && !c.skip) firstReal = i; });
+  var start = saved && typeof saved.ch === 'number' ? Math.min(saved.ch, meta.chapters.length - 1) : firstReal;
 
   ensure(start).then(function () {
     boot.classList.add('gone');
-    if (saved && saved.r) {
+    var rr = saved && typeof saved.r === 'number' ? saved.r : 0;
+    if (start > 0 || rr > 0) {
       var el = $('sec' + start);
       var h = el ? el.offsetHeight : 0;
-      window.scrollTo(0, chTop(start) + saved.r * Math.max(h - window.innerHeight, 0));
+      window.scrollTo(0, chTop(start) + rr * Math.max(h - window.innerHeight, 0));
     }
     var first = tocList.children[start];
     if (first) first.classList.add('on');

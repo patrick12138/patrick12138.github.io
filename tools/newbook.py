@@ -233,7 +233,8 @@ def build_book(epub, slug, title_override):
             idx = len(chapters)
             fn = "%03d.html" % idx
             open(os.path.join(dst, "ch", fn), "w", encoding="utf-8").write(frag)
-            chapters.append({"t": label, "f": "ch/" + fn, "n": n, "_h": frag})
+            skip = bool(re.search(r"^(版权页|目录|扉页|封面|序言?页|Cover|Title)", label)) or n < 400
+            chapters.append({"t": label, "f": "ch/" + fn, "n": n, "_h": frag, "skip": skip})
 
         # 资源：只拷图片和字体，保持包内相对结构
         for name in z.namelist():
@@ -252,8 +253,8 @@ def build_book(epub, slug, title_override):
 
     # 正文直接内嵌：页面不发任何额外请求，minis:// 之类不支持 fetch 的环境也能读
     holder = "\n".join(
-        '<template id="ch%d" data-t="%s" data-n="%d">%s</template>'
-        % (i, htmllib.escape(c["t"]), c["n"], c.pop("_h"))
+        '<template id="ch%d" data-t="%s" data-n="%d"%s>%s</template>'
+        % (i, htmllib.escape(c["t"]), c["n"], ' data-skip="1"' if c.get("skip") else "", c.pop("_h"))
         for i, c in enumerate(chapters))
     json.dump(meta, open(os.path.join(dst, "book.json"), "w", encoding="utf-8"),
               ensure_ascii=False, separators=(",", ":"))
