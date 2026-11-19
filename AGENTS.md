@@ -24,7 +24,7 @@ assets/                      base|home|post.css + site|home|post.js
 tools/                       生成器与质检脚本（清单见 SKILL.md）
 skills/                      skill 单一源，build 时同步到 /var/minis/skills
 about/ lab/ tga/ backlog/    单页
-read/<slug>/                 电子书（book.epub + 阅读页），不进首页/搜索/feed
+read/<slug>/                 电子书（章节内嵌 + 阅读器），不进首页/搜索/feed
 ```
 
 ## 3. 一条命令
@@ -47,7 +47,7 @@ PC（Windows）首次：`python -m pip install pyyaml markdown pillow`；之后�
 | **脱敏** | vault 里的 md 改词（公司名换代号）→ `md2post` 重生成 → `qa.py` 复查 |
 | **下线文章** | `tools/unpublish.py <slug>`（git rm + 移出 sources.json + 重生成列表/feed） |
 | 文章正文排版 | `assets/post.css` |
-| **上线一本 EPUB**（原样挂到 `/read/<slug>/`，前端 epub.js 渲染） | `tools/newbook.py --file x.epub`（模板 `tools/read_template.html`） |
+| **上线一本 EPUB**（挂到 `/read/<slug>/`，与文章上线无关，见 skill `epub-reader`） | `tools/newbook.py --file x.epub`（模板 `tools/read_template.html`） |
 | 首页列表/分类/搜索 | `tools/gen_index.py`（**不是** `index.html`） |
 | 导航条（Lab / About） | `tools/gen_index.py` + `tools/post_template.html` + `lab/index.html`（三处） |
 | 右侧目录 / 站名下拉 | `tools/add_toc.py` + `assets/post.css` |
