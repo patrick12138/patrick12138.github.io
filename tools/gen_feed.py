@@ -82,7 +82,7 @@ def write_sitemap(items):
     out += ["</urlset>", ""]
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write("\n".join(out))
 
-    robots = "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % BASE
+    robots = "User-agent: *\nAllow: /\nDisallow: /read/\n\nSitemap: %s/sitemap.xml\n" % BASE
     open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8").write(robots)
 
 

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>书架</title>
+<style>
+:root{--bg:#0a0c10;--text:#dfe5ec;--muted:#98a2b0;--border:#191d24;--accent:#6aa2d8;
+--sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+--mono:ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:light){:root{--bg:#f3f5f8;--text:#1e2935;--muted:#526070;--border:#dfe4ea;--accent:#2d6496}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+ padding:calc(48px + env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom))}
+h1{font-size:1.15rem;margin:0 0 4px;letter-spacing:-.01em}
+.sub{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:26px}
+.list{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:2px}
+.bk{display:flex;align-items:baseline;gap:12px;padding:15px 4px;text-decoration:none;
+ color:inherit;border-bottom:1px solid var(--border);transition:padding-left .15s}
+.bk:active{padding-left:10px}
+.bk .t{flex:1;font-size:.94rem;line-height:1.4}
+.bk .m{flex:none;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.empty{color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body><div class="list"><h1>书架</h1><div class="sub">1 本 · 链接不外传</div>
+<a class="bk" href="test/"><span class="t">Moby Dick（测试）</span><span class="m">1.6 MB</span></a>
+</div></body></html>
