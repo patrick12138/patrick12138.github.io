@@ -50,10 +50,17 @@ img{max-width:100%;height:auto}
 #doc a{color:var(--accent)}
 #doc .ch-sep{margin:2.6em auto;text-align:center;color:var(--text-muted);font-size:.8em;letter-spacing:.3em}
 
-#pct{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:30;
-  font-family:var(--mono);font-size:.66rem;color:var(--text-muted);opacity:0;pointer-events:none;
+/* 右下角 120px 见方的热区：PC 上鼠标移进来才显示，触屏靠 .show 闪一下 */
+#pct{position:fixed;right:0;bottom:0;width:120px;height:120px;z-index:30;pointer-events:none;
+  display:flex;align-items:flex-end;justify-content:flex-end;
+  padding:0 12px calc(12px + env(safe-area-inset-bottom)) 0}
+#pct span{font-family:var(--mono);font-size:.66rem;color:var(--text-muted);opacity:0;
   transition:opacity .25s}
-#pct.show{opacity:.55}
+#pct.show span{opacity:.55}
+@media (hover:hover) and (pointer:fine){
+  #pct{pointer-events:auto}
+  #pct:hover span{opacity:.55}
+}
 
 #mask{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:45;opacity:0;pointer-events:none;
   transition:opacity .2s}
@@ -110,7 +117,7 @@ img{max-width:100%;height:auto}
 
 <div id="doc"></div>
 {{CHAPTERS}}
-<div id="pct"></div>
+<div id="pct"><span></span></div>
 
 <div id="mask"></div>
 <aside id="toc"><h2>目录</h2><div id="toclist"></div></aside>
@@ -128,7 +135,8 @@ img{max-width:100%;height:auto}
   var K = function (n) { return 'rd:' + SLUG + ':' + n; };
   var $ = function (id) { return document.getElementById(id); };
   var html = document.documentElement;
-  var docEl = $('doc'), boot = $('boot'), bar = $('bar'), pct = $('pct');
+  var docEl = $('doc'), boot = $('boot'), bar = $('bar'), pct = $('pct'), pctTxt = pct.firstElementChild;
+  var canHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var tocEl = $('toc'), tocList = $('toclist'), mask = $('mask'), panel = $('panel');
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';  // 位置由我们自己恢复
@@ -236,7 +244,6 @@ img{max-width:100%;height:auto}
     var first = tocList.children[start];
     if (first) first.classList.add('on');
     updateProgress();
-    pct.classList.toggle('show', !bar.classList.contains('hide'));
   });
 
   applySize();
@@ -268,7 +275,7 @@ img{max-width:100%;height:auto}
     for (var j = 0; j < ch; j++) before += sizes[j] || 0;
     var p = (before + (sizes[ch] || 0) * Math.min(r, 1)) / total * 100;
     if (!isNaN(p)) {
-      pct.textContent = Math.round(p) + '%';
+      pctTxt.textContent = Math.round(p) + '%';
     }
     clearTimeout(saveTimer);
     saveTimer = setTimeout(function () {
@@ -286,9 +293,15 @@ img{max-width:100%;height:auto}
     if (y > lastY + 8 && y > 90) bar.classList.add('hide');
     else if (y < lastY - 8) bar.classList.remove('hide');
     lastY = y;
-    /* 百分比跟着顶栏走：顶栏收起 = 正在读，画面上不留任何控件 */
-    pct.classList.toggle('show', !bar.classList.contains('hide'));
+    if (!canHover) flashPct();
     updateProgressDebounced();
+  }
+
+  var pctTimer = null;
+  function flashPct() {
+    pct.classList.add('show');
+    clearTimeout(pctTimer);
+    pctTimer = setTimeout(function () { pct.classList.remove('show'); }, 900);
   }
 
   function onScrollThrottled() {
