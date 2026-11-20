@@ -61,6 +61,7 @@ read/index.html          书架（每次生成重扫 read/*/book.json）
 - **纯 DOM 滚动阅读，不用 iframe**。epub.js 在这套 WebView 里会让渲染队列永久卡死（srcdoc iframe 不派发 load 事件），别再回头试
 - 顶栏：触屏上滑唤出/下滑收起；PC 指针进入顶部 80px 才出现，离开 600ms 收起
 - 进度：只存本地 `localStorage['rd:<slug>:pos'] = {ch, r, n}`；触屏往回翻时闪 1.2 秒，PC 悬停右下角
+- **保存不能靠 timer**：这套 WebView 里 scroll 事件不派发、setInterval/rAF 在页面静止时会被冻。进度在 `touchend`（手指一抬）、`visibilitychange`、`pagehide` 里同步算完就写 localStorage，不走防抖
 - 章节数（`n`）变了旧进度自动作废 —— 重新拆书不会让人跳到乱位置
 - 三套底色（深色/浅色/羊皮纸），首次进入跟随系统；书架跟随系统并复用主页配色变量
 

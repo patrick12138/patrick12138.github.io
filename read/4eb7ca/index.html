@@ -1106,7 +1106,7 @@ a.btn{text-decoration:none}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';  // 位置由我们自己恢复
   var meta = null, sizes = [], total = 0, loaded = 0, busy = Promise.resolve();
   var curCh = 0, size = parseInt(localStorage.getItem(K('sz')) || '100', 10);
-  var lastY = 0, saveTimer = null, ticking = false;
+  var lastY = 0, ticking = false;
 
   /* ---------- 外观 ---------- */
   var theme = localStorage.getItem(K('ui')) ||
@@ -1196,18 +1196,25 @@ a.btn{text-decoration:none}
   try { saved = JSON.parse(localStorage.getItem(K('pos')) || 'null'); } catch (e) {}
   /* 章节结构变了（重新拆过书），旧位置对不上，重来 */
   if (saved && saved.n !== meta.chapters.length) saved = null;
-  var firstReal = 0;
-  meta.chapters.forEach(function (c, i) { if (!firstReal && !c.skip) firstReal = i; });
+  var firstReal = -1;
+  meta.chapters.forEach(function (c, i) { if (firstReal < 0 && !c.skip) firstReal = i; });
+  if (firstReal < 0) firstReal = 0;
   var start = saved && typeof saved.ch === 'number' ? Math.min(saved.ch, meta.chapters.length - 1) : firstReal;
 
   ensure(start).then(function () {
     boot.classList.add('gone');
     var rr = saved && typeof saved.r === 'number' ? saved.r : 0;
-    if (start > 0 || rr > 0) {
-      var el = $('sec' + start);
-      var h = el ? el.offsetHeight : 0;
-      window.scrollTo(0, chTop(start) + rr * Math.max(h - window.innerHeight, 0));
+    function restore() {
+      if (start > 0 || rr > 0) {
+        var el = $('sec' + start);
+        var h = el ? el.offsetHeight : 0;
+        window.scrollTo(0, chTop(start) + rr * Math.max(h - window.innerHeight, 0));
+      } else {
+        window.scrollTo(0, 0);          // 没有进度就老老实实从头，别让浏览器的滚动恢复插手
+      }
     }
+    restore();
+    setTimeout(restore, 700);           // 图片撑开高度后再校一次
     var first = tocList.children[start];
     if (first) first.classList.add('on');
     updateProgress();
@@ -1219,7 +1226,7 @@ a.btn{text-decoration:none}
   /* ---------- 滚动：进度 / 预加载 / 顶栏 ---------- */
   /* 进度只在滚动停下后算一次：11 章每次都重新量一遍位置（一次 reflow），
      比每帧都量便宜得多，进度条也不需要 60fps。 */
-  var progTimer = null;
+  var progTimer = null, lastR = 0;
 
   function updateProgress() {
     var secs = docEl.children;
@@ -1244,12 +1251,15 @@ a.btn{text-decoration:none}
     if (!isNaN(p)) {
       pctTxt.textContent = Math.round(p) + '%';
     }
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () {
-      try {
-        localStorage.setItem(K('pos'), JSON.stringify({ ch: ch, r: Math.min(r, 1), n: sizes.length }));
-      } catch (e) {}
-    }, 400);
+    lastR = Math.min(r, 1);
+    saveNow();          /* 直接写：localStorage 一次不到 1ms，别为它再挂定时器 */
+  }
+
+  /* 落盘独立出来，退出页面时也要能立刻写 */
+  function saveNow() {
+    try {
+      localStorage.setItem(K('pos'), JSON.stringify({ ch: curCh, r: lastR, n: sizes.length }));
+    } catch (e) {}
   }
 
   function updateProgressDebounced() {
@@ -1311,14 +1321,24 @@ a.btn{text-decoration:none}
   }
   window.addEventListener('scroll', onScrollThrottled, { passive: true });
   document.addEventListener('scroll', onScrollThrottled, { passive: true, capture: true });
-  /* 有些内嵌 WebView（含本机的）根本不派发 scroll 事件，只有 scrollY 在变。轮询兜底。 */
+  /* 这套 WebView 不派发 scroll 事件，setInterval 也可能被冻。
+     用 rAF 循环 + 触摸/滚轮事件 + 退出前落盘，三重兜底。 */
   var pollY = window.scrollY;
-  setInterval(function () {
+  function watchScroll() {
     var y = window.scrollY;
-    if (y === pollY) return;
-    pollY = y;
-    onScrollThrottled();
-  }, 180);
+    if (y !== pollY) { pollY = y; onScrollThrottled(); }
+    requestAnimationFrame(watchScroll);
+  }
+  requestAnimationFrame(watchScroll);
+  ['touchmove', 'wheel', 'click', 'keyup'].forEach(function (ev) {
+    window.addEventListener(ev, onScrollThrottled, { passive: true });
+  });
+  /* 手指一抬就把进度算准存下：这一步不能走防抖，否则用户滑完立刻退出会丢最后一段 */
+  window.addEventListener('touchend', function () { updateProgress(); }, { passive: true });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') { updateProgress(); saveNow(); }
+  });
+  window.addEventListener('pagehide', function () { updateProgress(); saveNow(); });
 
   /* ---------- 交互 ---------- */
   function openToc() { tocEl.classList.add('on'); mask.classList.add('on'); closePanel(); }
