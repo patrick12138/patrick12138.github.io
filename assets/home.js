@@ -183,7 +183,7 @@
   function syncUrl(){
     try{
       var u=new URL(location.href);
-      if(state.f==='all'){ u.searchParams.delete('tab'); } else { u.searchParams.set('tab', state.f); }
+      /* tab 不写进 URL：它只是个浏览过滤器，写进去会让右滑返回/刷新都带着上次的分类 */
       if(state.q){ u.searchParams.set('q', state.q); } else { u.searchParams.delete('q'); }
       history.replaceState(null,'', u.pathname + u.search + u.hash);
     }catch(err){}
@@ -208,6 +208,17 @@
     var b=e.target.closest('button'); if(!b)return;
     [].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===b);});
     state.f=b.dataset.f; state.q?runSearch():apply(); syncUrl();
+  });
+
+  /* 右滑返回时页面常从 bfcache 复原，DOM 还留着上次点过的蓝色 tab；
+     这里把它拉回 URL 对应的状态（没带 tab 参数就是「全部」）。 */
+  window.addEventListener('pageshow',function(e){
+    if(!e.persisted) return;
+    var tf2=null;
+    try{ tf2=new URLSearchParams(location.search).get('tab'); }catch(err){}
+    state.f=(tf2 && ['all','repost','own'].indexOf(tf2)>=0) ? tf2 : 'all';
+    if(tabs)[].forEach.call(tabs.children,function(x){ x.classList.toggle('on', x.dataset.f===state.f); });
+    state.q ? runSearch() : apply();
   });
 
   if(btn)btn.addEventListener('click',function(){
