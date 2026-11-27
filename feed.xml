@@ -5,8 +5,15 @@
 <link>https://patrick12138.github.io/</link>
 <description>写点东西，也搬运点好东西。</description>
 <language>zh-CN</language>
-<lastBuildDate>Sun, 08 Nov 2026 00:00:00 +0000</lastBuildDate>
+<lastBuildDate>Thu, 26 Nov 2026 00:00:00 +0000</lastBuildDate>
 <atom:link href="https://patrick12138.github.io/feed.xml" rel="self" type="application/rss+xml" />
+<item>
+<title>为什么 2027 是 AI 的 USER 之年</title>
+<link>https://patrick12138.github.io/posts/user-year-2027/</link>
+<guid isPermaLink="true">https://patrick12138.github.io/posts/user-year-2027/</guid>
+<pubDate>Thu, 26 Nov 2026 00:00:00 +0000</pubDate>
+<description>LLM 会吃掉所有 verifiable reward，人心里那些模糊的判断才是接下来最稀缺的资源。去找 user，去学 sales，去 formalize things。</description>
+</item>
 <item>
 <title>Your coding agents made you a manager</title>
 <link>https://patrick12138.github.io/posts/agents-made-you-a-manager/</link>
